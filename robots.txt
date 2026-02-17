@@ -1,4 +1,16 @@
+# robots.txt for stackpick.co.uk
+# Updated: February 17, 2026
+
 User-agent: *
 Allow: /
+Crawl-delay: 1
 
+# Sitemap
 Sitemap: https://stackpick.co.uk/sitemap.xml
+
+# Block common bad bots (optional - uncomment if needed)
+# User-agent: AhrefsBot
+# Disallow: /
+# 
+# User-agent: SemrushBot
+# Disallow: /
