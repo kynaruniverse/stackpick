@@ -17,8 +17,15 @@
     <link rel="stylesheet" href="/assets/css/style.css">
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZTN7H3L6DV"></script>
     <script src="/assets/js/analytics.js"></script>
+    <script type="application/ld+json">
+    {"@context":"https://schema.org","@type":"WebSite","name":"Stack Pick","description":"Researched gaming gear recommendations for UK gamers","url":"https://stackpick.co.uk","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://stackpick.co.uk/?s={search_term_string}"},"query-input":"required name=search_term_string"}}
+    </script>
+    <script type="application/ld+json">
+    {"@context":"https://schema.org","@type":"Organization","name":"Stack Pick","url":"https://stackpick.co.uk","logo":"https://stackpick.co.uk/assets/images/logo.png","contactPoint":{"@type":"ContactPoint","email":"hello@stackpick.co.uk","contactType":"customer support"}}
+    </script>
 </head>
 <body>
+    <a href="#categories" class="skip-link">Skip to main content</a>
     <header>
         <div class="header-container">
             <a href="/" class="logo">Stack<span>Pick</span></a>
@@ -121,11 +128,34 @@
 
     <footer>
         <div class="footer-container">
-            <p>&copy; 2026 Stack Pick. Built for UK gamers.</p>
-            <p style="font-size: 0.8rem; margin-top: 0.5rem;">
-                As an Amazon Associate, we earn from qualifying purchases. 
-                <a href="/about/">Learn more</a>
-            </p>
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <a href="/" class="logo footer-logo">Stack<span>Pick</span></a>
+                    <p class="footer-tagline">Researched gaming gear for UK gamers. Real prices. No BS.</p>
+                </div>
+                <div class="footer-col">
+                    <h4 class="footer-heading">Categories</h4>
+                    <ul class="footer-links">
+                        <li><a href="/headsets/">Headsets</a></li>
+                        <li><a href="/keyboards/">Keyboards</a></li>
+                        <li><a href="/mice/">Mice</a></li>
+                        <li><a href="/monitors/">Monitors</a></li>
+                        <li><a href="/chairs/">Chairs</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4 class="footer-heading">Resources</h4>
+                    <ul class="footer-links">
+                        <li><a href="/guides/">Setup Guides</a></li>
+                        <li><a href="/comparisons/">Comparisons</a></li>
+                        <li><a href="/about/">About</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Stack Pick. Built for UK gamers.</p>
+                <p style="font-size:0.8rem;margin-top:0.5rem;">As an Amazon Associate, we earn from qualifying purchases. <a href="/about/">Learn more</a></p>
+            </div>
         </div>
     </footer>
 
