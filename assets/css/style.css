@@ -907,3 +907,106 @@ footer .footer-container > p {
         display: none;
     }
 }
+
+/* COMING SOON CARD */
+.category-card.coming-soon {
+    opacity: 0.55;
+    cursor: default;
+    pointer-events: none;
+}
+
+.badge-coming-soon {
+    display: inline-block;
+    background: var(--text-secondary);
+    color: var(--bg-primary);
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 0.15rem 0.5rem;
+    border-radius: 0.75rem;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    margin-left: 0.25rem;
+    vertical-align: middle;
+}
+
+/* COMPARISON PAGE TABLE */
+.comparison-table-wrap {
+    overflow-x: auto;
+    margin: 2rem 0;
+    border-radius: 0.75rem;
+    border: 1px solid var(--border-color);
+}
+
+.comparison-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 560px;
+}
+
+.comparison-table th {
+    padding: 1rem 1.25rem;
+    text-align: left;
+    background-color: var(--bg-secondary);
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    border-bottom: 2px solid var(--border-color);
+}
+
+.comparison-table th:first-child {
+    width: 35%;
+    color: var(--text-secondary);
+}
+
+.comparison-table td {
+    padding: 0.875rem 1.25rem;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    vertical-align: top;
+}
+
+.comparison-table tr:last-child td {
+    border-bottom: none;
+}
+
+.comparison-table tr:nth-child(even) td {
+    background-color: var(--bg-secondary);
+}
+
+.comparison-table td:first-child {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.comparison-winner {
+    color: var(--accent-primary) !important;
+    font-weight: 600 !important;
+}
+
+/* VERDICT BOX */
+.verdict-box {
+    background: linear-gradient(135deg, rgba(59,130,246,0.08), rgba(139,92,246,0.08));
+    border: 1px solid var(--accent-primary);
+    border-radius: 0.75rem;
+    padding: 1.5rem 2rem;
+    margin: 2rem 0;
+}
+
+.verdict-box h3 {
+    color: var(--accent-primary);
+    margin-bottom: 0.75rem;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.verdict-box p {
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.verdict-box p:last-child {
+    margin-bottom: 0;
+}
