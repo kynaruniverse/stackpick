@@ -26,7 +26,6 @@
     <header>
         <div class="header-container">
             <a href="/" class="logo">Stack<span>Pick</span></a>
-            <button class="menu-toggle" id="menu-toggle" aria-label="Open menu" aria-expanded="false">☰</button>
             <nav>
                 <a href="/headsets/">Headsets</a>
                 <a href="/keyboards/">Keyboards</a>
@@ -38,6 +37,42 @@
             </nav>
         </div>
     </header>
+
+    <!-- DESKTOP SIDEBAR -->
+    <aside class="desktop-sidebar" aria-label="Site navigation">
+        <div class="sidebar-section">
+            <p class="sidebar-heading">Stacks</p>
+            <a href="/#stacks" class="sidebar-link"><span class="nav-icon">⚡</span> All Stacks</a>
+        </div>
+        <div class="sidebar-section">
+            <p class="sidebar-heading">Peripherals</p>
+            <a href="/headsets/" class="sidebar-link"><span class="nav-icon">🎧</span> Headsets</a>
+            <a href="/keyboards/" class="sidebar-link"><span class="nav-icon">⌨️</span> Keyboards</a>
+            <a href="/mice/" class="sidebar-link"><span class="nav-icon">🖱️</span> Mice</a>
+            <a href="/monitors/" class="sidebar-link"><span class="nav-icon">🖥️</span> Monitors</a>
+            <a href="/chairs/" class="sidebar-link"><span class="nav-icon">🪑</span> Chairs</a>
+        </div>
+        <div class="sidebar-section">
+            <p class="sidebar-heading">Coming Soon</p>
+            <span class="sidebar-link sidebar-link-disabled"><span class="nav-icon">💻</span> PCs <span class="sidebar-badge">Soon</span></span>
+            <span class="sidebar-link sidebar-link-disabled"><span class="nav-icon">🪵</span> Desks <span class="sidebar-badge">Soon</span></span>
+            <span class="sidebar-link sidebar-link-disabled"><span class="nav-icon">🔊</span> Speakers <span class="sidebar-badge">Soon</span></span>
+            <span class="sidebar-link sidebar-link-disabled"><span class="nav-icon">✨</span> Extras <span class="sidebar-badge">Soon</span></span>
+        </div>
+        <div class="sidebar-divider"></div>
+        <div class="sidebar-section">
+            <a href="/guides/" class="sidebar-link"><span class="nav-icon">📋</span> Setup Guides</a>
+            <a href="/comparisons/" class="sidebar-link"><span class="nav-icon">⚖️</span> Comparisons</a>
+            <a href="/about/" class="sidebar-link"><span class="nav-icon">ℹ️</span> About</a>
+        </div>
+        <button class="sidebar-theme-btn" id="theme-toggle-sidebar" aria-label="Toggle theme">
+            <span id="sidebar-theme-icon">🌙</span>
+            <span id="sidebar-theme-label">Dark mode</span>
+        </button>
+    </aside>
+
+    <!-- PAGE WRAPPER -->
+    <div class="page-wrapper">
 
     <section class="hero">
         <div class="hero-container">
@@ -113,7 +148,7 @@
                             <li class="pro"><span class="pro-icon">✓</span> Matte finish — zero-glare gaming</li>
                             <li class="con"><span class="con-icon">✕</span> Needs a powerful GPU to run 4K at 240Hz</li>
                         </ul>
-                        <a href=https://amzn.to/4cy1qh1" target="_blank" rel="noopener sponsored" class="product-btn">View on Amazon →</a>
+                        <a href="https://amzn.to/4cy1qh1" target="_blank" rel="noopener sponsored" class="product-btn">View on Amazon →</a>
                     </div>
                 </div>
 
@@ -211,7 +246,62 @@
             </div>
         </div>
     </footer>
+    </div><!-- end .page-wrapper -->
+
+    <!-- MORE PANEL -->
+    <div class="more-panel-overlay" id="more-overlay"></div>
+    <div class="bottom-nav-more-panel" id="more-panel">
+        <p class="more-panel-title">All categories</p>
+        <div class="more-panel-grid">
+            <a href="/monitors/" class="more-panel-link"><span class="nav-icon">🖥️</span>Monitors</a>
+            <a href="/chairs/" class="more-panel-link"><span class="nav-icon">🪑</span>Chairs</a>
+            <a href="/guides/" class="more-panel-link"><span class="nav-icon">📋</span>Guides</a>
+            <a href="/comparisons/" class="more-panel-link"><span class="nav-icon">⚖️</span>Compare</a>
+            <a href="/about/" class="more-panel-link"><span class="nav-icon">ℹ️</span>About</a>
+            <div class="more-panel-link more-panel-link-disabled"><span class="nav-icon">💻</span>PCs</div>
+            <div class="more-panel-link more-panel-link-disabled"><span class="nav-icon">🪵</span>Desks</div>
+            <div class="more-panel-link more-panel-link-disabled"><span class="nav-icon">✨</span>Extras</div>
+        </div>
+    </div>
+
+    <!-- BOTTOM NAV -->
+    <nav class="bottom-nav" aria-label="Mobile navigation">
+        <ul class="bottom-nav-items">
+            <li class="bottom-nav-item">
+                <a href="/" class="bottom-nav-link" aria-label="Home">
+                    <span class="nav-icon">🏠</span>
+                    <span class="nav-label">Home</span>
+                </a>
+            </li>
+            <li class="bottom-nav-item">
+                <a href="/headsets/" class="bottom-nav-link" aria-label="Headsets">
+                    <span class="nav-icon">🎧</span>
+                    <span class="nav-label">Headsets</span>
+                </a>
+            </li>
+            <li class="bottom-nav-item">
+                <a href="/keyboards/" class="bottom-nav-link" aria-label="Keyboards">
+                    <span class="nav-icon">⌨️</span>
+                    <span class="nav-label">Keyboards</span>
+                </a>
+            </li>
+            <li class="bottom-nav-item">
+                <a href="/mice/" class="bottom-nav-link" aria-label="Mice">
+                    <span class="nav-icon">🖱️</span>
+                    <span class="nav-label">Mice</span>
+                </a>
+            </li>
+            <li class="bottom-nav-item">
+                <button class="bottom-nav-link" id="more-btn" aria-label="More" aria-expanded="false">
+                    <span class="nav-icon">⊞</span>
+                    <span class="nav-label">More</span>
+                </button>
+            </li>
+        </ul>
+    </nav>
+
     <script src="/assets/js/theme-toggle.js"></script>
     <script src="/assets/js/main.js"></script>
+    <script src="/assets/js/nav.js"></script>
 </body>
 </html>
