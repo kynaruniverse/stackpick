@@ -8,7 +8,7 @@
 //    - Offline                      → /offline.html fallback
 // ============================================================
 
-const VERSION      = 'sp-v2';
+const VERSION      = 'sp-v3';
 const SHELL_CACHE  = `${VERSION}-shell`;
 const PAGE_CACHE   = `${VERSION}-pages`;
 const IMAGE_CACHE  = `${VERSION}-images`;
@@ -25,6 +25,9 @@ const SHELL_ASSETS = [
   '/mice/',
   '/monitors/',
   '/chairs/',
+  '/search/',
+  '/guides/',
+  '/comparisons/',
 ];
 
 // ── Domains we never intercept ────────────────────────────

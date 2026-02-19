@@ -21,6 +21,7 @@
     <meta property="twitter:description" content="The premium UK gaming setup. OLED monitor, wireless everything, and a Secretlab chair.">
     <meta property="twitter:image" content="https://stackpick.co.uk/assets/images/og-image.jpg">
     <title>£1500 Gaming Setup UK 2026 | Stack Pick</title>
+    <link rel="canonical" href="https://stackpick.co.uk/guides/gaming-setup-1500/">
     <script type="application/ld+json">
     {"@context":"https://schema.org","@type":"Article","headline":"£1500 Gaming Setup UK 2026","description":"Complete £1500 premium gaming peripheral setup for UK gamers with verified Amazon UK pricing.","url":"https://stackpick.co.uk/guides/gaming-setup-1500/","author":{"@type":"Organization","name":"Stack Pick","url":"https://stackpick.co.uk"},"publisher":{"@type":"Organization","name":"Stack Pick","url":"https://stackpick.co.uk"},"datePublished":"2026-02-19","dateModified":"2026-02-19"}
     </script>
@@ -30,10 +31,10 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👑</text></svg>">
     <link rel="manifest" href="/manifest.json">
     <link rel="apple-touch-icon" href="/assets/icons/icon-192.png">
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" as="style">
-    <link rel="preload" href="/assets/css/style.css" as="style">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" href="/assets/css/style.css" as="style">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" as="style">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/style.css">
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZTN7H3L6DV"></script>
@@ -73,15 +74,16 @@
         </div>
         <div class="sidebar-section">
             <p class="sidebar-heading">Coming Soon</p>
-            <span class="sidebar-link sidebar-link-disabled"><span class="nav-icon">💻</span> PCs <span class="sidebar-badge">Soon</span></span>
-            <span class="sidebar-link sidebar-link-disabled"><span class="nav-icon">🪵</span> Desks <span class="sidebar-badge">Soon</span></span>
-            <span class="sidebar-link sidebar-link-disabled"><span class="nav-icon">🔊</span> Speakers <span class="sidebar-badge">Soon</span></span>
-            <span class="sidebar-link sidebar-link-disabled"><span class="nav-icon">✨</span> Extras <span class="sidebar-badge">Soon</span></span>
+            <a href="/pcs/" class="sidebar-link"><span class="nav-icon">💻</span> PCs <span class="sidebar-badge">Soon</span></a>
+            <a href="/desks/" class="sidebar-link"><span class="nav-icon">🪵</span> Desks <span class="sidebar-badge">Soon</span></a>
+            <a href="/speakers/" class="sidebar-link"><span class="nav-icon">🔊</span> Speakers <span class="sidebar-badge">Soon</span></a>
+            <a href="/extras/" class="sidebar-link"><span class="nav-icon">✨</span> Extras <span class="sidebar-badge">Soon</span></a>
         </div>
         <div class="sidebar-divider"></div>
         <div class="sidebar-section">
             <a href="/guides/" class="sidebar-link"><span class="nav-icon">📋</span> Setup Guides</a>
             <a href="/comparisons/" class="sidebar-link"><span class="nav-icon">⚖️</span> Comparisons</a>
+            <a href="/search/" class="sidebar-link"><span class="nav-icon">🔍</span> Search</a>
             <a href="/about/" class="sidebar-link"><span class="nav-icon">ℹ️</span> About</a>
         </div>
         <button class="sidebar-theme-btn" id="theme-toggle-sidebar" aria-label="Toggle theme">
@@ -355,10 +357,10 @@
             <a href="/chairs/" class="more-panel-link"><span class="nav-icon">🪑</span>Chairs</a>
             <a href="/guides/" class="more-panel-link"><span class="nav-icon">📋</span>Guides</a>
             <a href="/comparisons/" class="more-panel-link"><span class="nav-icon">⚖️</span>Compare</a>
-            <a href="/about/" class="more-panel-link"><span class="nav-icon">ℹ️</span>About</a>
-            <div class="more-panel-link more-panel-link-disabled"><span class="nav-icon">💻</span>PCs</div>
-            <div class="more-panel-link more-panel-link-disabled"><span class="nav-icon">🪵</span>Desks</div>
-            <div class="more-panel-link more-panel-link-disabled"><span class="nav-icon">✨</span>Extras</div>
+            <a href="/about/" class="more-panel-link"><span class="nav-icon">ℹ️</span>About</a>             <a href="/search/" class="more-panel-link"><span class="nav-icon">🔍</span>Search</a>
+            <a href="/pcs/" class="more-panel-link"><span class="nav-icon">💻</span>PCs</a>
+            <a href="/desks/" class="more-panel-link"><span class="nav-icon">🪵</span>Desks</a>
+            <a href="/extras/" class="more-panel-link"><span class="nav-icon">✨</span>Extras</a>
         </div>
     </div>
 
@@ -373,5 +375,7 @@
     </nav>
 
     <script src="/assets/js/app.js" defer></script>
+    <script> document.querySelectorAll('.price-current').forEach(function(el) {     if (!el.querySelector('.price-badge')) {         var badge = document.createElement('span');         badge.className = 'price-badge';         badge.textContent = 'Checked Feb 2026';         el.appendChild(badge);     } }); 
+    </script> 
 </body>
 </html>

@@ -60,16 +60,12 @@
     // Track outbound clicks (affiliate links)
     document.addEventListener('click', function(e) {
         let target = e.target;
-        
-        // Find parent anchor tag if clicked element is inside one
         while (target && target.tagName !== 'A') {
             target = target.parentNode;
         }
-        
         if (target && target.tagName === 'A' && target.href) {
             const href = target.href;
-            
-            // Track Amazon affiliate clicks
+    
             if (href.includes('amzn.to') || href.includes('amazon.co.uk')) {
                 gtag('event', 'click', {
                     'event_category': 'affiliate',
@@ -77,41 +73,37 @@
                     'value': href
                 });
             }
-            
-            // Track external links
+    
             if (href.indexOf(window.location.hostname) === -1 && !href.startsWith('#')) {
                 gtag('event', 'click', {
                     'event_category': 'outbound',
                     'event_label': href
                 });
             }
-        }
-    });
     
-    // Track file downloads (if you add PDFs, guides, etc.)
-    document.addEventListener('click', function(e) {
-        if (e.target.tagName === 'A' && e.target.href) {
-            const ext = e.target.href.split('.').pop().toLowerCase();
+            const ext = href.split('.').pop().toLowerCase();
             if (['pdf', 'zip', 'doc', 'docx', 'xls', 'xlsx'].includes(ext)) {
                 gtag('event', 'file_download', {
                     'event_category': 'downloads',
-                    'event_label': e.target.href,
+                    'event_label': href,
                     'file_extension': ext
                 });
             }
         }
     });
     
+    // Track file downloads (if you add PDFs, guides, etc.)
+    
+    
     // Track search queries (if you add site search later)
     // Uncomment when search is implemented
-    /*
+
     if (window.location.search.includes('q=')) {
         const searchQuery = new URLSearchParams(window.location.search).get('q');
         gtag('event', 'search', {
             'search_term': searchQuery
         });
     }
-    */
     
     // Track errors (helps you find broken pages)
     window.addEventListener('error', function(e) {

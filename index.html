@@ -22,10 +22,10 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎮</text></svg>">
     <link rel="manifest" href="/manifest.json">
     <link rel="apple-touch-icon" href="/assets/icons/icon-192.png">
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" as="style">
-    <link rel="preload" href="/assets/css/style.css" as="style">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" href="/assets/css/style.css" as="style">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" as="style">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/style.css">
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZTN7H3L6DV"></script>
@@ -313,9 +313,6 @@
             <a href="/desks/" class="more-panel-link"><span class="nav-icon">🪵</span>Desks</a>
             <a href="/extras/" class="more-panel-link"><span class="nav-icon">✨</span>Extras</a>
         </div>
-            <div class="more-panel-link more-panel-link-disabled"><span class="nav-icon">🪵</span>Desks</div>
-            <div class="more-panel-link more-panel-link-disabled"><span class="nav-icon">✨</span>Extras</div>
-        </div>
     </div>
 
     <!-- BOTTOM NAV -->
@@ -382,5 +379,7 @@
     }());
 
     </script>
+    <script> document.querySelectorAll('.price-current').forEach(function(el) {     if (!el.querySelector('.price-badge')) {         var badge = document.createElement('span');         badge.className = 'price-badge';         badge.textContent = 'Checked Feb 2026';         el.appendChild(badge);     } }); 
+    </script> 
 </body>
 </html>

@@ -356,5 +356,7 @@
     })();
     </script>
 
+    <script> document.querySelectorAll('.price-current').forEach(function(el) {     if (!el.querySelector('.price-badge')) {         var badge = document.createElement('span');         badge.className = 'price-badge';         badge.textContent = 'Checked Feb 2026';         el.appendChild(badge);     } }); 
+    </script> 
 </body>
 </html>
