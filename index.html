@@ -1,9 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-GB">
 <head>
     <meta charset="UTF-8">
     <meta name="google-site-verification" content="FeboAnqcLjlONS3xZMwC55zCneE0qAR33PYKEPIZeJg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#3B82F6" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#1E293B" media="(prefers-color-scheme: dark)">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="StackPick">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="description" content="Stack Pick — complete gaming setup recommendations for UK gamers. Curated Stacks from budget to premium. Real UK prices, no BS.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://stackpick.co.uk/">
@@ -11,7 +17,13 @@
     <meta property="og:description" content="Complete gaming setup recommendations for UK gamers. Curated Stacks, real UK prices, researched picks.">
     <meta property="og:image" content="https://stackpick.co.uk/assets/images/og-image.jpg">
     <title>Stack Pick — Build Your Perfect Gaming Setup | UK</title>
+    <meta name="author" content="Stack Pick">
+    <link rel="canonical" href="https://stackpick.co.uk/">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎮</text></svg>">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="/assets/icons/icon-192.png">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" as="style">
+    <link rel="preload" href="/assets/css/style.css" as="style">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -20,6 +32,9 @@
     <script src="/assets/js/analytics.js"></script>
     <script type="application/ld+json">
     {"@context":"https://schema.org","@type":"WebSite","name":"Stack Pick","description":"Complete gaming setup recommendations for UK gamers","url":"https://stackpick.co.uk"}
+    </script>
+    <script type="application/ld+json">
+    {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Is Stack Pick affiliated with Amazon?","acceptedAnswer":{"@type":"Answer","text":"Yes \u2014 Stack Pick earns a small commission from qualifying Amazon UK purchases at no extra cost to you. This never influences which products we recommend; we only recommend gear we'd genuinely buy ourselves."}},{"@type":"Question","name":"How often are prices updated?","acceptedAnswer":{"@type":"Answer","text":"We verify prices manually before publishing each guide and mark the check date on every page. Amazon prices change frequently \u2014 always check the current price before purchasing."}},{"@type":"Question","name":"Do you cover gaming PCs?","acceptedAnswer":{"@type":"Answer","text":"Not yet. Stack Pick currently covers peripherals \u2014 monitors, headsets, keyboards, mice, and chairs. PC and laptop recommendations are planned for a future update."}}]}
     </script>
 </head>
 <body>
@@ -37,6 +52,7 @@
                 <a href="/monitors/">Monitors</a>
                 <a href="/chairs/">Chairs</a>
                 <a href="/about/">About</a>
+                <a href="/search/" aria-label="Search">🔍</a>
                 <button class="theme-toggle" id="theme-toggle" aria-label="Switch to dark mode">🌙</button>
             </nav>
         </div>
@@ -60,13 +76,14 @@
         </div>
         <div class="sidebar-section">
             <p class="sidebar-heading">Coming Soon</p>
-            <span class="sidebar-link sidebar-link-disabled"><span class="nav-icon">💻</span> PCs <span class="sidebar-badge">Soon</span></span>
-            <span class="sidebar-link sidebar-link-disabled"><span class="nav-icon">🪵</span> Desks <span class="sidebar-badge">Soon</span></span>
-            <span class="sidebar-link sidebar-link-disabled"><span class="nav-icon">🔊</span> Speakers <span class="sidebar-badge">Soon</span></span>
-            <span class="sidebar-link sidebar-link-disabled"><span class="nav-icon">✨</span> Extras <span class="sidebar-badge">Soon</span></span>
+            <a href="/pcs/" class="sidebar-link"><span class="nav-icon">💻</span> PCs <span class="sidebar-badge">Soon</span></a>
+            <a href="/desks/" class="sidebar-link"><span class="nav-icon">🪵</span> Desks <span class="sidebar-badge">Soon</span></a>
+            <a href="/speakers/" class="sidebar-link"><span class="nav-icon">🔊</span> Speakers <span class="sidebar-badge">Soon</span></a>
+            <a href="/extras/" class="sidebar-link"><span class="nav-icon">✨</span> Extras <span class="sidebar-badge">Soon</span></a>
         </div>
         <div class="sidebar-divider"></div>
         <div class="sidebar-section">
+            <a href="/search/" class="sidebar-link"><span class="nav-icon">🔍</span> Search</a>
             <a href="/guides/" class="sidebar-link"><span class="nav-icon">📋</span> Setup Guides</a>
             <a href="/comparisons/" class="sidebar-link"><span class="nav-icon">⚖️</span> Comparisons</a>
             <a href="/about/" class="sidebar-link"><span class="nav-icon">ℹ️</span> About</a>
@@ -222,6 +239,30 @@
 
         </main>
 
+            <!-- NEWSLETTER -->
+            <section class="section" aria-label="Newsletter signup">
+                <div class="newsletter-section">
+                    <h2>⚡ Get the Weekly Stack Update</h2>
+                    <p>Price drops, new gear worth knowing about, and setup guide updates — once a week, no fluff.</p>
+                    <form class="newsletter-form" id="newsletter-form" novalidate>
+                        <input
+                            type="email"
+                            class="newsletter-input"
+                            id="newsletter-email"
+                            placeholder="your@email.com"
+                            aria-label="Email address"
+                            required
+                            autocomplete="email"
+                        >
+                        <button type="submit" class="newsletter-btn">Subscribe</button>
+                    </form>
+                    <p class="newsletter-confirm" id="newsletter-confirm" aria-live="polite">
+                        ✓ You&#x2019;re in — check your inbox for a confirmation.
+                    </p>
+                    <p class="newsletter-note">No spam. Unsubscribe any time. UK gamers only.</p>
+                </div>
+            </section>
+
         <!-- FOOTER -->
         <footer>
             <div class="footer-container">
@@ -267,7 +308,11 @@
             <a href="/guides/" class="more-panel-link"><span class="nav-icon">📋</span>Guides</a>
             <a href="/comparisons/" class="more-panel-link"><span class="nav-icon">⚖️</span>Compare</a>
             <a href="/about/" class="more-panel-link"><span class="nav-icon">ℹ️</span>About</a>
-            <div class="more-panel-link more-panel-link-disabled"><span class="nav-icon">💻</span>PCs</div>
+            <a href="/search/" class="more-panel-link"><span class="nav-icon">🔍</span>Search</a>
+            <a href="/pcs/" class="more-panel-link"><span class="nav-icon">💻</span>PCs</a>
+            <a href="/desks/" class="more-panel-link"><span class="nav-icon">🪵</span>Desks</a>
+            <a href="/extras/" class="more-panel-link"><span class="nav-icon">✨</span>Extras</a>
+        </div>
             <div class="more-panel-link more-panel-link-disabled"><span class="nav-icon">🪵</span>Desks</div>
             <div class="more-panel-link more-panel-link-disabled"><span class="nav-icon">✨</span>Extras</div>
         </div>
@@ -309,8 +354,33 @@
         </ul>
     </nav>
 
-    <script src="/assets/js/theme-toggle.js"></script>
-    <script src="/assets/js/main.js"></script>
-    <script src="/assets/js/nav.js"></script>
+    <script src="/assets/js/app.js" defer></script>
+    <script>
+
+    // Newsletter form — replace action URL to wire to Mailchimp/ConvertKit
+    (function () {
+        var form    = document.getElementById('newsletter-form');
+        var confirm = document.getElementById('newsletter-confirm');
+        if (!form) return;
+
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            var email = document.getElementById('newsletter-email').value.trim();
+            if (!email || !email.includes('@')) return;
+
+            // TODO: Replace with real API endpoint
+            // fetch('/api/subscribe', { method:'POST', body: JSON.stringify({ email }) })
+
+            // Simulate success for now
+            form.style.display = 'none';
+            confirm.style.display = 'block';
+
+            if (typeof gtag === 'function') {
+                gtag('event', 'newsletter_signup', { email_provided: true });
+            }
+        });
+    }());
+
+    </script>
 </body>
 </html>

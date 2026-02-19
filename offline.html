@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en-GB" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#3B82F6">
+    <meta name="robots" content="noindex">
+    <title>You're offline — Stack Pick</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎮</text></svg>">
+    <style>
+        /* ── Reset ── */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        /* ── Tokens — match style.css exactly ── */
+        :root {
+            --bg-primary:       #FFFFFF;
+            --bg-secondary:     #F8FAFC;
+            --text-primary:     #0F172A;
+            --text-secondary:   #64748B;
+            --accent-primary:   #3B82F6;
+            --accent-secondary: #8B5CF6;
+            --border-color:     #E2E8F0;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary:       #0F172A;
+            --bg-secondary:     #1E293B;
+            --text-primary:     #F1F5F9;
+            --text-secondary:   #94A3B8;
+            --accent-primary:   #60A5FA;
+            --accent-secondary: #A78BFA;
+            --border-color:     #334155;
+        }
+
+        /* ── Base ── */
+        html {
+            height: 100%;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            min-height: 100%;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1.5rem;
+            text-align: center;
+        }
+
+        /* ── Icon ── */
+        .offline-icon {
+            font-size: 4rem;
+            line-height: 1;
+            margin-bottom: 1.5rem;
+            animation: pulse 2.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50%       { opacity: 0.6; transform: scale(0.95); }
+        }
+
+        /* ── Heading ── */
+        h1 {
+            font-size: clamp(1.5rem, 5vw, 2rem);
+            font-weight: 800;
+            color: var(--text-primary);
+            line-height: 1.2;
+            margin-bottom: 0.75rem;
+        }
+
+        h1 span {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* ── Sub ── */
+        .sub {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            max-width: 320px;
+            margin: 0 auto 2rem;
+        }
+
+        /* ── Actions ── */
+        .actions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            width: 100%;
+            max-width: 280px;
+        }
+
+        .btn-primary {
+            display: block;
+            width: 100%;
+            padding: 0.875rem 1.5rem;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: white;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 0.65rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: opacity 0.15s ease, transform 0.15s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .btn-primary:hover  { opacity: 0.9; }
+        .btn-primary:active { transform: scale(0.98); }
+
+        .btn-secondary {
+            display: block;
+            width: 100%;
+            padding: 0.875rem 1.5rem;
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            font-weight: 500;
+            border: 1px solid var(--border-color);
+            border-radius: 0.65rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: border-color 0.15s ease, color 0.15s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent-primary);
+            color: var(--text-primary);
+        }
+
+        /* ── Cached pages list ── */
+        .cached-section {
+            margin-top: 3rem;
+            width: 100%;
+            max-width: 360px;
+            text-align: left;
+        }
+
+        .cached-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-secondary);
+            margin-bottom: 0.75rem;
+        }
+
+        .cached-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .cached-list a {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            padding: 0.7rem 0.875rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 0.6rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: border-color 0.15s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .cached-list a:hover {
+            border-color: var(--accent-primary);
+        }
+
+        .cached-list .icon {
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        /* ── Divider ── */
+        .divider {
+            width: 100%;
+            max-width: 360px;
+            height: 1px;
+            background: var(--border-color);
+            margin: 2.5rem 0;
+        }
+
+        /* ── Logo ── */
+        .logo {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            text-decoration: none;
+            margin-top: 1rem;
+        }
+
+        .logo span {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* ── Status indicator ── */
+        .status-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #ef4444;
+            margin-right: 0.4rem;
+            animation: blink 1.5s ease-in-out infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50%       { opacity: 0.3; }
+        }
+
+        .status-bar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        /* ── Reduced motion ── */
+        @media (prefers-reduced-motion: reduce) {
+            .offline-icon, .status-dot { animation: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="offline-icon">📡</div>
+
+    <h1>You're offline<br><span>right now</span></h1>
+
+    <p class="sub">No connection detected. Check your signal and try again — or browse what we've already loaded for you below.</p>
+
+    <div class="status-bar">
+        <span class="status-dot"></span>
+        No internet connection
+    </div>
+
+    <div class="actions">
+        <button class="btn-primary" onclick="window.location.reload()">
+            Try again
+        </button>
+        <a href="/" class="btn-secondary">
+            Back to home
+        </a>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="cached-section">
+        <p class="cached-label">Available offline</p>
+        <ul class="cached-list" id="cached-list">
+            <!-- Populated by JS from the cache — falls back to static list -->
+            <li><a href="/headsets/"><span class="icon">🎧</span>Headsets</a></li>
+            <li><a href="/keyboards/"><span class="icon">⌨️</span>Keyboards</a></li>
+            <li><a href="/mice/"><span class="icon">🖱️</span>Mice</a></li>
+            <li><a href="/monitors/"><span class="icon">🖥️</span>Monitors</a></li>
+            <li><a href="/chairs/"><span class="icon">🪑</span>Chairs</a></li>
+        </ul>
+    </div>
+
+    <div class="divider"></div>
+
+    <a href="/" class="logo">Stack<span>Pick</span></a>
+
+    <script>
+    (function () {
+        'use strict';
+
+        // ── Apply saved theme preference ──────────────────────
+        try {
+            var saved = localStorage.getItem('sp-theme');
+            if (saved) {
+                document.documentElement.setAttribute('data-theme', saved);
+            } else if (window.matchMedia('(prefers-color-scheme: light)').matches) {
+                document.documentElement.setAttribute('data-theme', 'light');
+            }
+        } catch (e) { /* localStorage blocked */ }
+
+        // ── Populate cached pages list from actual cache ──────
+        if ('caches' in window) {
+            var PAGE_ICONS = {
+                '/':            { icon: '🏠', label: 'Home' },
+                '/headsets/':   { icon: '🎧', label: 'Headsets' },
+                '/keyboards/':  { icon: '⌨️', label: 'Keyboards' },
+                '/mice/':       { icon: '🖱️', label: 'Mice' },
+                '/monitors/':   { icon: '🖥️', label: 'Monitors' },
+                '/chairs/':     { icon: '🪑', label: 'Chairs' },
+                '/guides/':     { icon: '📋', label: 'Setup Guides' },
+                '/comparisons/':{ icon: '⚖️', label: 'Comparisons' },
+                '/about/':      { icon: 'ℹ️', label: 'About' },
+            };
+
+            caches.keys().then(function (cacheNames) {
+                return Promise.all(cacheNames.map(function (name) {
+                    return caches.open(name).then(function (cache) {
+                        return cache.keys();
+                    });
+                }));
+            }).then(function (keyArrays) {
+                var allKeys = [].concat.apply([], keyArrays);
+                var cachedPaths = allKeys
+                    .map(function (req) {
+                        try { return new URL(req.url).pathname; }
+                        catch (e) { return null; }
+                    })
+                    .filter(function (path) {
+                        return path && PAGE_ICONS[path];
+                    });
+
+                // Dedupe and sort by PAGE_ICONS key order
+                var seen = {};
+                var unique = Object.keys(PAGE_ICONS).filter(function (path) {
+                    return cachedPaths.indexOf(path) !== -1 && !seen[path] && (seen[path] = true);
+                });
+
+                if (unique.length === 0) return; // keep static fallback
+
+                var list = document.getElementById('cached-list');
+                list.innerHTML = unique.map(function (path) {
+                    var meta = PAGE_ICONS[path];
+                    return '<li><a href="' + path + '">' +
+                           '<span class="icon">' + meta.icon + '</span>' +
+                           meta.label +
+                           '</a></li>';
+                }).join('');
+
+            }).catch(function () { /* keep static fallback */ });
+        }
+
+        // ── Auto-retry when connection returns ────────────────
+        window.addEventListener('online', function () {
+            window.location.reload();
+        });
+
+    })();
+    </script>
+
+</body>
+</html>

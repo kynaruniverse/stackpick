@@ -1,112 +1,246 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-GB">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="About Stack Pick - UK gaming gear recommendations and affiliate disclosure.">
-    <title>About Stack Pick | Gaming Gear Reviews UK</title>
+    <meta name="theme-color" content="#3B82F6" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#1E293B" media="(prefers-color-scheme: dark)">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="StackPick">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="description" content="About Stack Pick — honest gaming gear recommendations for UK gamers. How we research, our affiliate disclosure, and our promise to you.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://stackpick.co.uk/about/">
+    <meta property="og:title" content="About Stack Pick | UK Gaming Gear Recommendations">
+    <meta property="og:description" content="Honest gaming gear recommendations for UK gamers. How we research, our affiliate disclosure, and our promise.">
+    <meta property="og:image" content="https://stackpick.co.uk/assets/images/og-image.jpg">
+    <title>About Stack Pick | UK Gaming Gear Recommendations</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎮</text></svg>">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="/assets/icons/icon-192.png">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" as="style">
+    <link rel="preload" href="/assets/css/style.css" as="style">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/style.css">
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZTN7H3L6DV"></script>
     <script src="/assets/js/analytics.js"></script>
 </head>
 <body>
+
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <!-- HEADER -->
     <header>
         <div class="header-container">
             <a href="/" class="logo">Stack<span>Pick</span></a>
-            <button class="menu-toggle" id="menu-toggle">☰</button>
-            <nav>
+            <nav aria-label="Main navigation">
                 <a href="/headsets/">Headsets</a>
                 <a href="/keyboards/">Keyboards</a>
                 <a href="/mice/">Mice</a>
                 <a href="/monitors/">Monitors</a>
                 <a href="/chairs/">Chairs</a>
-                <a href="/about/">About</a>
-                <button class="theme-toggle" id="theme-toggle">🌙</button>
+                <a href="/about/" aria-current="page">About</a>
+                <button class="theme-toggle" id="theme-toggle" aria-label="Switch to dark mode">🌙</button>
             </nav>
         </div>
     </header>
 
-    <section class="hero">
-        <div class="hero-container">
-            <h1>About Stack Pick</h1>
-            <p>Honest gaming gear recommendations for UK gamers</p>
+    <!-- DESKTOP SIDEBAR -->
+    <aside class="desktop-sidebar" aria-label="Site navigation">
+        <div class="sidebar-section">
+            <p class="sidebar-heading">Stacks</p>
+            <a href="/#stacks" class="sidebar-link"><span class="nav-icon">⚡</span> All Stacks</a>
         </div>
-    </section>
+        <div class="sidebar-section">
+            <p class="sidebar-heading">Peripherals</p>
+            <a href="/headsets/" class="sidebar-link"><span class="nav-icon">🎧</span> Headsets</a>
+            <a href="/keyboards/" class="sidebar-link"><span class="nav-icon">⌨️</span> Keyboards</a>
+            <a href="/mice/" class="sidebar-link"><span class="nav-icon">🖱️</span> Mice</a>
+            <a href="/monitors/" class="sidebar-link"><span class="nav-icon">🖥️</span> Monitors</a>
+            <a href="/chairs/" class="sidebar-link"><span class="nav-icon">🪑</span> Chairs</a>
+        </div>
+        <div class="sidebar-section">
+            <p class="sidebar-heading">Coming Soon</p>
+            <span class="sidebar-link sidebar-link-disabled"><span class="nav-icon">💻</span> PCs <span class="sidebar-badge">Soon</span></span>
+            <span class="sidebar-link sidebar-link-disabled"><span class="nav-icon">🪵</span> Desks <span class="sidebar-badge">Soon</span></span>
+            <span class="sidebar-link sidebar-link-disabled"><span class="nav-icon">🔊</span> Speakers <span class="sidebar-badge">Soon</span></span>
+            <span class="sidebar-link sidebar-link-disabled"><span class="nav-icon">✨</span> Extras <span class="sidebar-badge">Soon</span></span>
+        </div>
+        <div class="sidebar-divider"></div>
+        <div class="sidebar-section">
+            <a href="/guides/" class="sidebar-link"><span class="nav-icon">📋</span> Setup Guides</a>
+            <a href="/comparisons/" class="sidebar-link"><span class="nav-icon">⚖️</span> Comparisons</a>
+            <a href="/about/" class="sidebar-link"><span class="nav-icon">ℹ️</span> About</a>
+        </div>
+        <button class="sidebar-theme-btn" id="theme-toggle-sidebar" aria-label="Toggle theme">
+            <span id="sidebar-theme-icon">🌙</span>
+            <span id="sidebar-theme-label">Dark mode</span>
+        </button>
+    </aside>
 
-    <main class="container">
-        <section class="section">
-            <div style="max-width: 800px; margin: 0 auto;">
-                <h2>Who We Are</h2>
-                <p>Stack Pick is a UK-based gaming gear recommendation site. We help gamers build their perfect setup by curating the best headsets, keyboards, mice, monitors, and chairs available in the UK market.</p>
-                
-                <p>We focus on real-world performance, UK pricing, and actual availability - no US-centric recommendations or products you can't actually buy.</p>
+    <!-- PAGE WRAPPER -->
+    <div class="page-wrapper">
 
-                <h2>Our Research Process</h2>
-                <p>Every product we recommend is carefully researched and curated based on multiple factors:</p>
-                
-                <p><strong>Community Feedback:</strong> We analyze real gamer feedback from UK gaming communities on Reddit, Discord servers, and tech forums to identify products with consistent real-world satisfaction.</p>
-                
-                <p><strong>Long-term Experiences:</strong> Rather than relying solely on launch-day reviews, we focus on crowd-sourced experiences from gamers who've used these products for months. We look for patterns: What do people still love after 6 months? What breaks easily? What's genuinely worth the price?</p>
-                
-                <p><strong>UK Market Research:</strong> We verify pricing, availability, and warranty support specifically for UK buyers. Products are only recommended if they're readily available and competitively priced in the UK market.</p>
-
-                <h2>How We Select Products</h2>
-                <p>We curate recommendations by researching what UK gamers actually use and recommend in communities like r/buildapc, r/pcmasterrace, and r/GamingUK.</p>
-                
-                <p>Our selection focuses on performance, build quality, UK availability, and real-world value. Every recommendation is verified for current UK pricing on Amazon.</p>
-
-                <h2>Why Trust Us</h2>
-                <p>We're gamers who understand what matters: performance, value, and UK availability. We research extensively so you don't have to wade through hundreds of options and contradictory reviews.</p>
-                
-                <p>All prices are in GBP. All products are available in the UK. All recommendations are based on thorough research and genuine assessment of value.</p>
-
-                <h2>Affiliate Disclosure</h2>
-                <p><strong>Stack Pick is a participant in the Amazon EU Associates Programme, an affiliate advertising programme designed to provide a means for sites to earn advertising fees by advertising and linking to Amazon.co.uk.</strong></p>
-                
-                <p>This means when you click our product links and make a purchase, we may earn a small commission at no extra cost to you. These commissions help us keep the site running and continue providing free gaming gear recommendations.</p>
-                
-                <p>Our affiliate relationship does not influence our recommendations. We only recommend products we genuinely believe offer value to UK gamers based on our research. Whether we earn a commission or not, our goal is to help you make informed purchasing decisions.</p>
-                
-                <p>We regularly update our recommendations as new products launch and prices change to ensure you're getting the most current information.</p>
-
-                <h2>Our Promise</h2>
-                <p>✓ Honest recommendations based on extensive research<br>
-                ✓ UK-focused pricing and availability<br>
-                ✓ Regular price and product updates<br>
-                ✓ Clear affiliate disclosure<br>
-                ✓ No sponsored content disguised as reviews<br>
-                ✓ Products we'd actually recommend to friends</p>
-
-                <h2>What We Don't Do</h2>
-                <p>We don't accept payment from manufacturers to recommend products. We don't create "Top 50" lists with products we haven't researched. We don't recommend US-only products that UK gamers can't easily buy. We don't inflate recommendations with sponsored content.</p>
-
-                <h2>Contact</h2>
-                <p>Have questions, feedback, or product suggestions? We'd love to hear from you.</p>
-                
-                <p>Email: <a href="mailto:hello@stackpick.co.uk">hello@stackpick.co.uk</a></p>
-                
-                <p style="font-size: 0.9rem; color: var(--text-secondary); margin-top: 2rem;">
-                    <em>Last updated: February 17, 2026</em>
-                </p>
+        <section class="hero">
+            <div class="hero-container">
+                <h1>About Stack Pick</h1>
+                <p>Honest gaming gear recommendations for UK gamers</p>
             </div>
         </section>
-    </main>
 
-    <footer>
-        <div class="footer-container">
-            <p>&copy; 2026 Stack Pick. Built for UK gamers.</p>
-            <p style="font-size: 0.8rem; margin-top: 0.5rem;">
-                As an Amazon Associate, we earn from qualifying purchases. 
-                <a href="/about/">Learn more</a>
-            </p>
+        <div class="breadcrumb-bar">
+            <div class="container" style="padding-top:0.75rem;padding-bottom:0.75rem;">
+                <ol class="breadcrumb-list" aria-label="Breadcrumb">
+                    <li><a href="/">Home</a></li>
+                    <li aria-hidden="true" class="breadcrumb-sep">›</li>
+                    <li aria-current="page">About</li>
+                </ol>
+            </div>
         </div>
-    </footer>
 
-    <script src="/assets/js/theme-toggle.js"></script>
-    <script src="/assets/js/main.js"></script>
+        <main class="container" id="main-content">
+            <section class="section">
+                <div class="buying-guide">
+
+                    <h2>Who We Are</h2>
+                    <p>Stack Pick is a UK-based gaming gear recommendation site. We help gamers build their perfect setup by curating the best headsets, keyboards, mice, monitors, and chairs available in the UK market.</p>
+                    <p>We focus on real-world performance, UK pricing, and actual availability — no US-centric recommendations or products you can't actually buy.</p>
+
+                    <h2>Our Research Process</h2>
+                    <p>Every product we recommend is carefully researched and curated based on multiple factors.</p>
+                    <h3>Community Feedback</h3>
+                    <p>We analyse real gamer feedback from UK gaming communities on Reddit, Discord servers, and tech forums to identify products with consistent real-world satisfaction.</p>
+                    <h3>Long-term Experiences</h3>
+                    <p>Rather than relying solely on launch-day reviews, we focus on crowd-sourced experiences from gamers who've used these products for months. We look for patterns: what do people still love after six months? What breaks easily? What's genuinely worth the price?</p>
+                    <h3>UK Market Research</h3>
+                    <p>We verify pricing, availability, and warranty support specifically for UK buyers. Products are only recommended if they're readily available and competitively priced in the UK market.</p>
+
+                    <h2>How We Select Products</h2>
+                    <p>We curate recommendations by researching what UK gamers actually use and recommend in communities like r/buildapc, r/pcmasterrace, and r/GamingUK.</p>
+                    <p>Our selection focuses on performance, build quality, UK availability, and real-world value. Every recommendation is verified for current UK pricing on Amazon.</p>
+
+                    <h2>Why Trust Us</h2>
+                    <p>We're gamers who understand what matters: performance, value, and UK availability. We research extensively so you don't have to wade through hundreds of options and contradictory reviews.</p>
+                    <p>All prices are in GBP. All products are available in the UK. All recommendations are based on thorough research and genuine assessment of value.</p>
+
+                    <h2>Affiliate Disclosure</h2>
+                    <p><strong>Stack Pick is a participant in the Amazon EU Associates Programme, an affiliate advertising programme designed to provide a means for sites to earn advertising fees by advertising and linking to Amazon.co.uk.</strong></p>
+                    <p>This means when you click our product links and make a purchase, we may earn a small commission at no extra cost to you. These commissions help us keep the site running and continue providing free gaming gear recommendations.</p>
+                    <p>Our affiliate relationship does not influence our recommendations. We only recommend products we genuinely believe offer value to UK gamers based on our research. Whether we earn a commission or not, our goal is to help you make informed purchasing decisions.</p>
+                    <p>We regularly update our recommendations as new products launch and prices change to ensure you're getting the most current information.</p>
+
+                    <h2>Our Promise</h2>
+                    <p>✓ Honest recommendations based on extensive research<br>
+                    ✓ UK-focused pricing and availability<br>
+                    ✓ Regular price and product updates<br>
+                    ✓ Clear affiliate disclosure<br>
+                    ✓ No sponsored content disguised as reviews<br>
+                    ✓ Products we'd actually recommend to friends</p>
+
+                    <h2>What We Don't Do</h2>
+                    <p>We don't accept payment from manufacturers to recommend products. We don't create "Top 50" lists with products we haven't researched. We don't recommend US-only products that UK gamers can't easily buy. We don't inflate recommendations with sponsored content.</p>
+
+                    <h2>Contact</h2>
+                    <p>Have questions, feedback, or product suggestions? We'd love to hear from you.</p>
+                    <p>Email: <a href="mailto:hello@stackpick.co.uk">hello@stackpick.co.uk</a></p>
+
+                    <p class="last-updated"><em>Last updated: February 2026</em></p>
+
+                </div>
+            </section>
+        </main>
+
+        <!-- FOOTER -->
+        <footer>
+            <div class="footer-container">
+                <div class="footer-grid">
+                    <div class="footer-col">
+                        <a href="/" class="logo footer-logo">Stack<span>Pick</span></a>
+                        <p class="footer-tagline">Researched gaming gear for UK gamers. Real prices. No BS.</p>
+                    </div>
+                    <div class="footer-col">
+                        <h4 class="footer-heading">Categories</h4>
+                        <ul class="footer-links">
+                            <li><a href="/headsets/">Headsets</a></li>
+                            <li><a href="/keyboards/">Keyboards</a></li>
+                            <li><a href="/mice/">Mice</a></li>
+                            <li><a href="/monitors/">Monitors</a></li>
+                            <li><a href="/chairs/">Chairs</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-col">
+                        <h4 class="footer-heading">Resources</h4>
+                        <ul class="footer-links">
+                            <li><a href="/guides/">Setup Guides</a></li>
+                            <li><a href="/comparisons/">Comparisons</a></li>
+                            <li><a href="/about/">About</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    <p>&copy; 2026 Stack Pick. Built for UK gamers.</p>
+                    <p style="font-size:0.8rem;margin-top:0.5rem;">As an Amazon Associate, we earn from qualifying purchases. <a href="/about/">Learn more</a></p>
+                </div>
+            </div>
+        </footer>
+
+    </div><!-- end .page-wrapper -->
+
+    <!-- MORE PANEL OVERLAY -->
+    <div class="more-panel-overlay" id="more-overlay"></div>
+    <div class="bottom-nav-more-panel" id="more-panel">
+        <p class="more-panel-title">All categories</p>
+        <div class="more-panel-grid">
+            <a href="/monitors/" class="more-panel-link"><span class="nav-icon">🖥️</span>Monitors</a>
+            <a href="/chairs/" class="more-panel-link"><span class="nav-icon">🪑</span>Chairs</a>
+            <a href="/guides/" class="more-panel-link"><span class="nav-icon">📋</span>Guides</a>
+            <a href="/comparisons/" class="more-panel-link"><span class="nav-icon">⚖️</span>Compare</a>
+            <a href="/about/" class="more-panel-link"><span class="nav-icon">ℹ️</span>About</a>
+            <div class="more-panel-link more-panel-link-disabled"><span class="nav-icon">💻</span>PCs</div>
+            <div class="more-panel-link more-panel-link-disabled"><span class="nav-icon">🪵</span>Desks</div>
+            <div class="more-panel-link more-panel-link-disabled"><span class="nav-icon">✨</span>Extras</div>
+        </div>
+    </div>
+
+    <!-- BOTTOM NAV -->
+    <nav class="bottom-nav" aria-label="Mobile navigation">
+        <ul class="bottom-nav-items">
+            <li class="bottom-nav-item">
+                <a href="/" class="bottom-nav-link" aria-label="Home">
+                    <span class="nav-icon">🏠</span>
+                    <span class="nav-label">Home</span>
+                </a>
+            </li>
+            <li class="bottom-nav-item">
+                <a href="/headsets/" class="bottom-nav-link" aria-label="Headsets">
+                    <span class="nav-icon">🎧</span>
+                    <span class="nav-label">Headsets</span>
+                </a>
+            </li>
+            <li class="bottom-nav-item">
+                <a href="/keyboards/" class="bottom-nav-link" aria-label="Keyboards">
+                    <span class="nav-icon">⌨️</span>
+                    <span class="nav-label">Keyboards</span>
+                </a>
+            </li>
+            <li class="bottom-nav-item">
+                <a href="/mice/" class="bottom-nav-link" aria-label="Mice">
+                    <span class="nav-icon">🖱️</span>
+                    <span class="nav-label">Mice</span>
+                </a>
+            </li>
+            <li class="bottom-nav-item">
+                <button class="bottom-nav-link" id="more-btn" aria-label="More" aria-expanded="false">
+                    <span class="nav-icon">⊞</span>
+                    <span class="nav-label">More</span>
+                </button>
+            </li>
+        </ul>
+    </nav>
+
+    <script src="/assets/js/app.js" defer></script>
 </body>
 </html>

@@ -1,69 +1,102 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-GB">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#3B82F6" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#1E293B" media="(prefers-color-scheme: dark)">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="StackPick">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="description" content="Complete gaming setup guides for UK gamers. Build your perfect setup by budget.">
-    <!-- Open Graph / Social Media -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://stackpick.co.uk/guides/">
     <meta property="og:title" content="Gaming Setup Guides UK | Stack Pick">
     <meta property="og:description" content="Complete gaming setup guides by budget. Build your perfect setup with UK pricing and availability.">
     <meta property="og:image" content="https://stackpick.co.uk/assets/images/og-image.jpg">
-    
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://stackpick.co.uk/guides/">
     <meta property="twitter:title" content="Gaming Setup Guides UK | Stack Pick">
     <meta property="twitter:description" content="Complete gaming setup guides by budget. Build your perfect setup with UK pricing and availability.">
     <meta property="twitter:image" content="https://stackpick.co.uk/assets/images/og-image.jpg">
     <title>Gaming Setup Guides UK | Stack Pick</title>
-    
-    <!-- Favicon -->
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎮</text></svg>">
-    
-    <!-- Fonts -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📋</text></svg>">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="/assets/icons/icon-192.png">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" as="style">
+    <link rel="preload" href="/assets/css/style.css" as="style">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Stylesheet -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/style.css">
-    
-    <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZTN7H3L6DV"></script>
     <script src="/assets/js/analytics.js"></script>
-    
 </head>
 <body>
+
     <a href="#main-content" class="skip-link">Skip to main content</a>
+
     <!-- HEADER -->
     <header>
         <div class="header-container">
             <a href="/" class="logo">Stack<span>Pick</span></a>
-            
-            <button class="menu-toggle" id="menu-toggle" aria-label="Open menu" aria-expanded="false">☰</button>
-            
-            <nav>
+            <nav aria-label="Main navigation">
                 <a href="/headsets/">Headsets</a>
                 <a href="/keyboards/">Keyboards</a>
                 <a href="/mice/">Mice</a>
                 <a href="/monitors/">Monitors</a>
                 <a href="/chairs/">Chairs</a>
                 <a href="/about/">About</a>
-                <button class="theme-toggle" id="theme-toggle">🌙</button>
+                <button class="theme-toggle" id="theme-toggle" aria-label="Switch to dark mode">🌙</button>
             </nav>
         </div>
     </header>
 
-    <!-- HERO SECTION -->
-    <section class="hero">
+    <!-- DESKTOP SIDEBAR -->
+    <aside class="desktop-sidebar" aria-label="Site navigation">
+        <div class="sidebar-section">
+            <p class="sidebar-heading">Stacks</p>
+            <a href="/#stacks" class="sidebar-link"><span class="nav-icon">⚡</span> All Stacks</a>
+        </div>
+        <div class="sidebar-section">
+            <p class="sidebar-heading">Peripherals</p>
+            <a href="/headsets/" class="sidebar-link"><span class="nav-icon">🎧</span> Headsets</a>
+            <a href="/keyboards/" class="sidebar-link"><span class="nav-icon">⌨️</span> Keyboards</a>
+            <a href="/mice/" class="sidebar-link"><span class="nav-icon">🖱️</span> Mice</a>
+            <a href="/monitors/" class="sidebar-link"><span class="nav-icon">🖥️</span> Monitors</a>
+            <a href="/chairs/" class="sidebar-link"><span class="nav-icon">🪑</span> Chairs</a>
+        </div>
+        <div class="sidebar-section">
+            <p class="sidebar-heading">Coming Soon</p>
+            <span class="sidebar-link sidebar-link-disabled"><span class="nav-icon">💻</span> PCs <span class="sidebar-badge">Soon</span></span>
+            <span class="sidebar-link sidebar-link-disabled"><span class="nav-icon">🪵</span> Desks <span class="sidebar-badge">Soon</span></span>
+            <span class="sidebar-link sidebar-link-disabled"><span class="nav-icon">🔊</span> Speakers <span class="sidebar-badge">Soon</span></span>
+            <span class="sidebar-link sidebar-link-disabled"><span class="nav-icon">✨</span> Extras <span class="sidebar-badge">Soon</span></span>
+        </div>
+        <div class="sidebar-divider"></div>
+        <div class="sidebar-section">
+            <a href="/guides/" class="sidebar-link"><span class="nav-icon">📋</span> Setup Guides</a>
+            <a href="/comparisons/" class="sidebar-link"><span class="nav-icon">⚖️</span> Comparisons</a>
+            <a href="/about/" class="sidebar-link"><span class="nav-icon">ℹ️</span> About</a>
+        </div>
+        <button class="sidebar-theme-btn" id="theme-toggle-sidebar" aria-label="Toggle theme">
+            <span id="sidebar-theme-icon">🌙</span>
+            <span id="sidebar-theme-label">Dark mode</span>
+        </button>
+    </aside>
+
+    <!-- PAGE WRAPPER -->
+    <div class="page-wrapper">
+
+        <section class="hero">
         <div class="hero-container">
             <h1>Gaming Setup Guides</h1>
             <p>Complete builds for every budget</p>
         </div>
     </section>
 
-    <div class="breadcrumb-bar">
+        <div class="breadcrumb-bar">
         <div class="container" style="padding-top:0.75rem;padding-bottom:0.75rem;">
             <ol class="breadcrumb-list" aria-label="Breadcrumb">
                 <li><a href="/">Home</a></li>
@@ -73,8 +106,7 @@
         </div>
     </div>
 
-    <!-- MAIN CONTENT -->
-    <main class="container" id="main-content">
+        <main class="container" id="main-content">
         <section class="section">
             <div class="section-title">
                 <h2>Setup Guides by Budget</h2>
@@ -116,41 +148,94 @@
         </section>
     </main>
 
-            <footer>
-        <div class="footer-container">
-            <div class="footer-grid">
-                <div class="footer-col">
-                    <a href="/" class="logo footer-logo">Stack<span>Pick</span></a>
-                    <p class="footer-tagline">Researched gaming gear for UK gamers. Real prices. No BS.</p>
+        <!-- FOOTER -->
+        <footer>
+            <div class="footer-container">
+                <div class="footer-grid">
+                    <div class="footer-col">
+                        <a href="/" class="logo footer-logo">Stack<span>Pick</span></a>
+                        <p class="footer-tagline">Researched gaming gear for UK gamers. Real prices. No BS.</p>
+                    </div>
+                    <div class="footer-col">
+                        <h4 class="footer-heading">Categories</h4>
+                        <ul class="footer-links">
+                            <li><a href="/headsets/">Headsets</a></li>
+                            <li><a href="/keyboards/">Keyboards</a></li>
+                            <li><a href="/mice/">Mice</a></li>
+                            <li><a href="/monitors/">Monitors</a></li>
+                            <li><a href="/chairs/">Chairs</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-col">
+                        <h4 class="footer-heading">Resources</h4>
+                        <ul class="footer-links">
+                            <li><a href="/guides/">Setup Guides</a></li>
+                            <li><a href="/comparisons/">Comparisons</a></li>
+                            <li><a href="/about/">About</a></li>
+                        </ul>
+                    </div>
                 </div>
-                <div class="footer-col">
-                    <h4 class="footer-heading">Categories</h4>
-                    <ul class="footer-links">
-                        <li><a href="/headsets/">Headsets</a></li>
-                        <li><a href="/keyboards/">Keyboards</a></li>
-                        <li><a href="/mice/">Mice</a></li>
-                        <li><a href="/monitors/">Monitors</a></li>
-                        <li><a href="/chairs/">Chairs</a></li>
-                    </ul>
-                </div>
-                <div class="footer-col">
-                    <h4 class="footer-heading">Resources</h4>
-                    <ul class="footer-links">
-                        <li><a href="/guides/">Setup Guides</a></li>
-                        <li><a href="/comparisons/">Comparisons</a></li>
-                        <li><a href="/about/">About</a></li>
-                    </ul>
+                <div class="footer-bottom">
+                    <p>&copy; 2026 Stack Pick. Built for UK gamers.</p>
+                    <p style="font-size:0.8rem;margin-top:0.5rem;">As an Amazon Associate, we earn from qualifying purchases. <a href="/about/">Learn more</a></p>
                 </div>
             </div>
-            <div class="footer-bottom">
-                <p>&copy; 2026 Stack Pick. Built for UK gamers.</p>
-                <p style="font-size:0.8rem;margin-top:0.5rem;">As an Amazon Associate, we earn from qualifying purchases. <a href="/about/">Learn more</a></p>
-            </div>
-        </div>
-    </footer>
+        </footer>
 
-    <!-- SCRIPTS -->
-    <script src="/assets/js/theme-toggle.js"></script>
-    <script src="/assets/js/main.js"></script>
+    </div><!-- end .page-wrapper -->
+
+    <!-- MORE PANEL OVERLAY -->
+    <div class="more-panel-overlay" id="more-overlay"></div>
+    <div class="bottom-nav-more-panel" id="more-panel">
+        <p class="more-panel-title">All categories</p>
+        <div class="more-panel-grid">
+            <a href="/monitors/" class="more-panel-link"><span class="nav-icon">🖥️</span>Monitors</a>
+            <a href="/chairs/" class="more-panel-link"><span class="nav-icon">🪑</span>Chairs</a>
+            <a href="/guides/" class="more-panel-link"><span class="nav-icon">📋</span>Guides</a>
+            <a href="/comparisons/" class="more-panel-link"><span class="nav-icon">⚖️</span>Compare</a>
+            <a href="/about/" class="more-panel-link"><span class="nav-icon">ℹ️</span>About</a>
+            <div class="more-panel-link more-panel-link-disabled"><span class="nav-icon">💻</span>PCs</div>
+            <div class="more-panel-link more-panel-link-disabled"><span class="nav-icon">🪵</span>Desks</div>
+            <div class="more-panel-link more-panel-link-disabled"><span class="nav-icon">✨</span>Extras</div>
+        </div>
+    </div>
+
+    <!-- BOTTOM NAV -->
+    <nav class="bottom-nav" aria-label="Mobile navigation">
+        <ul class="bottom-nav-items">
+            <li class="bottom-nav-item">
+                <a href="/" class="bottom-nav-link" aria-label="Home">
+                    <span class="nav-icon">🏠</span>
+                    <span class="nav-label">Home</span>
+                </a>
+            </li>
+            <li class="bottom-nav-item">
+                <a href="/headsets/" class="bottom-nav-link" aria-label="Headsets">
+                    <span class="nav-icon">🎧</span>
+                    <span class="nav-label">Headsets</span>
+                </a>
+            </li>
+            <li class="bottom-nav-item">
+                <a href="/keyboards/" class="bottom-nav-link" aria-label="Keyboards">
+                    <span class="nav-icon">⌨️</span>
+                    <span class="nav-label">Keyboards</span>
+                </a>
+            </li>
+            <li class="bottom-nav-item">
+                <a href="/mice/" class="bottom-nav-link" aria-label="Mice">
+                    <span class="nav-icon">🖱️</span>
+                    <span class="nav-label">Mice</span>
+                </a>
+            </li>
+            <li class="bottom-nav-item">
+                <button class="bottom-nav-link" id="more-btn" aria-label="More" aria-expanded="false">
+                    <span class="nav-icon">⊞</span>
+                    <span class="nav-label">More</span>
+                </button>
+            </li>
+        </ul>
+    </nav>
+
+    <script src="/assets/js/app.js" defer></script>
 </body>
 </html>

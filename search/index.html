@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#3B82F6" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#1E293B" media="(prefers-color-scheme: dark)">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="StackPick">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="author" content="Stack Pick">
+    <meta name="description" content="Search Stack Pick — find the best gaming headsets, keyboards, mice, monitors, and chairs for UK gamers. Instant search across all products and guides.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://stackpick.co.uk/search/">
+    <meta property="og:title" content="Search | Stack Pick">
+    <meta property="og:description" content="Instant search across all Stack Pick gaming gear reviews and setup guides.">
+    <meta property="og:image" content="https://stackpick.co.uk/assets/images/og-image.jpg">
+    <meta property="twitter:card" content="summary_large_image">
+    <link rel="canonical" href="https://stackpick.co.uk/search/">
+    <title>Search | Stack Pick</title>
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" as="style">
+    <link rel="preload" href="/assets/css/style.css" as="style">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔍</text></svg>">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="/assets/icons/icon-192.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZTN7H3L6DV"></script>
+    <script src="/assets/js/analytics.js"></script>
+    <style>
+        .search-hero {
+            padding: 2.5rem 0 1.5rem;
+        }
+        .search-input-wrap {
+            position: relative;
+            max-width: 640px;
+            margin: 1.5rem auto 0;
+        }
+        .search-input {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            font-size: 1.1rem;
+            font-family: var(--font-sans);
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            background: var(--card-bg);
+            color: var(--text-primary);
+            transition: border-color 0.15s, box-shadow 0.15s;
+            outline: none;
+        }
+        .search-input:focus {
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
+        }
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.1rem;
+            pointer-events: none;
+        }
+        .search-clear {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+            display: none;
+            padding: 0.25rem;
+        }
+        .search-filters {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin: 1rem 0 0;
+            max-width: 640px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .filter-btn {
+            padding: 0.35rem 0.85rem;
+            border-radius: var(--radius-full);
+            border: 1px solid var(--border-color);
+            background: var(--card-bg);
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s;
+            font-family: var(--font-sans);
+        }
+        .filter-btn:hover,
+        .filter-btn.active {
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+            background: rgba(59,130,246,0.08);
+        }
+        .search-meta {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin: 1.25rem 0 0.5rem;
+        }
+        .search-results {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.75rem;
+            margin-top: 0.75rem;
+        }
+        .result-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 1rem 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: border-color 0.15s, box-shadow 0.15s;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+        }
+        .result-card:hover {
+            border-color: var(--accent-primary);
+            box-shadow: var(--shadow);
+        }
+        .result-icon {
+            font-size: 2rem;
+            flex-shrink: 0;
+            width: 48px;
+            text-align: center;
+        }
+        .result-body {
+            flex: 1;
+            min-width: 0;
+        }
+        .result-type {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-secondary);
+            margin-bottom: 0.2rem;
+        }
+        .result-title {
+            font-size: 0.975rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .result-desc {
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            margin-top: 0.2rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .result-price {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--accent-primary);
+            flex-shrink: 0;
+        }
+        .result-price-wrap {
+            text-align: right;
+            flex-shrink: 0;
+        }
+        .result-arrow {
+            color: var(--text-secondary);
+            flex-shrink: 0;
+            font-size: 1.1rem;
+        }
+        mark {
+            background: rgba(59,130,246,0.18);
+            color: var(--text-primary);
+            border-radius: 2px;
+            padding: 0 1px;
+        }
+        .search-empty {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--text-secondary);
+        }
+        .search-empty-icon { font-size: 3rem; margin-bottom: 1rem; }
+        .search-suggestions {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+        .suggestion-pill {
+            padding: 0.35rem 0.85rem;
+            border-radius: var(--radius-full);
+            border: 1px solid var(--border-color);
+            background: var(--card-bg);
+            color: var(--accent-primary);
+            font-size: 0.82rem;
+            cursor: pointer;
+            font-family: var(--font-sans);
+            transition: background 0.15s;
+        }
+        .suggestion-pill:hover { background: rgba(59,130,246,0.08); }
+
+        @media(min-width:640px) {
+            .search-results { grid-template-columns: 1fr 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <header>
+        <div class="header-container">
+            <a href="/" class="logo">Stack<span>Pick</span></a>
+            <nav aria-label="Main navigation">
+                <a href="/headsets/">Headsets</a>
+                <a href="/keyboards/">Keyboards</a>
+                <a href="/mice/">Mice</a>
+                <a href="/monitors/">Monitors</a>
+                <a href="/chairs/">Chairs</a>
+                <a href="/about/">About</a>
+                <a href="/search/" aria-label="Search">🔍</a>
+                <button class="theme-toggle" id="theme-toggle" aria-label="Switch to dark mode">🌙</button>
+            </nav>
+        </div>
+    </header>
+
+    <aside class="desktop-sidebar" aria-label="Site navigation">
+        <div class="sidebar-section">
+            <p class="sidebar-heading">Stacks</p>
+            <a href="/#stacks" class="sidebar-link"><span class="nav-icon">⚡</span> All Stacks</a>
+        </div>
+        <div class="sidebar-section">
+            <p class="sidebar-heading">Peripherals</p>
+            <a href="/headsets/" class="sidebar-link"><span class="nav-icon">🎧</span> Headsets</a>
+            <a href="/keyboards/" class="sidebar-link"><span class="nav-icon">⌨️</span> Keyboards</a>
+            <a href="/mice/" class="sidebar-link"><span class="nav-icon">🖱️</span> Mice</a>
+            <a href="/monitors/" class="sidebar-link"><span class="nav-icon">🖥️</span> Monitors</a>
+            <a href="/chairs/" class="sidebar-link"><span class="nav-icon">🪑</span> Chairs</a>
+        </div>
+        <div class="sidebar-section">
+            <p class="sidebar-heading">Coming Soon</p>
+            <a href="/pcs/" class="sidebar-link"><span class="nav-icon">💻</span> PCs <span class="sidebar-badge">Soon</span></a>
+            <a href="/desks/" class="sidebar-link"><span class="nav-icon">🪵</span> Desks <span class="sidebar-badge">Soon</span></a>
+            <a href="/speakers/" class="sidebar-link"><span class="nav-icon">🔊</span> Speakers <span class="sidebar-badge">Soon</span></a>
+            <a href="/extras/" class="sidebar-link"><span class="nav-icon">✨</span> Extras <span class="sidebar-badge">Soon</span></a>
+        </div>
+        <div class="sidebar-divider"></div>
+        <div class="sidebar-section">
+            <a href="/search/" class="sidebar-link"><span class="nav-icon">🔍</span> Search</a>
+            <a href="/guides/" class="sidebar-link"><span class="nav-icon">📋</span> Setup Guides</a>
+            <a href="/comparisons/" class="sidebar-link"><span class="nav-icon">⚖️</span> Comparisons</a>
+            <a href="/about/" class="sidebar-link"><span class="nav-icon">ℹ️</span> About</a>
+        </div>
+        <button class="sidebar-theme-btn" id="theme-toggle-sidebar" aria-label="Toggle theme">
+            <span id="sidebar-theme-icon">🌙</span>
+            <span id="sidebar-theme-label">Dark mode</span>
+        </button>
+    </aside>
+
+    <div class="page-wrapper">
+
+        <section class="hero">
+            <div class="hero-container search-hero">
+                <h1>Search Stack Pick</h1>
+                <div class="search-input-wrap">
+                    <span class="search-icon" aria-hidden="true">🔍</span>
+                    <input
+                        type="search"
+                        id="search-input"
+                        class="search-input"
+                        placeholder="Headset, keyboard, setup guide…"
+                        aria-label="Search products and guides"
+                        autocomplete="off"
+                        autofocus
+                    >
+                    <button class="search-clear" id="search-clear" aria-label="Clear search">✕</button>
+                </div>
+                <div class="search-filters" role="group" aria-label="Filter by category">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="headset">🎧 Headsets</button>
+                    <button class="filter-btn" data-filter="keyboard">⌨️ Keyboards</button>
+                    <button class="filter-btn" data-filter="mouse">🖱️ Mice</button>
+                    <button class="filter-btn" data-filter="monitor">🖥️ Monitors</button>
+                    <button class="filter-btn" data-filter="chair">🪑 Chairs</button>
+                    <button class="filter-btn" data-filter="guide">📋 Guides</button>
+                    <button class="filter-btn" data-filter="comparison">⚖️ Comparisons</button>
+                </div>
+            </div>
+        </section>
+
+        <main class="container" id="main-content">
+            <p class="search-meta" id="search-meta" aria-live="polite" aria-atomic="true"></p>
+            <div class="search-results" id="search-results" role="list"></div>
+        </main>
+
+        <footer>
+            <div class="footer-container">
+                <div class="footer-grid">
+                    <div class="footer-col"><a href="/" class="logo footer-logo">Stack<span>Pick</span></a><p class="footer-tagline">Researched gaming gear for UK gamers. Real prices. No BS.</p></div>
+                    <div class="footer-col"><h4 class="footer-heading">Categories</h4><ul class="footer-links"><li><a href="/headsets/">Headsets</a></li><li><a href="/keyboards/">Keyboards</a></li><li><a href="/mice/">Mice</a></li><li><a href="/monitors/">Monitors</a></li><li><a href="/chairs/">Chairs</a></li></ul></div>
+                    <div class="footer-col"><h4 class="footer-heading">Resources</h4><ul class="footer-links"><li><a href="/guides/">Setup Guides</a></li><li><a href="/comparisons/">Comparisons</a></li><li><a href="/about/">About</a></li></ul></div>
+                </div>
+                <div class="footer-bottom"><p>&copy; 2026 Stack Pick. Built for UK gamers.</p><p style="font-size:0.8rem;margin-top:0.5rem;">As an Amazon Associate, we earn from qualifying purchases. <a href="/about/">Learn more</a></p></div>
+            </div>
+        </footer>
+    </div>
+
+    <div class="more-panel-overlay" id="more-overlay"></div>
+    <div class="bottom-nav-more-panel" id="more-panel">
+        <p class="more-panel-title">All categories</p>
+        <div class="more-panel-grid">
+            <a href="/monitors/" class="more-panel-link"><span class="nav-icon">🖥️</span>Monitors</a>
+            <a href="/chairs/" class="more-panel-link"><span class="nav-icon">🪑</span>Chairs</a>
+            <a href="/guides/" class="more-panel-link"><span class="nav-icon">📋</span>Guides</a>
+            <a href="/comparisons/" class="more-panel-link"><span class="nav-icon">⚖️</span>Compare</a>
+            <a href="/about/" class="more-panel-link"><span class="nav-icon">ℹ️</span>About</a>
+            <a href="/search/" class="more-panel-link"><span class="nav-icon">🔍</span>Search</a>
+            <a href="/pcs/" class="more-panel-link"><span class="nav-icon">💻</span>PCs</a>
+            <a href="/desks/" class="more-panel-link"><span class="nav-icon">🪵</span>Desks</a>
+            <a href="/extras/" class="more-panel-link"><span class="nav-icon">✨</span>Extras</a>
+        </div>
+            <div class="more-panel-link more-panel-link-disabled"><span class="nav-icon">🪵</span>Desks</div>
+            <div class="more-panel-link more-panel-link-disabled"><span class="nav-icon">✨</span>Extras</div>
+        </div>
+    </div>
+    <nav class="bottom-nav" aria-label="Mobile navigation">
+        <ul class="bottom-nav-items">
+            <li class="bottom-nav-item"><a href="/" class="bottom-nav-link" aria-label="Home"><span class="nav-icon">🏠</span><span class="nav-label">Home</span></a></li>
+            <li class="bottom-nav-item"><a href="/headsets/" class="bottom-nav-link" aria-label="Headsets"><span class="nav-icon">🎧</span><span class="nav-label">Headsets</span></a></li>
+            <li class="bottom-nav-item"><a href="/keyboards/" class="bottom-nav-link" aria-label="Keyboards"><span class="nav-icon">⌨️</span><span class="nav-label">Keyboards</span></a></li>
+            <li class="bottom-nav-item"><a href="/mice/" class="bottom-nav-link" aria-label="Mice"><span class="nav-icon">🖱️</span><span class="nav-label">Mice</span></a></li>
+            <li class="bottom-nav-item"><button class="bottom-nav-link" id="more-btn" aria-label="More" aria-expanded="false"><span class="nav-icon">⊞</span><span class="nav-label">More</span></button></li>
+        </ul>
+    </nav>
+
+    <script src="/assets/js/app.js" defer></script>
+    <script>
+    // ============================================================
+    //  STACK PICK SEARCH — inline, no build step required
+    //  Complete product + guide + comparison index
+    // ============================================================
+    (function () {
+
+        // ── DATA INDEX ─────────────────────────────────────────
+        var INDEX = [
+            // HEADSETS
+            { type:'headset', icon:'🎧', title:'Sennheiser HD 560S', desc:'Open-back audiophile headset — best spatial audio for FPS. No mic.', price:'£99', url:'/headsets/', tags:'sennheiser hd560s open back audiophile competitive fps' },
+            { type:'headset', icon:'🎧', title:'SteelSeries Arctis Nova Pro Wireless', desc:'Hot-swap dual battery, ANC, simultaneous PC + console connection.', price:'£260', url:'/headsets/', tags:'steelseries arctis nova pro wireless anc premium' },
+            { type:'headset', icon:'🎧', title:'HyperX Cloud III S Wireless', desc:'120-hour battery, memory foam, legendary comfort for long sessions.', price:'£130', url:'/headsets/', tags:'hyperx cloud wireless comfort long session' },
+            { type:'headset', icon:'🎧', title:'Razer BlackShark V2', desc:'THX Spatial Audio, 50mm titanium drivers. Best budget gaming headset.', price:'~£36', url:'/headsets/', tags:'razer blackshark v2 budget thx spatial audio' },
+            { type:'headset', icon:'🎧', title:'Sony INZONE H9', desc:'PS5-optimised with native 360 Spatial Sound. 32-hour battery.', price:'~£215', url:'/headsets/', tags:'sony inzone h9 ps5 wireless spatial sound' },
+            { type:'headset', icon:'🎧', title:'Razer BlackShark V2 X', desc:'Best wired headset under £35. TriForce 50mm drivers.', price:'~£34', url:'/guides/budget-picks-under-50/', tags:'razer blackshark v2x budget wired cheap' },
+
+            // KEYBOARDS
+            { type:'keyboard', icon:'⌨️', title:'Wooting 60HE+', desc:'Hall Effect switches, Rapid Trigger 0.1mm. The competitive standard.', price:'£175', url:'/keyboards/', tags:'wooting 60he hall effect rapid trigger competitive cs2' },
+            { type:'keyboard', icon:'⌨️', title:'SteelSeries Apex Pro TKL Gen 3', desc:'Adjustable OmniPoint switches, OLED display, magnetic wrist rest.', price:'£190', url:'/keyboards/', tags:'steelseries apex pro tkl adjustable omnipoint oled' },
+            { type:'keyboard', icon:'⌨️', title:'Keychron Q3', desc:'Gasket-mount aluminium TKL with Gateron switches. Best typing feel.', price:'£150', url:'/keyboards/', tags:'keychron q3 gasket mount aluminium tkl gateron typing' },
+            { type:'keyboard', icon:'⌨️', title:'Aula F99 Wireless', desc:'Hall Effect wireless at mid-range price. Tri-mode connectivity.', price:'£83', url:'/keyboards/', tags:'aula f99 wireless hall effect budget' },
+            { type:'keyboard', icon:'⌨️', title:'Logitech G Pro X 2 LIGHTSPEED TKL', desc:'LIGHTSPEED wireless TKL, GX switches, 2000Hz polling.', price:'~£165', url:'/keyboards/', tags:'logitech g pro x 2 lightspeed wireless tkl' },
+            { type:'keyboard', icon:'⌨️', title:'HyperX Alloy Origins TKL', desc:'Full aluminium body, HyperX Red switches, USB passthrough.', price:'~£90', url:'/keyboards/', tags:'hyperx alloy origins tkl aluminium wired budget' },
+            { type:'keyboard', icon:'⌨️', title:'Redragon K552 RGB', desc:'Real mechanical switches, metal plate, 60% layout. Best under £35.', price:'~£32', url:'/guides/budget-picks-under-50/', tags:'redragon k552 budget mechanical 60 percent cheap' },
+            { type:'keyboard', icon:'⌨️', title:'RK ROYAL KLUDGE RK68', desc:'Wireless mechanical under £50. Hotswap, 65% layout, tri-mode.', price:'~£49', url:'/guides/budget-picks-under-50/', tags:'rk royal kludge rk68 wireless budget hotswap' },
+
+            // MICE
+            { type:'mouse', icon:'🖱️', title:'Logitech G Pro X Superlight 2', desc:'60g wireless — the competitive standard. HERO 2 sensor, LIGHTFORCE switches.', price:'£140', url:'/mice/', tags:'logitech g pro x superlight 2 ultralight wireless competitive' },
+            { type:'mouse', icon:'🖱️', title:'Razer Viper V3 Pro', desc:'54g ambidextrous wireless, 4000Hz polling. Lightest at this tier.', price:'£119', url:'/mice/', tags:'razer viper v3 pro ultralight wireless ambidextrous' },
+            { type:'mouse', icon:'🖱️', title:'Endgame Gear OP1w 4K V2', desc:'78g ergonomic wireless. Superb shape for palm/claw grips.', price:'£105', url:'/mice/', tags:'endgame gear op1w ergonomic wireless palm claw' },
+            { type:'mouse', icon:'🖱️', title:'Lamzu Thorn 4K Wireless', desc:'55g wireless gaming mouse with 4K polling rate sensor.', price:'£92', url:'/mice/', tags:'lamzu thorn ultralight wireless 4k polling' },
+            { type:'mouse', icon:'🖱️', title:'Logitech G305 LIGHTSPEED', desc:'Wireless gaming under £35. HERO sensor, 250hr battery. Best budget wireless.', price:'~£32', url:'/mice/', tags:'logitech g305 lightspeed budget wireless hero sensor cheap' },
+            { type:'mouse', icon:'🖱️', title:'Razer DeathAdder Essential', desc:'Best wired mouse under £30. Ergonomic, 6400 DPI.', price:'~£29', url:'/guides/budget-picks-under-50/', tags:'razer deathadder essential budget wired cheap ergonomic' },
+            { type:'mouse', icon:'🖱️', title:'Cooler Master MM712', desc:'52g honeycomb ambidextrous wired ultralight. PixArt PAW3370 sensor.', price:'~£44', url:'/guides/budget-picks-under-50/', tags:'cooler master mm712 ultralight budget honeycomb ambidextrous' },
+
+            // MONITORS
+            { type:'monitor', icon:'🖥️', title:'ASUS ROG Swift PG27AQDP', desc:'27" 1440p WOLED 480Hz — fastest OLED gaming monitor. For competitive endgame.', price:'£899', url:'/monitors/', tags:'asus rog swift pg27aqdp 480hz oled 1440p competitive endgame' },
+            { type:'monitor', icon:'🖥️', title:'ASUS ROG Swift PG32UCDM', desc:'32" 4K QD-OLED 240Hz — best large screen gaming monitor.', price:'£900', url:'/monitors/', tags:'asus rog swift pg32ucdm 4k qd-oled 240hz large screen' },
+            { type:'monitor', icon:'🖥️', title:'LG UltraGear 27GR95QE', desc:'27" 1440p OLED 240Hz — best value OLED monitor.', price:'£599', url:'/monitors/', tags:'lg ultragear 27gr95qe oled 240hz 1440p value' },
+            { type:'monitor', icon:'🖥️', title:'AOC Gaming 24G4XE', desc:'24" 1080p IPS 180Hz — fast budget gaming monitor.', price:'£110', url:'/monitors/', tags:'aoc 24g4xe 180hz 1080p budget cheap fast ips' },
+            { type:'monitor', icon:'🖥️', title:'LG UltraGear 24GS65F', desc:'24" 1080p IPS 180Hz — best budget monitor for competitive gaming.', price:'£120', url:'/guides/gaming-setup-500/', tags:'lg 24gs65f 180hz 1080p budget competitive' },
+
+            // CHAIRS
+            { type:'chair', icon:'🪑', title:'Secretlab TITAN Evo 2022', desc:'4-way lumbar, cold-cure foam, 5-year warranty. Best gaming chair.', price:'£329', url:'/chairs/', tags:'secretlab titan evo gaming chair lumbar foam warranty' },
+            { type:'chair', icon:'🪑', title:'Herman Miller Aeron', desc:'8Z mesh, PostureFit SL, 12-year warranty. For 7+ hours daily.', price:'£1,099', url:'/chairs/', tags:'herman miller aeron mesh office ergonomic posture long session' },
+            { type:'chair', icon:'🪑', title:'AndaSeat Kaiser 4', desc:'Premium gaming chair. 4D armrests, magnetic headrest, aluminium base.', price:'£450', url:'/chairs/', tags:'andaseat kaiser 4 premium gaming chair 4d armrests' },
+            { type:'chair', icon:'🪑', title:'Corsair TC100 RELAXED', desc:'Budget gaming chair. Breathable fabric, wide seat, 120kg capacity.', price:'~£188', url:'/chairs/', tags:'corsair tc100 relaxed budget cheap gaming chair fabric' },
+            { type:'chair', icon:'🪑', title:'EUREKA Typhon Gaming Chair', desc:'Mid-range gaming chair with magnetic headrest and adjustable lumbar.', price:'£370', url:'/chairs/', tags:'eureka typhon gaming chair mid-range' },
+
+            // GUIDES
+            { type:'guide', icon:'📋', title:'£500 Gaming Setup Guide', desc:'Monitor, headset, keyboard, mouse, mousepad, chair. Under £500.', price:'~£436', url:'/guides/gaming-setup-500/', tags:'500 budget setup guide complete build monitor keyboard mouse chair cheap' },
+            { type:'guide', icon:'📋', title:'£1000 Gaming Setup Guide', desc:'1440p monitor, mechanical keyboard, ultralight mouse, Secretlab chair.', price:'~£1,000', url:'/guides/gaming-setup-1000/', tags:'1000 setup guide complete build enthusiast' },
+            { type:'guide', icon:'📋', title:'£1500 Gaming Setup Guide', desc:'OLED monitor, Wooting keyboard, Superlight 2, Nova Pro Wireless, Secretlab.', price:'~£1,502', url:'/guides/gaming-setup-1500/', tags:'1500 premium setup guide oled wooting superlight secretlab' },
+            { type:'guide', icon:'📋', title:'£2500 Endgame Setup Guide', desc:'480Hz OLED monitor, Wooting, Superlight 2, Sennheiser + DAC, Herman Miller.', price:'~£2,512', url:'/guides/gaming-setup-2500/', tags:'2500 endgame setup guide herman miller aeron 480hz oled' },
+            { type:'guide', icon:'📋', title:'Best Gaming Gear Under £50', desc:'Top budget headsets, mice, keyboards, and mousepads under fifty quid.', price:'Under £50', url:'/guides/budget-picks-under-50/', tags:'budget under 50 cheap best value headset mouse keyboard mousepad' },
+
+            // COMPARISONS
+            { type:'comparison', icon:'⚖️', title:'ASUS PG27AQDP vs PG32UCDM', desc:'480Hz 1440p vs 240Hz 4K OLED — which monitor is right for you?', price:null, url:'/comparisons/asus-pg27aqdp-vs-pg32ucdm/', tags:'asus rog swift pg27aqdp pg32ucdm 480hz 4k oled monitor comparison' },
+            { type:'comparison', icon:'⚖️', title:'Superlight 2 vs Razer Viper V3 Pro', desc:'Logitech vs Razer ultralight wireless — the endgame mouse showdown.', price:null, url:'/comparisons/logitech-superlight-2-vs-razer-viper-v3-pro/', tags:'superlight 2 viper v3 pro mouse comparison logitech razer ultralight wireless' },
+            { type:'comparison', icon:'⚖️', title:'Arctis Nova Pro vs Sony INZONE H9', desc:'PC-first vs PS5-first premium wireless headset. Which should you buy?', price:null, url:'/comparisons/steelseries-arctis-nova-pro-vs-sony-inzone-h9/', tags:'arctis nova pro inzone h9 steelseries sony headset comparison wireless' },
+            { type:'comparison', icon:'⚖️', title:'Secretlab TITAN Evo vs Herman Miller Aeron', desc:'£329 gaming chair vs £1,100 office chair — the honest comparison.', price:null, url:'/comparisons/secretlab-titan-evo-vs-herman-miller-aeron/', tags:'secretlab titan evo herman miller aeron gaming chair office chair comparison' },
+            { type:'comparison', icon:'⚖️', title:'G Pro X 2 vs HyperX Alloy Origins TKL', desc:'Wireless LIGHTSPEED TKL vs full aluminium wired TKL. Price vs features.', price:null, url:'/comparisons/logitech-g-pro-x-2-vs-hyperx-alloy-origins/', tags:'g pro x 2 alloy origins logitech hyperx keyboard comparison wireless wired' },
+
+            // MOUSEPADS (within guides)
+            { type:'mouse', icon:'🎯', title:'Logitech G640 Large Mousepad', desc:'460×400mm cloth pad matched to HERO sensor. Best value mousepad.', price:'~£28', url:'/guides/budget-picks-under-50/', tags:'logitech g640 mousepad large cloth budget' },
+            { type:'mouse', icon:'🎯', title:'Corsair MM300 Pro Extended', desc:'930×300mm extended desk pad, spill-resistant surface.', price:'~£30', url:'/guides/budget-picks-under-50/', tags:'corsair mm300 pro extended desk pad mousepad' },
+        ];
+
+        // ── FUZZY SCORE ──────────────────────────────────────────────
+        function score(item, query) {
+            var q = query.toLowerCase();
+            var title = item.title.toLowerCase();
+            var tags  = (item.tags || '').toLowerCase();
+            var desc  = item.desc.toLowerCase();
+
+            if (title === q) return 100;
+            if (title.startsWith(q)) return 90;
+            if (title.includes(q)) return 80;
+
+            // All words match
+            var words = q.split(/\s+/).filter(Boolean);
+            var allInTitle = words.every(function (w) { return title.includes(w); });
+            if (allInTitle) return 70;
+
+            var allInTags  = words.every(function (w) { return tags.includes(w);  });
+            if (allInTags) return 60;
+
+            var anyInTitle = words.some(function (w) { return title.includes(w); });
+            if (anyInTitle) return 50;
+
+            var anyInTags  = words.some(function (w) { return tags.includes(w);  });
+            if (anyInTags) return 40;
+
+            var anyInDesc  = words.some(function (w) { return desc.includes(w);  });
+            if (anyInDesc) return 20;
+
+            return 0;
+        }
+
+        function highlight(text, query) {
+            if (!query) return text;
+            var words = query.split(/\s+/).filter(Boolean);
+            var escaped = words.map(function(w) { return w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); });
+            var pattern = new RegExp('(' + escaped.join('|') + ')', 'gi');
+            return text.replace(pattern, '<mark>$1</mark>');
+        }
+
+        // ── RENDER ───────────────────────────────────────────────────
+        function renderResults(results, query) {
+            var container = document.getElementById('search-results');
+            var meta      = document.getElementById('search-meta');
+
+            if (results.length === 0) {
+                meta.textContent = '';
+                container.innerHTML =
+                    '<div class="search-empty" role="status">' +
+                    '  <div class="search-empty-icon">🔍</div>' +
+                    '  <p>No results for <strong>"' + escHtml(query) + '"</strong></p>' +
+                    '  <p style="font-size:0.875rem;">Try a product name, brand, or category</p>' +
+                    '  <div class="search-suggestions" role="list">' +
+                    ['Headset','Keyboard','Mouse','OLED monitor','Budget setup','Secretlab chair','Wooting'].map(function(s) {
+                        return '<button class="suggestion-pill" role="listitem">' + s + '</button>';
+                    }).join('') +
+                    '  </div>' +
+                    '</div>';
+                container.querySelectorAll('.suggestion-pill').forEach(function(btn) {
+                    btn.addEventListener('click', function() {
+                        document.getElementById('search-input').value = btn.textContent;
+                        runSearch(btn.textContent);
+                    });
+                });
+                return;
+            }
+
+            meta.textContent = results.length + ' result' + (results.length === 1 ? '' : 's');
+
+            container.innerHTML = results.map(function (item) {
+                var typeLabel = {
+                    headset:'Headset', keyboard:'Keyboard', mouse:'Mouse',
+                    monitor:'Monitor', chair:'Chair',
+                    guide:'Setup Guide', comparison:'Comparison'
+                }[item.type] || item.type;
+
+                return '<a href="' + item.url + '" class="result-card" role="listitem">' +
+                    '<div class="result-icon" aria-hidden="true">' + item.icon + '</div>' +
+                    '<div class="result-body">' +
+                    '  <div class="result-type">' + typeLabel + '</div>' +
+                    '  <div class="result-title">' + highlight(item.title, query) + '</div>' +
+                    '  <div class="result-desc">' + highlight(item.desc, query) + '</div>' +
+                    '</div>' +
+                    (item.price ? '<div class="result-price-wrap"><span class="result-price">' + item.price + '</span></div>' : '') +
+                    '<div class="result-arrow" aria-hidden="true">›</div>' +
+                    '</a>';
+            }).join('');
+        }
+
+        function renderDefault() {
+            var meta = document.getElementById('search-meta');
+            var container = document.getElementById('search-results');
+            meta.textContent = '';
+            container.innerHTML =
+                '<div class="search-empty" role="status">' +
+                '  <div class="search-empty-icon">🎮</div>' +
+                '  <p style="color:var(--text-primary);font-weight:600;">What are you looking for?</p>' +
+                '  <p style="font-size:0.875rem;">Search by product, brand, budget, or feature</p>' +
+                '  <div class="search-suggestions" role="list">' +
+                ['Best headset under £100','Wireless mouse','OLED monitor','£500 setup','Secretlab chair','Budget keyboard','Herman Miller'].map(function(s) {
+                    return '<button class="suggestion-pill" role="listitem">' + s + '</button>';
+                }).join('') +
+                '  </div>' +
+                '</div>';
+            container.querySelectorAll('.suggestion-pill').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    document.getElementById('search-input').value = btn.textContent;
+                    runSearch(btn.textContent);
+                });
+            });
+        }
+
+        function escHtml(s) {
+            return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+        }
+
+        // ── SEARCH RUNNER ────────────────────────────────────────────
+        var activeFilter = 'all';
+
+        function runSearch(query) {
+            query = (query || '').trim();
+            var clearBtn = document.getElementById('search-clear');
+            clearBtn.style.display = query ? 'block' : 'none';
+
+            if (!query) { renderDefault(); return; }
+
+            var pool = activeFilter === 'all'
+                ? INDEX
+                : INDEX.filter(function(i) { return i.type === activeFilter; });
+
+            var scored = pool
+                .map(function (item) { return { item: item, s: score(item, query) }; })
+                .filter(function (x) { return x.s > 0; })
+                .sort(function (a, b) { return b.s - a.s; })
+                .map(function (x) { return x.item; });
+
+            // Track search in GA
+            if (typeof gtag === 'function') {
+                gtag('event', 'search', { search_term: query });
+            }
+
+            renderResults(scored, query);
+        }
+
+        // ── EVENT BINDINGS ───────────────────────────────────────────
+        var input = document.getElementById('search-input');
+        var clearBtn = document.getElementById('search-clear');
+        var filterBtns = document.querySelectorAll('.filter-btn');
+
+        var debounceTimer;
+        input.addEventListener('input', function () {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { runSearch(input.value); }, 120);
+        });
+
+        input.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') { input.value = ''; runSearch(''); input.blur(); }
+        });
+
+        clearBtn.addEventListener('click', function () {
+            input.value = '';
+            runSearch('');
+            input.focus();
+        });
+
+        filterBtns.forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                filterBtns.forEach(function (b) { b.classList.remove('active'); });
+                btn.classList.add('active');
+                activeFilter = btn.dataset.filter;
+                runSearch(input.value);
+            });
+        });
+
+        // ── URL QUERY PARAM SUPPORT ──────────────────────────────────
+        var params = new URLSearchParams(window.location.search);
+        var qParam = params.get('q');
+        if (qParam) {
+            input.value = qParam;
+            runSearch(qParam);
+        } else {
+            renderDefault();
+        }
+
+    }());
+    </script>
+</body>
+</html>
