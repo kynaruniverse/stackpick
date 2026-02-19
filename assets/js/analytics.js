@@ -57,38 +57,55 @@
         });
     });
     
-    // Track outbound clicks (affiliate links)
+    // Track affiliate + outbound clicks — GA4 recommended event format
     document.addEventListener('click', function(e) {
         let target = e.target;
         while (target && target.tagName !== 'A') {
             target = target.parentNode;
         }
-        if (target && target.tagName === 'A' && target.href) {
-            const href = target.href;
-    
-            if (href.includes('amzn.to') || href.includes('amazon.co.uk')) {
-                gtag('event', 'click', {
-                    'event_category': 'affiliate',
-                    'event_label': 'amazon',
-                    'value': href
-                });
-            }
-    
-            if (href.indexOf(window.location.hostname) === -1 && !href.startsWith('#')) {
-                gtag('event', 'click', {
-                    'event_category': 'outbound',
-                    'event_label': href
-                });
-            }
-    
-            const ext = href.split('.').pop().toLowerCase();
-            if (['pdf', 'zip', 'doc', 'docx', 'xls', 'xlsx'].includes(ext)) {
-                gtag('event', 'file_download', {
-                    'event_category': 'downloads',
-                    'event_label': href,
-                    'file_extension': ext
-                });
-            }
+        if (!target || target.tagName !== 'A' || !target.href) return;
+
+        const href  = target.href;
+        const text  = (target.textContent || '').trim().slice(0, 100);
+        const page  = window.location.pathname;
+
+        // Affiliate clicks — GA4 standard: select_item
+        if (href.includes('amzn.to') || href.includes('amazon.co.uk')) {
+            gtag('event', 'select_item', {
+                item_list_name: page,
+                items: [{
+                    item_name:     text || href,
+                    item_category: 'affiliate',
+                    item_brand:    'Amazon UK',
+                    affiliation:   'Amazon Associates',
+                    link_url:      href
+                }]
+            });
+            // Also fire a simpler named event for easy GA4 goal setup
+            gtag('event', 'affiliate_click', {
+                link_url:      href,
+                link_text:     text,
+                page_path:     page
+            });
+        }
+
+        // General outbound (non-affiliate externals)
+        else if (target.hostname && target.hostname !== window.location.hostname) {
+            gtag('event', 'click', {
+                link_url:      href,
+                link_domain:   target.hostname,
+                outbound:      true
+            });
+        }
+
+        // File downloads
+        const ext = href.split('.').pop().toLowerCase();
+        if (['pdf', 'zip', 'doc', 'docx', 'xls', 'xlsx'].includes(ext)) {
+            gtag('event', 'file_download', {
+                file_extension: ext,
+                file_name:      href.split('/').pop(),
+                link_url:       href
+            });
         }
     });
     
