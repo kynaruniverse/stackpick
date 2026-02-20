@@ -1,36 +1,51 @@
 // ============================================================
 //  STACK PICK — SERVICE WORKER
+//  Phase 6 — Updated for Stacked Loadout Wall
+//
 //  Strategy:
-//    - Core shell (CSS, JS, fonts)  → Cache-first
-//    - Pages (HTML)                 → Network-first, fallback cache
-//    - Images                       → Cache-first, lazy populated
-//    - External (Amazon, GA)        → Network-only, never cached
-//    - Offline                      → /offline.html fallback
+//    Core shell (CSS, JS, data, fonts) → Cache-first
+//    Pages (HTML)                      → Network-first, fallback cache
+//    Images                            → Cache-first, lazy populated
+//    External (Amazon, GA, fonts CDN)  → Network-only, never cached
+//    Offline                           → /offline.html fallback
+//
+//  VERSION: bump sp-v4 whenever SHELL_ASSETS change.
 // ============================================================
 
-const VERSION      = 'sp-v3';
-const SHELL_CACHE  = `${VERSION}-shell`;
-const PAGE_CACHE   = `${VERSION}-pages`;
-const IMAGE_CACHE  = `${VERSION}-images`;
+const VERSION     = 'sp-v4';
+const SHELL_CACHE = `${VERSION}-shell`;
+const PAGE_CACHE  = `${VERSION}-pages`;
+const IMAGE_CACHE = `${VERSION}-images`;
 
-// ── Assets cached immediately on install (app shell) ──────
+// ── Assets cached immediately on install (app shell) ──────────
 const SHELL_ASSETS = [
   '/',
   '/offline.html',
-  '/assets/css/style.css',
-  '/assets/js/app.js',
   '/manifest.json',
+
+  // ── Phase 6 wall assets ──
+  '/assets/css/wall-tokens.css',
+  '/assets/css/wall.css',
+  '/assets/js/wall.js',
+  '/assets/js/data/products.js',
+  '/assets/js/data/collections.js',
+  '/assets/js/analytics.js',
+
+  // ── Category pages (affiliate plumbing — never remove) ──
   '/headsets/',
   '/keyboards/',
   '/mice/',
   '/monitors/',
   '/chairs/',
-  '/search/',
+
+  // ── Supporting pages ──
   '/guides/',
   '/comparisons/',
+  '/search/',
+  '/about/',
 ];
 
-// ── Domains we never intercept ────────────────────────────
+// ── Domains we never intercept (pass straight to network) ──────
 const PASSTHROUGH_ORIGINS = [
   'amzn.to',
   'amazon.co.uk',
@@ -40,7 +55,6 @@ const PASSTHROUGH_ORIGINS = [
   'fonts.gstatic.com',
 ];
 
-// ── Max entries per cache ──────────────────────────────────
 const MAX_PAGES  = 30;
 const MAX_IMAGES = 60;
 
@@ -52,29 +66,28 @@ self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(SHELL_CACHE)
       .then(cache => cache.addAll(SHELL_ASSETS))
-      .then(() => self.skipWaiting())   // activate immediately
+      .then(() => self.skipWaiting())
       .catch(err => console.error('[SW] Install failed:', err))
   );
 });
 
 
 // ============================================================
-//  ACTIVATE — delete old caches
+//  ACTIVATE — delete stale caches (old sp-v* versions)
 // ============================================================
 self.addEventListener('activate', event => {
   const KEEP = [SHELL_CACHE, PAGE_CACHE, IMAGE_CACHE];
-
   event.waitUntil(
     caches.keys()
       .then(keys => Promise.all(
         keys
           .filter(key => !KEEP.includes(key))
           .map(key => {
-            console.log('[SW] Deleting old cache:', key);
+            console.log('[SW] Deleting stale cache:', key);
             return caches.delete(key);
           })
       ))
-      .then(() => self.clients.claim())  // take control of all open tabs
+      .then(() => self.clients.claim())
   );
 });
 
@@ -89,24 +102,23 @@ self.addEventListener('fetch', event => {
   // 1. Only handle GET
   if (request.method !== 'GET') return;
 
-  // 2. Pass through external origins (Amazon, GA, fonts etc.)
+  // 2. Pass through external origins (Amazon, GA, Google Fonts, etc.)
   if (PASSTHROUGH_ORIGINS.some(origin => url.hostname.includes(origin))) return;
 
-  // 3. Only handle same-origin requests
+  // 3. Only handle same-origin
   if (url.origin !== self.location.origin) return;
 
-  // 4. Route by resource type
+  // 4. Route by type
   if (isImage(url)) {
     event.respondWith(cacheFirstImage(request));
     return;
   }
-
   if (isPage(request)) {
     event.respondWith(networkFirstPage(request));
     return;
   }
 
-  // Shell assets (CSS, JS, manifest) — cache-first
+  // Shell assets (CSS, JS, data files) — cache-first
   event.respondWith(cacheFirstShell(request));
 });
 
@@ -115,11 +127,9 @@ self.addEventListener('fetch', event => {
 //  STRATEGIES
 // ============================================================
 
-// Cache-first for shell assets (CSS/JS never change without VERSION bump)
 async function cacheFirstShell(request) {
   const cached = await caches.match(request);
   if (cached) return cached;
-
   try {
     const response = await fetch(request);
     if (response.ok) {
@@ -128,41 +138,30 @@ async function cacheFirstShell(request) {
     }
     return response;
   } catch {
-    // Shell miss + offline — nothing useful to return
     return new Response('Offline', { status: 503, statusText: 'Service Unavailable' });
   }
 }
 
-// Network-first for HTML pages — fresh content when online, cached when not
 async function networkFirstPage(request) {
   try {
     const response = await fetch(request);
-
     if (response.ok) {
       const cache = await caches.open(PAGE_CACHE);
       cache.put(request, response.clone());
       await trimCache(PAGE_CACHE, MAX_PAGES);
     }
-
     return response;
   } catch {
-    // Network failed — try cache
     const cached = await caches.match(request);
     if (cached) return cached;
-
-    // Nothing cached — serve offline page
     const offline = await caches.match('/offline.html');
-    return offline || new Response('<h1>You are offline</h1>', {
-      headers: { 'Content-Type': 'text/html' }
-    });
+    return offline || new Response('<h1>You are offline</h1>', { headers: { 'Content-Type': 'text/html' } });
   }
 }
 
-// Cache-first for images — save bandwidth on repeat visits
 async function cacheFirstImage(request) {
   const cached = await caches.match(request);
   if (cached) return cached;
-
   try {
     const response = await fetch(request);
     if (response.ok) {
@@ -172,7 +171,6 @@ async function cacheFirstImage(request) {
     }
     return response;
   } catch {
-    // Return a transparent 1px gif as placeholder
     return new Response(
       atob('R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'),
       { headers: { 'Content-Type': 'image/gif' } }
@@ -186,9 +184,7 @@ async function cacheFirstImage(request) {
 // ============================================================
 
 function isPage(request) {
-  // Navigation requests (clicking links, typing URLs)
   if (request.mode === 'navigate') return true;
-  // Accept header includes HTML
   const accept = request.headers.get('Accept') || '';
   return accept.includes('text/html');
 }
@@ -197,7 +193,6 @@ function isImage(url) {
   return /\.(png|jpg|jpeg|gif|webp|svg|ico)(\?.*)?$/.test(url.pathname);
 }
 
-// Trim a cache to maxEntries (FIFO — delete oldest first)
 async function trimCache(cacheName, maxEntries) {
   const cache = await caches.open(cacheName);
   const keys  = await cache.keys();
@@ -213,18 +208,10 @@ async function trimCache(cacheName, maxEntries) {
 // ============================================================
 self.addEventListener('message', event => {
   if (!event.data) return;
-
-  // Force the SW to take control immediately (used after updates)
-  if (event.data.type === 'SKIP_WAITING') {
-    self.skipWaiting();
-  }
-
-  // Clear all caches on demand (useful for a "clear cache" UI button)
+  if (event.data.type === 'SKIP_WAITING') self.skipWaiting();
   if (event.data.type === 'CLEAR_CACHE') {
-    caches.keys().then(keys =>
-      Promise.all(keys.map(key => caches.delete(key)))
-    ).then(() => {
-      event.source?.postMessage({ type: 'CACHE_CLEARED' });
-    });
+    caches.keys()
+      .then(keys => Promise.all(keys.map(key => caches.delete(key))))
+      .then(() => { event.source?.postMessage({ type: 'CACHE_CLEARED' }); });
   }
 });

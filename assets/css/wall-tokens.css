@@ -1,0 +1,2562 @@
+/* ============================================================
+   STACK PICK — WALL TOKENS
+   Stacked Loadout Wall | Phase 6
+   Design: Dapper-Street / Varsity / Hardware Boutique
+   ============================================================ */
+
+/* ─────────────────────────────────────────────────────────────
+   GOOGLE FONTS IMPORT
+   Barlow Condensed (display) · Outfit (body) · JetBrains Mono (data)
+   ───────────────────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+
+/* ─────────────────────────────────────────────────────────────
+   ROOT — DARK MODE (default — wall body is always dark first)
+   ───────────────────────────────────────────────────────────── */
+:root {
+
+  /* ── WALL PALETTE ── */
+  --ink:           #0A0A0F;   /* near-black with blue undertone — the "wall" bg */
+  --ink-mid:       #141420;   /* card surface in dark mode */
+  --ink-lift:      #1E1E2E;   /* elevated surface — box fronts */
+  --ink-high:      #28283C;   /* hover / pressed state */
+  --grain-overlay: rgba(255,255,255,0.028); /* noise texture base */
+
+  --chalk:         #F2F0EB;   /* warm off-white — light mode base */
+  --chalk-mid:     #E8E5DE;   /* light mode surface */
+  --chalk-lift:    #FFFFFF;   /* light mode elevated */
+  --chalk-muted:   #B8B5AE;   /* light mode secondary text */
+
+  /* ── VOLT ACCENT ── */
+  --volt:          #C8FF00;   /* electric yellow-green — primary accent */
+  --volt-dim:      #8FB800;   /* volt at 70% — secondary accent */
+  --volt-glow:     rgba(200,255,0,0.15); /* ambient glow */
+  --volt-glow-lg:  rgba(200,255,0,0.08); /* large glow for cards */
+  --volt-text:     #0A0A0F;   /* text on volt background */
+
+  /* ── CATEGORY SEAM COLOURS ── */
+  --cobalt:        #0057FF;   /* keyboard seam */
+  --crimson:       #FF2D55;   /* mouse seam */
+  --amber:         #FF9500;   /* monitor seam */
+  --jade:          #00C853;   /* chair seam */
+  --slate:         #8E8EA0;   /* headset seam */
+  --purple:        #7B2FBE;   /* creator/extras seam */
+
+  /* ── CURRENT THEME SURFACE TOKENS (dark default) ── */
+  --surface-base:   var(--ink);
+  --surface-card:   var(--ink-mid);
+  --surface-lift:   var(--ink-lift);
+  --surface-high:   var(--ink-high);
+  --text-primary:   var(--chalk);
+  --text-secondary: rgba(242,240,235,0.55);
+  --text-tertiary:  rgba(242,240,235,0.30);
+  --border:         rgba(255,255,255,0.07);
+  --border-strong:  rgba(255,255,255,0.13);
+
+  /* ── TYPOGRAPHY ── */
+  --font-display: 'Barlow Condensed', 'Impact', Arial Narrow, sans-serif;
+  --font-body:    'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono:    'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+
+  /* ── TYPE SCALE ── */
+  --text-xs:   0.6875rem;   /* 11px */
+  --text-sm:   0.8125rem;   /* 13px */
+  --text-base: 1rem;        /* 16px */
+  --text-lg:   1.125rem;    /* 18px */
+  --text-xl:   1.375rem;    /* 22px */
+  --text-2xl:  1.75rem;     /* 28px */
+  --text-3xl:  2.25rem;     /* 36px */
+  --text-4xl:  3rem;        /* 48px */
+  --text-5xl:  3.75rem;     /* 60px */
+  --text-6xl:  4.5rem;      /* 72px */
+
+  /* ── DIMENSION TOKENS ── */
+  --seam-width:         4px;
+  --card-radius:        12px;
+  --card-radius-sm:     8px;
+  --patch-size:         72px;   /* mobile patch diameter */
+  --patch-size-lg:      80px;   /* desktop rail patch diameter */
+  --persona-strip-h:    96px;   /* mobile persona strip height */
+  --persona-strip-h-lg: 108px;  /* desktop persona strip height */
+  --story-strip-h:      104px;  /* mobile patch rail height */
+  --patch-rail-w:       100px;  /* desktop left rail width */
+  --utility-rack-h:     68px;   /* mobile bottom nav height */
+
+  /* ── SPACING SCALE ── */
+  --sp-1:  0.25rem;
+  --sp-2:  0.5rem;
+  --sp-3:  0.75rem;
+  --sp-4:  1rem;
+  --sp-5:  1.25rem;
+  --sp-6:  1.5rem;
+  --sp-8:  2rem;
+  --sp-10: 2.5rem;
+  --sp-12: 3rem;
+  --sp-16: 4rem;
+
+  /* ── RADIUS ── */
+  --radius-sm:   4px;
+  --radius:      8px;
+  --radius-lg:   12px;
+  --radius-xl:   16px;
+  --radius-pill: 9999px;
+
+  /* ── SHADOW / DEPTH ── */
+  --shadow-sm:    0 1px 3px rgba(0,0,0,0.4);
+  --shadow:       0 4px 16px rgba(0,0,0,0.5), 0 1px 3px rgba(0,0,0,0.3);
+  --shadow-card:  0 8px 32px rgba(0,0,0,0.6), 0 2px 6px rgba(0,0,0,0.4);
+  --shadow-lifted:0 16px 48px rgba(0,0,0,0.7), 0 4px 12px rgba(0,0,0,0.5);
+  --shadow-volt:  0 0 24px var(--volt-glow), 0 0 48px var(--volt-glow-lg);
+  --focus-ring:   0 0 0 2px var(--ink), 0 0 0 4px var(--volt);
+
+  /* ── TRANSITIONS ── */
+  --ease-spring:   cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-bounce:   cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-smooth:   cubic-bezier(0.645, 0.045, 0.355, 1.000);
+  --ease-snap:     cubic-bezier(0.87, 0, 0.13, 1);
+  --t-fast:        150ms;
+  --t-base:        250ms;
+  --t-slow:        400ms;
+  --t-flip:        550ms;
+  --t-drawer:      350ms;
+
+  /* ── LAYOUT ── */
+  --wall-max-w:    680px;
+  --wall-padding:  var(--sp-4);
+  --card-gap:      var(--sp-3);
+
+  /* ── STAMP / BADGE ── */
+  --stamp-ink:     rgba(255,255,255,0.06);
+  --stamp-border:  rgba(255,255,255,0.12);
+  --stamp-text:    var(--text-secondary);
+
+  /* ── Z-INDEX SCALE ── */
+  --z-base:        1;
+  --z-card:        10;
+  --z-sticky:      100;
+  --z-persona:     200;
+  --z-rail:        200;
+  --z-rack:        200;
+  --z-overlay:     300;
+  --z-sheet:       400;
+  --z-preview:     500;
+  --z-banner:      600;
+  --z-top:         9999;
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   LIGHT MODE OVERRIDES
+   Applied when [data-theme="light"] on <html>
+   ───────────────────────────────────────────────────────────── */
+[data-theme="light"] {
+  --surface-base:   var(--chalk);
+  --surface-card:   var(--chalk-lift);
+  --surface-lift:   var(--chalk-mid);
+  --surface-high:   #DEDAD2;
+  --text-primary:   #0A0A0F;
+  --text-secondary: rgba(10,10,15,0.55);
+  --text-tertiary:  rgba(10,10,15,0.30);
+  --border:         rgba(0,0,0,0.07);
+  --border-strong:  rgba(0,0,0,0.14);
+
+  --shadow-sm:    0 1px 3px rgba(0,0,0,0.1);
+  --shadow:       0 4px 16px rgba(0,0,0,0.1), 0 1px 3px rgba(0,0,0,0.08);
+  --shadow-card:  0 8px 32px rgba(0,0,0,0.12), 0 2px 6px rgba(0,0,0,0.08);
+  --shadow-lifted:0 16px 48px rgba(0,0,0,0.16), 0 4px 12px rgba(0,0,0,0.1);
+  --shadow-volt:  0 0 24px rgba(143,184,0,0.25), 0 0 48px rgba(143,184,0,0.12);
+  --focus-ring:   0 0 0 2px var(--chalk), 0 0 0 4px var(--cobalt);
+
+  --stamp-ink:     rgba(0,0,0,0.04);
+  --stamp-border:  rgba(0,0,0,0.10);
+  --stamp-text:    var(--text-secondary);
+
+  --volt-glow:     rgba(143,184,0,0.20);
+  --volt-glow-lg:  rgba(143,184,0,0.10);
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   CATEGORY SEAM MAP — utility custom props per category
+   JS sets these on .box-card via data-category attr + inline var
+   ───────────────────────────────────────────────────────────── */
+[data-category="headsets"]  { --cat-seam: var(--slate);   --cat-glow: rgba(142,142,160,0.15); }
+[data-category="keyboards"] { --cat-seam: var(--cobalt);  --cat-glow: rgba(0,87,255,0.15);   }
+[data-category="mice"]      { --cat-seam: var(--crimson); --cat-glow: rgba(255,45,85,0.15);  }
+[data-category="monitors"]  { --cat-seam: var(--amber);   --cat-glow: rgba(255,149,0,0.15);  }
+[data-category="chairs"]    { --cat-seam: var(--jade);    --cat-glow: rgba(0,200,83,0.15);   }
+
+
+/* ─────────────────────────────────────────────────────────────
+   PATCH COLOUR MAP — used in story-strip + patch-rail
+   data-collection on patch button drives CSS currentColor
+   ───────────────────────────────────────────────────────────── */
+.patch[data-collection="sweaty-fps"]  { --patch-color: var(--crimson); }
+.patch[data-collection="study-mode"]  { --patch-color: var(--cobalt);  }
+.patch[data-collection="kynar-setup"] { --patch-color: var(--volt);    }
+.patch[data-collection="under-100"]   { --patch-color: var(--jade);    }
+.patch[data-collection="cozy-station"]{ --patch-color: var(--amber);   }
+.patch[data-collection="wireless-only"]{ --patch-color: var(--slate);  }
+.patch[data-collection="creator-bay"] { --patch-color: var(--purple);  }
+.patch[data-collection="all-picks"]   { --patch-color: var(--chalk);   }
+
+
+/* ─────────────────────────────────────────────────────────────
+   KEYFRAMES LIBRARY
+   ───────────────────────────────────────────────────────────── */
+
+/* Volt pulse — locator dot + active patch glow */
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1;   transform: scale(1);   }
+  50%       { opacity: 0.4; transform: scale(0.7); }
+}
+
+/* Volt ring breathe — active patch */
+@keyframes volt-breathe {
+  0%, 100% { box-shadow: 0 0 0 0 var(--volt-glow); }
+  50%       { box-shadow: 0 0 0 8px transparent;    }
+}
+
+/* Patch jiggle — scroll trigger */
+@keyframes patch-jiggle {
+  0%   { transform: rotate(0deg) scale(1);    }
+  20%  { transform: rotate(-6deg) scale(1.04);}
+  40%  { transform: rotate(5deg) scale(1.04); }
+  60%  { transform: rotate(-4deg) scale(1.02);}
+  80%  { transform: rotate(3deg) scale(1.01); }
+  100% { transform: rotate(0deg) scale(1);    }
+}
+
+/* Card enter — stagger on collection swap */
+@keyframes card-enter {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Shuffle compress */
+@keyframes shuffle-compress {
+  0%   { transform: scaleY(1);    }
+  50%  { transform: scaleY(0.95); }
+  100% { transform: scaleY(1);    }
+}
+
+/* Banner slide in */
+@keyframes banner-in {
+  from { transform: translateY(-100%); opacity: 0; }
+  to   { transform: translateY(0);     opacity: 1; }
+}
+
+/* Stamp emboss pulse */
+@keyframes stamp-emboss {
+  0%   { letter-spacing: 0.12em; }
+  50%  { letter-spacing: 0.14em; }
+  100% { letter-spacing: 0.12em; }
+}
+
+/* Rack lift */
+@keyframes rack-lift {
+  from { transform: translateY(0)   scale(1);    }
+  to   { transform: translateY(-4px) scale(1.04); }
+}
+
+/* Shimmer (for loading states) */
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+
+/* Spinner */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+/* ============================================================
+   STACK PICK — wall.css
+   Stacked Loadout Wall | Phase 6B — Visual Shell
+   Design: Dapper-Street / Varsity / Hardware Boutique
+
+   CONTENTS
+   01  Reset & base
+   02  Skip link
+   03  Persona strip
+   04  Locator pill
+   05  Guest chip
+   06  Theme toggle
+   07  Preferences side sheet
+   08  Story strip (mobile patch rail)
+   09  Patches (shared — mobile + desktop)
+   10  Patch preview overlay
+   11  Patch rail (desktop left column)
+   12  Wall layout + header
+   13  Sort menu
+   14  Box card — structure & 3D physics
+   15  Box card — image zone & category gradient placeholders
+   16  Box card — info zone (badge, name, specs)
+   17  Box card — stamps (screen-printed tactile)
+   18  Box card — loadout dots
+   19  Box card — drawer (expand)
+   20  Box card — back face (flip)
+   21  Box card — flip button
+   22  Box card — offsets & stagger
+   23  Box card — states (hover, expanded, flipped, entering)
+   24  Loadout cluster
+   25  Shuffle trigger + banner
+   26  Utility rack (mobile bottom nav)
+   27  Rack sheet
+   28  Loading shimmer
+   29  Accessibility: focus, reduced motion
+   30  Desktop layout (≥ 900px)
+   31  Print
+   ============================================================ */
+
+
+/* ============================================================
+   01  RESET & BASE
+   ============================================================ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+  /* Prevent overscroll bounce revealing bg behind persona strip */
+  overscroll-behavior-y: none;
+}
+
+.wall-body {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--text-primary);
+  background-color: var(--surface-base);
+  min-height: 100dvh;
+  /* Safe area insets for iOS notch / home bar */
+  padding-bottom: env(safe-area-inset-bottom);
+  /* Prevent layout shift from scrollbar appearing */
+  scrollbar-gutter: stable;
+  /* Stacked wall always anchors content below strip + story strip */
+  padding-top: calc(var(--persona-strip-h) + var(--story-strip-h));
+}
+
+button {
+  font-family: var(--font-body);
+  cursor: pointer;
+  border: none;
+  background: none;
+  appearance: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul, ol {
+  list-style: none;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+
+/* ============================================================
+   02  SKIP LINK
+   ============================================================ */
+
+.skip-link {
+  position: fixed;
+  top: -100%;
+  left: var(--sp-4);
+  z-index: var(--z-top);
+  padding: var(--sp-2) var(--sp-4);
+  background: var(--volt);
+  color: var(--volt-text);
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: var(--text-sm);
+  border-radius: var(--radius);
+  transition: top var(--t-fast);
+}
+
+.skip-link:focus {
+  top: var(--sp-4);
+}
+
+
+/* ============================================================
+   03  PERSONA STRIP
+   Fixed top band — 96px mobile / 108px desktop
+   ============================================================ */
+
+.persona-strip {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: var(--z-persona);
+  height: var(--persona-strip-h);
+  background-color: var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--sp-4);
+  gap: var(--sp-4);
+  /* Blur backdrop for depth on scroll */
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+}
+
+/* ── Volt glowing top edge line ── */
+.persona-strip::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--volt-dim) 20%,
+    var(--volt) 50%,
+    var(--volt-dim) 80%,
+    transparent 100%
+  );
+  box-shadow:
+    0 0 8px  var(--volt-glow),
+    0 0 20px var(--volt-glow-lg);
+  z-index: 1;
+}
+
+/* ── SVG grain texture overlay ── */
+.persona-strip::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  /* Inline SVG turbulence filter — subtle grain */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 120px 120px;
+  opacity: 0.04;
+  pointer-events: none;
+  mix-blend-mode: overlay;
+  z-index: 2;
+}
+
+/* ── Bottom shadow fade into wall ── */
+.persona-strip {
+  box-shadow:
+    0 1px 0 var(--border),
+    0 4px 24px rgba(0,0,0,0.5);
+}
+
+/* Left zone */
+.persona-strip__left {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+  min-width: 0;
+  flex: 0 0 auto;
+}
+
+/* Center zone */
+.persona-strip__center {
+  flex: 1;
+  text-align: center;
+  min-width: 0;
+}
+
+/* Right zone */
+.persona-strip__right {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  flex: 0 0 auto;
+}
+
+/* Headline — Barlow Condensed, uppercase, massive */
+.persona-strip__headline {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 5vw, 2.6rem);
+  font-weight: 800;
+  line-height: 0.9;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  /* Subtle volt shimmer on the word */
+  background: linear-gradient(
+    135deg,
+    var(--chalk) 0%,
+    var(--volt) 60%,
+    var(--chalk) 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.persona-strip__sub {
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  font-weight: 400;
+  color: var(--text-secondary);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-top: var(--sp-1);
+}
+
+.persona-strip__tagline {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--text-tertiary);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+
+/* ============================================================
+   04  LOCATOR PILL
+   ============================================================ */
+
+.locator-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: 4px var(--sp-3);
+  background: rgba(200,255,0,0.08);
+  border: 1px solid rgba(200,255,0,0.20);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 500;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.locator-pill strong {
+  color: var(--volt);
+  font-weight: 600;
+}
+
+/* Pulsing dot */
+.locator-pill__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--volt);
+  flex-shrink: 0;
+  animation: pulse-dot 2.5s ease-in-out infinite;
+  box-shadow: 0 0 6px var(--volt-glow);
+}
+
+
+/* ============================================================
+   05  GUEST CHIP
+   ============================================================ */
+
+.guest-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: 6px 10px 6px 6px;
+  background: var(--surface-lift);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-pill);
+  color: var(--text-secondary);
+  font-size: var(--text-xs);
+  font-weight: 500;
+  transition:
+    background var(--t-fast),
+    border-color var(--t-fast),
+    color var(--t-fast);
+}
+
+.guest-chip:hover,
+.guest-chip:focus-visible {
+  background: var(--surface-high);
+  border-color: var(--volt-dim);
+  color: var(--text-primary);
+  outline: none;
+}
+
+.guest-chip__avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--volt-dim), var(--cobalt));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 9px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: 0.05em;
+  flex-shrink: 0;
+}
+
+.guest-chip__label {
+  font-family: var(--font-body);
+}
+
+
+/* ============================================================
+   06  THEME TOGGLE
+   ============================================================ */
+
+.theme-toggle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--surface-lift);
+  border: 1px solid var(--border-strong);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  flex-shrink: 0;
+  transition:
+    background var(--t-fast),
+    border-color var(--t-fast),
+    transform var(--t-fast);
+}
+
+.theme-toggle:hover,
+.theme-toggle:focus-visible {
+  background: var(--surface-high);
+  border-color: var(--volt-dim);
+  transform: rotate(20deg);
+  outline: none;
+}
+
+.theme-toggle:active {
+  transform: rotate(0deg) scale(0.93);
+}
+
+
+/* ============================================================
+   07  PREFERENCES SIDE SHEET
+   ============================================================ */
+
+.prefs-sheet {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: var(--z-sheet);
+  width: min(340px, 90vw);
+  background: var(--surface-card);
+  border-left: 1px solid var(--border-strong);
+  padding: var(--sp-8) var(--sp-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-6);
+  transform: translateX(100%);
+  transition: transform var(--t-slow) var(--ease-spring);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.prefs-sheet--open {
+  transform: translateX(0);
+}
+
+.prefs-sheet__handle {
+  position: absolute;
+  top: var(--sp-4);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 36px;
+  height: 4px;
+  background: var(--border-strong);
+  border-radius: var(--radius-pill);
+}
+
+.prefs-sheet__title {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  margin-top: var(--sp-4);
+}
+
+.prefs-sheet__body {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  background: var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.pref-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--sp-3) var(--sp-4);
+  background: var(--surface-lift);
+  gap: var(--sp-4);
+}
+
+.pref-row__label {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  font-weight: 400;
+}
+
+.pref-row__value {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.prefs-sheet__links {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+  margin-top: auto;
+}
+
+.prefs-sheet__nav-link {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  padding: var(--sp-2) 0;
+  border-bottom: 1px solid var(--border);
+  transition: color var(--t-fast);
+}
+
+.prefs-sheet__nav-link:hover {
+  color: var(--volt);
+}
+
+.prefs-sheet__close {
+  position: absolute;
+  top: var(--sp-4);
+  right: var(--sp-4);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--surface-high);
+  border: 1px solid var(--border-strong);
+  color: var(--text-secondary);
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--t-fast), color var(--t-fast);
+}
+
+.prefs-sheet__close:hover {
+  background: var(--crimson);
+  border-color: var(--crimson);
+  color: #fff;
+}
+
+/* Overlay */
+.prefs-sheet__overlay {
+  position: fixed;
+  inset: 0;
+  z-index: calc(var(--z-sheet) - 1);
+  background: rgba(10,10,15,0.72);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--t-slow);
+}
+
+.prefs-sheet--open ~ .prefs-sheet__overlay,
+.prefs-sheet__overlay.open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+
+/* ============================================================
+   08  STORY STRIP — Mobile horizontal patch rail
+   ============================================================ */
+
+.story-strip {
+  position: fixed;
+  top: var(--persona-strip-h);
+  left: 0;
+  right: 0;
+  z-index: var(--z-sticky);
+  height: var(--story-strip-h);
+  background: var(--ink);
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+  overflow: hidden;
+}
+
+.story-strip__track {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+  padding: var(--sp-3) var(--sp-4);
+  height: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
+  /* Hide scrollbar — keep it functional */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.story-strip__track::-webkit-scrollbar {
+  display: none;
+}
+
+
+/* ============================================================
+   09  PATCHES — Shared mobile + desktop
+   Varsity double-ring style
+   ============================================================ */
+
+.patch {
+  position: relative;
+  width: var(--patch-size);
+  height: var(--patch-size);
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  background: var(--surface-card);
+  scroll-snap-align: center;
+  cursor: pointer;
+  color: var(--patch-color, var(--text-secondary));
+  transition:
+    transform var(--t-base) var(--ease-spring),
+    background var(--t-fast);
+  -webkit-tap-highlight-color: transparent;
+  /* Subtle base shadow */
+  box-shadow:
+    0 2px 8px rgba(0,0,0,0.5),
+    inset 0 1px 0 rgba(255,255,255,0.06);
+}
+
+.patch:hover {
+  transform: scale(1.08);
+}
+
+.patch:active {
+  transform: scale(0.96);
+}
+
+/* ── Outer varsity ring ── */
+.patch__ring {
+  position: absolute;
+  inset: 3px;
+  border-radius: 50%;
+  border: 2px solid currentColor;
+  opacity: 0.55;
+  pointer-events: none;
+  transition: opacity var(--t-fast), border-color var(--t-fast);
+}
+
+/* ── Inner varsity ring (tighter) ── */
+.patch__ring--inner {
+  inset: 8px;
+  border: 1px solid currentColor;
+  opacity: 0.25;
+}
+
+/* ── Emoji ── */
+.patch__emoji {
+  font-size: 22px;
+  line-height: 1;
+  display: block;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Label below emoji ── */
+.patch__label {
+  font-family: var(--font-display);
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Active indicator dot ── */
+.patch__active-dot {
+  position: absolute;
+  bottom: 6px;
+  left: 50%;
+  transform: translateX(-50%) scale(0);
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--patch-color, var(--volt));
+  transition: transform var(--t-base) var(--ease-bounce);
+}
+
+/* ── ACTIVE STATE ── */
+.patch--active {
+  background: color-mix(in srgb, var(--patch-color) 12%, var(--surface-lift));
+  box-shadow:
+    0 0 0 1px var(--patch-color),
+    0 4px 20px rgba(0,0,0,0.6),
+    inset 0 1px 0 rgba(255,255,255,0.1);
+  animation: volt-breathe 3s ease-in-out infinite;
+}
+
+.patch--active .patch__ring {
+  opacity: 0.85;
+  border-width: 2px;
+}
+
+.patch--active .patch__ring--inner {
+  opacity: 0.4;
+}
+
+.patch--active .patch__label {
+  color: currentColor;
+}
+
+.patch--active .patch__active-dot {
+  transform: translateX(-50%) scale(1);
+  box-shadow: 0 0 6px currentColor;
+}
+
+/* ── JIGGLE animation (JS adds/removes) ── */
+.patch--jiggle {
+  animation: patch-jiggle 0.6s ease-in-out !important;
+}
+
+
+/* ============================================================
+   10  PATCH PREVIEW OVERLAY
+   Long-press 3-card mini stack
+   ============================================================ */
+
+.patch-preview {
+  position: absolute;
+  left: 50%;
+  bottom: 100%;
+  transform: translateX(-50%) translateY(8px);
+  z-index: var(--z-preview);
+  background: var(--surface-lift);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-xl);
+  padding: var(--sp-4);
+  box-shadow: var(--shadow-lifted);
+  width: min(320px, 92vw);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity var(--t-base) var(--ease-spring),
+    transform var(--t-base) var(--ease-spring);
+}
+
+.patch-preview--open {
+  opacity: 1;
+  pointer-events: all;
+  transform: translateX(-50%) translateY(0);
+}
+
+.patch-preview__cards {
+  display: flex;
+  gap: var(--sp-3);
+  margin-bottom: var(--sp-4);
+}
+
+.patch-preview__cta {
+  width: 100%;
+  padding: var(--sp-3);
+  background: var(--volt);
+  color: var(--volt-text);
+  border-radius: var(--radius);
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  text-align: center;
+  transition: background var(--t-fast), transform var(--t-fast);
+}
+
+.patch-preview__cta:hover {
+  background: var(--volt-dim);
+  transform: scale(1.02);
+}
+
+
+/* ============================================================
+   11  PATCH RAIL — Desktop fixed left column
+   Hidden on mobile, visible ≥ 900px
+   ============================================================ */
+
+.patch-rail {
+  display: none; /* shown in desktop media query below */
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: var(--z-rail);
+  width: var(--patch-rail-w);
+  background: var(--ink);
+  border-right: 1px solid var(--border);
+  flex-direction: column;
+  align-items: center;
+  padding: var(--sp-4) 0;
+  gap: var(--sp-2);
+  box-shadow: 1px 0 0 var(--border), 4px 0 24px rgba(0,0,0,0.3);
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.patch-rail::-webkit-scrollbar {
+  display: none;
+}
+
+.patch-rail__logo {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(135deg, var(--volt-dim), var(--cobalt));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-bottom: var(--sp-4);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4), var(--shadow-volt);
+}
+
+.patch-rail__logo-text {
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: 900;
+  color: var(--ink);
+  letter-spacing: 0.05em;
+}
+
+.patch-rail__track {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-4);
+  flex: 1;
+  width: 100%;
+  padding: 0 var(--sp-2);
+}
+
+/* Desktop patches are slightly larger */
+.patch-rail .patch {
+  width: var(--patch-size-lg);
+  height: var(--patch-size-lg);
+}
+
+.patch-rail__footer {
+  margin-top: auto;
+  padding-top: var(--sp-4);
+  border-top: 1px solid var(--border);
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.patch-rail__theme-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--surface-lift);
+  border: 1px solid var(--border-strong);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  color: var(--text-secondary);
+  transition: background var(--t-fast), transform var(--t-fast);
+}
+
+.patch-rail__theme-btn:hover {
+  background: var(--surface-high);
+  transform: rotate(20deg);
+}
+
+
+/* ============================================================
+   12  WALL LAYOUT + HEADER
+   ============================================================ */
+
+.wall {
+  position: relative;
+  max-width: var(--wall-max-w);
+  margin: 0 auto;
+  padding: var(--sp-4) var(--wall-padding);
+  padding-bottom: calc(var(--utility-rack-h) + var(--sp-8) + env(safe-area-inset-bottom));
+  min-height: 100dvh;
+}
+
+.wall__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--sp-4) 0 var(--sp-3);
+  border-bottom: 1px solid var(--border);
+  margin-bottom: var(--sp-4);
+  position: sticky;
+  top: 0;
+  z-index: var(--z-sticky);
+  background: var(--surface-base);
+}
+
+.wall__header-left {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+}
+
+.wall__collection-emoji {
+  font-size: var(--text-xl);
+  line-height: 1;
+}
+
+.wall__collection-label {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+}
+
+.wall__count {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--text-tertiary);
+  font-weight: 400;
+  padding: 2px 8px;
+  background: var(--surface-lift);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+}
+
+.wall__header-right {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+}
+
+.wall__sort-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-1);
+  padding: var(--sp-2) var(--sp-3);
+  background: var(--surface-lift);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  font-weight: 500;
+  color: var(--text-secondary);
+  letter-spacing: 0.02em;
+  transition: background var(--t-fast), color var(--t-fast);
+}
+
+.wall__sort-btn:hover {
+  background: var(--surface-high);
+  color: var(--text-primary);
+}
+
+.wall__sort-icon {
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+
+/* ============================================================
+   13  SORT MENU
+   ============================================================ */
+
+.wall__sort-menu {
+  position: absolute;
+  top: calc(100% + var(--sp-2));
+  right: 0;
+  z-index: var(--z-sticky);
+  background: var(--surface-lift);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lifted);
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-8px) scale(0.97);
+  transition:
+    opacity var(--t-base) var(--ease-spring),
+    transform var(--t-base) var(--ease-spring);
+  min-width: 180px;
+}
+
+.wall__sort-menu[aria-hidden="false"] {
+  opacity: 1;
+  pointer-events: all;
+  transform: translateY(0) scale(1);
+}
+
+.wall__sort-option {
+  display: block;
+  width: 100%;
+  padding: var(--sp-3) var(--sp-4);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 400;
+  color: var(--text-secondary);
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  transition: background var(--t-fast), color var(--t-fast);
+}
+
+.wall__sort-option:last-child {
+  border-bottom: none;
+}
+
+.wall__sort-option:hover {
+  background: var(--surface-high);
+  color: var(--text-primary);
+}
+
+.wall__sort-option--active {
+  color: var(--volt);
+  font-weight: 500;
+}
+
+
+/* ============================================================
+   14  BOX CARD — Structure & 3D Physics
+
+   Layer order (back to front):
+   .box-card__shadow-layer  (parallax — moves at 0.6x scroll)
+   .box-card__body          (3D flip container)
+     .box-card__front       (default face, backface-hidden)
+     .box-card__drawer      (expand-on-tap, inside front)
+     .box-card__back        (flip face, backface-hidden)
+   .box-card__flip-btn      (corner icon)
+   ============================================================ */
+
+.card-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--card-gap);
+  position: relative;
+}
+
+.box-card {
+  position: relative;
+  border-radius: var(--card-radius);
+  /* 3D perspective for child transforms */
+  perspective: 1400px;
+  -webkit-perspective: 1400px;
+}
+
+/* ── Parallax shadow layer ── */
+.box-card__shadow-layer {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--card-radius);
+  /* Larger blurred shadow creates depth illusion */
+  box-shadow:
+    0 20px 40px -8px rgba(0,0,0,0.7),
+    0 8px 16px -4px rgba(0,0,0,0.5);
+  will-change: transform;
+  pointer-events: none;
+  z-index: 0;
+  /* Seam glow bleeds through shadow layer */
+  border-right: var(--seam-width) solid var(--cat-seam, transparent);
+  border-radius: 0 var(--card-radius) var(--card-radius) 0;
+}
+
+/* ── 3D flip container ── */
+.box-card__body {
+  position: relative;
+  z-index: var(--z-card);
+  border-radius: var(--card-radius);
+  transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
+  transition: transform var(--t-flip) var(--ease-smooth);
+  will-change: transform;
+  /* Lift shadow from surface */
+  box-shadow: var(--shadow-card);
+  background: var(--surface-card);
+}
+
+/* Flipped state */
+.box-card--flipped .box-card__body {
+  transform: rotateY(180deg);
+}
+
+/* ── FRONT FACE ── */
+.box-card__front {
+  position: relative;
+  border-radius: var(--card-radius);
+  overflow: hidden;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  background: var(--surface-card);
+}
+
+/* ── SEAM — right edge category colour stripe ── */
+.box-card__seam {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: var(--seam-width);
+  background: var(--cat-seam, var(--slate));
+  border-radius: 0 var(--card-radius) var(--card-radius) 0;
+  z-index: 2;
+  /* Glow inward from seam */
+  box-shadow: -4px 0 16px var(--cat-glow, rgba(142,142,160,0.15));
+}
+
+/* ── LIP — top edge highlight ── */
+.box-card__lip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: linear-gradient(
+    180deg,
+    rgba(255,255,255,0.18) 0%,
+    transparent 100%
+  );
+  border-radius: var(--card-radius) var(--card-radius) 0 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+
+/* ============================================================
+   15  BOX CARD — Image zone & CSS gradient placeholders
+   ============================================================ */
+
+.box-card__img-zone {
+  position: relative;
+  height: 140px;
+  overflow: hidden;
+  border-radius: var(--card-radius) var(--card-radius) 0 0;
+}
+
+/* Base gradient — overridden per category */
+.box-card__img {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 64px;
+  /* Default — ink surface with subtle glow */
+  background:
+    radial-gradient(
+      ellipse 60% 70% at 30% 50%,
+      var(--cat-glow, rgba(142,142,160,0.12)) 0%,
+      transparent 70%
+    ),
+    var(--surface-lift);
+  position: relative;
+}
+
+/* Category-specific gradient washes */
+.box-card__img--mice {
+  background:
+    radial-gradient(ellipse 60% 70% at 30% 50%, rgba(255,45,85,0.12) 0%, transparent 70%),
+    linear-gradient(135deg, var(--ink) 0%, #1a0810 100%);
+}
+.box-card__img--keyboards {
+  background:
+    radial-gradient(ellipse 60% 70% at 30% 50%, rgba(0,87,255,0.12) 0%, transparent 70%),
+    linear-gradient(135deg, var(--ink) 0%, #080d1a 100%);
+}
+.box-card__img--headsets {
+  background:
+    radial-gradient(ellipse 60% 70% at 30% 50%, rgba(142,142,160,0.12) 0%, transparent 70%),
+    linear-gradient(135deg, var(--ink) 0%, #101015 100%);
+}
+.box-card__img--monitors {
+  background:
+    radial-gradient(ellipse 60% 70% at 30% 50%, rgba(255,149,0,0.12) 0%, transparent 70%),
+    linear-gradient(135deg, var(--ink) 0%, #1a1000 100%);
+}
+.box-card__img--chairs {
+  background:
+    radial-gradient(ellipse 60% 70% at 30% 50%, rgba(0,200,83,0.12) 0%, transparent 70%),
+    linear-gradient(135deg, var(--ink) 0%, #001a08 100%);
+}
+
+/* Category tag — top-left corner chip */
+.box-card__category-tag {
+  position: absolute;
+  top: var(--sp-3);
+  left: var(--sp-3);
+  z-index: 2;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  background: rgba(10,10,15,0.7);
+  border: 1px solid var(--border-strong);
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+
+/* ============================================================
+   16  BOX CARD — Info zone (badge, name, specs)
+   ============================================================ */
+
+.box-card__info {
+  padding: var(--sp-4) var(--sp-4) var(--sp-2);
+}
+
+/* Badge — screen-printed varsity style */
+.box-card__badge {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--volt);
+  background: rgba(200,255,0,0.08);
+  border: 1px solid rgba(200,255,0,0.18);
+  padding: 3px 10px;
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--sp-2);
+  /* Embossed/screen-printed look */
+  text-shadow: 0 0 12px rgba(200,255,0,0.4);
+  box-shadow:
+    inset 0 1px 0 rgba(200,255,0,0.08),
+    0 1px 0 rgba(0,0,0,0.3);
+}
+
+/* Product name — Barlow Condensed */
+.box-card__name {
+  font-family: var(--font-display);
+  font-size: clamp(1.3rem, 4vw, 1.65rem);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  line-height: 1.05;
+  color: var(--text-primary);
+  margin-bottom: var(--sp-3);
+  /* Prevent seam overlap */
+  padding-right: calc(var(--seam-width) + var(--sp-4));
+}
+
+/* Spec pills row */
+.box-card__specs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+  margin-bottom: var(--sp-3);
+}
+
+.spec-pill {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  background: var(--surface-lift);
+  border: 1px solid var(--border);
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+  transition: border-color var(--t-fast), color var(--t-fast);
+}
+
+/* ── Spec pill hover — seam colour accent ── */
+.box-card:hover .spec-pill {
+  border-color: var(--cat-seam, var(--border-strong));
+}
+
+
+/* ============================================================
+   17  BOX CARD — Stamps (screen-printed / tactile)
+
+   PHILOSOPHY: These should feel like a garment label pressed
+   into fabric — not a digital badge. Achieved via:
+   - Slightly rough font tracking
+   - No border-radius on the outer stamp border
+   - Mix of opacity + blend mode for ink-on-surface feel
+   - Faint offset drop shadow (simulating ink deboss)
+   ============================================================ */
+
+.box-card__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--sp-2) var(--sp-4) var(--sp-4);
+  gap: var(--sp-3);
+  /* Right padding clears the seam */
+  padding-right: calc(var(--seam-width) + var(--sp-4));
+}
+
+.box-card__badges-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+}
+
+/* Base stamp — the screen-print base */
+.stamp {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--stamp-text);
+  /* Roughened border — no smooth radius, mimics edge of a rubber stamp */
+  border: 1px solid var(--stamp-border);
+  border-radius: 2px;
+  padding: 3px 7px;
+  background: var(--stamp-ink);
+  /* The tactile deboss effect */
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.04),
+    0 1px 0 rgba(0,0,0,0.4);
+  /* Slight rotation adds hand-stamped feel */
+  transform: rotate(-0.4deg);
+  /* Faint halftone-ish blend */
+  mix-blend-mode: normal;
+  user-select: none;
+}
+
+/* UK Stock — subtle green tint */
+.stamp--uk-stock {
+  color: rgba(0,200,83,0.75);
+  border-color: rgba(0,200,83,0.20);
+  background: rgba(0,200,83,0.06);
+  text-shadow: 0 0 8px rgba(0,200,83,0.25);
+  transform: rotate(-0.6deg);
+}
+
+/* Next Day — volt tint, slightly more prominent */
+.stamp--next-day {
+  color: rgba(200,255,0,0.80);
+  border-color: rgba(200,255,0,0.22);
+  background: rgba(200,255,0,0.06);
+  text-shadow: 0 0 8px rgba(200,255,0,0.3);
+  transform: rotate(0.3deg);
+}
+
+/* Desk Ready — amber tint */
+.stamp--desk-ready {
+  color: rgba(255,149,0,0.75);
+  border-color: rgba(255,149,0,0.20);
+  background: rgba(255,149,0,0.06);
+  transform: rotate(-0.2deg);
+}
+
+
+/* ============================================================
+   18  BOX CARD — Loadout dots (social proof)
+   ============================================================ */
+
+.box-card__loadout-dots {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.loadout-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--border-strong);
+  transition: background var(--t-fast);
+}
+
+.loadout-dot--filled {
+  background: var(--cat-seam, var(--volt-dim));
+  box-shadow: 0 0 4px var(--cat-glow, var(--volt-glow));
+}
+
+
+/* ============================================================
+   19  BOX CARD — Drawer (expand on tap)
+   ============================================================ */
+
+.box-card__drawer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height var(--t-drawer) var(--ease-spring);
+  border-top: 0px solid transparent;
+  transition:
+    max-height var(--t-drawer) var(--ease-spring),
+    border-color var(--t-fast);
+}
+
+.box-card--expanded .box-card__drawer {
+  max-height: 400px;
+  border-top: 1px solid var(--border);
+}
+
+/* Stat grid */
+.box-card__drawer-specs {
+  padding: var(--sp-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+
+.drawer-stat {
+  display: grid;
+  grid-template-columns: 52px 1fr;
+  gap: var(--sp-3);
+  align-items: baseline;
+}
+
+.drawer-stat__key {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+.drawer-stat__val {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 400;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.drawer-stat--con .drawer-stat__key {
+  color: rgba(255,45,85,0.6);
+}
+
+.drawer-stat--con .drawer-stat__val {
+  color: rgba(255,45,85,0.7);
+}
+
+/* Price + CTA */
+.box-card__drawer-price {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  padding: var(--sp-4);
+  padding-top: 0;
+}
+
+/* Price — JetBrains Mono, large */
+.box-card__price {
+  font-family: var(--font-mono);
+  font-size: var(--text-2xl);
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+}
+
+/* CTA — Amazon affiliate link */
+.box-card__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: var(--sp-3) var(--sp-5);
+  background: var(--volt);
+  color: var(--volt-text);
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-radius: var(--radius);
+  transition:
+    background var(--t-fast),
+    transform var(--t-fast),
+    box-shadow var(--t-fast);
+  box-shadow: var(--shadow-volt);
+  text-decoration: none;
+}
+
+.box-card__cta:hover {
+  background: var(--volt-dim);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px var(--volt-glow), 0 0 40px var(--volt-glow-lg);
+}
+
+.box-card__cta:active {
+  transform: translateY(0) scale(0.97);
+}
+
+
+/* ============================================================
+   20  BOX CARD — Back face (flip face — Similar picks)
+   ============================================================ */
+
+.box-card__back {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--card-radius);
+  background: var(--surface-lift);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: rotateY(180deg);
+  display: flex;
+  flex-direction: column;
+  padding: var(--sp-6);
+  gap: var(--sp-4);
+  overflow: hidden;
+}
+
+/* Seam on back face too */
+.box-card__back::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: var(--seam-width);
+  background: var(--cat-seam, var(--slate));
+  border-radius: 0 var(--card-radius) var(--card-radius) 0;
+}
+
+.box-card__back-label {
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+.box-card__alt-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  flex: 1;
+}
+
+.alt-pick {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-3);
+  background: var(--surface-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  transition: border-color var(--t-fast);
+}
+
+.alt-pick:hover {
+  border-color: var(--cat-seam, var(--border-strong));
+}
+
+.alt-pick__name {
+  flex: 1;
+  font-family: var(--font-display);
+  font-size: var(--text-base);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: var(--text-primary);
+}
+
+.alt-pick__price {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.alt-pick__link {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--volt);
+  color: var(--volt-text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+  transition: background var(--t-fast), transform var(--t-fast);
+  text-decoration: none;
+}
+
+.alt-pick__link:hover {
+  background: var(--volt-dim);
+  transform: scale(1.1);
+}
+
+
+/* ============================================================
+   21  BOX CARD — Flip button (corner icon)
+   ============================================================ */
+
+.box-card__flip-btn {
+  position: absolute;
+  bottom: var(--sp-3);
+  right: calc(var(--seam-width) + var(--sp-3));
+  z-index: 20;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--surface-high);
+  border: 1px solid var(--border-strong);
+  color: var(--text-tertiary);
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    background var(--t-fast),
+    color var(--t-fast),
+    transform var(--t-base) var(--ease-bounce);
+}
+
+.box-card__flip-btn:hover {
+  background: var(--surface-lift);
+  color: var(--text-secondary);
+  transform: rotate(180deg);
+}
+
+.box-card--flipped .box-card__flip-btn {
+  transform: rotate(180deg);
+  color: var(--volt-dim);
+}
+
+
+/* ============================================================
+   22  BOX CARD — Asymmetric offset staggering
+   Blueprint: odd → offset-right (shifted right slightly)
+              even → offset-left (shifted left slightly)
+   ============================================================ */
+
+.box-card:nth-child(odd) {
+  margin-left: 12px;
+  margin-right: 4px;
+}
+
+.box-card:nth-child(even) {
+  margin-left: 4px;
+  margin-right: 12px;
+}
+
+/* JS also stamps these modifier classes for consistency */
+.box-card--offset-right {
+  margin-left: 12px;
+  margin-right: 4px;
+}
+
+.box-card--offset-left {
+  margin-left: 4px;
+  margin-right: 12px;
+}
+
+
+/* ============================================================
+   23  BOX CARD — States (hover, expanded, flipped, entering)
+   ============================================================ */
+
+/* Hover — lift and glow */
+.box-card:hover .box-card__body {
+  box-shadow:
+    var(--shadow-lifted),
+    -2px 0 24px var(--cat-glow, rgba(200,255,0,0.06));
+  transform: translateY(-2px);
+}
+
+.box-card--flipped:hover .box-card__body {
+  transform: rotateY(180deg) translateY(-2px);
+}
+
+/* Expanded — glow along seam */
+.box-card--expanded .box-card__body {
+  box-shadow:
+    var(--shadow-lifted),
+    4px 0 32px var(--cat-glow, rgba(200,255,0,0.08));
+}
+
+.box-card--expanded .box-card__seam {
+  box-shadow: -6px 0 24px var(--cat-glow, rgba(200,255,0,0.20));
+}
+
+/* Entering — stagger animation (class added by JS) */
+.box-card--entering {
+  animation: card-enter 0.5s var(--ease-spring) both;
+}
+
+/* Stagger delays — up to 8 cards, then resets */
+.box-card--entering:nth-child(1)  { animation-delay: 0ms;   }
+.box-card--entering:nth-child(2)  { animation-delay: 60ms;  }
+.box-card--entering:nth-child(3)  { animation-delay: 120ms; }
+.box-card--entering:nth-child(4)  { animation-delay: 180ms; }
+.box-card--entering:nth-child(5)  { animation-delay: 240ms; }
+.box-card--entering:nth-child(6)  { animation-delay: 300ms; }
+.box-card--entering:nth-child(7)  { animation-delay: 360ms; }
+.box-card--entering:nth-child(8)  { animation-delay: 420ms; }
+
+/* Focus visible — volt ring */
+.box-card:focus-within .box-card__body {
+  outline: none;
+  box-shadow:
+    var(--shadow-card),
+    0 0 0 2px var(--ink),
+    0 0 0 4px var(--volt);
+}
+
+
+/* ============================================================
+   24  LOADOUT CLUSTER
+   Injected by JS every 5 cards
+   ============================================================ */
+
+.loadout-cluster {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-5);
+  padding: var(--sp-5);
+  background: var(--surface-lift);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--card-radius);
+  margin: var(--sp-4) 0;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Volt accent left border */
+.loadout-cluster::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(
+    180deg,
+    var(--volt-dim) 0%,
+    transparent 100%
+  );
+}
+
+/* Diagonal grain bg */
+.loadout-cluster::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    -45deg,
+    rgba(255,255,255,0.01) 0px,
+    rgba(255,255,255,0.01) 1px,
+    transparent 1px,
+    transparent 8px
+  );
+  pointer-events: none;
+}
+
+/* Mini box stack */
+.loadout-cluster__stack {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  flex-shrink: 0;
+}
+
+.loadout-cluster__mini-box {
+  position: absolute;
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  background: var(--surface-card);
+  border: 1px solid var(--border-strong);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  box-shadow: var(--shadow-sm);
+}
+
+/* Diagonal stacking offsets */
+.loadout-cluster__mini-box--1 {
+  top: 0;
+  left: 0;
+  z-index: 3;
+  transform: rotate(-4deg);
+}
+.loadout-cluster__mini-box--2 {
+  top: 10px;
+  left: 10px;
+  z-index: 2;
+  transform: rotate(2deg);
+}
+.loadout-cluster__mini-box--3 {
+  top: 20px;
+  left: 20px;
+  z-index: 1;
+  transform: rotate(-1deg);
+}
+
+.mini-box__silhouette {
+  font-size: 18px;
+}
+
+/* Meta */
+.loadout-cluster__meta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+  min-width: 0;
+  flex: 1;
+}
+
+.loadout-cluster__title {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: var(--text-primary);
+  line-height: 1.1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.loadout-cluster__items {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--text-tertiary);
+}
+
+.loadout-cluster__total {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--volt);
+}
+
+.loadout-cluster__cta {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-decoration: none;
+  margin-top: var(--sp-1);
+  transition: color var(--t-fast);
+}
+
+.loadout-cluster__cta:hover {
+  color: var(--volt);
+}
+
+
+/* ============================================================
+   25  SHUFFLE TRIGGER + BANNER
+   ============================================================ */
+
+/* Pull-to-shuffle gesture zone */
+.shuffle-trigger {
+  height: 0;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition:
+    height var(--t-base),
+    opacity var(--t-base);
+  margin-bottom: 0;
+}
+
+.shuffle-trigger--pulling {
+  height: 56px;
+  opacity: 1;
+  margin-bottom: var(--sp-3);
+}
+
+.shuffle-trigger__inner {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+.shuffle-trigger__icon {
+  font-size: var(--text-xl);
+  animation: spin 1s linear infinite;
+  display: block;
+}
+
+/* Shuffle state banner */
+.shuffle-banner {
+  position: sticky;
+  top: calc(var(--sp-4));
+  z-index: var(--z-banner);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-3) var(--sp-4);
+  background: var(--ink-lift);
+  border: 1px solid var(--volt-dim);
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--sp-4);
+  /* Hidden by default */
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-100%);
+  transition:
+    opacity var(--t-base) var(--ease-spring),
+    transform var(--t-base) var(--ease-spring);
+  box-shadow: 0 4px 20px var(--volt-glow-lg);
+}
+
+.shuffle-banner--visible {
+  opacity: 1;
+  pointer-events: all;
+  transform: translateY(0);
+}
+
+.shuffle-banner__dice {
+  font-size: var(--text-xl);
+  flex-shrink: 0;
+}
+
+.shuffle-banner__text {
+  flex: 1;
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--volt);
+  letter-spacing: 0.02em;
+}
+
+.shuffle-banner__reset {
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  padding: 4px 10px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  transition: background var(--t-fast), color var(--t-fast);
+}
+
+.shuffle-banner__reset:hover {
+  background: var(--surface-high);
+  color: var(--text-primary);
+}
+
+
+/* ============================================================
+   26  UTILITY RACK — Mobile bottom shoebox nav
+   4 shoebox mini-cards docked to bottom
+   ============================================================ */
+
+.utility-rack {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: var(--z-rack);
+  height: calc(var(--utility-rack-h) + env(safe-area-inset-bottom));
+  padding-bottom: env(safe-area-inset-bottom);
+  background: var(--ink);
+  border-top: 1px solid var(--border-strong);
+  display: flex;
+  align-items: flex-start;
+  padding-top: var(--sp-2);
+  box-shadow: 0 -4px 24px rgba(0,0,0,0.5);
+  gap: var(--sp-1);
+  padding-left: var(--sp-2);
+  padding-right: var(--sp-2);
+}
+
+/* Shoebox tile */
+.rack-box {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: var(--radius);
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
+  transition:
+    transform var(--t-fast) var(--ease-bounce),
+    background var(--t-fast);
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+.rack-box:active {
+  transform: scale(0.93);
+}
+
+/* ── Lip — top highlight of shoebox ── */
+.rack-box__lip {
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(
+    180deg,
+    rgba(255,255,255,0.10) 0%,
+    rgba(255,255,255,0.02) 100%
+  );
+  border-radius: var(--radius) var(--radius) 0 0;
+  flex-shrink: 0;
+}
+
+/* ── Face — icon + label ── */
+.rack-box__face {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 6px var(--sp-2) 8px;
+  flex: 1;
+  width: 100%;
+  position: relative;
+}
+
+.rack-box__icon {
+  font-size: 20px;
+  line-height: 1;
+  transition: transform var(--t-base) var(--ease-bounce);
+}
+
+.rack-box__label {
+  font-family: var(--font-body);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  transition: color var(--t-fast);
+}
+
+/* ── Active shoebox ── */
+.rack-box--active {
+  background: var(--surface-lift);
+}
+
+.rack-box--active .rack-box__lip {
+  background: linear-gradient(
+    180deg,
+    var(--volt) 0%,
+    rgba(200,255,0,0.2) 60%,
+    transparent 100%
+  );
+  box-shadow: 0 0 8px var(--volt-glow);
+}
+
+.rack-box--active .rack-box__label {
+  color: var(--volt);
+}
+
+.rack-box--active .rack-box__icon {
+  transform: translateY(-2px) scale(1.1);
+}
+
+/* ── Lifted state (hold-to-open) ── */
+.rack-box--lifted {
+  animation: rack-lift 0.3s var(--ease-bounce) forwards;
+}
+
+
+/* ============================================================
+   27  RACK SHEET — Hold-to-open quick actions
+   ============================================================ */
+
+.rack-sheet {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: var(--z-sheet);
+  background: var(--surface-card);
+  border-top: 1px solid var(--border-strong);
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  padding: var(--sp-4) var(--sp-4) calc(var(--utility-rack-h) + var(--sp-4) + env(safe-area-inset-bottom));
+  box-shadow: 0 -8px 40px rgba(0,0,0,0.6);
+  transform: translateY(100%);
+  transition: transform var(--t-slow) var(--ease-spring);
+  max-height: 70dvh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.rack-sheet--open {
+  transform: translateY(0);
+}
+
+.rack-sheet__bar {
+  width: 36px;
+  height: 4px;
+  background: var(--border-strong);
+  border-radius: var(--radius-pill);
+  margin: 0 auto var(--sp-5);
+}
+
+.rack-sheet__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+
+.rack-sheet__overlay {
+  position: fixed;
+  inset: 0;
+  z-index: calc(var(--z-sheet) - 1);
+  background: rgba(10,10,15,0.6);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--t-slow);
+}
+
+.rack-sheet--open ~ .rack-sheet__overlay,
+.rack-sheet__overlay.open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+
+/* ============================================================
+   28  LOADING SHIMMER
+   ============================================================ */
+
+.card-stack__loading {
+  display: flex;
+  flex-direction: column;
+  gap: var(--card-gap);
+}
+
+.loading-shimmer {
+  border-radius: var(--card-radius);
+  background: linear-gradient(
+    90deg,
+    var(--surface-card)     0%,
+    var(--surface-lift)    50%,
+    var(--surface-card)   100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+  border: 1px solid var(--border);
+}
+
+.loading-shimmer--card {
+  height: 320px;
+}
+
+.loading-shimmer--card:nth-child(1) { margin-left: 12px; margin-right: 4px; }
+.loading-shimmer--card:nth-child(2) { margin-left: 4px;  margin-right: 12px; animation-delay: 0.2s; }
+.loading-shimmer--card:nth-child(3) { margin-left: 12px; margin-right: 4px;  animation-delay: 0.4s; }
+
+
+/* ============================================================
+   29  ACCESSIBILITY — Focus, reduced motion
+   ============================================================ */
+
+/* Custom focus ring — volt on dark, cobalt on light */
+:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+/* Reduced motion — respect OS preference */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .box-card__body {
+    transition: none !important;
+  }
+
+  .patch {
+    transition: background var(--t-fast) !important;
+  }
+
+  .persona-strip__headline {
+    animation: none !important;
+    -webkit-text-fill-color: var(--chalk);
+    background: none;
+  }
+}
+
+
+/* ============================================================
+   30  DESKTOP LAYOUT — ≥ 900px
+   ============================================================ */
+
+@media (min-width: 900px) {
+
+  /* Body no longer needs top padding for story-strip */
+  .wall-body {
+    padding-top: var(--persona-strip-h-lg);
+    padding-bottom: 0;
+  }
+
+  /* Persona strip taller */
+  .persona-strip {
+    height: var(--persona-strip-h-lg);
+    padding: 0 var(--sp-8) 0 calc(var(--patch-rail-w) + var(--sp-8));
+  }
+
+  /* Story strip hidden on desktop */
+  .story-strip {
+    display: none;
+  }
+
+  /* Patch rail shown on desktop */
+  .patch-rail {
+    display: flex;
+  }
+
+  /* Wall pushed right to clear patch rail */
+  .wall {
+    margin-left: var(--patch-rail-w);
+    padding: var(--sp-8) var(--sp-8);
+    max-width: calc(var(--wall-max-w) + var(--patch-rail-w));
+  }
+
+  /* Wall header: position relative to cleared patch rail */
+  .wall__header {
+    top: calc(var(--persona-strip-h-lg) + var(--sp-4));
+  }
+
+  /* Utility rack hidden on desktop */
+  .utility-rack {
+    display: none;
+  }
+
+  /* Rack sheet hidden on desktop */
+  .rack-sheet {
+    display: none;
+  }
+
+  /* Box cards slightly wider offset on desktop */
+  .box-card:nth-child(odd) {
+    margin-left: 24px;
+    margin-right: 8px;
+  }
+  .box-card:nth-child(even) {
+    margin-left: 8px;
+    margin-right: 24px;
+  }
+
+  /* Headline larger on desktop */
+  .persona-strip__headline {
+    font-size: 3rem;
+  }
+
+  /* Patch preview anchors to rail */
+  .patch-preview {
+    left: var(--patch-rail-w);
+    transform: translateY(-100%);
+  }
+}
+
+/* Mid-range: tablet layout */
+@media (min-width: 600px) and (max-width: 899px) {
+  .wall {
+    padding: var(--sp-6);
+    max-width: 100%;
+  }
+
+  .box-card__img-zone {
+    height: 160px;
+  }
+}
+
+
+/* ============================================================
+   31  PRINT
+   ============================================================ */
+
+@media print {
+  .persona-strip,
+  .story-strip,
+  .patch-rail,
+  .utility-rack,
+  .rack-sheet,
+  .shuffle-banner,
+  .shuffle-trigger,
+  .box-card__flip-btn,
+  .wall__sort-btn {
+    display: none !important;
+  }
+
+  .wall-body {
+    padding-top: 0;
+    background: white;
+    color: black;
+  }
+
+  .box-card__cta {
+    background: none;
+    color: black;
+    border: 1px solid black;
+    box-shadow: none;
+  }
+
+  .box-card__drawer {
+    max-height: none !important;
+  }
+}
