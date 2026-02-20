@@ -2560,3 +2560,33 @@ img {
     max-height: none !important;
   }
 }
+
+
+/* ============================================================
+   PHASE 6E — Polish additions
+   Append-only. Do not edit existing rules above.
+   ============================================================ */
+
+/* ── Patch overshoot — fires on triggerShuffle() deal moment ─
+   JS adds .patch--overshoot to active patches when the deck
+   "deals" — more theatrical than the standard jiggle.
+   Transform-origin: center bottom keeps the patch anchored
+   to the rail while it bounces upward.                        */
+@keyframes patch-overshoot {
+  0%   { transform: scale(1)       translateY(0);   }
+  22%  { transform: scale(1.20)    translateY(-10px) rotate(-4deg); }
+  45%  { transform: scale(0.90)    translateY(3px)  rotate(2deg);  }
+  65%  { transform: scale(1.07)    translateY(-4px) rotate(-1deg); }
+  82%  { transform: scale(0.97)    translateY(1px); }
+  100% { transform: scale(1)       translateY(0);   }
+}
+
+.patch--overshoot {
+  animation: patch-overshoot 0.65s cubic-bezier(0.22, 1, 0.36, 1) both !important;
+  transform-origin: center bottom;
+}
+
+/* Reduced-motion guard */
+@media (prefers-reduced-motion: reduce) {
+  .patch--overshoot { animation: none !important; }
+}

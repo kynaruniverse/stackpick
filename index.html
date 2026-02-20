@@ -169,18 +169,33 @@
 
     <!-- Pull-to-shuffle gesture zone -->
     <div class="shuffle-trigger" id="shuffle-trigger" aria-hidden="true" role="presentation">
-      <div class="shuffle-trigger__inner">
-        <span class="shuffle-trigger__icon" aria-hidden="true">🎲</span>
-        <span class="shuffle-trigger__label">Pull to shuffle</span>
+      <div class="shuffle-trigger__ring-wrap">
+        <svg class="shuffle-trigger__svg" viewBox="0 0 40 40">
+          <circle class="shuffle-trigger__track" cx="20" cy="20" r="18" fill="none" stroke-width="3"></circle>
+          <circle class="shuffle-trigger__arc" id="shuffle-trigger-arc" cx="20" cy="20" r="18" fill="none" stroke-width="3" stroke-dasharray="113.1" stroke-dashoffset="113.1"></circle>
+        </svg>
+        <div class="shuffle-trigger__inner">
+          <span class="shuffle-trigger__icon" id="shuffle-trigger-dice" aria-hidden="true">🎲</span>
+        </div>
       </div>
+      <span class="shuffle-trigger__label" id="shuffle-trigger-label">Pull to shuffle</span>
     </div>
+
+
 
     <!-- Shuffle state banner -->
     <div class="shuffle-banner" id="shuffle-banner" aria-live="polite" aria-atomic="true" role="status">
-      <span class="shuffle-banner__dice" aria-hidden="true">🎲</span>
-      <span class="shuffle-banner__text" id="shuffle-banner-text">Shuffled picks — All Picks (v2)</span>
+      <div class="shuffle-banner__content">
+        <span class="shuffle-banner__dice" id="shuffle-banner-dice" aria-hidden="true">🎲</span>
+        <div class="shuffle-banner__meta">
+          <span class="shuffle-banner__text" id="shuffle-banner-text">Shuffled picks</span>
+          <div class="shuffle-banner__dots" id="shuffle-banner-dots">
+            </div>
+        </div>
+      </div>
       <button class="shuffle-banner__reset" id="shuffle-reset" aria-label="Reset to default collection">Reset</button>
     </div>
+
 
     <!-- Wall header -->
     <div class="wall__header" id="wall-header">
