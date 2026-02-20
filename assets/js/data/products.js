@@ -1,15 +1,30 @@
 /* ============================================================
-   STACK PICK — products.js
-   Master product array — Phase 6 Stacked Loadout Wall
-   All affiliate links (amzn.to) preserved verbatim from repo.
+   STACK PICK — products.js  v6
+   Master product catalogue — 25 products across 5 categories.
+   Affiliate links (amzn.to) preserved verbatim — do not alter.
+   Last updated: February 2026
+
+   LOAD ORDER: must load before collections.js and wall.js.
+
+   CONTENTS
+   01  Mice       (5 products) — seam: crimson #FF2D55
+   02  Keyboards  (5 products) — seam: cobalt  #0057FF
+   03  Headsets   (5 products) — seam: slate   #8E8EA0
+   04  Monitors   (5 products) — seam: amber   #FF9500
+   05  Chairs     (5 products) — seam: jade    #00C853
+   06  Utility helpers
+   07  Startup validation
    ============================================================ */
+
 
 window.SP_PRODUCTS = [
 
+
   /* ══════════════════════════════════════════════════════════
-     MICE (5 products)
-     Seam: crimson (#FF2D55)
+     01  MICE  ·  5 products  ·  seam: crimson (#FF2D55)
      ══════════════════════════════════════════════════════════ */
+
+  /* 01a — Razer Viper V3 Pro */
   {
     id:           'mice-razer-viper-v3-pro',
     category:     'mice',
@@ -23,6 +38,7 @@ window.SP_PRODUCTS = [
     price:        '£119',
     priceRaw:     119.05,
     affiliate:    'https://amzn.to/4c1StN0',
+    url:          '/mice/',
     emoji:        '🖱️',
     seam:         'crimson',
     loadoutCount: 4,
@@ -30,6 +46,11 @@ window.SP_PRODUCTS = [
     inStock:      true,
     nextDay:      true,
   },
+
+  /* 01b — Endgame Gear OP1w 4K V2
+     NOTE: "w" = white colourway, not wireless. This is a WIRED mouse.
+     Tags corrected from ['fps','claw-grip','wireless','competitive']
+     to ['fps','claw-grip','wired','competitive'].                     */
   {
     id:           'mice-endgame-gear-op1w',
     category:     'mice',
@@ -43,13 +64,16 @@ window.SP_PRODUCTS = [
     price:        '£104',
     priceRaw:     104.99,
     affiliate:    'https://amzn.to/4rUtqjn',
+    url:          '/mice/',
     emoji:        '🖱️',
     seam:         'crimson',
     loadoutCount: 2,
-    tags:         ['fps', 'claw-grip', 'wireless', 'competitive'],
+    tags:         ['fps', 'claw-grip', 'wired', 'competitive'],
     inStock:      true,
     nextDay:      false,
   },
+
+  /* 01c — Lamzu Thorn 4K Wireless */
   {
     id:           'mice-lamzu-thorn-4k',
     category:     'mice',
@@ -63,6 +87,7 @@ window.SP_PRODUCTS = [
     price:        '£92',
     priceRaw:     92.08,
     affiliate:    'https://amzn.to/4rZaG2l',
+    url:          '/mice/',
     emoji:        '🖱️',
     seam:         'crimson',
     loadoutCount: 3,
@@ -70,6 +95,8 @@ window.SP_PRODUCTS = [
     inStock:      true,
     nextDay:      false,
   },
+
+  /* 01d — Logitech G502 X Plus */
   {
     id:           'mice-logitech-g502x-plus',
     category:     'mice',
@@ -83,6 +110,7 @@ window.SP_PRODUCTS = [
     price:        '£94',
     priceRaw:     94.97,
     affiliate:    'https://amzn.to/3MCPIaj',
+    url:          '/mice/',
     emoji:        '🖱️',
     seam:         'crimson',
     loadoutCount: 2,
@@ -90,6 +118,8 @@ window.SP_PRODUCTS = [
     inStock:      true,
     nextDay:      true,
   },
+
+  /* 01e — ATK VXE MAD R */
   {
     id:           'mice-atk-vxe-mad-r',
     category:     'mice',
@@ -103,6 +133,7 @@ window.SP_PRODUCTS = [
     price:        '£48',
     priceRaw:     48.17,
     affiliate:    'https://amzn.to/3ZImZUM',
+    url:          '/mice/',
     emoji:        '🖱️',
     seam:         'crimson',
     loadoutCount: 2,
@@ -111,10 +142,12 @@ window.SP_PRODUCTS = [
     nextDay:      false,
   },
 
+
   /* ══════════════════════════════════════════════════════════
-     KEYBOARDS (5 products)
-     Seam: cobalt (#0057FF)
+     02  KEYBOARDS  ·  5 products  ·  seam: cobalt (#0057FF)
      ══════════════════════════════════════════════════════════ */
+
+  /* 02a — SteelSeries Apex Pro TKL Gen 3 */
   {
     id:           'keyboards-steelseries-apex-pro-tkl-gen3',
     category:     'keyboards',
@@ -128,6 +161,7 @@ window.SP_PRODUCTS = [
     price:        '£189',
     priceRaw:     189.98,
     affiliate:    'https://amzn.to/4kHUmQV',
+    url:          '/keyboards/',
     emoji:        '⌨️',
     seam:         'cobalt',
     loadoutCount: 3,
@@ -135,6 +169,8 @@ window.SP_PRODUCTS = [
     inStock:      true,
     nextDay:      true,
   },
+
+  /* 02b — ASUS ROG Strix Scope II 96 */
   {
     id:           'keyboards-asus-rog-strix-scope-ii-96',
     category:     'keyboards',
@@ -148,6 +184,7 @@ window.SP_PRODUCTS = [
     price:        '£125',
     priceRaw:     125.47,
     affiliate:    'https://amzn.to/4c2dVRR',
+    url:          '/keyboards/',
     emoji:        '⌨️',
     seam:         'cobalt',
     loadoutCount: 3,
@@ -155,6 +192,8 @@ window.SP_PRODUCTS = [
     inStock:      true,
     nextDay:      true,
   },
+
+  /* 02c — Aula F99 Wireless */
   {
     id:           'keyboards-aula-f99-wireless',
     category:     'keyboards',
@@ -168,6 +207,7 @@ window.SP_PRODUCTS = [
     price:        '£82',
     priceRaw:     82.89,
     affiliate:    'https://amzn.to/4qMyVj3',
+    url:          '/keyboards/',
     emoji:        '⌨️',
     seam:         'cobalt',
     loadoutCount: 2,
@@ -175,6 +215,8 @@ window.SP_PRODUCTS = [
     inStock:      true,
     nextDay:      false,
   },
+
+  /* 02d — Keychron Q1 Max */
   {
     id:           'keyboards-keychron-q1-max',
     category:     'keyboards',
@@ -188,6 +230,7 @@ window.SP_PRODUCTS = [
     price:        '£219',
     priceRaw:     219.99,
     affiliate:    'https://amzn.to/4aFmdwP',
+    url:          '/keyboards/',
     emoji:        '⌨️',
     seam:         'cobalt',
     loadoutCount: 2,
@@ -195,6 +238,8 @@ window.SP_PRODUCTS = [
     inStock:      true,
     nextDay:      false,
   },
+
+  /* 02e — Keychron C3 Pro */
   {
     id:           'keyboards-keychron-c3-pro',
     category:     'keyboards',
@@ -208,6 +253,7 @@ window.SP_PRODUCTS = [
     price:        '£39',
     priceRaw:     39.99,
     affiliate:    'https://amzn.to/4kGDHNL',
+    url:          '/keyboards/',
     emoji:        '⌨️',
     seam:         'cobalt',
     loadoutCount: 3,
@@ -216,10 +262,12 @@ window.SP_PRODUCTS = [
     nextDay:      true,
   },
 
+
   /* ══════════════════════════════════════════════════════════
-     HEADSETS (5 products)
-     Seam: slate (#8E8EA0)
+     03  HEADSETS  ·  5 products  ·  seam: slate (#8E8EA0)
      ══════════════════════════════════════════════════════════ */
+
+  /* 03a — Sennheiser HD 560S */
   {
     id:           'headsets-sennheiser-hd560s',
     category:     'headsets',
@@ -233,6 +281,7 @@ window.SP_PRODUCTS = [
     price:        '£99',
     priceRaw:     99.00,
     affiliate:    'https://amzn.to/4tHtncv',
+    url:          '/headsets/',
     emoji:        '🎧',
     seam:         'slate',
     loadoutCount: 3,
@@ -240,6 +289,8 @@ window.SP_PRODUCTS = [
     inStock:      true,
     nextDay:      true,
   },
+
+  /* 03b — SteelSeries Arctis Nova Pro */
   {
     id:           'headsets-steelseries-arctis-nova-pro',
     category:     'headsets',
@@ -253,6 +304,7 @@ window.SP_PRODUCTS = [
     price:        '£289',
     priceRaw:     289.00,
     affiliate:    'https://amzn.to/3OkA3NA',
+    url:          '/headsets/',
     emoji:        '🎧',
     seam:         'slate',
     loadoutCount: 2,
@@ -260,6 +312,8 @@ window.SP_PRODUCTS = [
     inStock:      true,
     nextDay:      false,
   },
+
+  /* 03c — HyperX Cloud III S Wireless */
   {
     id:           'headsets-hyperx-cloud-iii-s-wireless',
     category:     'headsets',
@@ -273,6 +327,7 @@ window.SP_PRODUCTS = [
     price:        '£129',
     priceRaw:     129.97,
     affiliate:    'https://amzn.to/4apWJo8',
+    url:          '/headsets/',
     emoji:        '🎧',
     seam:         'slate',
     loadoutCount: 3,
@@ -280,6 +335,8 @@ window.SP_PRODUCTS = [
     inStock:      true,
     nextDay:      true,
   },
+
+  /* 03d — Bose QuietComfort Ultra Gen 2 */
   {
     id:           'headsets-bose-quietcomfort-ultra-gen2',
     category:     'headsets',
@@ -293,6 +350,7 @@ window.SP_PRODUCTS = [
     price:        '£399',
     priceRaw:     399.95,
     affiliate:    'https://amzn.to/4kETP2t',
+    url:          '/headsets/',
     emoji:        '🎧',
     seam:         'slate',
     loadoutCount: 2,
@@ -300,6 +358,8 @@ window.SP_PRODUCTS = [
     inStock:      true,
     nextDay:      true,
   },
+
+  /* 03e — ASTRO A10 Gen 2 */
   {
     id:           'headsets-astro-a10-gen2',
     category:     'headsets',
@@ -313,6 +373,7 @@ window.SP_PRODUCTS = [
     price:        '£40',
     priceRaw:     40.10,
     affiliate:    'https://amzn.to/4rz9Vgo',
+    url:          '/headsets/',
     emoji:        '🎧',
     seam:         'slate',
     loadoutCount: 2,
@@ -321,10 +382,12 @@ window.SP_PRODUCTS = [
     nextDay:      true,
   },
 
+
   /* ══════════════════════════════════════════════════════════
-     MONITORS (5 products)
-     Seam: amber (#FF9500)
+     04  MONITORS  ·  5 products  ·  seam: amber (#FF9500)
      ══════════════════════════════════════════════════════════ */
+
+  /* 04a — ASUS ROG Strix OLED XG27AQDMG */
   {
     id:           'monitors-asus-rog-xg27aqdmg',
     category:     'monitors',
@@ -338,6 +401,7 @@ window.SP_PRODUCTS = [
     price:        '£429',
     priceRaw:     429.00,
     affiliate:    'https://amzn.to/4aX25Y9',
+    url:          '/monitors/',
     emoji:        '🖥️',
     seam:         'amber',
     loadoutCount: 3,
@@ -345,6 +409,8 @@ window.SP_PRODUCTS = [
     inStock:      true,
     nextDay:      false,
   },
+
+  /* 04b — AOC Gaming 24G4XE */
   {
     id:           'monitors-aoc-24g4xe',
     category:     'monitors',
@@ -358,6 +424,7 @@ window.SP_PRODUCTS = [
     price:        '£109',
     priceRaw:     109.97,
     affiliate:    'https://amzn.to/4kFxb9U',
+    url:          '/monitors/',
     emoji:        '🖥️',
     seam:         'amber',
     loadoutCount: 3,
@@ -365,6 +432,8 @@ window.SP_PRODUCTS = [
     inStock:      true,
     nextDay:      true,
   },
+
+  /* 04c — Samsung 32" Odyssey G80SD */
   {
     id:           'monitors-samsung-odyssey-g80sd',
     category:     'monitors',
@@ -378,6 +447,7 @@ window.SP_PRODUCTS = [
     price:        '£740',
     priceRaw:     740.30,
     affiliate:    'https://amzn.to/4cy1qh1',
+    url:          '/monitors/',
     emoji:        '🖥️',
     seam:         'amber',
     loadoutCount: 2,
@@ -385,6 +455,8 @@ window.SP_PRODUCTS = [
     inStock:      true,
     nextDay:      false,
   },
+
+  /* 04d — AOC Gaming Q27G3XMN */
   {
     id:           'monitors-aoc-q27g3xmn',
     category:     'monitors',
@@ -398,6 +470,7 @@ window.SP_PRODUCTS = [
     price:        '£293',
     priceRaw:     293.99,
     affiliate:    'https://amzn.to/4kFwZHI',
+    url:          '/monitors/',
     emoji:        '🖥️',
     seam:         'amber',
     loadoutCount: 2,
@@ -405,12 +478,14 @@ window.SP_PRODUCTS = [
     inStock:      true,
     nextDay:      true,
   },
+
+  /* 04e — MSI MAG 274UPDF E16M */
   {
     id:           'monitors-msi-mag-274updf',
     category:     'monitors',
     badge:        'BEST ART & PLAY',
     name:         'MSI MAG 274UPDF E16M',
-    shortName:    'MSI MAG 274UPD',
+    shortName:    'MSI MAG 274UPDF',
     specs:        ['27" 4K', 'USB-C 96W', 'Creator'],
     desc:         'A 27" 4K monitor that doubles as a laptop dock with 96W USB-C power delivery. The creator desk centrepiece.',
     pros:         ['27" 4K with USB-C 96W power delivery', 'Colour-accurate IPS for creative work'],
@@ -418,6 +493,7 @@ window.SP_PRODUCTS = [
     price:        '£398',
     priceRaw:     398.97,
     affiliate:    'https://amzn.to/46iIlvA',
+    url:          '/monitors/',
     emoji:        '🖥️',
     seam:         'amber',
     loadoutCount: 2,
@@ -426,10 +502,12 @@ window.SP_PRODUCTS = [
     nextDay:      false,
   },
 
+
   /* ══════════════════════════════════════════════════════════
-     CHAIRS (5 products)
-     Seam: jade (#00C853)
+     05  CHAIRS  ·  5 products  ·  seam: jade (#00C853)
      ══════════════════════════════════════════════════════════ */
+
+  /* 05a — AndaSeat Kaiser 4 */
   {
     id:           'chairs-andaseat-kaiser-4',
     category:     'chairs',
@@ -443,6 +521,7 @@ window.SP_PRODUCTS = [
     price:        '£449',
     priceRaw:     449.99,
     affiliate:    'https://amzn.to/4qPy6pT',
+    url:          '/chairs/',
     emoji:        '🪑',
     seam:         'jade',
     loadoutCount: 3,
@@ -450,6 +529,8 @@ window.SP_PRODUCTS = [
     inStock:      true,
     nextDay:      false,
   },
+
+  /* 05b — Corsair TC100 Relaxed */
   {
     id:           'chairs-corsair-tc100-relaxed',
     category:     'chairs',
@@ -463,6 +544,7 @@ window.SP_PRODUCTS = [
     price:        '£187',
     priceRaw:     187.97,
     affiliate:    'https://amzn.to/4aCwuK2',
+    url:          '/chairs/',
     emoji:        '🪑',
     seam:         'jade',
     loadoutCount: 2,
@@ -470,6 +552,8 @@ window.SP_PRODUCTS = [
     inStock:      true,
     nextDay:      true,
   },
+
+  /* 05c — EUREKA Typhon Gaming Chair */
   {
     id:           'chairs-eureka-typhon',
     category:     'chairs',
@@ -483,6 +567,7 @@ window.SP_PRODUCTS = [
     price:        '£369',
     priceRaw:     369.99,
     affiliate:    'https://amzn.to/4tDne0R',
+    url:          '/chairs/',
     emoji:        '🪑',
     seam:         'jade',
     loadoutCount: 2,
@@ -490,6 +575,8 @@ window.SP_PRODUCTS = [
     inStock:      true,
     nextDay:      false,
   },
+
+  /* 05d — Sihoo Doro C300 */
   {
     id:           'chairs-sihoo-doro-c300',
     category:     'chairs',
@@ -503,6 +590,7 @@ window.SP_PRODUCTS = [
     price:        '£298',
     priceRaw:     298.99,
     affiliate:    'https://amzn.to/4s3kiJA',
+    url:          '/chairs/',
     emoji:        '🪑',
     seam:         'jade',
     loadoutCount: 3,
@@ -510,6 +598,8 @@ window.SP_PRODUCTS = [
     inStock:      true,
     nextDay:      false,
   },
+
+  /* 05e — Noblechairs Hero */
   {
     id:           'chairs-noblechairs-hero',
     category:     'chairs',
@@ -523,6 +613,7 @@ window.SP_PRODUCTS = [
     price:        '£349',
     priceRaw:     349.99,
     affiliate:    'https://amzn.to/4tHQDal',
+    url:          '/chairs/',
     emoji:        '🪑',
     seam:         'jade',
     loadoutCount: 2,
@@ -531,45 +622,198 @@ window.SP_PRODUCTS = [
     nextDay:      true,
   },
 
+
 ];
 
 
-/* ─────────────────────────────────────────────────────────────
-   UTILITY HELPERS
-   ───────────────────────────────────────────────────────────── */
+/* ============================================================
+   06  UTILITY HELPERS
+   Read-only functions — do not mutate SP_PRODUCTS directly.
+   All return new arrays (sliced/filtered) to avoid side effects.
+   ============================================================ */
 
 /**
- * Get a product by ID
- * @param {string} id
+ * 06a  SP_getProduct
+ * Get a single product object by its unique ID string.
+ * Returns undefined if the ID doesn't exist (safe for filter(Boolean)).
+ * @param  {string} id
  * @returns {Object|undefined}
  */
-window.SP_getProduct = function(id) {
-  return window.SP_PRODUCTS.find(function(p) { return p.id === id; });
+window.SP_getProduct = function (id) {
+  return window.SP_PRODUCTS.find(function (p) { return p.id === id; });
 };
 
 /**
- * Get products by category
- * @param {string} category
+ * 06b  SP_getByCategory
+ * Get all products in a given category.
+ * Valid values: 'mice' | 'keyboards' | 'headsets' | 'monitors' | 'chairs'
+ * @param  {string} category
  * @returns {Array}
  */
-window.SP_getByCategory = function(category) {
-  return window.SP_PRODUCTS.filter(function(p) { return p.category === category; });
+window.SP_getByCategory = function (category) {
+  return window.SP_PRODUCTS.filter(function (p) { return p.category === category; });
 };
 
 /**
- * Get products by tag
- * @param {string} tag
+ * 06c  SP_getByTag
+ * Get all products that include a given tag.
+ * Tags are defined per-product and are not normalised — match exactly.
+ * @param  {string} tag
  * @returns {Array}
  */
-window.SP_getByTag = function(tag) {
-  return window.SP_PRODUCTS.filter(function(p) { return p.tags.includes(tag); });
+window.SP_getByTag = function (tag) {
+  return window.SP_PRODUCTS.filter(function (p) { return p.tags.indexOf(tag) !== -1; });
 };
 
 /**
- * Get products under a price threshold
- * @param {number} max
+ * 06d  SP_getUnder
+ * Get products at or below a price ceiling (uses priceRaw, inclusive).
+ * @param  {number} max  — e.g. 100 for "under £100"
  * @returns {Array}
  */
-window.SP_getUnder = function(max) {
-  return window.SP_PRODUCTS.filter(function(p) { return p.priceRaw <= max; });
+window.SP_getUnder = function (max) {
+  return window.SP_PRODUCTS.filter(function (p) { return p.priceRaw <= max; });
 };
+
+/**
+ * 06e  SP_getByPriceRange
+ * Get products within an inclusive price band.
+ * @param  {number} min
+ * @param  {number} max
+ * @returns {Array}
+ */
+window.SP_getByPriceRange = function (min, max) {
+  return window.SP_PRODUCTS.filter(function (p) {
+    return p.priceRaw >= min && p.priceRaw <= max;
+  });
+};
+
+/**
+ * 06f  SP_getInStock
+ * Get in-stock products, optionally filtered by category.
+ * @param  {string} [category]  — omit to get all in-stock products
+ * @returns {Array}
+ */
+window.SP_getInStock = function (category) {
+  return window.SP_PRODUCTS.filter(function (p) {
+    return p.inStock && (category ? p.category === category : true);
+  });
+};
+
+/**
+ * 06g  SP_getSorted
+ * Return a sorted copy of a product array.
+ * Modes: 'price-asc' | 'price-desc' | 'popular' | 'default'
+ * Pass SP_PRODUCTS or any filtered subset as the first argument.
+ * @param  {Array}  products  — source array (not mutated)
+ * @param  {string} mode
+ * @returns {Array}
+ */
+window.SP_getSorted = function (products, mode) {
+  var arr = (products || window.SP_PRODUCTS).slice();
+  if (mode === 'price-asc')  return arr.sort(function (a, b) { return a.priceRaw - b.priceRaw; });
+  if (mode === 'price-desc') return arr.sort(function (a, b) { return b.priceRaw - a.priceRaw; });
+  if (mode === 'popular')    return arr.sort(function (a, b) { return (b.loadoutCount || 0) - (a.loadoutCount || 0); });
+  return arr; // 'default' — preserve original array order
+};
+
+/**
+ * 06h  SP_getWireless
+ * Convenience helper — returns products tagged 'wireless'.
+ * Used by the Wireless Only collection and any future filter UI.
+ * @returns {Array}
+ */
+window.SP_getWireless = function () {
+  return window.SP_getByTag('wireless');
+};
+
+/**
+ * 06i  SP_getBySeam
+ * Get all products sharing a seam colour token name.
+ * Useful for building category-coloured UI elements without
+ * hard-coding the hex value.
+ * Valid values: 'crimson' | 'cobalt' | 'slate' | 'amber' | 'jade'
+ * @param  {string} seam
+ * @returns {Array}
+ */
+window.SP_getBySeam = function (seam) {
+  return window.SP_PRODUCTS.filter(function (p) { return p.seam === seam; });
+};
+
+
+/* ============================================================
+   07  STARTUP VALIDATION
+   Runs once on load in non-production environments.
+   Logs warnings for:
+     · Duplicate product IDs
+     · Products missing required fields
+     · Products in Wireless Only collections tagged 'wired'
+       (cross-checks against collections.js if already loaded)
+   Silent in production (hostname check).
+   ============================================================ */
+
+(function () {
+  var isProd = (
+    window.location.hostname === 'stackpick.co.uk' ||
+    window.location.hostname === 'www.stackpick.co.uk'
+  );
+  if (isProd) return;
+
+  var REQUIRED_FIELDS = [
+    'id', 'category', 'badge', 'name', 'shortName',
+    'specs', 'desc', 'pros', 'cons',
+    'price', 'priceRaw', 'affiliate', 'url',
+    'emoji', 'seam', 'loadoutCount', 'tags',
+    'inStock', 'nextDay',
+  ];
+
+  var seen = {};
+
+  window.SP_PRODUCTS.forEach(function (p) {
+
+    // 07a  Duplicate ID check
+    if (seen[p.id]) {
+      console.warn('[SP products] Duplicate product ID detected:', p.id);
+    }
+    seen[p.id] = true;
+
+    // 07b  Required field check
+    REQUIRED_FIELDS.forEach(function (field) {
+      if (p[field] === undefined || p[field] === null || p[field] === '') {
+        console.warn('[SP products] Product "' + p.id + '" is missing field: ' + field);
+      }
+    });
+
+    // 07c  priceRaw type check
+    if (typeof p.priceRaw !== 'number' || isNaN(p.priceRaw)) {
+      console.warn('[SP products] Product "' + p.id + '" has invalid priceRaw:', p.priceRaw);
+    }
+
+    // 07d  Tags array check
+    if (!Array.isArray(p.tags) || p.tags.length === 0) {
+      console.warn('[SP products] Product "' + p.id + '" has empty or missing tags array.');
+    }
+
+  });
+
+  // 07e  Cross-check: wireless-only collection vs wired-tagged products
+  if (window.SP_COLLECTIONS) {
+    var wirelessCol = window.SP_COLLECTIONS.find(function (c) { return c.id === 'wireless-only'; });
+    if (wirelessCol) {
+      wirelessCol.baseProducts.forEach(function (pid) {
+        var prod = window.SP_getProduct(pid);
+        if (prod && prod.tags.indexOf('wired') !== -1) {
+          console.warn(
+            '[SP products] "' + pid + '" is tagged "wired" but appears in the wireless-only collection.'
+          );
+        }
+      });
+    }
+  }
+
+  console.log(
+    '%c[SP products] Validation complete — ' + window.SP_PRODUCTS.length + ' products loaded.',
+    'color:#C8FF00;font-family:monospace;font-size:11px;'
+  );
+
+}());

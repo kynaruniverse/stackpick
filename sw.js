@@ -9,7 +9,7 @@
 //    External (Amazon, GA, fonts CDN)  → Network-only, never cached
 //    Offline                           → /offline.html fallback
 //
-//  VERSION: bump sp-v4 whenever SHELL_ASSETS change.
+//  VERSION: bump sp-v5 whenever SHELL_ASSETS change.
 // ============================================================
 
 const VERSION     = 'sp-v5';

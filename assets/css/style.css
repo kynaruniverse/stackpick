@@ -1,7 +1,10 @@
 /* ============================================================
-   STACK PICK — MAIN STYLESHEET v4
+   STACK PICK — style.css  v6
    Design direction: Clean editorial minimal
    Font: DM Sans (body) + DM Mono (accents/prices)
+   Used by: category pages, guides, comparisons, about, search.
+   NOT used by index.html — that loads wall-tokens.css + wall.css.
+   Last updated: February 2026
    Mobile-first. Desktop via min-width queries.
 
    CONTENTS
@@ -37,7 +40,7 @@
    30  Newsletter
    ============================================================ */
 
-
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;450;500;600;700&family=DM+Mono:wght@400;500;600&display=swap');
 /* ============================================================
    01  TOKENS
    ============================================================ */
@@ -114,6 +117,7 @@
     --text-tertiary: #71717A;
     --accent-primary:#3B82F6;
     --accent-secondary:#8B5CF6;
+    --accent-warm:   #F97316;
     --border-color:  #27272A;
     --border-strong: #3F3F46;
     --card-bg:       #18181B;
@@ -330,7 +334,7 @@ header {
    09  BOTTOM NAV
    ============================================================ */
 .bottom-nav {
-    position: fixed; bottom: 0; left: 0; right: 0; z-index: 400;
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 400; /* above .more-panel-overlay (390) */
     background-color: var(--bg-primary);
     border-top: 1px solid var(--border-color);
     padding-bottom: env(safe-area-inset-bottom);
@@ -383,7 +387,7 @@ header {
     display: none; position: fixed;
     bottom: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom));
     left: var(--space-3); right: var(--space-3);
-    z-index: 395;
+    z-index: 395; /* below .bottom-nav (400), above overlay (390) */
     background: var(--bg-surface);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-xl);
@@ -453,6 +457,7 @@ header {
     content: ''; position: absolute;
     left: 0; top: 0; bottom: 0; width: 3px;
     background: linear-gradient(180deg, var(--accent-primary), var(--accent-secondary));
+    transition: background var(--ease-normal);
 }
 
 @media (min-width: 768px) {
@@ -957,7 +962,8 @@ nav a[aria-current="page"] { color: var(--accent-primary); }
 @media print {
     header, footer, .bottom-nav, .desktop-sidebar,
     .more-panel-overlay, .bottom-nav-more-panel,
-    .product-btn, .stack-cta, .theme-toggle { display: none !important; }
+    .product-btn, .stack-cta, .theme-toggle,
+    .newsletter-section, .trust-strip { display: none !important; }
     body { background: #fff; color: #000; padding: 0; display: block; }
     .page-wrapper { display: block; }
     a { text-decoration: underline; color: #000; }

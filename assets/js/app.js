@@ -1,18 +1,19 @@
 // ============================================================
-//  STACK PICK — app.js
-//  Single consolidated script. Replaces:
-//    - theme-toggle.js
-//    - nav.js
-//    - main.js
+//  STACK PICK — app.js  v6
+//  Phase 6F — Category pages, guides, comparisons, search, about.
+//  NOT loaded on index.html (wall.js handles the homepage).
+//
+//  DEPENDS ON:
+//    analytics.js  — must load before this (GA4 gtag global)
+//    style.css     — design tokens for category pages
 //
 //  CONTENTS
 //  01  Theme — detection, apply, persist, system-sync
-//  02  Nav — bottom nav active state, sidebar active state
-//  03  More panel — open/close/overlay/keyboard
-//  04  Sidebar theme button — synced to main toggle
-//  05  Smooth scroll — anchor links
-//  06  Affiliate tracking — Amazon click events
-//  07  Service worker registration
+//  02  Prefs sheet — open/close/overlay/keyboard
+//  03  Nav active states — rack-box + prefs-sheet links
+//  04  Smooth scroll — anchor links
+//  05  Affiliate & outbound click tracking (GA4)
+//  06  PWA install prompt — volt-themed banner
 // ============================================================
 
 (function () {
@@ -21,10 +22,17 @@
 
     // ============================================================
     //  01  THEME
+    //
+    //  Detection priority: saved localStorage → system preference.
+    //  The icon lives inside a <span class="theme-toggle__icon">
+    //  child of the button — we update the span, not textContent.
+    //  Also updates the desktop patch-rail theme button if present.
     // ============================================================
 
     var html        = document.documentElement;
     var themeToggle = document.getElementById('theme-toggle');
+
+    // ── 01a  Helpers ──────────────────────────────────────────
 
     function getSystemTheme() {
         return (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)
@@ -42,50 +50,71 @@
         catch (e) { /* private browsing — silent fail */ }
     }
 
+    // ── 01b  Apply & sync all theme buttons ──────────────────
+
     function applyTheme(theme) {
         html.setAttribute('data-theme', theme);
-        updateThemeButtons(theme);
+        _syncThemeButtons(theme);
     }
 
-    function updateThemeButtons(theme) {
+    function _syncThemeButtons(theme) {
         var isDark = theme === 'dark';
+        var icon   = isDark ? '☀️' : '🌙';
+        var label  = isDark ? 'Switch to light mode' : 'Switch to dark mode';
 
-        // Header toggle (mobile)
+        // Mobile header toggle
         if (themeToggle) {
-            themeToggle.textContent = isDark ? '☀️' : '🌙';
-            themeToggle.setAttribute('aria-label',
-                isDark ? 'Switch to light mode' : 'Switch to dark mode');
+            var iconSpan = themeToggle.querySelector('.theme-toggle__icon');
+            if (iconSpan) {
+                iconSpan.textContent = icon;
+            } else {
+                themeToggle.textContent = icon;
+            }
+            themeToggle.setAttribute('aria-label', label);
         }
 
-        // Sidebar toggle (desktop)
-        var sidebarIcon  = document.getElementById('sidebar-theme-icon');
-        var sidebarLabel = document.getElementById('sidebar-theme-label');
-        if (sidebarIcon)  sidebarIcon.textContent  = isDark ? '☀️' : '🌙';
-        if (sidebarLabel) sidebarLabel.textContent  = isDark ? 'Light mode' : 'Dark mode';
+        // Desktop patch-rail theme button (category pages share the same rail HTML)
+        var railThemeBtn = document.querySelector('.patch-rail__theme-btn');
+        if (railThemeBtn) {
+            var railIcon = railThemeBtn.querySelector('.patch-rail__theme-icon');
+            if (railIcon) {
+                railIcon.textContent = icon;
+            } else {
+                railThemeBtn.textContent = icon;
+            }
+            railThemeBtn.setAttribute('aria-label', label);
+        }
+
+        // Prefs sheet theme value label
+        var prefThemeVal = document.getElementById('pref-theme-val');
+        if (prefThemeVal) {
+            prefThemeVal.textContent = isDark ? 'Dark' : 'Light';
+        }
     }
 
     function toggleTheme() {
-        var current  = html.getAttribute('data-theme') || 'light';
-        var next     = current === 'dark' ? 'light' : 'dark';
+        var current = html.getAttribute('data-theme') || 'light';
+        var next    = current === 'dark' ? 'light' : 'dark';
         applyTheme(next);
         saveTheme(next);
     }
 
-    // Initialise — saved preference beats system preference
+    // ── 01c  Initialise ───────────────────────────────────────
+
     applyTheme(getSavedTheme() || getSystemTheme());
 
-    // Header toggle click
     if (themeToggle) {
         themeToggle.addEventListener('click', toggleTheme);
     }
 
-    // Sidebar toggle click — delegate to toggleTheme directly
-    var sidebarThemeBtn = document.getElementById('theme-toggle-sidebar');
-    if (sidebarThemeBtn) {
-        sidebarThemeBtn.addEventListener('click', toggleTheme);
-    }
+    // Delegate for desktop rail button (may not exist on all pages)
+    document.addEventListener('click', function (e) {
+        if (e.target.closest('.patch-rail__theme-btn')) {
+            toggleTheme();
+        }
+    });
 
-    // Follow system preference changes only when user hasn't set a manual preference
+    // Follow OS preference only when user has no saved preference
     if (window.matchMedia) {
         window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function (e) {
             if (!getSavedTheme()) {
@@ -96,109 +125,152 @@
 
 
     // ============================================================
-    //  02  NAV ACTIVE STATES
+    //  02  PREFS SHEET
+    //
+    //  Wires: #guest-chip (open) · #prefs-close (close) ·
+    //         #prefs-overlay (backdrop click)
+    //  Keyboard: Escape closes · moves focus to first focusable on open ·
+    //            returns focus to trigger on close.
     // ============================================================
 
-    var path = window.location.pathname;
+    var guestChip    = document.getElementById('guest-chip');
+    var prefsSheet   = document.getElementById('prefs-sheet');
+    var prefsClose   = document.getElementById('prefs-close');
+    var prefsOverlay = document.getElementById('prefs-overlay');
 
-    // Normalise: strip trailing slash for comparison (except root)
+    // ── 02a  State helpers ────────────────────────────────────
+
+    function isPrefsOpen() {
+        return prefsSheet && prefsSheet.classList.contains('prefs-sheet--open');
+    }
+
+    function openPrefs() {
+        if (!prefsSheet || !prefsOverlay || !guestChip) return;
+        prefsSheet.classList.add('prefs-sheet--open');
+        prefsOverlay.classList.add('open');
+        guestChip.setAttribute('aria-expanded', 'true');
+        prefsSheet.setAttribute('aria-hidden', 'false');
+        prefsOverlay.setAttribute('aria-hidden', 'false');
+        var firstFocusable = prefsSheet.querySelector('button, a, [tabindex="0"]');
+        if (firstFocusable) firstFocusable.focus();
+    }
+
+    function closePrefs() {
+        if (!prefsSheet || !prefsOverlay || !guestChip) return;
+        prefsSheet.classList.remove('prefs-sheet--open');
+        prefsOverlay.classList.remove('open');
+        guestChip.setAttribute('aria-expanded', 'false');
+        prefsSheet.setAttribute('aria-hidden', 'true');
+        prefsOverlay.setAttribute('aria-hidden', 'true');
+        guestChip.focus();
+    }
+
+    // ── 02b  Wire events ──────────────────────────────────────
+
+    if (guestChip) {
+        guestChip.addEventListener('click', function (e) {
+            e.stopPropagation();
+            isPrefsOpen() ? closePrefs() : openPrefs();
+        });
+    }
+
+    if (prefsClose)   prefsClose.addEventListener('click', closePrefs);
+    if (prefsOverlay) prefsOverlay.addEventListener('click', closePrefs);
+
+    // Close on Escape (also closes rack sheet & sort menu if present)
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && isPrefsOpen()) {
+            closePrefs();
+        }
+    });
+
+    // Close when a nav link inside the sheet is activated
+    if (prefsSheet) {
+        prefsSheet.querySelectorAll('a').forEach(function (link) {
+            link.addEventListener('click', closePrefs);
+        });
+    }
+
+
+    // ============================================================
+    //  03  NAV ACTIVE STATES
+    //
+    //  Sets active highlight on:
+    //    .prefs-sheet__nav-link  — side sheet nav links (volt colour)
+    //    .rack-box[data-tab]     — utility rack shoebox tiles
+    //
+    //  wall.js owns rack-box state on the homepage.
+    //  This block covers all other pages.
+    // ============================================================
+
+    var currentPath     = window.location.pathname;
+
     function normalisePath(p) {
         return p.length > 1 ? p.replace(/\/$/, '') : p;
     }
 
-    var normPath = normalisePath(path);
+    var normCurrentPath = normalisePath(currentPath);
 
-    // Sidebar links
-    document.querySelectorAll('.sidebar-link[href]').forEach(function (link) {
-        if (normalisePath(link.getAttribute('href')) === normPath) {
-            link.classList.add('active');
+    // ── 03a  Prefs sheet nav links ────────────────────────────
+
+    document.querySelectorAll('.prefs-sheet__nav-link[href]').forEach(function (link) {
+        if (normalisePath(link.getAttribute('href')) === normCurrentPath) {
+            link.style.color      = 'var(--volt, #C8FF00)';
+            link.style.fontWeight = '600';
         }
     });
 
-    // Bottom nav links
-    document.querySelectorAll('.bottom-nav-link[href]').forEach(function (link) {
-        if (normalisePath(link.getAttribute('href')) === normPath) {
-            link.classList.add('active');
-        }
-    });
+    // ── 03b  Utility rack tabs ────────────────────────────────
 
-    // More panel links — mark active so user can see where they are
-    document.querySelectorAll('.more-panel-link[href]').forEach(function (link) {
-        if (normalisePath(link.getAttribute('href')) === normPath) {
-            link.style.background      = 'var(--accent-primary)';
-            link.style.borderColor     = 'var(--accent-primary)';
-            link.style.color           = '#fff';
-        }
-    });
+    (function () {
+        // Maps a path prefix → rack data-tab value.
+        // Category paths all map to 'browse' so the Browse tile stays active
+        // when users are on /headsets/, /keyboards/, etc.
+        var tabMap = {
+            '/headsets':    'browse',
+            '/keyboards':   'browse',
+            '/mice':        'browse',
+            '/monitors':    'browse',
+            '/chairs':      'browse',
+            '/pcs':         'browse',
+            '/desks':       'browse',
+            '/speakers':    'browse',
+            '/extras':      'browse',
+            '/guides':      'loadouts',
+            '/comparisons': 'drops',
+            '/search':      'profile',
+            '/about':       'profile',
+        };
 
-
-    // ============================================================
-    //  03  MORE PANEL
-    // ============================================================
-
-    var moreBtn     = document.getElementById('more-btn');
-    var morePanel   = document.getElementById('more-panel');
-    var moreOverlay = document.getElementById('more-overlay');
-
-    function isPanelOpen() {
-        return morePanel && morePanel.classList.contains('open');
-    }
-
-    function openMorePanel() {
-        if (!morePanel || !moreOverlay || !moreBtn) return;
-        morePanel.classList.add('open');
-        moreOverlay.classList.add('open');
-        moreBtn.setAttribute('aria-expanded', 'true');
-        // Trap focus visually — move focus into panel
-        var firstLink = morePanel.querySelector('a, button');
-        if (firstLink) firstLink.focus();
-    }
-
-    function closeMorePanel() {
-        if (!morePanel || !moreOverlay || !moreBtn) return;
-        morePanel.classList.remove('open');
-        moreOverlay.classList.remove('open');
-        moreBtn.setAttribute('aria-expanded', 'false');
-    }
-
-    function toggleMorePanel() {
-        isPanelOpen() ? closeMorePanel() : openMorePanel();
-    }
-
-    if (moreBtn) {
-        moreBtn.addEventListener('click', function (e) {
-            e.stopPropagation();
-            toggleMorePanel();
+        var activeTab = null;
+        Object.keys(tabMap).forEach(function (prefix) {
+            if (normCurrentPath === prefix ||
+                normCurrentPath.indexOf(prefix + '/') === 0) {
+                activeTab = tabMap[prefix];
+            }
         });
-    }
 
-    if (moreOverlay) {
-        moreOverlay.addEventListener('click', closeMorePanel);
-    }
-
-    // Close panel on Escape
-    document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape' && isPanelOpen()) {
-            closeMorePanel();
-            if (moreBtn) moreBtn.focus();
+        if (activeTab) {
+            document.querySelectorAll('.rack-box').forEach(function (box) {
+                var isActive = box.getAttribute('data-tab') === activeTab;
+                box.classList.toggle('rack-box--active', isActive);
+                box.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+            });
         }
-    });
-
-    // Close panel on any more-panel link click (navigation happening)
-    if (morePanel) {
-        morePanel.querySelectorAll('a').forEach(function (link) {
-            link.addEventListener('click', closeMorePanel);
-        });
-    }
+    }());
 
 
     // ============================================================
-    //  04  SMOOTH SCROLL — anchor links
+    //  04  SMOOTH SCROLL
+    //
+    //  Intercepts same-page anchor links, scrolls smoothly,
+    //  pushes state, and moves focus to the target for
+    //  keyboard/screen-reader accessibility.
     // ============================================================
 
     document.querySelectorAll('a[href^="#"]').forEach(function (anchor) {
         anchor.addEventListener('click', function (e) {
-            var href   = this.getAttribute('href');
+            var href = this.getAttribute('href');
             if (!href || href === '#') return;
 
             var target = document.querySelector(href);
@@ -208,12 +280,10 @@
 
             target.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-            // Update URL without jump
             if (history.pushState) {
                 history.pushState(null, null, href);
             }
 
-            // Accessibility: move focus to target
             if (!target.hasAttribute('tabindex')) {
                 target.setAttribute('tabindex', '-1');
             }
@@ -223,131 +293,109 @@
 
 
     // ============================================================
-    //  05  AFFILIATE CLICK TRACKING
-    //  Fires a GA4 event for every Amazon affiliate link click.
-    //  analytics.js loads gtag separately — we just fire events.
+    //  05  AFFILIATE & OUTBOUND CLICK TRACKING
+    //
+    //  GA4 event schema matches analytics.js to avoid duplicate
+    //  but conflicting events:
+    //    affiliate_click — amzn.to / amazon.co.uk links
+    //    outbound_click  — all other external links
+    //
+    //  analytics.js fires select_item (GA4 ecommerce standard) on
+    //  the same affiliate clicks; this fires the simpler named
+    //  event used for goal funnels in GA4.
+    //
+    //  NOTE: analytics.js is loaded before this script and handles
+    //  its own click listener. Both fire intentionally — one for
+    //  ecommerce reporting, one for simple goal tracking.
     // ============================================================
 
     document.addEventListener('click', function (e) {
-        // Walk up the DOM to find the nearest anchor
         var el = e.target;
         while (el && el.tagName !== 'A') { el = el.parentElement; }
         if (!el || !el.href) return;
 
         var href = el.href;
+        var text = (el.textContent || '').trim().slice(0, 100);
+        var page = window.location.pathname;
 
-        // Amazon affiliate clicks
+        // ── Amazon affiliate clicks ───────────────────────────
         if (href.includes('amzn.to') || href.includes('amazon.co.uk')) {
             if (typeof gtag === 'function') {
                 gtag('event', 'affiliate_click', {
                     link_url:  href,
-                    link_text: el.textContent.trim().slice(0, 100)
+                    link_text: text,
+                    page_path: page,
                 });
             }
+            return; // don't double-fire as outbound
         }
 
-        // General outbound clicks (non-affiliate externals)
-        if (
-            el.hostname &&
-            el.hostname !== window.location.hostname &&
-            !href.includes('amzn.to') &&
-            !href.includes('amazon.co.uk')
-        ) {
+        // ── General outbound clicks ───────────────────────────
+        if (el.hostname && el.hostname !== window.location.hostname) {
             if (typeof gtag === 'function') {
-                gtag('event', 'outbound_click', { link_url: href });
+                gtag('event', 'outbound_click', {
+                    link_url:    href,
+                    link_domain: el.hostname,
+                });
             }
         }
     });
 
 
     // ============================================================
-    //  06  SERVICE WORKER REGISTRATION
-    // ============================================================
-
-    if ('serviceWorker' in navigator) {
-        // Register after page load — don't block first render
-        window.addEventListener('load', function () {
-            navigator.serviceWorker
-                .register('/sw.js', { scope: '/' })
-                .then(function (reg) {
-                    // Check for updates on every page load
-                    reg.update();
-
-                    // When a new SW is waiting, notify it to activate
-                    reg.addEventListener('updatefound', function () {
-                        var newWorker = reg.installing;
-                        if (!newWorker) return;
-
-                        newWorker.addEventListener('statechange', function () {
-                            if (
-                                newWorker.state === 'installed' &&
-                                navigator.serviceWorker.controller
-                            ) {
-                                // A new version is ready.
-                                // Silent update — no intrusive prompt.
-                                // New SW will take over on next navigation.
-                                newWorker.postMessage({ type: 'SKIP_WAITING' });
-                            }
-                        });
-                    });
-                })
-                .catch(function (err) {
-                    // SW registration failed — site still works, just no offline support
-                    console.warn('[SP] Service worker registration failed:', err);
-                });
-
-            // When a new SW takes control, reload to get fresh assets
-            var refreshing = false;
-            navigator.serviceWorker.addEventListener('controllerchange', function () {
-                if (!refreshing) {
-                    refreshing = true;
-                    window.location.reload();
-                }
-            });
-        });
-    }
-
-
-    // ============================================================
-    //  08  PWA INSTALL PROMPT
-    // ============================================================
+    //  06  PWA INSTALL PROMPT
     //
-    //  Shows a subtle bottom banner after 30 seconds.
-    //  Respects: already installed, user dismissed, iOS vs Android.
+    //  Shown after 30 s on Android/Chrome (deferred prompt) and
+    //  iOS Safari (manual share-sheet guide).
+    //  Dismissed state stored in sessionStorage — clears on tab close.
     //
+    //  Design tokens used (defined in wall-tokens.css + style.css):
+    //    --surface-card / --border-strong / --volt / --volt-text
+    //    --volt-dim / --text-primary / --text-secondary
+    //    --radius-lg / --radius / --font-display / --font-body
+    //    --text-sm / --text-xs / --shadow-card
+    //    --utility-rack-h (68px) — banner clears the bottom nav
+    //    --sp-4 / --sp-6 / --z-banner
+    // ============================================================
+
     (function () {
-        var BANNER_DISMISSED_KEY = 'sp-pwa-dismissed';
+        var BANNER_KEY    = 'sp-pwa-dismissed';
         var deferredPrompt = null;
 
-        // Never show if already installed (standalone mode)
+        // ── 06a  Guards ───────────────────────────────────────
+
+        // Already installed (standalone PWA)
         if (window.matchMedia('(display-mode: standalone)').matches) return;
 
-        // Never show if dismissed this session
-        try {
-            if (sessionStorage.getItem(BANNER_DISMISSED_KEY)) return;
-        } catch (e) {}
+        // Already dismissed this session
+        try { if (sessionStorage.getItem(BANNER_KEY)) return; } catch (e) {}
+
+        // ── 06b  Banner DOM ───────────────────────────────────
 
         function createBanner() {
             var banner = document.createElement('div');
             banner.id = 'pwa-install-banner';
-            banner.setAttribute('role', 'banner');
+            banner.setAttribute('role', 'complementary');
+            banner.setAttribute('aria-label', 'Install StackPick app');
             banner.innerHTML =
                 '<div class="pwa-banner-inner">' +
                 '  <div class="pwa-banner-text">' +
-                '    <span class="pwa-banner-icon">⚡</span>' +
-                '    <span id="pwa-banner-msg">Install <strong>StackPick</strong> for instant access — works offline too.</span>' +
+                '    <span class="pwa-banner-icon" aria-hidden="true">⚡</span>' +
+                '    <span id="pwa-banner-msg">Install <strong>StackPick</strong> — instant access, works offline.</span>' +
                 '  </div>' +
                 '  <div class="pwa-banner-actions">' +
                 '    <button id="pwa-install-btn" class="pwa-btn-install">Install</button>' +
-                '    <button id="pwa-dismiss-btn" class="pwa-btn-dismiss" aria-label="Dismiss">✕</button>' +
+                '    <button id="pwa-dismiss-btn" class="pwa-btn-dismiss" aria-label="Dismiss install prompt">✕</button>' +
                 '  </div>' +
                 '</div>';
 
+            // Dismiss
             banner.querySelector('#pwa-dismiss-btn').addEventListener('click', function () {
-                banner.remove();
-                try { sessionStorage.setItem(BANNER_DISMISSED_KEY, '1'); } catch (e) {}
+                _hideBanner(banner);
+                try { sessionStorage.setItem(BANNER_KEY, '1'); } catch (e) {}
             });
 
+            // Install / iOS guide
             banner.querySelector('#pwa-install-btn').addEventListener('click', function () {
                 if (deferredPrompt) {
                     deferredPrompt.prompt();
@@ -356,12 +404,15 @@
                             gtag('event', 'pwa_install_prompt', { outcome: result.outcome });
                         }
                         deferredPrompt = null;
-                        banner.remove();
+                        _hideBanner(banner);
                     });
                 } else {
-                    // iOS — switch to manual instruction
-                    document.getElementById('pwa-banner-msg').innerHTML =
-                        'Tap the <strong>Share</strong> button in Safari, then <strong>Add to Home Screen</strong>.';
+                    // iOS Safari — show manual instructions
+                    var msg = document.getElementById('pwa-banner-msg');
+                    if (msg) {
+                        msg.innerHTML =
+                            'Tap <strong>Share</strong> in Safari → <strong>Add to Home Screen</strong>.';
+                    }
                     banner.querySelector('#pwa-install-btn').style.display = 'none';
                 }
             });
@@ -369,57 +420,121 @@
             return banner;
         }
 
+        // ── 06c  Styles ───────────────────────────────────────
+
         function injectStyles() {
+            if (document.getElementById('pwa-banner-styles')) return; // idempotent
             var style = document.createElement('style');
-            style.textContent =
-                '#pwa-install-banner {' +
-                '  position: fixed; bottom: 72px; left: 0; right: 0; z-index: 200; padding: 0 1rem; pointer-events: none;' +
-                '}' +
-                '@media(min-width:768px){#pwa-install-banner{bottom:1rem;max-width:480px;left:50%;transform:translateX(-50%);}}' +
-                '.pwa-banner-inner {' +
-                '  background: var(--card-bg, #1e293b); border: 1px solid var(--border, #334155);' +
-                '  border-radius: 12px; padding: 0.85rem 1rem; display: flex; align-items: center;' +
-                '  gap: 0.75rem; box-shadow: 0 4px 24px rgba(0,0,0,.35); pointer-events: all;' +
-                '}' +
-                '.pwa-banner-text { flex: 1; font-size: 0.875rem; line-height: 1.4; color: var(--text-primary, #f1f5f9); }' +
-                '.pwa-banner-icon { margin-right: 0.4rem; }' +
-                '.pwa-banner-actions { display: flex; gap: 0.5rem; align-items: center; flex-shrink: 0; }' +
-                '.pwa-btn-install {' +
-                '  background: #3b82f6; color: #fff; border: none; border-radius: 8px;' +
-                '  padding: 0.45rem 0.9rem; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: background 0.15s;' +
-                '}' +
-                '.pwa-btn-install:hover { background: #2563eb; }' +
-                '.pwa-btn-dismiss {' +
-                '  background: transparent; color: var(--text-secondary, #94a3b8);' +
-                '  border: none; cursor: pointer; font-size: 1rem; padding: 0.25rem 0.5rem;' +
-                '}';
+            style.id  = 'pwa-banner-styles';
+            style.textContent = [
+                '#pwa-install-banner {',
+                '  position: fixed;',
+                '  bottom: calc(var(--utility-rack-h, 68px) + env(safe-area-inset-bottom) + 8px);',
+                '  left: var(--sp-4, 1rem);',
+                '  right: var(--sp-4, 1rem);',
+                '  z-index: var(--z-banner, 600);',
+                '  pointer-events: none;',
+                '}',
+                '@media (min-width: 900px) {',
+                '  #pwa-install-banner {',
+                '    bottom: var(--sp-6, 1.5rem);',
+                '    left: 50%;',
+                '    right: auto;',
+                '    width: 480px;',
+                '    transform: translateX(-50%);',
+                '  }',
+                '}',
+                '.pwa-banner-inner {',
+                '  background: var(--surface-card, #141420);',
+                '  border: 1px solid var(--border-strong, rgba(255,255,255,0.13));',
+                '  border-radius: var(--radius-lg, 12px);',
+                '  padding: 0.85rem 1rem;',
+                '  display: flex;',
+                '  align-items: center;',
+                '  gap: 0.75rem;',
+                '  box-shadow: var(--shadow-card, 0 8px 32px rgba(0,0,0,0.6));',
+                '  pointer-events: all;',
+                '}',
+                '.pwa-banner-text {',
+                '  flex: 1;',
+                '  font-family: var(--font-body, var(--font-sans, sans-serif));',
+                '  font-size: var(--text-sm, 0.8125rem);',
+                '  line-height: 1.4;',
+                '  color: var(--text-primary, #F2F0EB);',
+                '}',
+                '.pwa-banner-icon { margin-right: 0.25rem; }',
+                '.pwa-banner-actions {',
+                '  display: flex;',
+                '  gap: 0.5rem;',
+                '  align-items: center;',
+                '  flex-shrink: 0;',
+                '}',
+                '.pwa-btn-install {',
+                '  background: var(--volt, #C8FF00);',
+                '  color: var(--volt-text, #0A0A0F);',
+                '  border: none;',
+                '  border-radius: var(--radius, 8px);',
+                '  padding: 0.45rem 0.9rem;',
+                '  font-family: var(--font-display, var(--font-sans, sans-serif));',
+                '  font-size: var(--text-xs, 0.6875rem);',
+                '  font-weight: 800;',
+                '  letter-spacing: 0.08em;',
+                '  text-transform: uppercase;',
+                '  cursor: pointer;',
+                '  transition: background 150ms;',
+                '}',
+                '.pwa-btn-install:hover { background: var(--volt-dim, #8FB800); }',
+                '.pwa-btn-dismiss {',
+                '  background: transparent;',
+                '  color: var(--text-secondary, rgba(242,240,235,0.55));',
+                '  border: none;',
+                '  cursor: pointer;',
+                '  font-size: 1rem;',
+                '  padding: 0.25rem 0.5rem;',
+                '}',
+            ].join('\n');
             document.head.appendChild(style);
         }
 
+        // ── 06d  Show / hide ──────────────────────────────────
+
         function showBanner() {
-            // Re-check dismissed in case another tab set it
-            try { if (sessionStorage.getItem(BANNER_DISMISSED_KEY)) return; } catch (e) {}
+            try { if (sessionStorage.getItem(BANNER_KEY)) return; } catch (e) {}
             var banner = createBanner();
             injectStyles();
             document.body.appendChild(banner);
-            // Animate in
-            banner.style.cssText += '; opacity:0; transform:translateY(20px); transition:opacity 0.3s,transform 0.3s';
+
+            // Animate in — ease-spring from wall-tokens
+            banner.style.opacity    = '0';
+            banner.style.transform  = (banner.style.transform || '') + ' translateY(16px)';
+            banner.style.transition =
+                'opacity 300ms var(--ease-spring, cubic-bezier(0.16,1,0.3,1)), ' +
+                'transform 300ms var(--ease-spring, cubic-bezier(0.16,1,0.3,1))';
+
             requestAnimationFrame(function () {
                 requestAnimationFrame(function () {
-                    banner.style.opacity = '1';
-                    banner.style.transform = 'translateY(0)';
+                    banner.style.opacity   = '1';
+                    banner.style.transform = banner.style.transform.replace('translateY(16px)', 'translateY(0)');
                 });
             });
         }
 
-        // Chrome / Android — capture the deferred prompt
+        function _hideBanner(banner) {
+            banner.style.opacity   = '0';
+            banner.style.transform = (banner.style.transform || '') + ' translateY(8px)';
+            setTimeout(function () { banner.remove(); }, 320);
+        }
+
+        // ── 06e  Platform detection & timing ─────────────────
+
+        // Android / Chrome — use native deferred prompt
         window.addEventListener('beforeinstallprompt', function (e) {
             e.preventDefault();
             deferredPrompt = e;
             setTimeout(showBanner, 30000);
         });
 
-        // iOS Safari — no beforeinstallprompt, show manual guide after 30s
+        // iOS Safari — no native prompt; show manual guide after 30 s
         var isIOS    = /iphone|ipad|ipod/i.test(navigator.userAgent);
         var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
         if (isIOS && isSafari) {
@@ -428,4 +543,4 @@
 
     }());
 
-})();
+}());

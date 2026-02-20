@@ -1,7 +1,8 @@
 /* ============================================================
-   STACK PICK — collections.js
-   8 Collection / Patch definitions — Phase 6 Stacked Loadout Wall
-   Product IDs reference window.SP_PRODUCTS from products.js
+   STACK PICK — collections.js  v6
+   8 collections · 3 shuffle variants max per collection
+   All product IDs must exist in products.js — validated on load.
+   Last updated: February 2026
    ============================================================ */
 
 window.SP_COLLECTIONS = [
@@ -195,6 +196,17 @@ window.SP_COLLECTIONS = [
           'chairs-andaseat-kaiser-4',
         ],
       },
+      {
+        label:    'v3 — Precision Build',
+        products: [
+          'mice-endgame-gear-op1w',
+          'keyboards-steelseries-apex-pro-tkl-gen3',
+          'headsets-steelseries-arctis-nova-pro',
+          'monitors-asus-rog-xg27aqdmg',
+          'monitors-samsung-odyssey-g80sd',
+          'chairs-noblechairs-hero',
+        ],
+      },
     ],
   },
 
@@ -214,7 +226,6 @@ window.SP_COLLECTIONS = [
       'keyboards-aula-f99-wireless',
       'headsets-sennheiser-hd560s',
       'headsets-astro-a10-gen2',
-      'monitors-aoc-24g4xe',
     ],
     shuffleVariants: [
       {
@@ -223,9 +234,9 @@ window.SP_COLLECTIONS = [
           'mice-atk-vxe-mad-r',
           'keyboards-keychron-c3-pro',
           'headsets-astro-a10-gen2',
-          'monitors-aoc-24g4xe',
           'mice-lamzu-thorn-4k',
           'headsets-sennheiser-hd560s',
+          'keyboards-aula-f99-wireless',
         ],
       },
     ],
@@ -262,6 +273,17 @@ window.SP_COLLECTIONS = [
           'monitors-msi-mag-274updf',
           'chairs-noblechairs-hero',
           'keyboards-keychron-q1-max',
+        ],
+      },
+      {
+        label:    'v3 — Budget Cozy',
+        products: [
+          'keyboards-aula-f99-wireless',
+          'mice-lamzu-thorn-4k',
+          'headsets-hyperx-cloud-iii-s-wireless',
+          'monitors-aoc-q27g3xmn',
+          'chairs-corsair-tc100-relaxed',
+          'keyboards-keychron-c3-pro',
         ],
       },
     ],
@@ -404,4 +426,25 @@ window.SP_getShuffleVariant = function(collectionId, variantIndex) {
   return col.shuffleVariants[variantIndex].products
     .map(function(id) { return window.SP_getProduct(id); })
     .filter(Boolean);
+};
+
+/**
+ * Get lightweight metadata for a collection (no product arrays)
+ * @param {string} collectionId
+ * @returns {{ id, label, emoji, color }|undefined}
+ */
+window.SP_getCollectionMeta = function(collectionId) {
+  var col = window.SP_getCollection(collectionId);
+  if (!col) return undefined;
+  return { id: col.id, label: col.label, emoji: col.emoji, color: col.color };
+};
+
+/**
+ * Get metadata for all collections (for patch rail rendering)
+ * @returns {Array<{ id, label, emoji, color }>}
+ */
+window.SP_getAllCollectionMeta = function() {
+  return window.SP_COLLECTIONS.map(function(col) {
+    return { id: col.id, label: col.label, emoji: col.emoji, color: col.color };
+  });
 };

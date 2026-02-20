@@ -1,8 +1,9 @@
 /* ============================================================
-   STACK PICK — wall.css
-   Stacked Loadout Wall | Phase 6B — Visual Shell
-   Design: Dapper-Street / Varsity / Hardware Boutique
-
+   STACK PICK — wall.css  v6
+   Visual shell — depends on wall-tokens.css being loaded first.
+   Last updated: February 2026
+   
+   
    CONTENTS
    01  Reset & base
    02  Skip link
@@ -122,7 +123,8 @@ img {
 
 /* ============================================================
    03  PERSONA STRIP
-   Fixed top band — 96px mobile / 108px desktop
+   Fixed top band — 72px mobile / 108px desktop
+   Left: logo + locator pill   Center: headline   Right: guest + toggle
    ============================================================ */
 
 .persona-strip {
@@ -138,9 +140,11 @@ img {
   justify-content: space-between;
   padding: 0 var(--sp-4);
   gap: var(--sp-4);
-  /* Blur backdrop for depth on scroll */
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
+  box-shadow:
+    0 1px 0 var(--border),
+    0 4px 24px rgba(0,0,0,0.5);
 }
 
 /* ── Volt glowing top edge line ── */
@@ -170,7 +174,6 @@ img {
   content: '';
   position: absolute;
   inset: 0;
-  /* Inline SVG turbulence filter — subtle grain */
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
   background-repeat: repeat;
   background-size: 120px 120px;
@@ -178,13 +181,6 @@ img {
   pointer-events: none;
   mix-blend-mode: overlay;
   z-index: 2;
-}
-
-/* ── Bottom shadow fade into wall ── */
-.persona-strip {
-  box-shadow:
-    0 1px 0 var(--border),
-    0 4px 24px rgba(0,0,0,0.5);
 }
 
 /* Left zone */
@@ -211,7 +207,7 @@ img {
   flex: 0 0 auto;
 }
 
-/* Headline — Barlow Condensed, uppercase, massive */
+/* Headline — Barlow Condensed, uppercase, volt shimmer */
 .persona-strip__headline {
   font-family: var(--font-display);
   font-size: clamp(1.6rem, 5vw, 2.6rem);
@@ -220,7 +216,6 @@ img {
   letter-spacing: -0.01em;
   text-transform: uppercase;
   color: var(--text-primary);
-  /* Subtle volt shimmer on the word */
   background: linear-gradient(
     135deg,
     var(--chalk) 0%,
@@ -251,42 +246,16 @@ img {
   white-space: nowrap;
 }
 
-
-/* ============================================================
-   04  LOCATOR PILL
-   ============================================================ */
-
-.locator-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--sp-2);
-  padding: 4px var(--sp-3);
-  background: rgba(200,255,0,0.08);
-  border: 1px solid rgba(200,255,0,0.20);
-  border-radius: var(--radius-pill);
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  font-weight: 500;
-  color: var(--text-secondary);
-  white-space: nowrap;
+/* Logo text (used when headline is in center) */
+.persona-strip__logo {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 900;
+  color: var(--chalk);
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  text-decoration: none;
 }
-
-.locator-pill strong {
-  color: var(--volt);
-  font-weight: 600;
-}
-
-/* Pulsing dot */
-.locator-pill__dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--volt);
-  flex-shrink: 0;
-  animation: pulse-dot 2.5s ease-in-out infinite;
-  box-shadow: 0 0 6px var(--volt-glow);
-}
-
 
 /* ============================================================
    05  GUEST CHIP
@@ -337,7 +306,6 @@ img {
   font-family: var(--font-body);
 }
 
-
 /* ============================================================
    06  THEME TOGGLE
    ============================================================ */
@@ -370,6 +338,7 @@ img {
 .theme-toggle:active {
   transform: rotate(0deg) scale(0.93);
 }
+
 
 
 /* ============================================================
@@ -469,6 +438,23 @@ img {
 
 .prefs-sheet__nav-link:hover {
   color: var(--volt);
+}
+
+.prefs-sheet__nav-group {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--nav-group-text, rgba(242,240,235,0.28));
+  padding: var(--sp-3) 0 var(--sp-1);
+  margin-top: var(--sp-2);
+  border-top: 1px solid var(--border);
+}
+
+.prefs-sheet__nav-group:first-child {
+  margin-top: 0;
+  border-top: none;
 }
 
 .prefs-sheet__close {
@@ -645,6 +631,7 @@ img {
 
 /* ── ACTIVE STATE ── */
 .patch--active {
+  background: var(--surface-lift); /* fallback: Safari < 16.2, Firefox < 113 */
   background: color-mix(in srgb, var(--patch-color) 12%, var(--surface-lift));
   box-shadow:
     0 0 0 1px var(--patch-color),
@@ -776,6 +763,18 @@ img {
   flex-shrink: 0;
   margin-bottom: var(--sp-4);
   box-shadow: 0 4px 12px rgba(0,0,0,0.4), var(--shadow-volt);
+  text-decoration: none;
+  transition: transform var(--t-fast) var(--ease-bounce), box-shadow var(--t-fast);
+}
+
+.patch-rail__logo:hover {
+  transform: scale(1.08);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.5), var(--shadow-volt);
+}
+
+.patch-rail__logo:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring), var(--shadow-volt);
 }
 
 .patch-rail__logo-text {
@@ -1348,7 +1347,6 @@ img {
 .box-card__drawer {
   max-height: 0;
   overflow: hidden;
-  transition: max-height var(--t-drawer) var(--ease-spring);
   border-top: 0px solid transparent;
   transition:
     max-height var(--t-drawer) var(--ease-spring),
@@ -2175,7 +2173,7 @@ img {
     padding-bottom: 0;
   }
 
-  /* Persona strip taller */
+  /* Persona strip taller on desktop */
   .persona-strip {
     height: var(--persona-strip-h-lg);
     padding: 0 var(--sp-8) 0 calc(var(--patch-rail-w) + var(--sp-8));
@@ -2247,7 +2245,6 @@ img {
   }
 }
 
-
 /* ============================================================
    31  PRINT
    ============================================================ */
@@ -2285,6 +2282,33 @@ img {
 
 
 /* ============================================================
+   PHASE 6E — Polish additions
+   Append-only. Do not edit existing rules above.
+   ============================================================ */
+
+/* ── Patch overshoot — fires on triggerShuffle() deal moment ─
+   JS adds .patch--overshoot to active patches when the deck
+   "deals" — more theatrical than the standard jiggle.
+   Transform-origin: center bottom keeps the patch anchored
+   to the rail while it bounces upward.                        */
+@keyframes patch-overshoot {
+  0%   { transform: scale(1)       translateY(0);   }
+  22%  { transform: scale(1.20)    translateY(-10px) rotate(-4deg); }
+  45%  { transform: scale(0.90)    translateY(3px)  rotate(2deg);  }
+  65%  { transform: scale(1.07)    translateY(-4px) rotate(-1deg); }
+  82%  { transform: scale(0.97)    translateY(1px); }
+  100% { transform: scale(1)       translateY(0);   }
+}
+
+.patch--overshoot {
+  animation: patch-overshoot 650ms var(--ease-spring) !important;
+  transform-origin: center bottom;
+  z-index: var(--z-top);
+}
+
+
+
+/* ============================================================
    WALL.CSS — Phase 6D INTERACTION POLISH ADDITIONS
    Appended to wall.css. Do not remove or reorder sections above.
    ============================================================
@@ -2293,7 +2317,7 @@ img {
    CONTENTS (6D additions)
    D01  Pull-to-shuffle trigger zone — refined indicator
    D02  Shuffle trigger arc (SVG progress ring)
-   D03  Shuffle trigger states (pulling / armed)
+   
    D04  Patch charged state (volt ring on armed pull)
    D05  Shuffle banner — cinematic entry + step dots + pulse
    D06  Long-press patch preview — refined mini-card layout
@@ -2434,20 +2458,7 @@ img {
 }
 
 
-/* ============================================================
-   D03  SHUFFLE TRIGGER — pulling vs armed state classes
-   ============================================================ */
 
-/* Label updates per state — content set via JS */
-.shuffle-trigger__label::after {
-  content: 'Pull to shuffle';
-}
-.shuffle-trigger--pulling .shuffle-trigger__label::after {
-  content: 'Keep pulling…';
-}
-.shuffle-trigger--armed .shuffle-trigger__label::after {
-  content: 'Release to deal!';
-}
 
 
 /* ============================================================
@@ -2957,4 +2968,61 @@ img {
   .shuffle-trigger--armed .shuffle-trigger__inner {
     box-shadow: var(--shadow-card) !important;
   }
+}
+
+/* ============================================================
+   PHASE 6F — DECK PHYSICS KEYFRAMES
+   Final additions to support JS triggerShuffle() 
+   ============================================================ */
+
+/* ── Card "Fly Out" — The top card being tossed ── */
+@keyframes card-toss-out {
+  0% { 
+    transform: translate3d(0, 0, 0) rotateX(0) rotateY(0); 
+    opacity: 1; 
+  }
+  30% { 
+    transform: translate3d(20px, -40px, 100px) rotateX(-10deg) rotateY(5deg); 
+    opacity: 1; 
+  }
+  100% { 
+    transform: translate3d(0, 100px, -500px) rotateX(-90deg) rotateY(0); 
+    opacity: 0; 
+  }
+}
+
+/* ── Card "Fly In" — The new card being dealt ── */
+@keyframes card-deal-in {
+  0% { 
+    transform: translate3d(0, -150px, -400px) rotateX(45deg); 
+    opacity: 0; 
+  }
+  60% { 
+    opacity: 1; 
+  }
+  100% { 
+    transform: translate3d(0, 0, 0) rotateX(0); 
+    opacity: 1; 
+  }
+}
+
+/* ── Global "Shuffle" Shake — Applied to the whole stack ── */
+@keyframes deck-vibrate {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-2px) rotate(-0.5deg); }
+  75% { transform: translateX(2px) rotate(0.5deg); }
+}
+
+.card-stack--shuffling {
+  animation: deck-vibrate 0.15s linear infinite;
+  pointer-events: none;
+}
+
+.box-card--tossing {
+  animation: card-toss-out 0.6s var(--ease-smooth) forwards !important;
+  z-index: 100;
+}
+
+.box-card--dealing {
+  animation: card-deal-in 0.5s var(--ease-spring) forwards !important;
 }

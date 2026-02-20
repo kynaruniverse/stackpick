@@ -1,5 +1,7 @@
 /* ============================================================
-   STACK PICK — wall.js  PHASE 6E
+   STACK PICK — wall.js  v6 (Phase 6E)
+   Depends on: products.js, collections.js loaded before this.
+   Last updated: February 2026
    ============================================================ */
 
 (function () {
@@ -192,7 +194,14 @@
     if (!window.SP_PRODUCTS) return '';
     var alts = window.SP_PRODUCTS.filter(function (p) { return p.category === product.category && p.id !== product.id; }).slice(0, 3);
     if (!alts.length) return '<li style="color:var(--text-tertiary);font-size:var(--text-sm);padding:var(--sp-3);">More picks coming soon.</li>';
-    return alts.map(function (alt) { return '<li class="alt-pick"><span class="alt-pick__name">' + escapeHTML(alt.shortName) + '</span><span class="alt-pick__price">' + escapeHTML(alt.price) + '</span><a class="alt-pick__link" href="' + alt.affiliate + '" target="_blank" rel="noopener sponsored" aria-label="View ' + escapeHTML(alt.name) + ' on Amazon UK">\u2192</a></li>'; }).join('');
+    return alts.map(function (alt) {
+      var href = alt.url || alt.affiliate;
+      var isExternal = !alt.url;
+      var rel = isExternal ? 'noopener sponsored' : '';
+      var target = isExternal ? '_blank' : '_self';
+      var label = isExternal ? 'View ' + escapeHTML(alt.name) + ' on Amazon UK' : 'See ' + escapeHTML(alt.name);
+      return '<li class="alt-pick"><span class="alt-pick__name">' + escapeHTML(alt.shortName) + '</span><span class="alt-pick__price">' + escapeHTML(alt.price) + '</span><a class="alt-pick__link" href="' + href + '" target="' + target + '" rel="' + rel + '" aria-label="' + label + '">\u2192</a></li>';
+    }).join('');
   }
 
   function buildCard(product, index, animDelay) {
@@ -356,6 +365,15 @@
       if (storyTrack) { var sp = buildPatch(col, isActive); wirePatch(sp, col, preview, previewCards, previewCta); storyTrack.appendChild(sp); }
       if (railTrack)  { var rp = buildPatch(col, isActive); wirePatch(rp, col, preview, previewCards, previewCta); railTrack.appendChild(rp); }
     });
+    if (preview && !preview._outsideWired) {
+      preview._outsideWired = true;
+      document.addEventListener('pointerdown', function (e) {
+        if (preview.classList.contains('patch-preview--open') && !preview.contains(e.target) && !e.target.closest('.patch')) {
+          preview.classList.remove('patch-preview--open');
+          preview.setAttribute('aria-hidden', 'true');
+        }
+      });
+    }
     setTimeout(function () {
       var ap = storyTrack && storyTrack.querySelector('.patch--active');
       if (ap) ap.scrollIntoView({ inline: 'center', behavior: 'smooth' });
@@ -490,7 +508,9 @@
         state.sortMode = opt.dataset.sort || 'default';
         menu.querySelectorAll('.wall__sort-option').forEach(function (o) { o.classList.toggle('wall__sort-option--active', o === opt); o.setAttribute('aria-selected', o === opt ? 'true' : 'false'); });
         closeSortMenu();
-        var products = state.shuffleStep > 0 ? SP_getShuffleVariant(state.activeCollectionId, state.shuffleStep - 1) : SP_getCollectionProducts(state.activeCollectionId);
+        var products = (state.shuffleStep > 0 && window.SP_getShuffleVariant)
+          ? SP_getShuffleVariant(state.activeCollectionId, state.shuffleStep - 1)
+          : (window.SP_getCollectionProducts ? SP_getCollectionProducts(state.activeCollectionId) : []);
         renderCollection(products);
       });
     });
@@ -595,6 +615,16 @@
     var arc = trigger.querySelector('.shuffle-trigger__arc');
     if (!arc) return;
     arc.style.strokeDashoffset = (113.1 * (1 - progress)).toFixed(2);
+    /* Sync label text in DOM — accessible, translatable, JS-controlled */
+    var label = trigger.querySelector('.shuffle-trigger__label');
+    if (!label) return;
+    if (progress >= 1) {
+        label.textContent = 'Release to deal!';
+    } else if (progress > 0) {
+        label.textContent = 'Keep pulling\u2026';
+    } else {
+        label.textContent = 'Pull to shuffle';
+    }
   }
 
   function _resetPullVisuals(stack, trigger) {
@@ -637,7 +667,7 @@
     state.shuffleStep = (state.shuffleStep % totalV) + 1;
     html.setAttribute('data-shuffle-step', state.shuffleStep);
     var variant  = col.shuffleVariants[state.shuffleStep - 1];
-    var products = SP_getShuffleVariant(state.activeCollectionId, state.shuffleStep - 1);
+    var products = window.SP_getShuffleVariant ? SP_getShuffleVariant(state.activeCollectionId, state.shuffleStep - 1) : [];
 
     /* 6E: GA4 shuffle_trigger event */
     if (typeof gtag === 'function') gtag('event', 'shuffle_trigger', {
@@ -769,35 +799,6 @@
     });
   }
 
-
-  /* 14  PWA BANNER */
-
-  function initPWABanner() {
-    var KEY = 'sp-pwa-dismissed', deferred = null;
-    if (window.matchMedia('(display-mode: standalone)').matches) return;
-    try { if (sessionStorage.getItem(KEY)) return; } catch (e) {}
-    function show() {
-      try { if (sessionStorage.getItem(KEY)) return; } catch (e) {}
-      var s = document.createElement('style');
-      s.textContent = '#sp-pwa{position:fixed;bottom:calc(var(--utility-rack-h)+8px);left:0;right:0;z-index:var(--z-banner);padding:0 1rem;pointer-events:none;}@media(min-width:768px){#sp-pwa{bottom:1rem;max-width:480px;left:50%;transform:translateX(-50%);}}.sp-pwa-i{background:var(--surface-lift);border:1px solid var(--border-strong);border-radius:12px;padding:.85rem 1rem;display:flex;align-items:center;gap:.75rem;box-shadow:var(--shadow-card);pointer-events:all;}.sp-pwa-t{flex:1;font-size:.875rem;line-height:1.4;color:var(--text-primary);font-family:var(--font-body);}.sp-pwa-a{display:flex;gap:.5rem;align-items:center;flex-shrink:0;}.sp-pwa-btn{background:var(--volt);color:var(--volt-text);border:none;border-radius:8px;padding:.45rem .9rem;font-size:.75rem;font-weight:800;cursor:pointer;font-family:var(--font-display);letter-spacing:.06em;text-transform:uppercase;}.sp-pwa-x{background:transparent;color:var(--text-tertiary);border:none;cursor:pointer;font-size:1rem;padding:.25rem .5rem;}';
-      document.head.appendChild(s);
-      var b = document.createElement('div'); b.id = 'sp-pwa';
-      b.innerHTML = '<div class="sp-pwa-i"><div class="sp-pwa-t"><span>\u26A1</span> <span id="sp-pwa-m">Install <strong>StackPick</strong> \u2014 works offline too.</span></div><div class="sp-pwa-a"><button class="sp-pwa-btn">Install</button><button class="sp-pwa-x" aria-label="Dismiss">\u2715</button></div></div>';
-      b.querySelector('.sp-pwa-x').addEventListener('click', function () { b.remove(); try { sessionStorage.setItem(KEY,'1'); } catch(e){} });
-      b.querySelector('.sp-pwa-btn').addEventListener('click', function () {
-        if (deferred) { deferred.prompt(); deferred.userChoice.then(function (r) { if (typeof gtag === 'function') gtag('event','pwa_install_prompt',{outcome:r.outcome}); deferred=null; b.remove(); }); }
-        else { var m = document.getElementById('sp-pwa-m'); if (m) m.innerHTML = 'Tap <strong>Share</strong> then <strong>Add to Home Screen</strong>.'; b.querySelector('.sp-pwa-btn').style.display = 'none'; }
-      });
-      document.body.appendChild(b);
-      b.style.cssText += ';opacity:0;transform:translateY(16px);transition:opacity .3s,transform .3s;';
-      requestAnimationFrame(function () { requestAnimationFrame(function () { b.style.opacity='1'; b.style.transform='translateY(0)'; }); });
-    }
-    window.addEventListener('beforeinstallprompt', function (e) { e.preventDefault(); deferred=e; setTimeout(show,30000); });
-    var isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent), isSafari=/^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-    if (isIOS && isSafari) setTimeout(show,30000);
-  }
-
-
   /* 15  INIT */
 
   function init() {
@@ -810,8 +811,8 @@
     initPrefsSheet(); initRack(); renderPatches();
     var products = SP_getCollectionProducts(state.activeCollectionId);
     renderCollection(products); updateWallHeader(state.activeCollectionId, products.length);
-    initSortMenu(); initScroll(); initPullToShuffle(); initShuffleBanner(); initServiceWorker(); initPWABanner();
-    console.log('%c\u26A1 StackPick%c 6E \u2014 ' + SP_PRODUCTS.length + ' products, ' + SP_COLLECTIONS.length + ' collections loaded', 'color:#C8FF00;font-weight:800;font-family:monospace;font-size:13px;', 'color:#8E8EA0;font-family:monospace;font-size:13px;');
+    initSortMenu(); initScroll(); initPullToShuffle(); initShuffleBanner(); initServiceWorker(); 
+    console.log('%c\u26A1 StackPick%c v6F \u2014 ' + SP_PRODUCTS.length + ' products, ' + SP_COLLECTIONS.length + ' collections loaded', 'color:#C8FF00;font-weight:800;font-family:monospace;font-size:13px;', 'color:#8E8EA0;font-family:monospace;font-size:13px;');
   }
 
   if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', init); } else { init(); }
