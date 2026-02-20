@@ -417,7 +417,7 @@
     var col = SP_getCollection(collectionId);
     if (!col) return;
     state.isTransitioning = true; state.shuffleStep = 0; state.activeCollectionId = collectionId;
-    hideSufflesBanner(); html.classList.add('wall-body--transitioning');
+    hideShuffleBanner(); html.classList.add('wall-body--transitioning');
     var stack = document.getElementById('card-stack');
     if (stack) {
       stack.style.transition = 'opacity ' + TRANSITION_OUT_MS + 'ms ease, transform ' + TRANSITION_OUT_MS + 'ms ease';
@@ -726,10 +726,10 @@
       banner.classList.add('shuffle-banner--pulse');
       setTimeout(function () { banner.classList.remove('shuffle-banner--pulse'); }, 300);
     }
-    _shuffleTimer = setTimeout(hideSufflesBanner, 3000);
+    _shuffleTimer = setTimeout(hideShuffleBanner, 3000);
   }
 
-  function hideSufflesBanner() {
+  function hideShuffleBanner() {
     var banner = document.getElementById('shuffle-banner');
     if (!banner) return;
     clearTimeout(_shuffleTimer);
@@ -742,10 +742,10 @@
     if (!btn) return;
     btn.addEventListener('click', function () {
       state.shuffleStep = 0; html.setAttribute('data-shuffle-step', '0');
-      hideSufflesBanner(); renderCollection(SP_getCollectionProducts(state.activeCollectionId));
+      hideShuffleBanner(); renderCollection(SP_getCollectionProducts(state.activeCollectionId));
     });
     var banner = document.getElementById('shuffle-banner');
-    if (banner) { banner.addEventListener('click', function (e) { if (!e.target.closest('button')) hideSufflesBanner(); }); }
+    if (banner) { banner.addEventListener('click', function (e) { if (!e.target.closest('button')) hideShuffleBanner(); }); }
   }
 
 

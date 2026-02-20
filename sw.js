@@ -12,7 +12,7 @@
 //  VERSION: bump sp-v4 whenever SHELL_ASSETS change.
 // ============================================================
 
-const VERSION     = 'sp-v4';
+const VERSION     = 'sp-v5';
 const SHELL_CACHE = `${VERSION}-shell`;
 const PAGE_CACHE  = `${VERSION}-pages`;
 const IMAGE_CACHE = `${VERSION}-images`;
@@ -30,6 +30,10 @@ const SHELL_ASSETS = [
   '/assets/js/data/products.js',
   '/assets/js/data/collections.js',
   '/assets/js/analytics.js',
+
+  // ── Category page shell (style.css + app.js used on all non-wall pages) ──
+  '/assets/css/style.css',
+  '/assets/js/app.js',
 
   // ── Category pages (affiliate plumbing — never remove) ──
   '/headsets/',

@@ -352,47 +352,42 @@
     (function () {
 
         // ── DATA INDEX ─────────────────────────────────────────
+        // Synced with /assets/js/data/products.js — update both together
         var INDEX = [
-            // HEADSETS
-            { type:'headset', icon:'🎧', title:'Sennheiser HD 560S', desc:'Open-back audiophile headset — best spatial audio for FPS. No mic.', price:'£99', url:'/headsets/', tags:'sennheiser hd560s open back audiophile competitive fps' },
-            { type:'headset', icon:'🎧', title:'SteelSeries Arctis Nova Pro Wireless', desc:'Hot-swap dual battery, ANC, simultaneous PC + console connection.', price:'£260', url:'/headsets/', tags:'steelseries arctis nova pro wireless anc premium' },
-            { type:'headset', icon:'🎧', title:'HyperX Cloud III S Wireless', desc:'120-hour battery, memory foam, legendary comfort for long sessions.', price:'£130', url:'/headsets/', tags:'hyperx cloud wireless comfort long session' },
-            { type:'headset', icon:'🎧', title:'Razer BlackShark V2', desc:'THX Spatial Audio, 50mm titanium drivers. Best budget gaming headset.', price:'~£36', url:'/headsets/', tags:'razer blackshark v2 budget thx spatial audio' },
-            { type:'headset', icon:'🎧', title:'Sony INZONE H9', desc:'PS5-optimised with native 360 Spatial Sound. 32-hour battery.', price:'~£215', url:'/headsets/', tags:'sony inzone h9 ps5 wireless spatial sound' },
-            { type:'headset', icon:'🎧', title:'Razer BlackShark V2 X', desc:'Best wired headset under £35. TriForce 50mm drivers.', price:'~£34', url:'/guides/budget-picks-under-50/', tags:'razer blackshark v2x budget wired cheap' },
+            // MICE
+            { type:'mouse', icon:'🖱️', title:'Razer Viper V3 Pro', desc:'54g wireless, 35K sensor, 8K polling. Most used mouse by Valorant pros in 2026.', price:'£119', url:'/mice/', tags:'razer viper v3 pro ultralight wireless fps competitive 8k polling 54g' },
+            { type:'mouse', icon:'🖱️', title:'Endgame Gear OP1w 4K V2', desc:'Claw-grip king. German-engineered, 4000Hz polling, lowest click latency on market.', price:'£104', url:'/mice/', tags:'endgame gear op1w 4k v2 claw grip wireless competitive fps' },
+            { type:'mouse', icon:'🖱️', title:'Lamzu Thorn (4K Wireless)', desc:'52g ergonomic wireless with 4K polling. Ultimate comfy gaming mouse. Reddit favourite.', price:'£92', url:'/mice/', tags:'lamzu thorn ergonomic wireless lightweight 4k polling cozy palm' },
+            { type:'mouse', icon:'🖱️', title:'Logitech G502 X Plus', desc:'13-button LIGHTFORCE wireless, infinite scroll, 106g. Great for MMOs and creators.', price:'£94', url:'/mice/', tags:'logitech g502 x plus lightforce wireless mmo creator infinite scroll buttons' },
+            { type:'mouse', icon:'🖱️', title:'ATK VXE MAD R', desc:'36g ultra-light wireless with flagship 3950 sensor under £50. Budget beast.', price:'£48', url:'/mice/', tags:'atk vxe mad r ultralight budget 36g wireless 3950 sensor cheap fps' },
 
             // KEYBOARDS
-            { type:'keyboard', icon:'⌨️', title:'Wooting 60HE+', desc:'Hall Effect switches, Rapid Trigger 0.1mm. The competitive standard.', price:'£175', url:'/keyboards/', tags:'wooting 60he hall effect rapid trigger competitive cs2' },
-            { type:'keyboard', icon:'⌨️', title:'SteelSeries Apex Pro TKL Gen 3', desc:'Adjustable OmniPoint switches, OLED display, magnetic wrist rest.', price:'£190', url:'/keyboards/', tags:'steelseries apex pro tkl adjustable omnipoint oled' },
-            { type:'keyboard', icon:'⌨️', title:'Keychron Q3', desc:'Gasket-mount aluminium TKL with Gateron switches. Best typing feel.', price:'£150', url:'/keyboards/', tags:'keychron q3 gasket mount aluminium tkl gateron typing' },
-            { type:'keyboard', icon:'⌨️', title:'Aula F99 Wireless', desc:'Hall Effect wireless at mid-range price. Tri-mode connectivity.', price:'£83', url:'/keyboards/', tags:'aula f99 wireless hall effect budget' },
-            { type:'keyboard', icon:'⌨️', title:'Logitech G Pro X 2 LIGHTSPEED TKL', desc:'LIGHTSPEED wireless TKL, GX switches, 2000Hz polling.', price:'~£165', url:'/keyboards/', tags:'logitech g pro x 2 lightspeed wireless tkl' },
-            { type:'keyboard', icon:'⌨️', title:'HyperX Alloy Origins TKL', desc:'Full aluminium body, HyperX Red switches, USB passthrough.', price:'~£90', url:'/keyboards/', tags:'hyperx alloy origins tkl aluminium wired budget' },
-            { type:'keyboard', icon:'⌨️', title:'Redragon K552 RGB', desc:'Real mechanical switches, metal plate, 60% layout. Best under £35.', price:'~£32', url:'/guides/budget-picks-under-50/', tags:'redragon k552 budget mechanical 60 percent cheap' },
-            { type:'keyboard', icon:'⌨️', title:'RK ROYAL KLUDGE RK68', desc:'Wireless mechanical under £50. Hotswap, 65% layout, tri-mode.', price:'~£49', url:'/guides/budget-picks-under-50/', tags:'rk royal kludge rk68 wireless budget hotswap' },
+            { type:'keyboard', icon:'⌨️', title:'SteelSeries Apex Pro TKL Gen 3', desc:'Hall Effect magnetic switches with best-in-class Rapid Trigger. Tournament standard.', price:'£189', url:'/keyboards/', tags:'steelseries apex pro tkl gen 3 hall effect rapid trigger competitive fps' },
+            { type:'keyboard', icon:'⌨️', title:'ASUS ROG Strix Scope II 96', desc:'96% wireless with pre-lubed NX Snow switches and 1,500-hour battery.', price:'£125', url:'/keyboards/', tags:'asus rog strix scope ii 96 wireless silent pre-lubed 1500hr battery all-rounder' },
+            { type:'keyboard', icon:'⌨️', title:'Aula F99 Wireless', desc:'Gasket mount, 75%, 8000mAh battery, enthusiast acoustics at budget price.', price:'£82', url:'/keyboards/', tags:'aula f99 wireless gasket mount budget 75 percent creamy acoustics' },
+            { type:'keyboard', icon:'⌨️', title:'Keychron Q1 Max', desc:'Full aluminium body, Jupiter Banana tactile switches, QMK/VIA. The desk piece forever.', price:'£219', url:'/keyboards/', tags:'keychron q1 max aluminium premium qmk via jupiter tactile creator' },
+            { type:'keyboard', icon:'⌨️', title:'Keychron C3 Pro', desc:'Gasket mount, hot-swap, QMK/VIA under £40. Most common first mechanical keyboard on UK Reddit.', price:'£39', url:'/keyboards/', tags:'keychron c3 pro budget gasket mount qmk via cheap value starter' },
 
-            // MICE
-            { type:'mouse', icon:'🖱️', title:'Logitech G Pro X Superlight 2', desc:'60g wireless — the competitive standard. HERO 2 sensor, LIGHTFORCE switches.', price:'£140', url:'/mice/', tags:'logitech g pro x superlight 2 ultralight wireless competitive' },
-            { type:'mouse', icon:'🖱️', title:'Razer Viper V3 Pro', desc:'54g ambidextrous wireless, 4000Hz polling. Lightest at this tier.', price:'£119', url:'/mice/', tags:'razer viper v3 pro ultralight wireless ambidextrous' },
-            { type:'mouse', icon:'🖱️', title:'Endgame Gear OP1w 4K V2', desc:'78g ergonomic wireless. Superb shape for palm/claw grips.', price:'£105', url:'/mice/', tags:'endgame gear op1w ergonomic wireless palm claw' },
-            { type:'mouse', icon:'🖱️', title:'Lamzu Thorn 4K Wireless', desc:'55g wireless gaming mouse with 4K polling rate sensor.', price:'£92', url:'/mice/', tags:'lamzu thorn ultralight wireless 4k polling' },
-            { type:'mouse', icon:'🖱️', title:'Logitech G305 LIGHTSPEED', desc:'Wireless gaming under £35. HERO sensor, 250hr battery. Best budget wireless.', price:'~£32', url:'/mice/', tags:'logitech g305 lightspeed budget wireless hero sensor cheap' },
-            { type:'mouse', icon:'🖱️', title:'Razer DeathAdder Essential', desc:'Best wired mouse under £30. Ergonomic, 6400 DPI.', price:'~£29', url:'/guides/budget-picks-under-50/', tags:'razer deathadder essential budget wired cheap ergonomic' },
-            { type:'mouse', icon:'🖱️', title:'Cooler Master MM712', desc:'52g honeycomb ambidextrous wired ultralight. PixArt PAW3370 sensor.', price:'~£44', url:'/guides/budget-picks-under-50/', tags:'cooler master mm712 ultralight budget honeycomb ambidextrous' },
+            // HEADSETS
+            { type:'headset', icon:'🎧', title:'Sennheiser HD 560S', desc:'Open-back audiophile, 120Ω. Incredible directional audio for footstep detection. No mic.', price:'£99', url:'/headsets/', tags:'sennheiser hd560s open back audiophile competitive fps spatial study' },
+            { type:'headset', icon:'🎧', title:'SteelSeries Arctis Nova Pro', desc:'Hot-swap battery, dual source (PC + console simultaneously), ANC.', price:'£289', url:'/headsets/', tags:'steelseries arctis nova pro wireless anc dual source premium hot-swap' },
+            { type:'headset', icon:'🎧', title:'HyperX Cloud III S Wireless', desc:'120-hour battery, metal frame, legendary comfort for long sessions.', price:'£129', url:'/headsets/', tags:'hyperx cloud iii s wireless comfort 120hr battery metal frame long session cozy' },
+            { type:'headset', icon:'🎧', title:'Bose QuietComfort Ultra (Gen 2)', desc:'Best-in-class ANC, spatial audio, high resale value. Dual-use gaming and travel.', price:'£399', url:'/headsets/', tags:'bose quietcomfort ultra gen 2 anc noise cancelling premium wireless creator travel' },
+            { type:'headset', icon:'🎧', title:'ASTRO A10 Gen 2', desc:'Damage-resistant flexible frame, detachable cable, multi-platform. Budget pick.', price:'£40', url:'/headsets/', tags:'astro a10 gen 2 budget wired flexible durable cheap multi-platform' },
 
             // MONITORS
-            { type:'monitor', icon:'🖥️', title:'ASUS ROG Swift PG27AQDP', desc:'27" 1440p WOLED 480Hz — fastest OLED gaming monitor. For competitive endgame.', price:'£899', url:'/monitors/', tags:'asus rog swift pg27aqdp 480hz oled 1440p competitive endgame' },
-            { type:'monitor', icon:'🖥️', title:'ASUS ROG Swift PG32UCDM', desc:'32" 4K QD-OLED 240Hz — best large screen gaming monitor.', price:'£900', url:'/monitors/', tags:'asus rog swift pg32ucdm 4k qd-oled 240hz large screen' },
-            { type:'monitor', icon:'🖥️', title:'LG UltraGear 27GR95QE', desc:'27" 1440p OLED 240Hz — best value OLED monitor.', price:'£599', url:'/monitors/', tags:'lg ultragear 27gr95qe oled 240hz 1440p value' },
-            { type:'monitor', icon:'🖥️', title:'AOC Gaming 24G4XE', desc:'24" 1080p IPS 180Hz — fast budget gaming monitor.', price:'£110', url:'/monitors/', tags:'aoc 24g4xe 180hz 1080p budget cheap fast ips' },
-            { type:'monitor', icon:'🖥️', title:'LG UltraGear 24GS65F', desc:'24" 1080p IPS 180Hz — best budget monitor for competitive gaming.', price:'£120', url:'/guides/gaming-setup-500/', tags:'lg 24gs65f 180hz 1080p budget competitive' },
+            { type:'monitor', icon:'🖥️', title:'ASUS ROG Strix OLED XG27AQDMG', desc:'27" 1440p WOLED 240Hz, 0.03ms, custom heatsink. Best overall OLED.', price:'£429', url:'/monitors/', tags:'asus rog xg27aqdmg woled oled 1440p 240hz competitive premium' },
+            { type:'monitor', icon:'🖥️', title:'AOC Gaming 24G4XE', desc:'24" 1080p Fast IPS 180Hz, 1ms GtG, G-Sync Compatible. Best budget gaming monitor.', price:'£109', url:'/monitors/', tags:'aoc 24g4xe 180hz 1080p fast ips budget cheap value gsync' },
+            { type:'monitor', icon:'🖥️', title:'Samsung 32" Odyssey G80SD', desc:'32" 4K QD-OLED 240Hz, Smart TV, AI upscaling. Matte, glare-free.', price:'£740', url:'/monitors/', tags:'samsung odyssey g80sd 4k qd-oled 240hz large premium smart creator' },
+            { type:'monitor', icon:'🖥️', title:'AOC Gaming Q27G3XMN', desc:'27" 1440p Mini-LED 180Hz, HDR1000 (700-1000 nits). Best HDR value.', price:'£293', url:'/monitors/', tags:'aoc q27g3xmn mini-led hdr1000 1440p 180hz value hdr' },
+            { type:'monitor', icon:'🖥️', title:'MSI MAG 274UPDF E16M', desc:'27" 4K USB-C 96W power delivery. Creator desk centrepiece and laptop dock.', price:'£398', url:'/monitors/', tags:'msi mag 274updf 4k usb-c creator studio colour accurate laptop dock' },
 
             // CHAIRS
-            { type:'chair', icon:'🪑', title:'Secretlab TITAN Evo 2022', desc:'4-way lumbar, cold-cure foam, 5-year warranty. Best gaming chair.', price:'£329', url:'/chairs/', tags:'secretlab titan evo gaming chair lumbar foam warranty' },
-            { type:'chair', icon:'🪑', title:'Herman Miller Aeron', desc:'8Z mesh, PostureFit SL, 12-year warranty. For 7+ hours daily.', price:'£1,099', url:'/chairs/', tags:'herman miller aeron mesh office ergonomic posture long session' },
-            { type:'chair', icon:'🪑', title:'AndaSeat Kaiser 4', desc:'Premium gaming chair. 4D armrests, magnetic headrest, aluminium base.', price:'£450', url:'/chairs/', tags:'andaseat kaiser 4 premium gaming chair 4d armrests' },
-            { type:'chair', icon:'🪑', title:'Corsair TC100 RELAXED', desc:'Budget gaming chair. Breathable fabric, wide seat, 120kg capacity.', price:'~£188', url:'/chairs/', tags:'corsair tc100 relaxed budget cheap gaming chair fabric' },
-            { type:'chair', icon:'🪑', title:'EUREKA Typhon Gaming Chair', desc:'Mid-range gaming chair with magnetic headrest and adjustable lumbar.', price:'£370', url:'/chairs/', tags:'eureka typhon gaming chair mid-range' },
+            { type:'chair', icon:'🪑', title:'AndaSeat Kaiser 4', desc:'6D armrests, magnetic memory foam headrest, 180kg rated. Best overall gaming chair.', price:'£449', url:'/chairs/', tags:'andaseat kaiser 4 6d armrests magnetic headrest premium ergonomic' },
+            { type:'chair', icon:'🪑', title:'Corsair TC100 Relaxed', desc:'Wide relaxed seat, leatherette and mesh hybrid back. Budget Corsair gaming chair.', price:'£187', url:'/chairs/', tags:'corsair tc100 relaxed budget wide seat mesh leatherette cheap value' },
+            { type:'chair', icon:'🪑', title:'EUREKA Typhon Gaming Chair', desc:'Full mesh seat, back and headrest. 4D armrests, adaptive lumbar. Best mesh chair.', price:'£369', url:'/chairs/', tags:'eureka typhon full mesh gaming chair 4d armrests adaptive lumbar ergonomic' },
+            { type:'chair', icon:'🪑', title:'Sihoo Doro C300', desc:'Self-adaptive lumbar support, TÜV certified, 12 ergonomic patents. Best for your back.', price:'£298', url:'/chairs/', tags:'sihoo doro c300 self-adaptive lumbar tuv back health ergonomic study' },
+            { type:'chair', icon:'🪑', title:'Noblechairs Hero', desc:'Cold foam cushioning that holds shape for years. 4D armrests, premium PU leather.', price:'£349', url:'/chairs/', tags:'noblechairs hero cold foam 4d armrests premium comfort long session cozy' },
 
             // GUIDES
             { type:'guide', icon:'📋', title:'£500 Gaming Setup Guide', desc:'Monitor, headset, keyboard, mouse, mousepad, chair. Under £500.', price:'~£436', url:'/guides/gaming-setup-500/', tags:'500 budget setup guide complete build monitor keyboard mouse chair cheap' },
