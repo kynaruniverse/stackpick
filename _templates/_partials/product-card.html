@@ -1,0 +1,28 @@
+        <div class="product-card">
+          <div class="product-image-placeholder" aria-hidden="true">{{emoji}}</div>
+          <div class="product-content">
+            <span class="product-badge"{{#if badgeColor}} style="background:{{badgeColor}};"{{/if}}>{{badge}}</span>
+            <h3 class="product-title">{{name}}</h3>
+            <div class="product-price-block">
+              <span class="price-current-label">Amazon price</span>
+              <span class="price-current">{{price}}</span>
+              {{#if priceRrp}}
+              <span class="price-rrp-wrap">
+                <span class="price-rrp-label">RRP</span>
+                <span class="price-rrp">{{priceRrp}}</span>
+              </span>
+              <span class="price-saving">{{priceSaving}}</span>
+              {{/if}}
+            </div>
+            <p class="product-desc">{{desc}}</p>
+            <ul class="product-features">
+              {{#each pros}}
+              <li class="pro"><span class="pro-icon">✓</span> {{this}}</li>
+              {{/each}}
+              {{#each cons}}
+              <li class="con"><span class="con-icon">✕</span> {{this}}</li>
+              {{/each}}
+            </ul>
+            <a href="{{affiliate}}" target="_blank" rel="noopener sponsored" class="product-btn">View on Amazon →</a>
+          </div>
+        </div>

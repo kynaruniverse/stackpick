@@ -1,0 +1,17 @@
+<body>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <header>
+    <div class="header-container">
+      <a href="/" class="logo">Stack<span>Pick</span></a>
+      <nav aria-label="Main navigation">
+        <a href="/headsets/"{{#if_active "headsets" activePage}} aria-current="page"{{/if_active}}>Headsets</a>
+        <a href="/keyboards/"{{#if_active "keyboards" activePage}} aria-current="page"{{/if_active}}>Keyboards</a>
+        <a href="/mice/"{{#if_active "mice" activePage}} aria-current="page"{{/if_active}}>Mice</a>
+        <a href="/monitors/"{{#if_active "monitors" activePage}} aria-current="page"{{/if_active}}>Monitors</a>
+        <a href="/chairs/"{{#if_active "chairs" activePage}} aria-current="page"{{/if_active}}>Chairs</a>
+        <a href="/about/"{{#if_active "about" activePage}} aria-current="page"{{/if_active}}>About</a>
+        <button class="theme-toggle" id="theme-toggle" aria-label="Switch to dark mode">🌙</button>
+      </nav>
+    </div>
+  </header>

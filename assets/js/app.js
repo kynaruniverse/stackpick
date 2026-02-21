@@ -544,3 +544,18 @@
     }());
 
 }());
+
+
+// Centralized Price Badge Injection
+var CHECKED_DATE = 'Feb 2026';
+
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.price-current').forEach(function (el) {
+        if (!el.querySelector('.price-badge')) {
+            var badge = document.createElement('span');
+            badge.className = 'price-badge';
+            badge.textContent = 'Checked ' + CHECKED_DATE;
+            el.appendChild(badge);
+        }
+    });
+});

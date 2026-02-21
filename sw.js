@@ -9,7 +9,7 @@
 //    External (Amazon, GA, fonts CDN)  → Network-only, never cached
 //    Offline                           → /offline.html fallback
 //
-//  VERSION: bump sp-v5 whenever SHELL_ASSETS change.
+//  VERSION: bump sp-v whenever SHELL_ASSETS change.
 // ============================================================
 
 const VERSION     = 'sp-v5';
@@ -107,7 +107,9 @@ self.addEventListener('fetch', event => {
   if (request.method !== 'GET') return;
 
   // 2. Pass through external origins (Amazon, GA, Google Fonts, etc.)
-  if (PASSTHROUGH_ORIGINS.some(origin => url.hostname.includes(origin))) return;
+  if (PASSTHROUGH_ORIGINS.some(origin =>
+    url.hostname === origin || url.hostname.endsWith('.' + origin)
+  )) return;
 
   // 3. Only handle same-origin
   if (url.origin !== self.location.origin) return;
@@ -175,10 +177,12 @@ async function cacheFirstImage(request) {
     }
     return response;
   } catch {
-    return new Response(
-      atob('R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'),
-      { headers: { 'Content-Type': 'image/gif' } }
-    );
+    var b64 = 'R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+    var bin = atob(b64);
+    var bytes = new Uint8Array(bin.length);
+    for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    return new Response(bytes, { headers: { 'Content-Type': 'image/gif' } });
+
   }
 }
 

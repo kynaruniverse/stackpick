@@ -1,0 +1,32 @@
+  <aside class="desktop-sidebar" aria-label="Site navigation">
+    <div class="sidebar-section">
+      <p class="sidebar-heading">Stacks</p>
+      <a href="/#stacks" class="sidebar-link"><span class="nav-icon">⚡</span> All Stacks</a>
+    </div>
+    <div class="sidebar-section">
+      <p class="sidebar-heading">Peripherals</p>
+      <a href="/headsets/" class="sidebar-link{{#if_active "headsets" activePage}} sidebar-link--active{{/if_active}}"><span class="nav-icon">🎧</span> Headsets</a>
+      <a href="/keyboards/" class="sidebar-link{{#if_active "keyboards" activePage}} sidebar-link--active{{/if_active}}"><span class="nav-icon">⌨️</span> Keyboards</a>
+      <a href="/mice/" class="sidebar-link{{#if_active "mice" activePage}} sidebar-link--active{{/if_active}}"><span class="nav-icon">🖱️</span> Mice</a>
+      <a href="/monitors/" class="sidebar-link{{#if_active "monitors" activePage}} sidebar-link--active{{/if_active}}"><span class="nav-icon">🖥️</span> Monitors</a>
+      <a href="/chairs/" class="sidebar-link{{#if_active "chairs" activePage}} sidebar-link--active{{/if_active}}"><span class="nav-icon">🪑</span> Chairs</a>
+    </div>
+    <div class="sidebar-section">
+      <p class="sidebar-heading">Coming Soon</p>
+      <a href="/pcs/" class="sidebar-link"><span class="nav-icon">💻</span> PCs <span class="sidebar-badge">Soon</span></a>
+      <a href="/desks/" class="sidebar-link"><span class="nav-icon">🪵</span> Desks <span class="sidebar-badge">Soon</span></a>
+      <a href="/speakers/" class="sidebar-link"><span class="nav-icon">🔊</span> Speakers <span class="sidebar-badge">Soon</span></a>
+      <a href="/extras/" class="sidebar-link"><span class="nav-icon">✨</span> Extras <span class="sidebar-badge">Soon</span></a>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section">
+      <a href="/guides/" class="sidebar-link{{#if_active "guides" activePage}} sidebar-link--active{{/if_active}}"><span class="nav-icon">📋</span> Setup Guides</a>
+      <a href="/comparisons/" class="sidebar-link{{#if_active "comparisons" activePage}} sidebar-link--active{{/if_active}}"><span class="nav-icon">⚖️</span> Comparisons</a>
+      <a href="/search/" class="sidebar-link"><span class="nav-icon">🔍</span> Search</a>
+      <a href="/about/" class="sidebar-link{{#if_active "about" activePage}} sidebar-link--active{{/if_active}}"><span class="nav-icon">ℹ️</span> About</a>
+    </div>
+    <button class="sidebar-theme-btn" id="theme-toggle-sidebar" aria-label="Toggle theme">
+      <span id="sidebar-theme-icon">🌙</span>
+      <span id="sidebar-theme-label">Dark mode</span>
+    </button>
+  </aside>

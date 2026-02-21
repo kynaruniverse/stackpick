@@ -1,0 +1,30 @@
+    <section class="hero">
+      <div class="hero-container">
+        <h1>{{heroTitle}}</h1>
+        <p>{{heroSubtitle}}</p>
+      </div>
+    </section>
+
+    <div class="breadcrumb-bar">
+      <div class="container" style="padding-top:0.75rem;padding-bottom:0.75rem;">
+        <ol class="breadcrumb-list" aria-label="Breadcrumb">
+          <li><a href="/">Home</a></li>
+          <li aria-hidden="true" class="breadcrumb-sep">›</li>
+          <li aria-current="page">{{breadcrumbLabel}}</li>
+        </ol>
+      </div>
+    </div>
+
+    <main class="container" id="main-content">
+      <section class="section">
+        <div class="product-grid">
+          {{{productCardsHTML}}}
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="buying-guide">
+          {{{buyingGuideHTML}}}
+        </div>
+      </section>
+    </main>

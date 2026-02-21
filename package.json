@@ -1,0 +1,13 @@
+{
+  "name": "stackpick",
+  "version": "1.0.0",
+  "description": "StackPick static site generator",
+  "scripts": {
+    "build": "node _generator/build.js",
+    "build:categories": "node _generator/generate-categories.js",
+    "build:validate": "node _generator/lib/validate.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
