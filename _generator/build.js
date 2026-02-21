@@ -11,7 +11,7 @@
  *   2. Generate category pages (mice, keyboards, headsets, monitors, chairs)
  *   3. Generate comparison pages
  *   4. Generate guide pages
- *   5. (Phase 6) Generate sitemap + export JS data files
+ *   5. Generate sitemap.xml + export assets/js/data/*.js
  */
 
 const path = require('path');
@@ -33,25 +33,27 @@ if (!valid) {
 // ---------------------------------------------------------------------------
 // Step 2: Category pages
 // ---------------------------------------------------------------------------
-console.log('Step 2 — Generating category pages...');
+console.log('\nStep 2 — Generating category pages...');
 require('./generate-categories.js');
 
 // ---------------------------------------------------------------------------
 // Step 3: Comparison pages
 // ---------------------------------------------------------------------------
-console.log('Step 3 — Generating comparison pages...');
+console.log('\nStep 3 — Generating comparison pages...');
 require('./generate-comparisons.js');
 
 // ---------------------------------------------------------------------------
 // Step 4: Guide pages
 // ---------------------------------------------------------------------------
-console.log('Step 4 — Generating guide pages...');
+console.log('\nStep 4 — Generating guide pages...');
 require('./generate-guides.js');
 
 // ---------------------------------------------------------------------------
-// Step 5 will be added in Phase 6
+// Step 5: Sitemap + JS data export
 // ---------------------------------------------------------------------------
-console.log('\nStep 5 — Sitemap      (Phase 6 — not yet built)');
+console.log('\nStep 5 — Generating sitemap + exporting JS data files...');
+require('./generate-sitemap.js');
+require('./export-js-data.js');
 
 // ---------------------------------------------------------------------------
 // Done
