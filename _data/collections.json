@@ -259,7 +259,6 @@
     "color": "#8E8EA0",
     "baseProducts": [
       "mice-razer-viper-v3-pro",
-      "mice-endgame-gear-op1w",
       "mice-lamzu-thorn-4k",
       "mice-logitech-g502x-plus",
       "keyboards-asus-rog-strix-scope-ii-96",
@@ -284,10 +283,10 @@
       {
         "label": "v3 — Budget Wireless",
         "products": [
-          "mice-endgame-gear-op1w",
+          "mice-lamzu-thorn-4k",
           "keyboards-asus-rog-strix-scope-ii-96",
           "headsets-hyperx-cloud-iii-s-wireless",
-          "mice-lamzu-thorn-4k",
+          "mice-razer-viper-v3-pro",
           "keyboards-aula-f99-wireless"
         ]
       }

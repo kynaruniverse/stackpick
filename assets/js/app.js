@@ -107,12 +107,18 @@
         themeToggle.addEventListener('click', toggleTheme);
     }
 
-    // Delegate for desktop rail button (may not exist on all pages)
+    // Desktop patch-rail theme button (delegation)
     document.addEventListener('click', function (e) {
         if (e.target.closest('.patch-rail__theme-btn')) {
             toggleTheme();
         }
     });
+
+    // Sidebar theme button (#theme-toggle-sidebar)
+    var sidebarThemeBtn = document.getElementById('theme-toggle-sidebar');
+    if (sidebarThemeBtn) {
+        sidebarThemeBtn.addEventListener('click', toggleTheme);
+    }
 
     // Follow OS preference only when user has no saved preference
     if (window.matchMedia) {
@@ -544,18 +550,3 @@
     }());
 
 }());
-
-
-// Centralized Price Badge Injection
-var CHECKED_DATE = 'Feb 2026';
-
-document.addEventListener('DOMContentLoaded', function () {
-    document.querySelectorAll('.price-current').forEach(function (el) {
-        if (!el.querySelector('.price-badge')) {
-            var badge = document.createElement('span');
-            badge.className = 'price-badge';
-            badge.textContent = 'Checked ' + CHECKED_DATE;
-            el.appendChild(badge);
-        }
-    });
-});

@@ -1,5 +1,5 @@
 /* ============================================================
-   STACK PICK — wall.js  v6 (Phase 6E)
+   STACK PICK — wall.js  v6 (Phase 6F)
    Depends on: products.js, collections.js loaded before this.
    Last updated: February 2026
    ============================================================ */
@@ -798,6 +798,50 @@
       navigator.serviceWorker.addEventListener('controllerchange', function () { if (!refreshing) { refreshing = true; window.location.reload(); } });
     });
   }
+
+  /* 14  DATA ACCESS HELPERS
+   *
+   * These functions bridge SP_PRODUCTS / SP_COLLECTIONS (raw arrays
+   * loaded by data/products.js and data/collections.js) and the wall
+   * renderer.  They are exposed on window so optional callers (patch
+   * preview, sort menu, shuffle reset) can guard with window.SP_get*.
+   */
+
+  function SP_getCollection(id) {
+    if (!window.SP_COLLECTIONS) return null;
+    for (var i = 0; i < SP_COLLECTIONS.length; i++) {
+      if (SP_COLLECTIONS[i].id === id) return SP_COLLECTIONS[i];
+    }
+    return null;
+  }
+
+  function SP_getCollectionProducts(id) {
+    var col = SP_getCollection(id);
+    if (!col || !window.SP_PRODUCTS) return [];
+    var productMap = {};
+    SP_PRODUCTS.forEach(function (p) { productMap[p.id] = p; });
+    return (col.baseProducts || [])
+      .map(function (pid) { return productMap[pid]; })
+      .filter(Boolean);
+  }
+
+  function SP_getShuffleVariant(id, variantIndex) {
+    var col = SP_getCollection(id);
+    if (!col || !col.shuffleVariants || !window.SP_PRODUCTS) return [];
+    var variant = col.shuffleVariants[variantIndex];
+    if (!variant) return SP_getCollectionProducts(id);
+    var productMap = {};
+    SP_PRODUCTS.forEach(function (p) { productMap[p.id] = p; });
+    return (variant.products || [])
+      .map(function (pid) { return productMap[pid]; })
+      .filter(Boolean);
+  }
+
+  // Expose on window so guards like `window.SP_getCollection` resolve
+  window.SP_getCollection         = SP_getCollection;
+  window.SP_getCollectionProducts = SP_getCollectionProducts;
+  window.SP_getShuffleVariant     = SP_getShuffleVariant;
+
 
   /* 15  INIT */
 
