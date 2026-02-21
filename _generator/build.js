@@ -37,11 +37,16 @@ console.log('Step 2 — Generating category pages...');
 require('./generate-categories.js');
 
 // ---------------------------------------------------------------------------
-// Steps 3–5 will be added in Phases 4, 5, 6
+// Step 3: Comparison pages
+// ---------------------------------------------------------------------------
+console.log('Step 3 — Generating comparison pages...');
+require('./generate-comparisons.js');
+
+// ---------------------------------------------------------------------------
+// Steps 4–5 will be added in Phases 5, 6
 // Stubs below so the build completes without errors
 // ---------------------------------------------------------------------------
-console.log('\nStep 3 — Comparisons  (Phase 4 — not yet built)');
-console.log('Step 4 — Guides       (Phase 5 — not yet built)');
+console.log('\nStep 4 — Guides       (Phase 5 — not yet built)');
 console.log('Step 5 — Sitemap      (Phase 6 — not yet built)');
 
 // ---------------------------------------------------------------------------
@@ -49,3 +54,6 @@ console.log('Step 5 — Sitemap      (Phase 6 — not yet built)');
 // ---------------------------------------------------------------------------
 const elapsed = ((Date.now() - start) / 1000).toFixed(2);
 console.log(`\n✅ Build complete in ${elapsed}s\n`);
+
+
+

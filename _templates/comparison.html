@@ -1,0 +1,64 @@
+    <section class="hero">
+      <div class="hero-container">
+        <h1>{{heroTitle}}</h1>
+        <p>{{heroSubtitle}}</p>
+      </div>
+    </section>
+
+    <div class="breadcrumb-bar">
+      <div class="container" style="padding-top:0.75rem;padding-bottom:0.75rem;">
+        <ol class="breadcrumb-list" aria-label="Breadcrumb">
+          <li><a href="/">Home</a></li>
+          <li aria-hidden="true" class="breadcrumb-sep">›</li>
+          <li><a href="/comparisons/">Comparisons</a></li>
+          <li aria-hidden="true" class="breadcrumb-sep">›</li>
+          <li aria-current="page">{{breadcrumbLabel}}</li>
+        </ol>
+      </div>
+    </div>
+
+    <main class="container" id="main-content">
+      <section class="section">
+        <div class="buying-guide">
+
+          {{{introHTML}}}
+
+          <h2>Specs at a Glance</h2>
+
+          <div class="comparison-table-wrap">
+            <table class="comparison-table">
+              <thead>
+                <tr>
+                  <th>Spec</th>
+                  <th>{{productAName}}</th>
+                  <th>{{productBName}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {{{specTableHTML}}}
+              </tbody>
+            </table>
+          </div>
+
+          <h2>Detailed Breakdown</h2>
+
+          {{{sectionsHTML}}}
+
+          <div class="verdict-box">
+            <h3>Our Verdict</h3>
+            {{{verdictHTML}}}
+          </div>
+
+          <h2>Where to Buy</h2>
+
+          <div class="product-grid" style="margin-top:1rem;">
+            {{{buyCardsHTML}}}
+          </div>
+
+          <p class="last-updated"><em>Last updated: February 2026. Prices fluctuate — check Amazon UK for current pricing.</em></p>
+
+          {{{relatedLinksHTML}}}
+
+        </div>
+      </section>
+    </main>
