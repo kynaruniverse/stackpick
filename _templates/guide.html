@@ -1,0 +1,64 @@
+    <section class="hero">
+      <div class="hero-container">
+        <h1>{{heroTitle}}</h1>
+        <p>{{heroSubtitle}}</p>
+      </div>
+    </section>
+
+    <div class="breadcrumb-bar">
+      <div class="container" style="padding-top:0.75rem;padding-bottom:0.75rem;">
+        <ol class="breadcrumb-list" aria-label="Breadcrumb">
+          <li><a href="/">Home</a></li>
+          <li aria-hidden="true" class="breadcrumb-sep">›</li>
+          <li><a href="/guides/">Guides</a></li>
+          <li aria-hidden="true" class="breadcrumb-sep">›</li>
+          <li aria-current="page">{{breadcrumbLabel}}</li>
+        </ol>
+      </div>
+    </div>
+
+    <main class="container" id="main-content">
+
+      <section class="section">
+        <div class="buying-guide">
+          <h2>What's in This Build</h2>
+          <p>{{intro}}</p>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-title"><h2>Quick Summary</h2></div>
+        <div class="comparison-table-wrap">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Category</th>
+                <th>Our Pick</th>
+                <th>Price</th>
+              </tr>
+            </thead>
+            <tbody>
+              {{{summaryTableHTML}}}
+            </tbody>
+          </table>
+        </div>
+        {{{summaryTotalsHTML}}}
+      </section>
+
+      {{{sectionsHTML}}}
+
+      <section class="section">
+        <div class="buying-guide">
+          {{{buyingGuideHTML}}}
+          <p class="last-updated"><em>Last updated: February 2026. All prices on Amazon UK. Prices checked weekly.</em></p>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-title"><h2>More Setup Guides</h2></div>
+        <div class="category-grid">
+          {{{relatedGuidesHTML}}}
+        </div>
+      </section>
+
+    </main>
