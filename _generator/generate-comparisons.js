@@ -247,11 +247,16 @@ function run() {
     const valid = validate(comp);
     if (!valid) { failed++; continue; }
 
-    const html       = generateComparison(comp);
-    const outputPath = path.join(ROOT, 'comparisons', comp.slug, 'index.html');
-    writeFile(outputPath, html);
-    console.log(`  ✓ comparisons/${comp.slug}/index.html`);
-    passed++;
+    try {
+      const html       = generateComparison(comp);
+      const outputPath = path.join(ROOT, 'comparisons', comp.slug, 'index.html');
+      writeFile(outputPath, html);
+      console.log(`  ✓ comparisons/${comp.slug}/index.html`);
+      passed++;
+    } catch (err) {
+      console.error(`  ✗ Failed to generate "comparisons/${comp.slug}/index.html": ${err.message}`);
+      failed++;
+    }
   }
 
   console.log(`\n  Generated ${passed} comparison page(s).${failed ? ` Skipped ${failed} with errors.` : ''}`);

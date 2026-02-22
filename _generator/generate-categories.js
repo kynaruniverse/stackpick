@@ -331,8 +331,7 @@ function run() {
   // editorial ordering used across all category pages.
   const allPicks = collections.find(c => c.id === 'all-picks');
   if (!allPicks) {
-    console.error('  ✗ Fatal: "all-picks" collection not found in collections.json');
-    process.exit(1);
+    throw new Error('Fatal: "all-picks" collection not found in collections.json');
   }
   const allPicksOrder = allPicks.baseProducts;
 
