@@ -1,459 +1,501 @@
 [
   {
-    "slug": "logitech-superlight-2-vs-razer-viper-v3-pro",
-    "title": "Logitech Superlight 2 vs Razer Viper V3 Pro",
-    "metaTitle": "Logitech Superlight 2 vs Razer Viper V3 Pro Comparison | Stack Pick",
-    "metaDescription": "Logitech G Pro X Superlight 2 vs Razer Viper V3 Pro — which is the best wireless gaming mouse for UK gamers? Full comparison with UK pricing.",
-    "ogTitle": "Superlight 2 vs Viper V3 Pro: Best Wireless Gaming Mouse? | Stack Pick",
-    "ogDescription": "The two best wireless gaming mice go head to head. We break down weight, sensor, battery, and shape to help you decide.",
-    "canonical": "https://stackpick.co.uk/comparisons/logitech-superlight-2-vs-razer-viper-v3-pro/",
-    "datePublished": "2026-02-17",
-    "dateModified": "2026-02-17",
+    "slug": "razer-viper-v3-pro-vs-logitech-g502x-plus",
+    "title": "Razer Viper V3 Pro vs Logitech G502 X Plus",
+    "metaTitle": "Razer Viper V3 Pro vs Logitech G502 X Plus Comparison | Stack Pick",
+    "metaDescription": "Ultralight FPS speed vs productivity power. We compare the 54g Viper V3 Pro against the feature-rich G502 X Plus for UK gamers.",
+    "ogTitle": "Viper V3 Pro vs G502 X Plus: Speed vs Features | Stack Pick",
+    "ogDescription": "Do you want the absolute fastest sensor for Valorant or the most versatile mouse for everything else? Full breakdown here.",
+    "canonical": "https://stackpick.co.uk/comparisons/razer-viper-v3-pro-vs-logitech-g502x-plus/",
+    "datePublished": "2026-02-22",
+    "dateModified": "2026-02-22",
     "emoji": "🖱️",
-    "intro": "Two of the best wireless gaming mice ever made. Both cost similar money, both use flagship sensors, both are used by pro players. This comparison exists to help you decide which one to actually buy.",
+    "intro": "This is a clash of philosophies. The Viper V3 Pro is a stripped-back racing car designed for one thing: winning FPS gunfights. The G502 X Plus is a luxury SUV, packed with buttons, RGB, and a legendary infinite scroll wheel. Your choice depends entirely on whether you value 'performance' or 'utility'.",
     "productA": {
-      "name": "Logitech G Pro X Superlight 2",
-      "badge": "OUR PICK",
-      "badgeColor": "#ef4444",
-      "price": "~£139",
-      "affiliate": "https://amzn.to/4kHUmQV",
-      "desc": "Right-hand symmetrical. LIGHTFORCE switches. HERO 2 sensor. 60g. 95hr battery.",
-      "linkLabel": "See on Mice page →",
-      "linkHref": "/mice/"
-    },
-    "productB": {
+      "id": "mice-razer-viper-v3-pro",
       "name": "Razer Viper V3 Pro",
-      "badge": "ALSO GREAT",
-      "badgeColor": "",
-      "price": "~£110",
+      "badge": "THE PRO STANDARD",
+      "badgeColor": "#ef4444",
+      "price": "£119",
       "affiliate": "https://amzn.to/4c1StN0",
-      "desc": "Ambidextrous. Focus Pro 35K sensor. 54g. 4000Hz capable. 95hr battery.",
-      "linkLabel": "See on Mice page →",
+      "desc": "54g Ultralight, Focus Pro 35K Gen-2 Sensor, 8000Hz wireless polling.",
+      "linkLabel": "See full specs →",
+      "linkHref": "/mice/"
+    },
+    "productB": {
+      "id": "mice-logitech-g502x-plus",
+      "name": "Logitech G502 X Plus",
+      "badge": "THE DO-IT-ALL LEGEND",
+      "badgeColor": "#3b82f6",
+      "price": "£94",
+      "affiliate": "https://amzn.to/3MCPIaj",
+      "desc": "13 programmable buttons, Infinite Scroll, LIGHTSYNC RGB, Hybrid switches.",
+      "linkLabel": "See full specs →",
       "linkHref": "/mice/"
     },
     "specTable": [
-      { "label": "Weight", "a": "60g", "b": "54g", "winner": "b" },
-      { "label": "Sensor", "a": "HERO 2 (32K DPI)", "b": "Focus Pro 35K", "winner": "" },
-      { "label": "Max Polling", "a": "2000Hz (adapter)", "b": "4000Hz (adapter)", "winner": "b" },
-      { "label": "Battery", "a": "~95 hours", "b": "~95 hours", "winner": "" },
-      { "label": "Shape", "a": "Right-hand symmetrical", "b": "Ambidextrous", "winner": "" },
-      { "label": "Buttons", "a": "5", "b": "5", "winner": "" },
-      { "label": "Wireless", "a": "LIGHTSPEED", "b": "HyperSpeed", "winner": "" },
-      { "label": "RGB", "a": "No", "b": "No", "winner": "" }
+      {
+        "label": "Weight",
+        "a": "54g",
+        "b": "106g",
+        "winner": "a"
+      },
+      {
+        "label": "Sensor",
+        "a": "Focus Pro 35K",
+        "b": "HERO 25K",
+        "winner": "a"
+      },
+      {
+        "label": "Polling Rate",
+        "a": "Up to 8000Hz",
+        "b": "1000Hz",
+        "winner": "a"
+      },
+      {
+        "label": "Buttons",
+        "a": "5",
+        "b": "13",
+        "winner": "b"
+      },
+      {
+        "label": "Scroll Wheel",
+        "a": "Tactile",
+        "b": "Infinite / Ratchet",
+        "winner": "b"
+      },
+      {
+        "label": "RGB",
+        "a": "None",
+        "b": "8-Zone LIGHTSYNC",
+        "winner": "b"
+      }
     ],
     "sections": [
       {
-        "heading": "Weight — Viper V3 Pro wins",
-        "body": "The Viper V3 Pro at 54g is genuinely lighter than the Superlight 2 at 60g. In isolation both are ultralight, but if you're specifically chasing the lowest possible weight, Razer wins here. Neither mouse will fatigue your wrist on a full day of gaming."
+        "heading": "The Weight Gap",
+        "body": "The Viper V3 Pro is literally half the weight of the G502 X Plus. For games like Valorant or CS2, lower weight translates to faster flick shots and less fatigue. However, some users find the G502's heft feels more 'premium' and stable for productivity or slow-paced RPGs."
       },
       {
-        "heading": "Sensor — Both are flawless, Viper edges on paper",
-        "body": "The HERO 2 in the Superlight 2 and the Focus Pro 35K in the Viper V3 Pro are both objectively flawless sensors — zero acceleration, zero jitter, perfectly linear tracking at any speed. The Focus Pro has a higher max DPI (35K vs 32K) and supports 4000Hz polling with the HyperPolling dongle. In practice, at the DPI ranges anyone actually uses (400–3200), you will not feel a difference. Both sensors are used by top-ranked competitive players."
-      },
-      {
-        "heading": "Polling Rate — Viper V3 Pro wins on paper",
-        "body": "The Viper V3 Pro supports 4000Hz polling with Razer's HyperPolling dongle (sold separately). The Superlight 2 ships at 1000Hz and supports 2000Hz with Logitech's separate adapter. Higher polling means more position updates per second, which reduces input lag. The difference between 1000Hz and 4000Hz is measurable in microseconds — real in theory, imperceptible in practice for all but the highest-level pros. If you're not playing at the absolute top of the ladder, 1000Hz is perfectly fine."
-      },
-      {
-        "heading": "Shape — comes down to your hand",
-        "body": "This is the most important factor and it's personal. The Superlight 2 is a right-hand-only symmetrical shape — similar to the G Pro Wireless that many pro players have used for years. It suits medium-to-large hands with a claw or fingertip grip. The Viper V3 Pro is ambidextrous — it works for both hands and suits a wider range of grip styles and hand sizes. If you're left-handed, Viper is your only option here. If you've used a G Pro before and loved it, Superlight 2 is the natural upgrade."
-      },
-      {
-        "heading": "Battery Life — identical",
-        "body": "Both claim approximately 95 hours of battery life at 1000Hz. Real-world use matches this closely. Neither mouse will need charging more than once a week for most gamers. Both charge via USB-C."
-      },
-      {
-        "heading": "Clicks and switches",
-        "body": "The Superlight 2 uses Logitech's LIGHTFORCE optical-mechanical hybrid switches — essentially optical speed with mechanical feel. They have a satisfying tactile click and are rated for 100M actuations. The Viper V3 Pro uses Razer's Gen-3 optical switches — true optical, no debounce delay, also rated for 100M actuations. Both are excellent. The Superlight 2 feels slightly more premium to the touch; the Viper feels crisper and faster."
-      },
-      {
-        "heading": "Software",
-        "body": "Logitech G HUB vs Razer Synapse. Both have had stability issues over the years. G HUB has improved significantly. Synapse is more feature-rich but heavier. If you're already using one ecosystem's products, stay there — mixing is a headache."
+        "heading": "Utility and Customisation",
+        "body": "This is where Logitech wins. With 13 buttons and the G-Shift feature, you can macro your entire workflow onto the mouse. The dual-mode scroll wheel (infinite spin) is a godsend for long documents or web browsing, features the Viper completely lacks."
       }
     ],
     "buySection": {
-      "heading": "Who Should Buy Each Mouse?",
+      "heading": "Which should you buy?",
       "buyA": {
-        "heading": "Buy the Superlight 2 if you:",
+        "heading": "Buy the Viper V3 Pro if:",
         "points": [
-          "Use a right-hand grip (claw or fingertip)",
-          "Already own Logitech gear (keyboard, headset)",
-          "Want LIGHTFORCE hybrid switches",
-          "Prefer the G Pro shape that pros have used for years",
-          "Don't need ambidextrous design"
+          "You play competitive FPS games primarily",
+          "You want the best sensor tech available",
+          "You use a claw or fingertip grip"
         ]
       },
       "buyB": {
-        "heading": "Buy the Viper V3 Pro if you:",
+        "heading": "Buy the G502 X Plus if:",
         "points": [
-          "Are left-handed",
-          "Prefer an ambidextrous shape",
-          "Want the absolute lightest mouse (54g vs 60g)",
-          "Already use Razer gear",
-          "Want 4000Hz polling capability (future-proofing)",
-          "Budget is tighter (usually £20–£30 cheaper)"
+          "You play a mix of MMOs, RPGs, and work",
+          "You love having multiple macro buttons",
+          "You want vibrant RGB for your setup"
         ]
       }
     },
-    "verdict": "If you're right-handed and have no strong shape preference, the Superlight 2 is our pick — the LIGHTFORCE switches are the best clicks we've felt on a wireless mouse and the HERO 2 sensor is proven across thousands of pro hours. It's the safer recommendation for most people.\n\nIf you're left-handed, use a palm grip on larger hands, or are coming from a Razer setup, the Viper V3 Pro is the right call. It's lighter, cheaper, and just as capable at any polling rate you'll realistically use.\n\nYou genuinely cannot go wrong with either. Both are endgame mice.",
+    "verdict": "Choose the Viper V3 Pro for pure performance. Choose the G502 X Plus for the best daily driving experience.",
     "relatedLinks": [
-      { "href": "/mice/", "label": "Best Gaming Mice UK" },
-      { "href": "/comparisons/", "label": "All Comparisons" }
+      {
+        "href": "/mice/",
+        "label": "Best Gaming Mice UK"
+      }
     ]
   },
   {
-    "slug": "asus-pg27aqdp-vs-pg32ucdm",
-    "title": "ASUS PG27AQDP vs PG32UCDM",
-    "metaTitle": "ASUS PG27AQDP vs PG32UCDM Monitor Comparison | Stack Pick",
-    "metaDescription": "ASUS ROG Swift PG27AQDP vs PG32UCDM — 1440p OLED vs 4K OLED. Which premium gaming monitor should UK gamers buy? Full comparison.",
-    "ogTitle": "ASUS PG27AQDP vs PG32UCDM: Which OLED Monitor? | Stack Pick",
-    "ogDescription": "ASUS ROG Swift OLED head to head — 1440p 240Hz vs 4K 144Hz. Resolution vs refresh rate. Full UK pricing comparison.",
-    "canonical": "https://stackpick.co.uk/comparisons/asus-pg27aqdp-vs-pg32ucdm/",
-    "datePublished": "2026-02-17",
-    "dateModified": "2026-02-17",
-    "emoji": "🖥️",
-    "intro": "Two of ASUS ROG's finest OLED monitors facing off. The PG27AQDP gives you 1440p at a blistering 240Hz. The PG32UCDM gives you 4K at a more measured 144Hz. Both use OLED panels. Both cost serious money. The question is whether you're a competitive gamer chasing frames or a visual quality hunter chasing resolution.",
-    "productA": {
-      "name": "ASUS ROG Swift PG27AQDP",
-      "badge": "OUR FPS PICK",
-      "badgeColor": "#ef4444",
-      "price": "~£699",
-      "affiliate": "https://amzn.to/4asusPG27",
-      "desc": "27\" 1440p WOLED, 240Hz, 0.03ms. The competitive gaming OLED — maximum frames, minimum input lag.",
-      "linkLabel": "View on Amazon →",
-      "linkHref": "https://amzn.to/4asusPG27"
-    },
-    "productB": {
-      "name": "ASUS ROG Swift PG32UCDM",
-      "badge": "OUR 4K PICK",
-      "badgeColor": "#7b2fbe",
-      "price": "~£899",
-      "affiliate": "https://amzn.to/4asusPG32",
-      "desc": "32\" 4K QD-OLED, 144Hz, USB-C 90W. The premium content creation and cinematic gaming OLED.",
-      "linkLabel": "View on Amazon →",
-      "linkHref": "https://amzn.to/4asusPG32"
-    },
-    "specTable": [
-      { "label": "Panel", "a": "WOLED", "b": "QD-OLED", "winner": "" },
-      { "label": "Resolution", "a": "2560×1440 (1440p)", "b": "3840×2160 (4K)", "winner": "b" },
-      { "label": "Size", "a": "27\"", "b": "32\"", "winner": "" },
-      { "label": "Refresh Rate", "a": "240Hz", "b": "144Hz", "winner": "a" },
-      { "label": "Response Time", "a": "0.03ms", "b": "0.03ms", "winner": "" },
-      { "label": "USB-C Power", "a": "No", "b": "90W", "winner": "b" },
-      { "label": "Approx UK Price", "a": "~£699", "b": "~£899", "winner": "a" }
-    ],
-    "sections": [
-      {
-        "heading": "Resolution — PG32UCDM wins, but 1440p is no slouch",
-        "body": "4K at 32\" is genuinely sharper and more immersive, especially for single-player games, content creation, and anything cinematic. 1440p at 27\" still looks excellent — the pixel density is high enough that individual pixels are invisible at normal desk distances. For pure competitive gaming, extra resolution adds GPU load without adding competitive value."
-      },
-      {
-        "heading": "Refresh Rate — PG27AQDP wins for competitive play",
-        "body": "240Hz vs 144Hz is a real difference in competitive gaming contexts. More frames means more current information about enemy positions, smoother tracking, and lower perceived input lag. If you play Valorant, CS2, or Apex at a high level, 240Hz matters. For single-player games, the difference between 144Hz and 240Hz is largely imperceptible."
-      },
-      {
-        "heading": "Panel technology — QD-OLED has the edge on colour",
-        "body": "The PG32UCDM uses QD-OLED (Quantum Dot OLED) which produces wider colour coverage and slightly brighter whites than the WOLED in the PG27AQDP. Both eliminate local dimming completely and produce true blacks. For colour-critical work, QD-OLED wins. For gaming, the difference is subtle."
-      },
-      {
-        "heading": "GPU requirements",
-        "body": "Running 4K at 144Hz requires significantly more GPU power than 1440p at 240Hz. If you're on an RTX 4070 or below, the PG27AQDP will let you actually use the refresh rate. The PG32UCDM at 4K will bottleneck anything below an RTX 4080 in demanding titles."
-      }
-    ],
-    "buySection": {
-      "heading": "Which Monitor Is Right For You?",
-      "buyA": {
-        "heading": "Buy the PG27AQDP if you:",
-        "points": [
-          "Play competitive FPS games (CS2, Valorant, Apex)",
-          "Want maximum frames per second",
-          "Have a mid-range GPU (RTX 4070 or similar)",
-          "Prefer a smaller, focused 27\" screen",
-          "Want to save ~£200"
-        ]
-      },
-      "buyB": {
-        "heading": "Buy the PG32UCDM if you:",
-        "points": [
-          "Prioritise visual fidelity and immersion",
-          "Play mostly single-player or cinematic games",
-          "Do content creation or colour-sensitive work",
-          "Have a powerful GPU (RTX 4080 or above)",
-          "Want a larger 32\" screen",
-          "Need USB-C laptop connectivity"
-        ]
-      }
-    },
-    "verdict": "For pure gaming performance, the PG27AQDP is the smarter buy — it's cheaper, has a higher refresh rate, and pairs with a wider range of GPUs. For the best overall screen — gaming, content creation, and cinematic experience — the PG32UCDM is exceptional but demands both a high-end GPU and a bigger budget.",
-    "relatedLinks": [
-      { "href": "/monitors/", "label": "Best Gaming Monitors UK" },
-      { "href": "/comparisons/", "label": "All Comparisons" }
-    ]
-  },
-  {
-    "slug": "logitech-g-pro-x-2-vs-hyperx-alloy-origins",
-    "title": "Logitech G Pro X 2 vs HyperX Alloy Origins",
-    "metaTitle": "Logitech G Pro X 2 vs HyperX Alloy Origins TKL Comparison | Stack Pick",
-    "metaDescription": "Logitech G Pro X 2 LIGHTSPEED vs HyperX Alloy Origins TKL — wireless premium vs wired value. Which TKL keyboard should UK gamers buy?",
-    "ogTitle": "G Pro X 2 vs HyperX Alloy Origins: Best TKL Keyboard? | Stack Pick",
-    "ogDescription": "Wireless premium vs wired value — two of the best TKL keyboards for competitive gaming compared for UK gamers.",
-    "canonical": "https://stackpick.co.uk/comparisons/logitech-g-pro-x-2-vs-hyperx-alloy-origins/",
-    "datePublished": "2026-02-17",
-    "dateModified": "2026-02-17",
+    "slug": "steelseries-apex-pro-tkl-gen3-vs-keychron-q1-max",
+    "title": "SteelSeries Apex Pro TKL Gen 3 vs Keychron Q1 Max",
+    "metaTitle": "SteelSeries Apex Pro TKL vs Keychron Q1 Max | Stack Pick",
+    "metaDescription": "Rapid Trigger vs Custom Build. We compare the Hall Effect speed of SteelSeries with the premium typing feel of Keychron.",
+    "ogTitle": "Apex Pro TKL vs Keychron Q1 Max: Speed vs Quality | Stack Pick",
+    "ogDescription": "Is the world's fastest gaming keyboard better than a custom-built masterpiece? Find out here.",
+    "canonical": "https://stackpick.co.uk/comparisons/steelseries-apex-pro-tkl-gen3-vs-keychron-q1-max/",
+    "datePublished": "2026-02-22",
+    "dateModified": "2026-02-22",
     "emoji": "⌨️",
-    "intro": "The G Pro X 2 is one of the most acclaimed wireless TKL keyboards ever made. The HyperX Alloy Origins TKL is a full-aluminium wired TKL that costs almost half the price. Both target competitive gamers. The question is whether wireless is worth the premium.",
+    "intro": "The Apex Pro TKL Gen 3 is built for speed, featuring Hall Effect sensors that allow for Rapid Trigger. The Keychron Q1 Max is built for 'thock'—a heavy aluminium chassis, multiple layers of acoustic foam, and a superior typing experience. One is a weapon, the other is an instrument.",
     "productA": {
-      "name": "Logitech G Pro X 2 LIGHTSPEED TKL",
-      "badge": "WIRELESS PICK",
-      "badgeColor": "",
-      "price": "~£165",
-      "affiliate": "https://amzn.to/3GProX2TKL",
-      "desc": "LIGHTSPEED wireless, GX switches, aluminium top, 2000Hz polling. Best wireless TKL.",
-      "linkLabel": "View on Amazon →",
-      "linkHref": "https://amzn.to/3GProX2TKL"
+      "id": "keyboards-steelseries-apex-pro-tkl-gen3",
+      "name": "SteelSeries Apex Pro TKL Gen 3",
+      "badge": "SPEED KING (HE)",
+      "badgeColor": "#ef4444",
+      "price": "£184",
+      "affiliate": "https://amzn.to/4kHUmQV",
+      "desc": "OmniPoint 3.0 Adjustable HyperMagnetic Switches, Rapid Trigger, OLED Screen.",
+      "linkLabel": "View on Keyboards →",
+      "linkHref": "/keyboards/"
     },
     "productB": {
-      "name": "HyperX Alloy Origins TKL",
-      "badge": "VALUE PICK",
-      "badgeColor": "#ef4444",
-      "price": "~£90",
-      "affiliate": "https://amzn.to/3AlloyOrigins",
-      "desc": "Full aluminium body, HyperX Red switches, USB passthrough, detachable cable. Outstanding value.",
-      "linkLabel": "View on Amazon →",
-      "linkHref": "https://amzn.to/3AlloyOrigins"
+      "id": "keyboards-keychron-q1-max",
+      "name": "Keychron Q1 Max",
+      "badge": "THE PREMIUM TANK",
+      "badgeColor": "#10b981",
+      "price": "£219",
+      "affiliate": "https://amzn.to/4aFmdwP",
+      "desc": "Full Aluminium Body, Gasket Mount, 2.4GHz Wireless, QMK/VIA Support.",
+      "linkLabel": "View on Keyboards →",
+      "linkHref": "/keyboards/"
     },
     "specTable": [
-      { "label": "Wireless", "a": "LIGHTSPEED 2.4GHz", "b": "Wired only", "winner": "a" },
-      { "label": "Max Polling", "a": "2000Hz", "b": "1000Hz", "winner": "a" },
-      { "label": "Build", "a": "Aluminium top plate", "b": "Full aluminium body", "winner": "b" },
-      { "label": "Switches", "a": "GX Red / GX Blue", "b": "HyperX Red Linear", "winner": "" },
-      { "label": "Battery", "a": "~50 hours", "b": "N/A (wired)", "winner": "" },
-      { "label": "USB Passthrough", "a": "No", "b": "Yes", "winner": "b" },
-      { "label": "UK Price", "a": "~£165", "b": "~£90", "winner": "b" }
+      {
+        "label": "Switch Type",
+        "a": "Hall Effect (Magnetic)",
+        "b": "Mechanical (Hot-swap)",
+        "winner": ""
+      },
+      {
+        "label": "Rapid Trigger",
+        "a": "Yes",
+        "b": "No",
+        "winner": "a"
+      },
+      {
+        "label": "Chassis",
+        "a": "Plastic/Aluminium top",
+        "b": "Full CNC Aluminium",
+        "winner": "b"
+      },
+      {
+        "label": "Wireless",
+        "a": "No (Wired)",
+        "b": "Yes (2.4GHz/BT)",
+        "winner": "b"
+      },
+      {
+        "label": "Customisation",
+        "a": "SteelSeries GG",
+        "b": "QMK/VIA (Web-based)",
+        "winner": "b"
+      }
     ],
     "sections": [
       {
-        "heading": "Wireless vs Wired — the core trade-off",
-        "body": "LIGHTSPEED wireless is legitimately comparable to wired — Logitech has proven this across years of pro adoption. You will not notice input lag. What you will notice is the freedom of no cable and the need to charge every ~50 hours. The Alloy Origins is wired but adds a USB passthrough port, which is actually useful on a desk where USB ports are occupied."
-      },
-      {
-        "heading": "Build quality — Alloy Origins has more aluminium",
-        "body": "Both are built for competitive use. The Alloy Origins has a full aluminium body which is slightly more premium in terms of raw material. The G Pro X 2 has an aluminium top plate with a plastic base to save weight. Both feel solid and will survive competitive use. The Alloy Origins is noticeably heavier."
-      },
-      {
-        "heading": "Polling rate — G Pro X 2 has a meaningful edge",
-        "body": "2000Hz polling on the G Pro X 2 means double the position updates per second compared to the standard 1000Hz on the Alloy Origins. This is a real difference at the highest competitive levels. For most gamers at sub-Radiant / sub-FACEIT Level 10, 1000Hz is perfectly adequate."
-      },
-      {
-        "heading": "Switches — both are solid linear options",
-        "body": "GX Red and HyperX Red are both smooth linear switches suited to gaming. The GX Red has a slightly lighter actuation force. Neither requires switch comparison to be the deciding factor — both will perform well in competitive use."
+        "heading": "Rapid Trigger Explained",
+        "body": "The SteelSeries switches detect the slightest lift of your finger to reset the key instantly. This makes counter-strafing in games like Valorant significantly faster. The Keychron, while excellent for typing, uses traditional mechanical switches that have a fixed reset point."
       }
     ],
     "buySection": {
-      "heading": "Which Keyboard Should You Buy?",
+      "heading": "Which is right for you?",
       "buyA": {
-        "heading": "Buy the G Pro X 2 if you:",
+        "heading": "Buy the Apex Pro if:",
         "points": [
-          "Wireless is a priority for you",
-          "Want 2000Hz polling",
-          "Already in the Logitech ecosystem",
-          "Budget allows for the premium"
+          "You are a competitive FPS player",
+          "You want adjustable actuation per key",
+          "You love the OLED screen for GIFs/Stats"
         ]
       },
       "buyB": {
-        "heading": "Buy the HyperX Alloy Origins TKL if you:",
+        "heading": "Buy the Keychron Q1 Max if:",
         "points": [
-          "Don't need wireless",
-          "Want the best build quality per pound spent",
-          "Need a USB passthrough port",
-          "Want to save ~£75 for peripherals elsewhere"
+          "You want the best typing sound and feel",
+          "You need wireless connectivity",
+          "You want a keyboard that lasts a decade"
         ]
       }
     },
-    "verdict": "The G Pro X 2 is the right choice specifically if wireless is your priority. LIGHTSPEED is genuinely excellent and if you're cable-averse, the premium is justified. Outside of that use case, the Alloy Origins is the smarter buy.",
+    "verdict": "Competitive gamers should buy the SteelSeries. Enthusiasts and office workers should buy the Keychron.",
     "relatedLinks": [
-      { "href": "/keyboards/", "label": "Best Gaming Keyboards UK" },
-      { "href": "/comparisons/", "label": "All Comparisons" }
+      {
+        "href": "/keyboards/",
+        "label": "Best Gaming Keyboards UK"
+      }
     ]
   },
   {
-    "slug": "secretlab-titan-evo-vs-herman-miller-aeron",
-    "title": "Secretlab Titan Evo vs Herman Miller Aeron",
-    "metaTitle": "Secretlab Titan Evo vs Herman Miller Aeron Comparison | Stack Pick",
-    "metaDescription": "Secretlab Titan Evo 2022 vs Herman Miller Aeron — gaming chair vs office chair. Which is better for long gaming sessions? Full UK comparison.",
-    "ogTitle": "Secretlab Titan Evo vs Herman Miller Aeron: Gaming vs Office Chair? | Stack Pick",
-    "ogDescription": "The best gaming chair vs the best office chair — which one should UK gamers actually sit in for long sessions?",
-    "canonical": "https://stackpick.co.uk/comparisons/secretlab-titan-evo-vs-herman-miller-aeron/",
-    "datePublished": "2026-02-17",
-    "dateModified": "2026-02-17",
-    "emoji": "🪑",
-    "intro": "This is the comparison that gets asked most often in gaming communities: should I buy a proper gaming chair, or spend the money on an office chair? The Secretlab Titan Evo is the best gaming chair. The Herman Miller Aeron is the gold standard office chair. Here's an honest answer.",
-    "productA": {
-      "name": "Secretlab Titan Evo 2022",
-      "badge": "BEST GAMING CHAIR",
-      "badgeColor": "#ef4444",
-      "price": "~£399",
-      "affiliate": "https://amzn.to/3SecretlabTitan",
-      "desc": "Magnetic head pillow, 4-way lumbar, cold-cure foam. The gaming chair built like a proper product.",
-      "linkLabel": "View on Amazon →",
-      "linkHref": "https://amzn.to/3SecretlabTitan"
-    },
-    "productB": {
-      "name": "Herman Miller Aeron (Remastered)",
-      "badge": "BEST OFFICE CHAIR",
-      "badgeColor": "#7b2fbe",
-      "price": "~£1,100",
-      "affiliate": "https://amzn.to/3HermanAeron",
-      "desc": "8Z mesh, PostureFit SL, 12-year warranty. For daily 7+ hour seated work and gaming.",
-      "linkLabel": "View on Amazon →",
-      "linkHref": "https://amzn.to/3HermanAeron"
-    },
-    "specTable": [
-      { "label": "Lumbar Support", "a": "4-way adjustable pillow", "b": "PostureFit SL (built-in)", "winner": "b" },
-      { "label": "Seat Material", "a": "Cold-cure foam + leather", "b": "8Z Pellicle mesh", "winner": "b" },
-      { "label": "Head Support", "a": "Magnetic memory foam", "b": "None (headrest optional)", "winner": "a" },
-      { "label": "Armrests", "a": "4D", "b": "3D", "winner": "a" },
-      { "label": "Recline", "a": "Up to 165°", "b": "Up to 104°", "winner": "a" },
-      { "label": "Warranty", "a": "3–5 years", "b": "12 years", "winner": "b" },
-      { "label": "UK Price", "a": "~£399", "b": "~£1,100", "winner": "a" }
-    ],
-    "sections": [
-      {
-        "heading": "Ergonomics — Herman Miller wins clearly",
-        "body": "The Aeron was designed by Bill Stumpf after studying human posture for years. The PostureFit SL supports both the sacrum and lumbar simultaneously, which no gaming chair pillow system replicates. The 8Z mesh zones provide varying tension across the back. If you sit for 8+ hours per day, the Aeron will outperform any gaming chair for long-term back health."
-      },
-      {
-        "heading": "Comfort for gaming specifically",
-        "body": "Gaming chairs generally recline further (the Titan Evo goes to 165°), which is useful for leaning back during casual play. The Aeron is designed for upright working posture and has limited recline. For pure gaming comfort with controller in hand, gaming chairs win. For competitive mouse-and-keyboard gaming where you sit upright, the Aeron's ergonomics make it the better choice."
-      },
-      {
-        "heading": "Build quality and longevity",
-        "body": "Herman Miller's 12-year warranty reflects the Aeron's build quality. These chairs routinely last 15–20 years. Secretlab's Titan Evo has improved significantly over its predecessors and the cold-cure foam holds its shape better than budget gaming chairs, but gaming chair materials (especially leatherette) degrade faster than mesh. The Aeron is a long-term investment; the Titan Evo is an excellent mid-term gaming purchase."
-      },
-      {
-        "heading": "Value",
-        "body": "At ~£399, the Titan Evo is the best gaming chair you can buy at that price. At ~£1,100, the Aeron is a significant investment but amortised over 15 years is £73/year. If you work from home full-time or game 6+ hours per day, the Aeron pays for itself in back health. If you game 2–3 hours casually per evening, the Titan Evo is the rational choice."
-      }
-    ],
-    "buySection": {
-      "heading": "Which Chair Is Right For You?",
-      "buyA": {
-        "heading": "Buy the Titan Evo if you:",
-        "points": [
-          "Game 2–4 hours per session (not all-day)",
-          "Budget is under £500",
-          "Want recline and a headrest included",
-          "Prefer leatherette aesthetics",
-          "Don't work from home all day"
-        ]
-      },
-      "buyB": {
-        "heading": "Buy the Herman Miller Aeron if you:",
-        "points": [
-          "Sit for 6–10 hours per day (work + gaming)",
-          "Have existing or past back problems",
-          "Want a chair that lasts 15+ years",
-          "Budget can stretch to £1,000+",
-          "Work from home and need true ergonomics"
-        ]
-      }
-    },
-    "verdict": "Buy the Titan Evo if you're a gamer who games. Buy the Herman Miller Aeron if you sit at a desk most of the day and game on top of that. The Aeron is the better chair — but the Titan Evo is the better gaming chair at its price point.",
-    "relatedLinks": [
-      { "href": "/chairs/", "label": "Best Gaming Chairs UK" },
-      { "href": "/comparisons/", "label": "All Comparisons" }
-    ]
-  },
-  {
-    "slug": "steelseries-arctis-nova-pro-vs-sony-inzone-h9",
-    "title": "SteelSeries Arctis Nova Pro vs Sony INZONE H9",
-    "metaTitle": "SteelSeries Arctis Nova Pro vs Sony INZONE H9 | Stack Pick",
-    "metaDescription": "SteelSeries Arctis Nova Pro Wireless vs Sony INZONE H9 — which premium wireless gaming headset is right for UK gamers? Full comparison with UK pricing.",
-    "ogTitle": "Arctis Nova Pro vs Sony INZONE H9: Best Premium Wireless Headset? | Stack Pick",
-    "ogDescription": "SteelSeries Arctis Nova Pro Wireless vs Sony INZONE H9 — two of the best wireless gaming headsets go head to head.",
-    "canonical": "https://stackpick.co.uk/comparisons/steelseries-arctis-nova-pro-vs-sony-inzone-h9/",
-    "datePublished": "2026-02-19",
-    "dateModified": "2026-02-19",
+    "slug": "sennheiser-hd560s-vs-steelseries-arctis-nova-pro",
+    "title": "Sennheiser HD560s vs SteelSeries Arctis Nova Pro Wireless",
+    "metaTitle": "Sennheiser HD560s vs SteelSeries Arctis Nova Pro | Stack Pick",
+    "metaDescription": "Audiophile open-back vs feature-packed wireless gaming. We help you choose the best audio setup for your UK gaming station.",
+    "ogTitle": "HD560s vs Arctis Nova Pro: Audio Quality vs Features | Stack Pick",
+    "ogDescription": "Can a pair of legendary studio headphones beat the most expensive gaming headset on the market?",
+    "canonical": "https://stackpick.co.uk/comparisons/sennheiser-hd560s-vs-steelseries-arctis-nova-pro/",
+    "datePublished": "2026-02-22",
+    "dateModified": "2026-02-22",
     "emoji": "🎧",
-    "intro": "Two premium wireless gaming headsets competing for the same buyer — someone who wants the best wireless audio for gaming without compromise. The Nova Pro has been a community favourite for years. The Sony INZONE H9 brings PlayStation integration and Sony's audio pedigree. Here's how they compare.",
+    "intro": "The Sennheiser HD560s is widely considered the best 'entry-level audiophile' headphone for gaming because of its massive soundstage. The Arctis Nova Pro Wireless, meanwhile, is the pinnacle of gaming tech, offering ANC, hot-swappable batteries, and simultaneous Bluetooth.",
     "productA": {
-      "name": "SteelSeries Arctis Nova Pro Wireless",
-      "badge": "OUR PICK",
-      "badgeColor": "#ef4444",
-      "price": "~£289",
-      "affiliate": "https://amzn.to/3OkA3NA",
-      "desc": "Hot-swap battery system, dual-source connectivity (PC + console simultaneously), ANC. The Swiss army knife of gaming headsets.",
-      "linkLabel": "View on Amazon →",
-      "linkHref": "https://amzn.to/3OkA3NA"
+      "id": "headsets-sennheiser-hd560s",
+      "name": "Sennheiser HD560s",
+      "badge": "OVERALL BEST",
+      "badgeColor": "#6366f1",
+      "price": "£99",
+      "affiliate": "https://amzn.to/4tHtncv",
+      "desc": "Open-back, Neutral tuning, exceptional soundstage for footstep tracking.",
+      "linkLabel": "View on Headsets →",
+      "linkHref": "/headsets/"
     },
     "productB": {
-      "name": "Sony INZONE H9",
-      "badge": "ALSO GREAT",
-      "badgeColor": "",
-      "price": "~£199",
-      "affiliate": "https://amzn.to/3SonyH9",
-      "desc": "360 Spatial Sound for PS5, best-in-class ANC for a gaming headset, 32-hour battery. Ideal PlayStation ecosystem headset.",
-      "linkLabel": "View on Amazon →",
-      "linkHref": "https://amzn.to/3SonyH9"
+      "id": "headsets-steelseries-arctis-nova-pro",
+      "name": "SteelSeries Arctis Nova Pro Wireless",
+      "badge": "PREMIUM WIRELESS",
+      "badgeColor": "#ef4444",
+      "price": "£256",
+      "affiliate": "https://amzn.to/3OkA3NA",
+      "desc": "Active Noise Cancellation, Hot-Swap Battery, GameDAC Gen 2 included.",
+      "linkLabel": "View on Headsets →",
+      "linkHref": "/headsets/"
     },
     "specTable": [
-      { "label": "Wireless", "a": "2.4GHz + Bluetooth", "b": "2.4GHz + Bluetooth", "winner": "" },
-      { "label": "Battery", "a": "Hot-swap (infinite)", "b": "32 hours", "winner": "a" },
-      { "label": "Dual Source", "a": "Yes (PC + Console)", "b": "No", "winner": "a" },
-      { "label": "ANC", "a": "Yes", "b": "Yes (stronger)", "winner": "b" },
-      { "label": "PS5 Integration", "a": "Partial", "b": "Full (360 Spatial)", "winner": "b" },
-      { "label": "Mic Quality", "a": "Excellent (retractable)", "b": "Good (boom)", "winner": "a" },
-      { "label": "UK Price", "a": "~£289", "b": "~£199", "winner": "b" }
+      {
+        "label": "Type",
+        "a": "Open-back (Wired)",
+        "b": "Closed-back (Wireless)",
+        "winner": ""
+      },
+      {
+        "label": "ANC",
+        "a": "No",
+        "b": "Yes",
+        "winner": "b"
+      },
+      {
+        "label": "Microphone",
+        "a": "None (Requires external)",
+        "b": "Retractable ClearCast Gen 2",
+        "winner": "b"
+      },
+      {
+        "label": "Battery Life",
+        "a": "Infinite (Wired)",
+        "b": "Hot-Swap (Dual batteries)",
+        "winner": "b"
+      },
+      {
+        "label": "Soundstage",
+        "a": "Wide & Natural",
+        "b": "Narrow & Immersive",
+        "winner": "a"
+      }
     ],
     "sections": [
       {
-        "heading": "Battery system — Nova Pro wins completely",
-        "body": "The Nova Pro's hot-swap battery system is genuinely unique. You get two batteries — one in the headset, one charging in the base station. When one dies, you swap in under 10 seconds. Effectively infinite battery life. The Sony H9 has 32 hours which is good, but you will eventually have a dead headset at an inconvenient moment. For serious gaming, the Nova Pro's system is a meaningful advantage."
-      },
-      {
-        "heading": "ANC — Sony H9 wins",
-        "body": "Sony's noise cancellation technology is best-in-class even on their consumer headphones. The INZONE H9 carries this over — its ANC is noticeably stronger than the Nova Pro's. If you're in a noisy environment (shared flat, open office, family home), the H9 will block more sound."
-      },
-      {
-        "heading": "PS5 integration — INZONE H9 wins decisively",
-        "body": "The Sony INZONE H9 connects directly to PS5 via USB and enables 360 Spatial Sound — Sony's full 3D audio implementation that takes advantage of the PS5's Tempest Engine. This is the headset Sony designed for their own console. The Nova Pro works with PS5 but doesn't get the same deep integration."
-      },
-      {
-        "heading": "Dual device connectivity — Nova Pro wins",
-        "body": "The Nova Pro connects to PC via 2.4GHz dongle and a console via optical simultaneously, with instant audio mixing between both sources. You can hear Discord on PC and game audio from PS5 at the same time. No other headset at this price does this as seamlessly."
-      },
-      {
-        "heading": "Sound quality for gaming",
-        "body": "Both are excellent for gaming audio. The Nova Pro has a slightly flatter, more neutral tuning which is better for competitive play (footstep detection). The Sony H9 has a warmer, more bass-heavy profile that many gamers prefer for immersive single-player experiences. Neither is objectively better — they suit different preferences."
+        "heading": "Soundstage and Imaging",
+        "body": "The open-back design of the Sennheiser allows air to move, creating a '3D' space where it's very easy to tell exactly where a sound is coming from. The Nova Pro is closed-back, which is better for immersion and blocking out background noise, but can feel more 'inside your head'."
       }
     ],
     "buySection": {
-      "heading": "Which Headset Should You Buy?",
+      "heading": "Which should you buy?",
       "buyA": {
-        "heading": "Buy the Arctis Nova Pro if you:",
+        "heading": "Buy the HD560s if:",
         "points": [
-          "Game on multiple platforms simultaneously",
-          "Want the hot-swap battery system",
-          "Use PC as your primary platform",
-          "Want the best competitive gaming audio tuning",
-          "Prefer a retractable microphone"
+          "You already have a dedicated microphone",
+          "You prioritise natural sound and music quality",
+          "You play in a quiet room"
         ]
       },
       "buyB": {
-        "heading": "Buy the Sony INZONE H9 if you:",
+        "heading": "Buy the Nova Pro Wireless if:",
         "points": [
-          "Are primarily a PS5 gamer",
-          "Want the best ANC in a gaming headset",
-          "Don't need dual-source connectivity",
-          "Want to save ~£90",
-          "Prefer Sony's warmer sound profile"
+          "You want the convenience of wireless",
+          "You need to block out noise (ANC)",
+          "You switch between PC and Console frequently"
         ]
       }
     },
-    "verdict": "If you're a PC-primary gamer or a multi-platform gamer who uses PC and console simultaneously, the Nova Pro is the better headset — the hot-swap battery and dual-source connectivity are genuinely class-leading features. If you're primarily on PS5 and want the best integration and strongest ANC, the Sony INZONE H9 at ~£90 less is the smarter buy.",
+    "verdict": "For pure competitive advantage, the Sennheiser soundstage is hard to beat. For every other convenience, the SteelSeries is the ultimate headset.",
     "relatedLinks": [
-      { "href": "/headsets/", "label": "Best Gaming Headsets UK" },
-      { "href": "/comparisons/", "label": "All Comparisons" }
+      {
+        "href": "/headsets/",
+        "label": "Best Gaming Headsets UK"
+      }
+    ]
+  },
+  {
+    "slug": "asus-rog-xg27aqdmg-vs-samsung-odyssey-g80sd",
+    "title": "ASUS ROG XG27AQDMG vs Samsung Odyssey G80SD",
+    "metaTitle": "ASUS XG27AQDMG vs Samsung G80SD Comparison | Stack Pick",
+    "metaDescription": "Glossy 1440p vs Matte 4K. We compare the best ASUS and Samsung OLED monitors for UK gamers.",
+    "ogTitle": "ASUS XG27AQDMG vs Samsung G80SD: Which OLED? | Stack Pick",
+    "ogDescription": "Comparing the 240Hz 1440p ASUS king against the 4K 240Hz Samsung powerhouse.",
+    "canonical": "https://stackpick.co.uk/comparisons/asus-rog-xg27aqdmg-vs-samsung-odyssey-g80sd/",
+    "datePublished": "2026-02-22",
+    "dateModified": "2026-02-22",
+    "emoji": "🖥️",
+    "intro": "These are two of the most popular OLEDs in 2026. The ASUS XG27AQDMG is famous for its glossy WOLED panel that makes blacks look truly 'inky'. The Samsung G80SD is a 4K powerhouse with a smart TV interface and a matte coating designed to reduce reflections.",
+    "productA": {
+      "id": "monitors-asus-rog-xg27aqdmg",
+      "name": "ASUS ROG Strix XG27AQDMG",
+      "badge": "BEST OVERALL (OLED)",
+      "badgeColor": "#ef4444",
+      "price": "£429",
+      "affiliate": "https://amzn.to/4aX25Y9",
+      "desc": "27\" 1440p Glossy WOLED, 240Hz, 0.03ms response.",
+      "linkLabel": "View on Monitors →",
+      "linkHref": "/monitors/"
+    },
+    "productB": {
+      "id": "monitors-samsung-odyssey-g80sd",
+      "name": "Samsung Odyssey G80SD",
+      "badge": "BEST PREMIUM 4K",
+      "badgeColor": "#7c3aed",
+      "price": "£740",
+      "affiliate": "https://amzn.to/4cy1qh1",
+      "desc": "32\" 4K QD-OLED, 240Hz, Matte coating, Smart TV Features.",
+      "linkLabel": "View on Monitors →",
+      "linkHref": "/monitors/"
+    },
+    "specTable": [
+      {
+        "label": "Resolution",
+        "a": "2560 x 1440",
+        "b": "3840 x 2160",
+        "winner": "b"
+      },
+      {
+        "label": "Panel Type",
+        "a": "WOLED (Glossy)",
+        "b": "QD-OLED (Matte)",
+        "winner": ""
+      },
+      {
+        "label": "Refresh Rate",
+        "a": "240Hz",
+        "b": "240Hz",
+        "winner": ""
+      },
+      {
+        "label": "Size",
+        "a": "27\"",
+        "b": "32\"",
+        "winner": "b"
+      },
+      {
+        "label": "Smart Features",
+        "a": "No",
+        "b": "Yes (Gaming Hub/Apps)",
+        "winner": "b"
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Glossy vs Matte",
+        "body": "The ASUS glossy finish is a game-changer for picture clarity—colors pop more and blacks look deeper. However, in a bright room with windows, the reflections can be distracting. The Samsung matte coating is best-in-class for diffusing glare but slightly softens the 'OLED pop'."
+      }
+    ],
+    "buySection": {
+      "heading": "Which should you buy?",
+      "buyA": {
+        "heading": "Buy the ASUS if:",
+        "points": [
+          "You want the 'inchiest' blacks (Glossy WOLED)",
+          "You play at 1440p to keep high framerates",
+          "You game in a dark or light-controlled room"
+        ]
+      },
+      "buyB": {
+        "heading": "Buy the Samsung if:",
+        "points": [
+          "You want the sharpness of 4K",
+          "You have a powerful GPU (RTX 4080+)",
+          "You want to use your monitor as a TV for Netflix/YouTube"
+        ]
+      }
+    },
+    "verdict": "Buy the ASUS for the best 1440p image quality. Buy the Samsung for the ultimate 4K big-screen experience.",
+    "relatedLinks": [
+      {
+        "href": "/monitors/",
+        "label": "Best Gaming Monitors UK"
+      }
+    ]
+  },
+  {
+    "slug": "andaseat-kaiser-4-vs-noblechairs-hero",
+    "title": "AndaSeat Kaiser 4 vs noblechairs HERO",
+    "metaTitle": "AndaSeat Kaiser 4 vs noblechairs HERO Comparison | Stack Pick",
+    "metaDescription": "Comparing the best heavy-duty gaming chairs for UK gamers. Soft fabric vs firm support.",
+    "ogTitle": "AndaSeat vs noblechairs: The Throne Battle | Stack Pick",
+    "ogDescription": "Which premium gaming chair is better for long sessions? We compare build, comfort, and lumbar support.",
+    "canonical": "https://stackpick.co.uk/comparisons/andaseat-kaiser-4-vs-noblechairs-hero/",
+    "datePublished": "2026-02-22",
+    "dateModified": "2026-02-22",
+    "emoji": "🪑",
+    "intro": "If you are looking for a 'grown-up' gaming chair, these are the two frontrunners. The AndaSeat Kaiser 4 is a feature-packed beast with a magnetic headrest. The noblechairs HERO is a firm, executive-style chair with integrated lumbar support designed for posture.",
+    "productA": {
+      "id": "chairs-andaseat-kaiser-4",
+      "name": "AndaSeat Kaiser 4",
+      "badge": "BEST OVERALL",
+      "badgeColor": "#f59e0b",
+      "price": "£394",
+      "affiliate": "https://amzn.to/4qPy6pT",
+      "desc": "Magnetic Headrest, 4D Armrests with tilt, premium PVC or Linen options.",
+      "linkLabel": "View on Chairs →",
+      "linkHref": "/chairs/"
+    },
+    "productB": {
+      "id": "chairs-noblechairs-hero",
+      "name": "noblechairs HERO",
+      "badge": "MOST COMFORTABLE",
+      "badgeColor": "#64748b",
+      "price": "£349",
+      "affiliate": "https://amzn.to/4tHQDal",
+      "desc": "Integrated Lumbar Dial, Large Seat Base, Firm Cold-Cure Foam.",
+      "linkLabel": "View on Chairs →",
+      "linkHref": "/chairs/"
+    },
+    "specTable": [
+      {
+        "label": "Lumbar Support",
+        "a": "Internal (4-way)",
+        "b": "Internal Dial (Adjustable)",
+        "winner": "a"
+      },
+      {
+        "label": "Head Pillow",
+        "a": "Magnetic Memory Foam",
+        "b": "Elastic Memory Foam",
+        "winner": "a"
+      },
+      {
+        "label": "Seat Firmness",
+        "a": "Medium-Soft",
+        "b": "Firm",
+        "winner": ""
+      },
+      {
+        "label": "Max Load",
+        "a": "180kg",
+        "b": "150kg",
+        "winner": "a"
+      }
+    ],
+    "sections": [
+      {
+        "heading": "The Feel: Plush vs Firm",
+        "body": "AndaSeat chairs feel more like a sofa; they are softer and more accommodating for sitting cross-legged. noblechairs are much firmer—almost like a high-end car seat. They are better for back health over 8-hour days but can feel 'hard' to some users initially."
+      }
+    ],
+    "buySection": {
+      "heading": "Which should you buy?",
+      "buyA": {
+        "heading": "Buy the AndaSeat if:",
+        "points": [
+          "You want a softer, more luxurious feel",
+          "You love the magnetic accessories",
+          "You are on the taller/heavier side"
+        ]
+      },
+      "buyB": {
+        "heading": "Buy the noblechairs if:",
+        "points": [
+          "You want a chair that looks like an office chair",
+          "You prefer very firm back support",
+          "You want to spend slightly less"
+        ]
+      }
+    },
+    "verdict": "AndaSeat for comfort and features. noblechairs for posture and professional looks.",
+    "relatedLinks": [
+      {
+        "href": "/chairs/",
+        "label": "Best Gaming Chairs UK"
+      }
     ]
   }
 ]
