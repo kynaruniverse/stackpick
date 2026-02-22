@@ -10,6 +10,7 @@ window.SP_PRODUCTS =
   {
     "id": "mice-razer-viper-v3-pro",
     "category": "mice",
+    "brand": "Razer",
     "badge": "THE PRO STANDARD",
     "name": "Razer Viper V3 Pro",
     "shortName": "Viper V3 Pro",
@@ -20,16 +21,16 @@ window.SP_PRODUCTS =
     ],
     "desc": "The 2026 Pro Standard. Trusted by the Valorant elite, the Viper V3 Pro weighs in at a surgical 54g. Outfitted with the Focus Pro 35K sensor and native 8K polling, it translates your intent into impact with near-zero latency.",
     "pros": [
-      "Gravity-defying 54g build—heavyweight tech in a featherweight frame.",
+      "Gravity-defying 54g build — heavyweight tech in a featherweight frame.",
       "Bespoke performance: Native 8K polling dongle included right in the box.",
-      "The new 'Pro Standard'—trusted by the top 1% of the 2026 VCT circuit."
+      "The new 'Pro Standard' — trusted by the top 1% of the 2026 VCT circuit."
     ],
     "cons": [
       "Commanding silhouette: Smaller hands may find the refined hump a bit too 'filling'.",
       "Right-hand biased: Symmetrical shape, but side buttons cater strictly to righties."
     ],
     "price": "£119",
-    "priceRaw": 119.00,
+    "priceRaw": 119.0,
     "msrp": "£159.99",
     "savings": "26%",
     "affiliate": "https://amzn.to/4c1StN0",
@@ -49,6 +50,7 @@ window.SP_PRODUCTS =
   {
     "id": "mice-endgame-gear-op1w",
     "category": "mice",
+    "brand": "Endgame Gear",
     "badge": "THE CLAW SPECIALIST",
     "name": "Endgame Gear OP1w 4K V2",
     "shortName": "OP1w 4K V2",
@@ -59,7 +61,7 @@ window.SP_PRODUCTS =
     ],
     "desc": "The 'Claw King' refined for 2026. German-engineered with a focus on surgical precision, the OP1w 4K V2 features a custom PAW3950 sensor and tactile Kailh GX mechanical switches. It's a narrow, nimble masterpiece built for pure performance over flashy aesthetics.",
     "pros": [
-      "Unrivaled click feel—pre-sorted Kailh GX mechanical switches for peak tactility.",
+      "Unrivaled click feel — pre-sorted Kailh GX mechanical switches for peak tactility.",
       "Bespoke customisation: Swappable main switches and internal 'GX Speed Mode'.",
       "Elite tracking: Custom 30K PAW3950 sensor with 750 IPS for flawless flicks."
     ],
@@ -86,6 +88,7 @@ window.SP_PRODUCTS =
   {
     "id": "mice-razer-deathadder-v3-pro",
     "category": "mice",
+    "brand": "Razer",
     "badge": "THE ERGO GOAT",
     "name": "Razer DeathAdder V3 Pro",
     "shortName": "DeathAdder V3 Pro",
@@ -94,7 +97,7 @@ window.SP_PRODUCTS =
       "Focus Pro 30K Sensor",
       "8K Polling Ready"
     ],
-    "desc": "The icon, perfected for the 2026 circuit. The DeathAdder V3 Pro takes the most successful ergonomic shape in history and strips it down to a 63g competitive frame. It's the 'Executive Suite' of gaming—natural, supportive, and relentlessly fast.",
+    "desc": "The icon, perfected for the 2026 circuit. The DeathAdder V3 Pro takes the most successful ergonomic shape in history and strips it down to a 63g competitive frame. It's the 'Executive Suite' of gaming — natural, supportive, and relentlessly fast.",
     "pros": [
       "World-class ergonomics: A refined, tilted shell designed to eliminate wrist fatigue.",
       "Surgical precision: Focus Pro 30K sensor delivers 99.8% resolution accuracy.",
@@ -125,6 +128,7 @@ window.SP_PRODUCTS =
   {
     "id": "mice-logitech-g502x-plus",
     "category": "mice",
+    "brand": "Logitech",
     "badge": "THE DO-IT-ALL LEGEND",
     "name": "Logitech G502 X Plus",
     "shortName": "G502 X Plus",
@@ -165,6 +169,7 @@ window.SP_PRODUCTS =
   {
     "id": "mice-atk-vxe-mad-r-plus",
     "category": "mice",
+    "brand": "ATK",
     "badge": "BUDGET BEAST",
     "name": "ATK VXE MAD R+ (White)",
     "shortName": "VXE MAD R+",
@@ -203,6 +208,7 @@ window.SP_PRODUCTS =
   {
     "id": "keyboards-steelseries-apex-pro-tkl-gen3",
     "category": "keyboards",
+    "brand": "SteelSeries",
     "badge": "SPEED KING (HE)",
     "name": "SteelSeries Apex Pro TKL Gen 3",
     "shortName": "Apex Pro TKL",
@@ -242,6 +248,7 @@ window.SP_PRODUCTS =
   {
     "id": "keyboards-asus-rog-strix-scope-ii-96",
     "category": "keyboards",
+    "brand": "ASUS",
     "badge": "BEST ALL-ROUNDER",
     "name": "ASUS ROG Strix Scope II 96 Wireless",
     "shortName": "Scope II 96",
@@ -281,6 +288,7 @@ window.SP_PRODUCTS =
   {
     "id": "keyboards-aula-f99-wireless",
     "category": "keyboards",
+    "brand": "AULA",
     "badge": "CREAMY ACOUSTICS",
     "name": "Aula F99 Wireless",
     "shortName": "Aula F99",
@@ -318,6 +326,7 @@ window.SP_PRODUCTS =
   {
     "id": "keyboards-keychron-q1-max",
     "category": "keyboards",
+    "brand": "Keychron",
     "badge": "THE PREMIUM TANK",
     "name": "Keychron Q1 Max Wireless",
     "shortName": "Q1 Max",
@@ -355,6 +364,7 @@ window.SP_PRODUCTS =
   {
     "id": "keyboards-keychron-c3-pro",
     "category": "keyboards",
+    "brand": "Keychron",
     "badge": "BUDGET CHAMPION",
     "name": "Keychron C3 Pro",
     "shortName": "C3 Pro",
@@ -363,7 +373,7 @@ window.SP_PRODUCTS =
       "QMK/VIA Support",
       "Double-Shot ABS"
     ],
-    "desc": "The ultimate gateway to mechanical keyboards. For under £40, the C3 Pro offers a premium gasket-mount structure and full QMK/VIA programmability—features usually reserved for boards triple its price.",
+    "desc": "The ultimate gateway to mechanical keyboards. For under £40, the C3 Pro offers a premium gasket-mount structure and full QMK/VIA programmability — features usually reserved for boards triple its price.",
     "pros": [
       "Unbeatable value: The cheapest way to get a genuine gasket-mount typing experience.",
       "Fully programmable: Use QMK/VIA to remap every single key and layer via your browser.",
@@ -394,6 +404,7 @@ window.SP_PRODUCTS =
   {
     "id": "headsets-sennheiser-hd560s",
     "category": "headsets",
+    "brand": "Sennheiser",
     "badge": "OVERALL BEST",
     "name": "Sennheiser HD 560S",
     "shortName": "HD 560S",
@@ -412,7 +423,7 @@ window.SP_PRODUCTS =
       "Leaks sound (open-back)"
     ],
     "price": "£99",
-    "priceRaw": 99.00,
+    "priceRaw": 99.0,
     "msrp": "£169.00",
     "savings": "41%",
     "affiliate": "https://amzn.to/4tHtncv",
@@ -432,6 +443,7 @@ window.SP_PRODUCTS =
   {
     "id": "headsets-steelseries-arctis-nova-pro",
     "category": "headsets",
+    "brand": "SteelSeries",
     "badge": "PREMIUM WIRELESS",
     "name": "SteelSeries Arctis Nova Pro Wireless",
     "shortName": "Nova Pro",
@@ -468,11 +480,12 @@ window.SP_PRODUCTS =
     "nextDay": false
   },
   {
-    "id": "headsets-hyperx-cloud-iii-wireless",
+    "id": "headsets-hyperx-cloud-iii-s-wireless",
     "category": "headsets",
+    "brand": "HyperX",
     "badge": "BEST COMFORT",
-    "name": "HyperX Cloud III Wireless",
-    "shortName": "Cloud III",
+    "name": "HyperX Cloud III S Wireless",
+    "shortName": "Cloud III S",
     "specs": [
       "120hr Battery",
       "53mm Drivers",
@@ -508,8 +521,9 @@ window.SP_PRODUCTS =
   {
     "id": "headsets-bose-quietcomfort-ultra-gen2",
     "category": "headsets",
+    "brand": "Bose",
     "badge": "BEST ANC",
-    "name": "Bose QuietComfort Ultra (Gen 2)",
+    "name": "Bose QuietComfort Ultra Gen 2",
     "shortName": "QC Ultra Gen 2",
     "specs": [
       "Lossless USB-C Audio",
@@ -546,6 +560,7 @@ window.SP_PRODUCTS =
   {
     "id": "headsets-razer-blackshark-v2-x",
     "category": "headsets",
+    "brand": "Razer",
     "badge": "BUDGET PICK",
     "name": "Razer BlackShark V2 X",
     "shortName": "BlackShark V2 X",
@@ -584,6 +599,7 @@ window.SP_PRODUCTS =
   {
     "id": "monitors-asus-rog-xg27aqdmg",
     "category": "monitors",
+    "brand": "ASUS",
     "badge": "BEST OVERALL (OLED)",
     "name": "ASUS ROG Strix OLED XG27AQDMG",
     "shortName": "ROG XG27 OLED",
@@ -603,7 +619,7 @@ window.SP_PRODUCTS =
       "Lacks HDMI 2.1 (uses HDMI 2.0), limiting consoles to 1440p/120Hz."
     ],
     "price": "£429",
-    "priceRaw": 429.00,
+    "priceRaw": 429.0,
     "affiliate": "https://amzn.to/4aX25Y9",
     "url": "/monitors/",
     "emoji": "🖥️",
@@ -621,6 +637,7 @@ window.SP_PRODUCTS =
   {
     "id": "monitors-aoc-24g4xe",
     "category": "monitors",
+    "brand": "AOC",
     "badge": "BEST BUDGET",
     "name": "AOC Gaming 24G4XE",
     "shortName": "AOC 24G4XE",
@@ -658,8 +675,9 @@ window.SP_PRODUCTS =
   {
     "id": "monitors-samsung-odyssey-g80sd",
     "category": "monitors",
+    "brand": "Samsung",
     "badge": "BEST PREMIUM 4K",
-    "name": "Samsung 32\" Odyssey G80SD",
+    "name": "Samsung Odyssey G80SD",
     "shortName": "Odyssey G80SD",
     "specs": [
       "32\" 4K",
@@ -677,7 +695,7 @@ window.SP_PRODUCTS =
       "TizenOS menu system can feel bloated for users who just want a monitor."
     ],
     "price": "£740",
-    "priceRaw": 740.30,
+    "priceRaw": 740.3,
     "affiliate": "https://amzn.to/4cy1qh1",
     "url": "/monitors/",
     "emoji": "🖥️",
@@ -695,6 +713,7 @@ window.SP_PRODUCTS =
   {
     "id": "monitors-aoc-q27g3xmn",
     "category": "monitors",
+    "brand": "AOC",
     "badge": "BEST HDR VALUE",
     "name": "AOC Gaming Q27G3XMN",
     "shortName": "AOC Q27G3XMN",
@@ -727,11 +746,12 @@ window.SP_PRODUCTS =
       "value"
     ],
     "inStock": true,
-    "nextDay": true
+    "nextDay": false
   },
   {
     "id": "monitors-msi-mag-274updf",
     "category": "monitors",
+    "brand": "MSI",
     "badge": "BEST ART & PLAY",
     "name": "MSI MAG 274UPDF E16M",
     "shortName": "MSI MAG 274UPDF",
@@ -747,7 +767,7 @@ window.SP_PRODUCTS =
       "Rapid IPS panel ensures a 0.5ms response time with zero ghosting."
     ],
     "cons": [
-      "USB-C is only 15W Power Delivery—not enough to charge most laptops.",
+      "USB-C is only 15W Power Delivery — not enough to charge most laptops.",
       "HDR1000 on IPS can still show minor blooming around small bright objects."
     ],
     "price": "£398",
@@ -769,6 +789,7 @@ window.SP_PRODUCTS =
   {
     "id": "chairs-andaseat-kaiser-4",
     "category": "chairs",
+    "brand": "AndaSeat",
     "badge": "BEST OVERALL",
     "name": "AndaSeat Kaiser 4",
     "shortName": "Kaiser 4",
@@ -806,6 +827,7 @@ window.SP_PRODUCTS =
   {
     "id": "chairs-corsair-tc100-relaxed",
     "category": "chairs",
+    "brand": "Corsair",
     "badge": "BEST BUDGET",
     "name": "Corsair TC100 Relaxed",
     "shortName": "TC100 Relaxed",
@@ -845,6 +867,7 @@ window.SP_PRODUCTS =
   {
     "id": "chairs-eureka-typhon",
     "category": "chairs",
+    "brand": "Eureka",
     "badge": "BEST MESH",
     "name": "EUREKA Typhon Gaming Chair",
     "shortName": "Typhon Mesh",
@@ -882,6 +905,7 @@ window.SP_PRODUCTS =
   {
     "id": "chairs-sihoo-doro-c300",
     "category": "chairs",
+    "brand": "Sihoo",
     "badge": "BEST FOR YOUR BACK",
     "name": "Sihoo Doro C300",
     "shortName": "Doro C300",
@@ -921,9 +945,10 @@ window.SP_PRODUCTS =
   {
     "id": "chairs-noblechairs-hero",
     "category": "chairs",
+    "brand": "Noblechairs",
     "badge": "MOST COMFORTABLE",
-    "name": "Noblechairs Hero",
-    "shortName": "Noblechairs Hero",
+    "name": "noblechairs HERO",
+    "shortName": "noblechairs HERO",
     "specs": [
       "Integrated Lumbar",
       "Steel Frame",
@@ -931,7 +956,7 @@ window.SP_PRODUCTS =
     ],
     "desc": "Designed in collaboration with esports professionals. The HERO is a sturdy, wide-base chair featuring a built-in dial-adjustable lumbar system (no pillows needed) and a firm cold-cure foam that maintains its shape for a decade.",
     "pros": [
-      "Integrated support: Use a side dial to adjust lumbar depth—no more slipping pillows.",
+      "Integrated support: Use a side dial to adjust lumbar depth — no more slipping pillows.",
       "Professional build: Solid steel frame and reinforced aluminum base support up to 150kg.",
       "Sophisticated style: Minimalist stitching makes it look perfect for streamers and executives alike."
     ],

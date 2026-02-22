@@ -109,11 +109,11 @@ function buildGuideProductCard(product) {
       ).join('\n')
     : '';
 
-  const rrpBlock = product.priceRrp
+  const rrpBlock = product.msrp
     ? `\n                  <span class="price-rrp-wrap">` +
       `<span class="price-rrp-label">RRP</span>` +
-      `<span class="price-rrp">${escapeHtml(product.priceRrp)}</span></span>` +
-      `<span class="price-saving">${escapeHtml(product.priceSaving || '')}</span>`
+      `<span class="price-rrp">${escapeHtml(product.msrp)}</span></span>` +
+      `<span class="price-saving">${escapeHtml(product.savings || '')}</span>`
     : '';
 
   return `          <div class="product-card">

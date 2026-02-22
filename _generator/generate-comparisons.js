@@ -88,7 +88,7 @@ function buildBuyCardsHTML({ productA, productB, buySection }) {
     <p class="product-desc">${escapeHtml(product.desc || '')}</p>
     ${buyHeading}${points ? `<ul class="buy-reasons">${points}</ul>` : ''}
     <a href="${escapeHtml(product.affiliate)}" target="_blank" rel="noopener sponsored" class="product-btn">${escapeHtml(product.linkLabel || 'View on Amazon →')}</a>
-    ${product.linkHref ? `<a href="${escapeHtml(product.linkHref)}" class="product-link">${escapeHtml(product.linkLabel || 'See full specs →')}</a>` : ''}
+    ${product.linkHref ? `<a href="${escapeHtml(product.linkHref)}" class="product-link">${escapeHtml(product.secondaryLabel || 'See full specs →')}</a>` : ''}
   </div>
 </div>`;
   }

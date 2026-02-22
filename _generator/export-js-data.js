@@ -23,13 +23,6 @@ const ROOT    = path.join(__dirname, '..');
 const DATA    = path.join(ROOT, '_data');
 const JS_DATA = path.join(ROOT, 'assets', 'js', 'data');
 
-// Ensure the output directory exists before any writes
-try {
-  fs.mkdirSync(JS_DATA, { recursive: true });
-} catch (err) {
-  throw new Error(`export-js-data: failed to create output directory "${JS_DATA}": ${err.message}`);
-}
-
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
@@ -107,6 +100,13 @@ function exportCollections(timestamp) {
 // Run
 // ---------------------------------------------------------------------------
 function run() {
+  // Ensure the output directory exists before any writes
+  try {
+    fs.mkdirSync(JS_DATA, { recursive: true });
+  } catch (err) {
+    throw new Error(`export-js-data: failed to create output directory "${JS_DATA}": ${err.message}`);
+  }
+
   // Single timestamp so both output files are byte-for-byte consistent
   const timestamp = new Date().toISOString();
 

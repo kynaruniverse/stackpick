@@ -38,7 +38,7 @@ if (!valid) {
 // ---------------------------------------------------------------------------
 console.log('\nStep 2 — Generating category pages...');
 try {
-  require('./generate-categories');
+  require('./generate-categories').run();
 } catch (err) {
   console.error('Step 2 failed:', err.message);
   process.exit(1);
@@ -49,7 +49,7 @@ try {
 // ---------------------------------------------------------------------------
 console.log('\nStep 3 — Generating comparison pages...');
 try {
-  require('./generate-comparisons');
+  require('./generate-comparisons').run();
 } catch (err) {
   console.error('Step 3 failed:', err.message);
   process.exit(1);
@@ -60,7 +60,7 @@ try {
 // ---------------------------------------------------------------------------
 console.log('\nStep 4 — Generating guide pages...');
 try {
-  require('./generate-guides');
+  require('./generate-guides').run();
 } catch (err) {
   console.error('Step 4 failed:', err.message);
   process.exit(1);
@@ -71,7 +71,7 @@ try {
 // ---------------------------------------------------------------------------
 console.log('\nStep 5 — Generating sitemap.xml...');
 try {
-  require('./generate-sitemap');
+  require('./generate-sitemap').run();
 } catch (err) {
   console.error('Step 5 failed:', err.message);
   process.exit(1);
@@ -82,7 +82,7 @@ try {
 // ---------------------------------------------------------------------------
 console.log('\nStep 6 — Exporting JS data files...');
 try {
-  require('./export-js-data');
+  require('./export-js-data').run();
 } catch (err) {
   console.error('Step 6 failed:', err.message);
   process.exit(1);

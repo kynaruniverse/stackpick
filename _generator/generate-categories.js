@@ -165,27 +165,6 @@ const BADGE_COLORS = {
 };
 
 // ---------------------------------------------------------------------------
-// RRP data — products that show a crossed-out RRP and saving percentage
-// Keyed by product id
-// ---------------------------------------------------------------------------
-const PRICE_RRP = {
-  'mice-razer-viper-v3-pro':                  { rrp: '£159.99', saving: 'Save 26%' },
-  'mice-razer-deathadder-v3-pro':             { rrp: '£149.99', saving: 'Save 53%' },
-  'mice-logitech-g502x-plus':                 { rrp: '£149.99', saving: 'Save 37%' },
-  'keyboards-steelseries-apex-pro-tkl-gen3':  { rrp: '£209.99', saving: 'Save 12%' },
-  'keyboards-asus-rog-strix-scope-ii-96':     { rrp: '£169.99', saving: 'Save 27%' },
-  'keyboards-keychron-c3-pro':                { rrp: '£45.99',  saving: 'Save 13%' },
-  'headsets-sennheiser-hd560s':               { rrp: '£169.00', saving: 'Save 41%' },
-  'headsets-steelseries-arctis-nova-pro':     { rrp: '£329.99', saving: 'Save 22%' },
-  'headsets-hyperx-cloud-iii-s-wireless':     { rrp: '£129.99', saving: 'Save 10%' },
-  'headsets-bose-quietcomfort-ultra-gen2':    { rrp: '£449.95', saving: 'Save 11%' },
-  'headsets-razer-blackshark-v2-x':           { rrp: '£39.99',  saving: 'Save 11%' },
-  'chairs-corsair-tc100-relaxed':             { rrp: '£199.99', saving: 'Save 6%'  },
-  'chairs-sihoo-doro-c300':                   { rrp: '£339.99', saving: 'Save 21%' },
-  'chairs-noblechairs-hero':                  { rrp: '£399.00', saving: 'Save 12%' },
-};
-
-// ---------------------------------------------------------------------------
 // Validate all product records required by the generator.
 // FIX: 'brand' is now required here and must be present in products.json.
 // Returns true if valid, logs warnings and returns false if not.
@@ -217,15 +196,14 @@ function validateProduct(p) {
 // ---------------------------------------------------------------------------
 function buildProductCard(product) {
   const badgeColor = BADGE_COLORS[product.id] || null;
-  const rrpData    = PRICE_RRP[product.id]    || null;
 
   const badgeStyle = badgeColor ? ` style="background:${escapeHtml(badgeColor)};"` : '';
 
-  const rrpBlock = rrpData
+  const rrpBlock = product.msrp
     ? `\n              <span class="price-rrp-wrap">` +
       `<span class="price-rrp-label">RRP</span>` +
-      `<span class="price-rrp">${escapeHtml(rrpData.rrp)}</span></span>` +
-      `<span class="price-saving">${escapeHtml(rrpData.saving)}</span>`
+      `<span class="price-rrp">${escapeHtml(product.msrp)}</span></span>` +
+      `<span class="price-saving">${escapeHtml(product.savings || '')}</span>`
     : '';
 
   const prosHTML = product.pros.map(p =>
