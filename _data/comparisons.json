@@ -2,6 +2,9 @@
   {
     "slug": "razer-viper-v3-pro-vs-logitech-g502x-plus",
     "title": "Razer Viper V3 Pro vs Logitech G502 X Plus",
+    "heroTitle": "Razer Viper V3 Pro vs Logitech G502 X Plus",
+    "heroSubtitle": "Ultralight Speed vs Feature-Packed Versatility",
+    "breadcrumbLabel": "Viper V3 Pro vs G502 X Plus",
     "metaTitle": "Razer Viper V3 Pro vs Logitech G502 X Plus Comparison | Stack Pick",
     "metaDescription": "Ultralight FPS speed vs productivity power. We compare the 54g Viper V3 Pro against the feature-rich G502 X Plus for UK gamers.",
     "ogTitle": "Viper V3 Pro vs G502 X Plus: Speed vs Features | Stack Pick",
@@ -19,7 +22,7 @@
       "price": "£119",
       "affiliate": "https://amzn.to/4c1StN0",
       "desc": "54g Ultralight, Focus Pro 35K Gen-2 Sensor, 8000Hz wireless polling.",
-      "linkLabel": "See full specs →",
+      "linkLabel": "See on Amazon →",
       "linkHref": "/mice/"
     },
     "productB": {
@@ -30,46 +33,16 @@
       "price": "£94",
       "affiliate": "https://amzn.to/3MCPIaj",
       "desc": "13 programmable buttons, Infinite Scroll, LIGHTSYNC RGB, Hybrid switches.",
-      "linkLabel": "See full specs →",
+      "linkLabel": "See on Amazon →",
       "linkHref": "/mice/"
     },
     "specTable": [
-      {
-        "label": "Weight",
-        "a": "54g",
-        "b": "106g",
-        "winner": "a"
-      },
-      {
-        "label": "Sensor",
-        "a": "Focus Pro 35K",
-        "b": "HERO 25K",
-        "winner": "a"
-      },
-      {
-        "label": "Polling Rate",
-        "a": "Up to 8000Hz",
-        "b": "1000Hz",
-        "winner": "a"
-      },
-      {
-        "label": "Buttons",
-        "a": "5",
-        "b": "13",
-        "winner": "b"
-      },
-      {
-        "label": "Scroll Wheel",
-        "a": "Tactile",
-        "b": "Infinite / Ratchet",
-        "winner": "b"
-      },
-      {
-        "label": "RGB",
-        "a": "None",
-        "b": "8-Zone LIGHTSYNC",
-        "winner": "b"
-      }
+      { "label": "Weight",       "a": "54g",            "b": "106g",                  "winner": "a" },
+      { "label": "Sensor",       "a": "Focus Pro 35K",  "b": "HERO 25K",              "winner": "a" },
+      { "label": "Polling Rate", "a": "Up to 8000Hz",   "b": "1000Hz",                "winner": "a" },
+      { "label": "Buttons",      "a": "5",              "b": "13",                    "winner": "b" },
+      { "label": "Scroll Wheel", "a": "Tactile",        "b": "Infinite / Ratchet",    "winner": "b" },
+      { "label": "RGB",          "a": "None",           "b": "8-Zone LIGHTSYNC",       "winner": "b" }
     ],
     "sections": [
       {
@@ -102,15 +75,15 @@
     },
     "verdict": "Choose the Viper V3 Pro for pure performance. Choose the G502 X Plus for the best daily driving experience.",
     "relatedLinks": [
-      {
-        "href": "/mice/",
-        "label": "Best Gaming Mice UK"
-      }
+      { "href": "/mice/", "label": "Best Gaming Mice UK" }
     ]
   },
   {
     "slug": "steelseries-apex-pro-tkl-gen3-vs-keychron-q1-max",
     "title": "SteelSeries Apex Pro TKL Gen 3 vs Keychron Q1 Max",
+    "heroTitle": "SteelSeries Apex Pro TKL Gen 3 vs Keychron Q1 Max",
+    "heroSubtitle": "Hall Effect Speed vs Premium Typing Bliss",
+    "breadcrumbLabel": "Apex Pro TKL Gen 3 vs Keychron Q1 Max",
     "metaTitle": "SteelSeries Apex Pro TKL vs Keychron Q1 Max | Stack Pick",
     "metaDescription": "Rapid Trigger vs Custom Build. We compare the Hall Effect speed of SteelSeries with the premium typing feel of Keychron.",
     "ogTitle": "Apex Pro TKL vs Keychron Q1 Max: Speed vs Quality | Stack Pick",
@@ -128,7 +101,7 @@
       "price": "£184",
       "affiliate": "https://amzn.to/4kHUmQV",
       "desc": "OmniPoint 3.0 Adjustable HyperMagnetic Switches, Rapid Trigger, OLED Screen.",
-      "linkLabel": "View on Keyboards →",
+      "linkLabel": "See on Amazon →",
       "linkHref": "/keyboards/"
     },
     "productB": {
@@ -139,40 +112,15 @@
       "price": "£219",
       "affiliate": "https://amzn.to/4aFmdwP",
       "desc": "Full Aluminium Body, Gasket Mount, 2.4GHz Wireless, QMK/VIA Support.",
-      "linkLabel": "View on Keyboards →",
+      "linkLabel": "See on Amazon →",
       "linkHref": "/keyboards/"
     },
     "specTable": [
-      {
-        "label": "Switch Type",
-        "a": "Hall Effect (Magnetic)",
-        "b": "Mechanical (Hot-swap)",
-        "winner": ""
-      },
-      {
-        "label": "Rapid Trigger",
-        "a": "Yes",
-        "b": "No",
-        "winner": "a"
-      },
-      {
-        "label": "Chassis",
-        "a": "Plastic/Aluminium top",
-        "b": "Full CNC Aluminium",
-        "winner": "b"
-      },
-      {
-        "label": "Wireless",
-        "a": "No (Wired)",
-        "b": "Yes (2.4GHz/BT)",
-        "winner": "b"
-      },
-      {
-        "label": "Customisation",
-        "a": "SteelSeries GG",
-        "b": "QMK/VIA (Web-based)",
-        "winner": "b"
-      }
+      { "label": "Switch Type",    "a": "Hall Effect (Magnetic)",  "b": "Mechanical (Hot-swap)",  "winner": ""  },
+      { "label": "Rapid Trigger",  "a": "Yes",                     "b": "No",                     "winner": "a" },
+      { "label": "Chassis",        "a": "Plastic/Aluminium top",   "b": "Full CNC Aluminium",     "winner": "b" },
+      { "label": "Wireless",       "a": "No (Wired)",              "b": "Yes (2.4GHz/BT)",        "winner": "b" },
+      { "label": "Customisation",  "a": "SteelSeries GG",          "b": "QMK/VIA (Web-based)",    "winner": "b" }
     ],
     "sections": [
       {
@@ -201,15 +149,15 @@
     },
     "verdict": "Competitive gamers should buy the SteelSeries. Enthusiasts and office workers should buy the Keychron.",
     "relatedLinks": [
-      {
-        "href": "/keyboards/",
-        "label": "Best Gaming Keyboards UK"
-      }
+      { "href": "/keyboards/", "label": "Best Gaming Keyboards UK" }
     ]
   },
   {
     "slug": "sennheiser-hd560s-vs-steelseries-arctis-nova-pro",
     "title": "Sennheiser HD560s vs SteelSeries Arctis Nova Pro Wireless",
+    "heroTitle": "Sennheiser HD560s vs SteelSeries Arctis Nova Pro Wireless",
+    "heroSubtitle": "Audiophile Soundstage vs Feature-Packed Wireless",
+    "breadcrumbLabel": "HD560s vs Arctis Nova Pro Wireless",
     "metaTitle": "Sennheiser HD560s vs SteelSeries Arctis Nova Pro | Stack Pick",
     "metaDescription": "Audiophile open-back vs feature-packed wireless gaming. We help you choose the best audio setup for your UK gaming station.",
     "ogTitle": "HD560s vs Arctis Nova Pro: Audio Quality vs Features | Stack Pick",
@@ -227,7 +175,7 @@
       "price": "£99",
       "affiliate": "https://amzn.to/4tHtncv",
       "desc": "Open-back, Neutral tuning, exceptional soundstage for footstep tracking.",
-      "linkLabel": "View on Headsets →",
+      "linkLabel": "See on Amazon →",
       "linkHref": "/headsets/"
     },
     "productB": {
@@ -238,40 +186,15 @@
       "price": "£256",
       "affiliate": "https://amzn.to/3OkA3NA",
       "desc": "Active Noise Cancellation, Hot-Swap Battery, GameDAC Gen 2 included.",
-      "linkLabel": "View on Headsets →",
+      "linkLabel": "See on Amazon →",
       "linkHref": "/headsets/"
     },
     "specTable": [
-      {
-        "label": "Type",
-        "a": "Open-back (Wired)",
-        "b": "Closed-back (Wireless)",
-        "winner": ""
-      },
-      {
-        "label": "ANC",
-        "a": "No",
-        "b": "Yes",
-        "winner": "b"
-      },
-      {
-        "label": "Microphone",
-        "a": "None (Requires external)",
-        "b": "Retractable ClearCast Gen 2",
-        "winner": "b"
-      },
-      {
-        "label": "Battery Life",
-        "a": "Infinite (Wired)",
-        "b": "Hot-Swap (Dual batteries)",
-        "winner": "b"
-      },
-      {
-        "label": "Soundstage",
-        "a": "Wide & Natural",
-        "b": "Narrow & Immersive",
-        "winner": "a"
-      }
+      { "label": "Type",        "a": "Open-back (Wired)",            "b": "Closed-back (Wireless)",         "winner": ""  },
+      { "label": "ANC",         "a": "No",                           "b": "Yes",                            "winner": "b" },
+      { "label": "Microphone",  "a": "None (Requires external)",     "b": "Retractable ClearCast Gen 2",    "winner": "b" },
+      { "label": "Battery Life","a": "Infinite (Wired)",             "b": "Hot-Swap (Dual batteries)",      "winner": "b" },
+      { "label": "Soundstage",  "a": "Wide & Natural",               "b": "Narrow & Immersive",             "winner": "a" }
     ],
     "sections": [
       {
@@ -300,15 +223,15 @@
     },
     "verdict": "For pure competitive advantage, the Sennheiser soundstage is hard to beat. For every other convenience, the SteelSeries is the ultimate headset.",
     "relatedLinks": [
-      {
-        "href": "/headsets/",
-        "label": "Best Gaming Headsets UK"
-      }
+      { "href": "/headsets/", "label": "Best Gaming Headsets UK" }
     ]
   },
   {
     "slug": "asus-rog-xg27aqdmg-vs-samsung-odyssey-g80sd",
     "title": "ASUS ROG XG27AQDMG vs Samsung Odyssey G80SD",
+    "heroTitle": "ASUS ROG XG27AQDMG vs Samsung Odyssey G80SD",
+    "heroSubtitle": "Glossy 1440p WOLED vs Matte 4K QD-OLED",
+    "breadcrumbLabel": "ASUS XG27AQDMG vs Samsung G80SD",
     "metaTitle": "ASUS XG27AQDMG vs Samsung G80SD Comparison | Stack Pick",
     "metaDescription": "Glossy 1440p vs Matte 4K. We compare the best ASUS and Samsung OLED monitors for UK gamers.",
     "ogTitle": "ASUS XG27AQDMG vs Samsung G80SD: Which OLED? | Stack Pick",
@@ -326,7 +249,7 @@
       "price": "£429",
       "affiliate": "https://amzn.to/4aX25Y9",
       "desc": "27\" 1440p Glossy WOLED, 240Hz, 0.03ms response.",
-      "linkLabel": "View on Monitors →",
+      "linkLabel": "See on Amazon →",
       "linkHref": "/monitors/"
     },
     "productB": {
@@ -337,40 +260,15 @@
       "price": "£740",
       "affiliate": "https://amzn.to/4cy1qh1",
       "desc": "32\" 4K QD-OLED, 240Hz, Matte coating, Smart TV Features.",
-      "linkLabel": "View on Monitors →",
+      "linkLabel": "See on Amazon →",
       "linkHref": "/monitors/"
     },
     "specTable": [
-      {
-        "label": "Resolution",
-        "a": "2560 x 1440",
-        "b": "3840 x 2160",
-        "winner": "b"
-      },
-      {
-        "label": "Panel Type",
-        "a": "WOLED (Glossy)",
-        "b": "QD-OLED (Matte)",
-        "winner": ""
-      },
-      {
-        "label": "Refresh Rate",
-        "a": "240Hz",
-        "b": "240Hz",
-        "winner": ""
-      },
-      {
-        "label": "Size",
-        "a": "27\"",
-        "b": "32\"",
-        "winner": "b"
-      },
-      {
-        "label": "Smart Features",
-        "a": "No",
-        "b": "Yes (Gaming Hub/Apps)",
-        "winner": "b"
-      }
+      { "label": "Resolution",     "a": "2560 x 1440",      "b": "3840 x 2160",          "winner": "b" },
+      { "label": "Panel Type",     "a": "WOLED (Glossy)",   "b": "QD-OLED (Matte)",      "winner": ""  },
+      { "label": "Refresh Rate",   "a": "240Hz",            "b": "240Hz",                 "winner": ""  },
+      { "label": "Size",           "a": "27\"",             "b": "32\"",                  "winner": "b" },
+      { "label": "Smart Features", "a": "No",               "b": "Yes (Gaming Hub/Apps)", "winner": "b" }
     ],
     "sections": [
       {
@@ -383,7 +281,7 @@
       "buyA": {
         "heading": "Buy the ASUS if:",
         "points": [
-          "You want the 'inchiest' blacks (Glossy WOLED)",
+          "You want the 'inkiest' blacks (Glossy WOLED)",
           "You play at 1440p to keep high framerates",
           "You game in a dark or light-controlled room"
         ]
@@ -399,15 +297,15 @@
     },
     "verdict": "Buy the ASUS for the best 1440p image quality. Buy the Samsung for the ultimate 4K big-screen experience.",
     "relatedLinks": [
-      {
-        "href": "/monitors/",
-        "label": "Best Gaming Monitors UK"
-      }
+      { "href": "/monitors/", "label": "Best Gaming Monitors UK" }
     ]
   },
   {
     "slug": "andaseat-kaiser-4-vs-noblechairs-hero",
     "title": "AndaSeat Kaiser 4 vs noblechairs HERO",
+    "heroTitle": "AndaSeat Kaiser 4 vs noblechairs HERO",
+    "heroSubtitle": "Plush Comfort vs Firm Posture Support",
+    "breadcrumbLabel": "AndaSeat Kaiser 4 vs noblechairs HERO",
     "metaTitle": "AndaSeat Kaiser 4 vs noblechairs HERO Comparison | Stack Pick",
     "metaDescription": "Comparing the best heavy-duty gaming chairs for UK gamers. Soft fabric vs firm support.",
     "ogTitle": "AndaSeat vs noblechairs: The Throne Battle | Stack Pick",
@@ -425,7 +323,7 @@
       "price": "£394",
       "affiliate": "https://amzn.to/4qPy6pT",
       "desc": "Magnetic Headrest, 4D Armrests with tilt, premium PVC or Linen options.",
-      "linkLabel": "View on Chairs →",
+      "linkLabel": "See on Amazon →",
       "linkHref": "/chairs/"
     },
     "productB": {
@@ -436,34 +334,14 @@
       "price": "£349",
       "affiliate": "https://amzn.to/4tHQDal",
       "desc": "Integrated Lumbar Dial, Large Seat Base, Firm Cold-Cure Foam.",
-      "linkLabel": "View on Chairs →",
+      "linkLabel": "See on Amazon →",
       "linkHref": "/chairs/"
     },
     "specTable": [
-      {
-        "label": "Lumbar Support",
-        "a": "Internal (4-way)",
-        "b": "Internal Dial (Adjustable)",
-        "winner": "a"
-      },
-      {
-        "label": "Head Pillow",
-        "a": "Magnetic Memory Foam",
-        "b": "Elastic Memory Foam",
-        "winner": "a"
-      },
-      {
-        "label": "Seat Firmness",
-        "a": "Medium-Soft",
-        "b": "Firm",
-        "winner": ""
-      },
-      {
-        "label": "Max Load",
-        "a": "180kg",
-        "b": "150kg",
-        "winner": "a"
-      }
+      { "label": "Lumbar Support", "a": "Internal (4-way)",        "b": "Internal Dial (Adjustable)", "winner": "a" },
+      { "label": "Head Pillow",    "a": "Magnetic Memory Foam",    "b": "Elastic Memory Foam",        "winner": "a" },
+      { "label": "Seat Firmness",  "a": "Medium-Soft",             "b": "Firm",                       "winner": ""  },
+      { "label": "Max Load",       "a": "180kg",                   "b": "150kg",                      "winner": "a" }
     ],
     "sections": [
       {
@@ -492,10 +370,7 @@
     },
     "verdict": "AndaSeat for comfort and features. noblechairs for posture and professional looks.",
     "relatedLinks": [
-      {
-        "href": "/chairs/",
-        "label": "Best Gaming Chairs UK"
-      }
+      { "href": "/chairs/", "label": "Best Gaming Chairs UK" }
     ]
   }
 ]

@@ -22,105 +22,101 @@ const PARTIALS_DIR = path.join(TEMPLATE_DIR, '_partials');
 const TEMPLATE     = fs.readFileSync(path.join(TEMPLATE_DIR, 'comparison.html'), 'utf8');
 
 // ---------------------------------------------------------------------------
-// Build the intro HTML block (Quick Answer + Price Comparison)
+// Helpers
 // ---------------------------------------------------------------------------
-function buildIntroHTML(comp) {
-  const lines = comp.intro
-    .split('\n')
-    .map(l => l.trim())
-    .filter(Boolean);
 
-  const paragraphs = lines.map(l => `          <p>${escapeHtml(l)}</p>`).join('\n');
-
-  return `          <h2>Quick Answer</h2>\n${paragraphs}`;
-}
-
-// ---------------------------------------------------------------------------
-// Build spec table rows HTML
-// ---------------------------------------------------------------------------
-function buildSpecTableHTML(specTable, comp) {
-  return specTable.map(row => {
-    const winA = row.winner === 'a';
-    const winB = row.winner === 'b';
-    const tdA  = winA
-      ? `<td class="comparison-winner">${escapeHtml(row.a)}</td>`
-      : `<td>${escapeHtml(row.a)}</td>`;
-    const tdB  = winB
-      ? `<td class="comparison-winner">${escapeHtml(row.b)}</td>`
-      : `<td>${escapeHtml(row.b)}</td>`;
-    return `                <tr>\n                  <td>${escapeHtml(row.label)}</td>\n                  ${tdA}\n                  ${tdB}\n                </tr>`;
-  }).join('\n');
-}
-
-// ---------------------------------------------------------------------------
-// Build sections HTML (h3 + paragraphs)
-// ---------------------------------------------------------------------------
-function buildSectionsHTML(sections) {
-  return sections.map(section => {
-    const heading = `          <h3>${escapeHtml(section.heading)}</h3>`;
-    const paras = section.body
-      .split('\n')
-      .map(l => l.trim())
-      .filter(Boolean)
-      .map(l => `          <p>${escapeHtml(l)}</p>`)
-      .join('\n');
-    return `${heading}\n${paras}`;
-  }).join('\n\n');
-}
-
-// ---------------------------------------------------------------------------
-// Build verdict HTML (split on double newlines → separate <p> tags)
-// ---------------------------------------------------------------------------
-function buildVerdictHTML(verdict) {
-  return verdict
+/** Splits a multi-line string into escaped <p> tags at a given indent. */
+function paragraphs(text, indent = '') {
+  return text
     .split('\n')
     .map(l => l.trim())
     .filter(Boolean)
-    .map(l => `            <p>${escapeHtml(l)}</p>`)
+    .map(l => `${indent}<p>${escapeHtml(l)}</p>`)
     .join('\n');
 }
 
 // ---------------------------------------------------------------------------
-// Build the two buy cards HTML
+// Block builders
 // ---------------------------------------------------------------------------
-function buildBuyCardsHTML(comp) {
-  function card(product) {
+
+function buildIntroHTML(comp) {
+  return `<h2>Quick Answer</h2>\n${paragraphs(comp.intro)}`;
+}
+
+function buildSpecTableHTML(specTable) {
+  return specTable.map(({ label, a, b, winner }) => {
+    const tdA = winner === 'a'
+      ? `<td class="comparison-winner">${escapeHtml(a)}</td>`
+      : `<td>${escapeHtml(a)}</td>`;
+    const tdB = winner === 'b'
+      ? `<td class="comparison-winner">${escapeHtml(b)}</td>`
+      : `<td>${escapeHtml(b)}</td>`;
+    return `<tr><td>${escapeHtml(label)}</td>${tdA}${tdB}</tr>`;
+  }).join('\n');
+}
+
+function buildSectionsHTML(sections) {
+  return sections.map(({ heading, body }) =>
+    `<h3>${escapeHtml(heading)}</h3>\n${paragraphs(body)}`
+  ).join('\n\n');
+}
+
+function buildBuyCardsHTML({ productA, productB, buySection }) {
+  const heading = buySection?.heading
+    ? `<h2>${escapeHtml(buySection.heading)}</h2>`
+    : '<h2>Which should you buy?</h2>';
+
+  function card(product, buy) {
     const badgeStyle = product.badgeColor
       ? ` style="background:${escapeHtml(product.badgeColor)};"`
       : '';
-    return `            <div class="product-card">
-              <div class="product-content">
-                <span class="product-badge"${badgeStyle}>${escapeHtml(product.badge)}</span>
-                <h3 class="product-title">${escapeHtml(product.name)}</h3>
-                <div class="product-price-block">
-                  <span class="price-current-label">Amazon price</span>
-                  <span class="price-current">${escapeHtml(product.price)}</span>
-                </div>
-                <p class="product-desc">${escapeHtml(product.desc)}</p>
-                <a href="${escapeHtml(product.affiliate)}" target="_blank" rel="noopener sponsored" class="product-btn">View on Amazon →</a>
-              </div>
-            </div>`;
+    const points = (buy?.points ?? [])
+      .map(pt => `<li>${escapeHtml(pt)}</li>`)
+      .join('');
+    const buyHeading = buy?.heading
+      ? `<h3>${escapeHtml(buy.heading)}</h3>`
+      : '';
+
+    return `<div class="product-card">
+  <div class="product-content">
+    <span class="product-badge"${badgeStyle}>${escapeHtml(product.badge)}</span>
+    <h3 class="product-title">${escapeHtml(product.name)}</h3>
+    <div class="product-price-block">
+      <span class="price-current-label">Amazon price</span>
+      <span class="price-current">${escapeHtml(product.price)}</span>
+    </div>
+    <p class="product-desc">${escapeHtml(product.desc || '')}</p>
+    ${buyHeading}${points ? `<ul class="buy-reasons">${points}</ul>` : ''}
+    <a href="${escapeHtml(product.affiliate)}" target="_blank" rel="noopener sponsored" class="product-btn">${escapeHtml(product.linkLabel || 'View on Amazon →')}</a>
+    ${product.linkHref ? `<a href="${escapeHtml(product.linkHref)}" class="product-link">${escapeHtml(product.linkLabel || 'See full specs →')}</a>` : ''}
+  </div>
+</div>`;
   }
-  return `${card(comp.productA)}\n${card(comp.productB)}`;
+
+  return `${heading}\n<div class="buy-cards">\n${card(productA, buySection?.buyA)}\n${card(productB, buySection?.buyB)}\n</div>`;
 }
 
-// ---------------------------------------------------------------------------
-// Build related links HTML
-// ---------------------------------------------------------------------------
+function buildVerdictHTML(verdict) {
+  return paragraphs(verdict);
+}
+
 function buildRelatedLinksHTML(relatedLinks) {
-  if (!relatedLinks || relatedLinks.length === 0) return '';
+  if (!relatedLinks?.length) return '';
   const links = relatedLinks
-    .map(l => `          <a href="${escapeHtml(l.href)}" class="category-card" style="text-decoration:none;">
-            <div class="category-icon">⚖️</div>
-            <h3>${escapeHtml(l.label)}</h3>
-          </a>`)
+    .map(({ href, label }) =>
+      `<a href="${escapeHtml(href)}" class="category-card" style="text-decoration:none;">
+  <div class="category-icon">⚖️</div>
+  <h3>${escapeHtml(label)}</h3>
+</a>`
+    )
     .join('\n');
-  return `\n          <h2>Explore More</h2>\n          <div class="category-grid" style="margin-top:1rem;">\n${links}\n          </div>`;
+  return `<h2>Explore More</h2>\n<div class="category-grid" style="margin-top:1rem;">\n${links}\n</div>`;
 }
 
 // ---------------------------------------------------------------------------
-// Build schema.org JSON-LD for a comparison
+// Schema.org JSON-LD
 // ---------------------------------------------------------------------------
+
 function buildSchemaJSON(comp) {
   const article = {
     '@context':    'https://schema.org',
@@ -144,47 +140,94 @@ function buildSchemaJSON(comp) {
     ],
   };
 
-  return `  <script type="application/ld+json">\n  ${JSON.stringify(article)}\n  </script>\n` +
-         `  <script type="application/ld+json">\n  ${JSON.stringify(breadcrumb)}\n  </script>`;
+  // ItemList schema exposes both products to search engines as structured data
+  const itemList = {
+    '@context': 'https://schema.org',
+    '@type':    'ItemList',
+    name:       comp.title,
+    url:        comp.canonical,
+    itemListElement: [
+      {
+        '@type':    'ListItem',
+        position:   1,
+        name:       comp.productA.name,
+        url:        comp.productA.affiliate,
+      },
+      {
+        '@type':    'ListItem',
+        position:   2,
+        name:       comp.productB.name,
+        url:        comp.productB.affiliate,
+      },
+    ],
+  };
+
+  const toTag = obj =>
+    `<script type="application/ld+json">\n${JSON.stringify(obj, null, 2)}\n</script>`;
+
+  return [article, breadcrumb, itemList].map(toTag).join('\n');
+}
+
+// ---------------------------------------------------------------------------
+// Validate a comparison entry and warn loudly on missing required fields
+// ---------------------------------------------------------------------------
+const REQUIRED_FIELDS = [
+  'slug', 'title', 'metaTitle', 'metaDescription', 'canonical',
+  'datePublished', 'intro', 'specTable', 'sections', 'verdict',
+  'productA', 'productB', 'relatedLinks',
+];
+const REQUIRED_PRODUCT_FIELDS = ['name', 'badge', 'price', 'affiliate', 'desc'];
+
+function validate(comp) {
+  const errors = [];
+  for (const field of REQUIRED_FIELDS) {
+    if (comp[field] == null) errors.push(`Missing required field: "${field}"`);
+  }
+  for (const [key, product] of [['productA', comp.productA], ['productB', comp.productB]]) {
+    if (!product) continue;
+    for (const field of REQUIRED_PRODUCT_FIELDS) {
+      if (product[field] == null) errors.push(`Missing ${key}.${field}`);
+    }
+  }
+  if (errors.length) {
+    console.warn(`\n  ⚠️  Validation errors in "${comp.slug}":`);
+    errors.forEach(e => console.warn(`     - ${e}`));
+  }
+  return errors.length === 0;
 }
 
 // ---------------------------------------------------------------------------
 // Generate one comparison page
 // ---------------------------------------------------------------------------
-function generateComparison(comp) {
-  const introHTML        = buildIntroHTML(comp);
-  const specTableHTML    = buildSpecTableHTML(comp.specTable, comp);
-  const sectionsHTML     = buildSectionsHTML(comp.sections);
-  const verdictHTML      = buildVerdictHTML(comp.verdict);
-  const buyCardsHTML     = buildBuyCardsHTML(comp);
-  const relatedLinksHTML = buildRelatedLinksHTML(comp.relatedLinks);
-  const schemaJSON       = buildSchemaJSON(comp);
 
+function generateComparison(comp) {
   const data = {
-    // head.html placeholders
+    // <head> placeholders
     pageTitle:       comp.metaTitle,
     metaDescription: comp.metaDescription,
     ogType:          'article',
-    ogTitle:         comp.ogTitle || comp.metaTitle,
-    ogDescription:   comp.ogDescription || comp.metaDescription,
+    ogTitle:         comp.ogTitle        || comp.metaTitle,
+    ogDescription:   comp.ogDescription  || comp.metaDescription,
     canonical:       comp.canonical,
-    emoji:           comp.emoji || '⚖️',
-    schemaJSON,
-    // header/sidebar active page
+    emoji:           comp.emoji          || '⚖️',
+    datePublished:   comp.datePublished,
+    dateModified:    comp.dateModified   || comp.datePublished,
+    schemaJSON:      buildSchemaJSON(comp),
+    // Navigation
     activePage:      'comparisons',
-    // comparison.html placeholders
-    heroTitle:       comp.heroTitle || comp.title,
-    heroSubtitle:    comp.heroSubtitle || '',
+    // Page content
+    heroTitle:       comp.heroTitle      || comp.title,
+    heroSubtitle:    comp.heroSubtitle   || '',
     breadcrumbLabel: comp.breadcrumbLabel || comp.title,
     productAName:    comp.productA.name,
     productBName:    comp.productB.name,
-    // rendered HTML blobs (raw — already safe HTML)
-    introHTML,
-    specTableHTML,
-    sectionsHTML,
-    verdictHTML,
-    buyCardsHTML,
-    relatedLinksHTML,
+    // Rendered HTML blocks (already escaped — insert as raw HTML)
+    introHTML:       buildIntroHTML(comp),
+    specTableHTML:   buildSpecTableHTML(comp.specTable),
+    sectionsHTML:    buildSectionsHTML(comp.sections),
+    buyCardsHTML:    buildBuyCardsHTML(comp),
+    verdictHTML:     buildVerdictHTML(comp.verdict),
+    relatedLinksHTML: buildRelatedLinksHTML(comp.relatedLinks),
   };
 
   return renderPage({ partialsDir: PARTIALS_DIR, template: TEMPLATE, data });
@@ -193,19 +236,30 @@ function generateComparison(comp) {
 // ---------------------------------------------------------------------------
 // Main
 // ---------------------------------------------------------------------------
+
 function run() {
   const comparisons = JSON.parse(fs.readFileSync(DATA_FILE, 'utf8'));
 
-  let count = 0;
+  let passed = 0;
+  let failed = 0;
+
   for (const comp of comparisons) {
+    const valid = validate(comp);
+    if (!valid) { failed++; continue; }
+
     const html       = generateComparison(comp);
     const outputPath = path.join(ROOT, 'comparisons', comp.slug, 'index.html');
     writeFile(outputPath, html);
     console.log(`  ✓ comparisons/${comp.slug}/index.html`);
-    count++;
+    passed++;
   }
 
-  console.log(`\n  Generated ${count} comparison pages.`);
+  console.log(`\n  Generated ${passed} comparison page(s).${failed ? ` Skipped ${failed} with errors.` : ''}`);
 }
 
-run();
+// FIX: guard with require.main to prevent auto-execution when imported by build.js
+if (require.main === module) {
+  run();
+}
+
+module.exports = { run };

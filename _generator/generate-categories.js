@@ -3,7 +3,8 @@
 /**
  * StackPick generate-categories.js
  *
- * Reads:  _data/products.json
+ * Reads:  _data/collections.json   — product IDs and collection groupings
+ *         _data/products.json      — full product records (name, price, badge, etc.)
  * Writes: mice/index.html
  *         keyboards/index.html
  *         headsets/index.html
@@ -12,26 +13,43 @@
  *
  * Run standalone: node _generator/generate-categories.js
  * Called by:      _generator/build.js
+ *
+ * Data contract (products.json):
+ *   Each product object must contain:
+ *     id          {string}   — e.g. "mice-razer-viper-v3-pro"
+ *     category    {string}   — slug matching a CATEGORY_CONFIG key
+ *     brand       {string}   — explicit brand name for schema.org e.g. "Razer"
+ *     name        {string}
+ *     badge       {string}
+ *     price       {string}   — display string e.g. "£119"
+ *     priceRaw    {number}   — numeric price for schema.org e.g. 119
+ *     inStock     {boolean}  — for schema.org availability
+ *     affiliate   {string}   — Amazon affiliate URL
+ *     desc        {string}
+ *     emoji       {string}
+ *     pros        {string[]}
+ *     cons        {string[]}
  */
 
 const fs   = require('fs');
 const path = require('path');
 
-const { renderPage, writeFile } = require('./lib/render.js');
+const { renderPage, writeFile, escapeHtml } = require('./lib/render.js');
 
-const ROOT         = path.join(__dirname, '..');
-const DATA_FILE    = path.join(ROOT, '_data', 'products.json');
-const TEMPLATE_DIR = path.join(ROOT, '_templates');
-const PARTIALS_DIR = path.join(TEMPLATE_DIR, '_partials');
-const TEMPLATE     = fs.readFileSync(path.join(TEMPLATE_DIR, 'category.html'), 'utf8');
+const ROOT             = path.join(__dirname, '..');
+const COLLECTIONS_FILE = path.join(ROOT, '_data', 'collections.json');
+const PRODUCTS_FILE    = path.join(ROOT, '_data', 'products.json');
+const TEMPLATE_DIR     = path.join(ROOT, '_templates');
+const PARTIALS_DIR     = path.join(TEMPLATE_DIR, '_partials');
+const TEMPLATE         = fs.readFileSync(path.join(TEMPLATE_DIR, 'category.html'), 'utf8');
 
 // ---------------------------------------------------------------------------
 // Per-category configuration
-// All copy here was taken verbatim from the original hand-written HTML pages.
+// All copy taken verbatim from the original hand-written HTML pages.
+// Note: key names here intentionally match the template placeholder names.
 // ---------------------------------------------------------------------------
 const CATEGORY_CONFIG = {
   mice: {
-    slug:            'mice',
     emoji:           '🖱️',
     pageTitle:       'Best Gaming Mice UK 2026 | Stack Pick',
     metaDescription: 'Best gaming mice for UK gamers. From sub-40g "super-clones" to the 8K polling pros use. Verified 2026 UK pricing.',
@@ -41,7 +59,7 @@ const CATEGORY_CONFIG = {
     heroTitle:       'Best Gaming Mice (UK)',
     heroSubtitle:    'From sub-40g "super-clones" to the 8K polling pros use. Updated Feb 2026.',
     breadcrumbLabel: 'Gaming Mice',
-    buyingGuide: `<h2>The 2026 Mouse Guide</h2>
+    buyingGuideHTML: `<h2>The 2026 Mouse Guide</h2>
 <h3>Polling Rate: 1K vs 4K vs 8K</h3>
 <p>Standard mice report to your PC 1,000 times per second (1K). In 2026, <strong>4K and 8K polling</strong> report up to 8,000 times. On a 240Hz or 360Hz monitor, this makes mouse movement look significantly smoother and reduces input lag by microseconds.</p>
 <h3>Optical vs Mechanical Switches</h3>
@@ -50,7 +68,6 @@ const CATEGORY_CONFIG = {
   },
 
   keyboards: {
-    slug:            'keyboards',
     emoji:           '⌨️',
     pageTitle:       'Best Gaming Keyboards UK 2026 | Stack Pick',
     metaDescription: 'Best gaming keyboards for UK gamers 2026. Hall Effect, wireless, and budget mechanical picks — verified UK pricing on Amazon.',
@@ -60,7 +77,7 @@ const CATEGORY_CONFIG = {
     heroTitle:       'Best Gaming Keyboards (UK)',
     heroSubtitle:    'Hall Effect, wireless, and budget mechanical picks. Updated Feb 2026.',
     breadcrumbLabel: 'Gaming Keyboards',
-    buyingGuide: `<h2>The 2026 Buying Guide</h2>
+    buyingGuideHTML: `<h2>The 2026 Buying Guide</h2>
 <h3>What is "Rapid Trigger"?</h3>
 <p>Standard keyboards actuate at a fixed point. <strong>Hall Effect (HE)</strong> boards like the <strong>Apex Pro</strong> use magnets to track every millimetre. Rapid Trigger resets the key the instant you lift your finger, letting you stop or strafe faster than physically possible on a normal board.</p>
 <h3>Why "Creamy" sounds better</h3>
@@ -69,7 +86,6 @@ const CATEGORY_CONFIG = {
   },
 
   headsets: {
-    slug:            'headsets',
     emoji:           '🎧',
     pageTitle:       'Best Gaming Headsets UK 2026 | Stack Pick',
     metaDescription: 'Best gaming headsets for UK gamers 2026. From audiophile open-back to wireless premium — verified UK pricing on Amazon.',
@@ -79,7 +95,7 @@ const CATEGORY_CONFIG = {
     heroTitle:       'Best Gaming Headsets (UK)',
     heroSubtitle:    'From open-back audiophile to wireless premium. Updated Feb 2026.',
     breadcrumbLabel: 'Gaming Headsets',
-    buyingGuide: `<h2>The 2026 Headset Guide</h2>
+    buyingGuideHTML: `<h2>The 2026 Headset Guide</h2>
 <h3>Open-back vs Closed-back</h3>
 <p><strong>Open-back</strong> headphones (like the Sennheiser HD 560S) let sound in and out — creating a wider, more natural soundstage that makes footstep positioning in FPS significantly clearer. The trade-off: everyone nearby can hear your game, and ambient noise bleeds in. <strong>Closed-back</strong> gaming headsets isolate you from the room — better for noisy environments and voice chat.</p>
 <h3>Wireless latency — solved</h3>
@@ -88,7 +104,6 @@ const CATEGORY_CONFIG = {
   },
 
   monitors: {
-    slug:            'monitors',
     emoji:           '🖥️',
     pageTitle:       'Best Gaming Monitors UK 2026 | Stack Pick',
     metaDescription: 'Best gaming monitors for UK gamers 2026. OLED, Mini-LED, and budget IPS picks — verified UK pricing on Amazon.',
@@ -98,7 +113,7 @@ const CATEGORY_CONFIG = {
     heroTitle:       'Best Gaming Monitors (UK)',
     heroSubtitle:    'OLED, Mini-LED, and the budget IPS that punches above its weight. Updated Feb 2026.',
     breadcrumbLabel: 'Gaming Monitors',
-    buyingGuide: `<h2>2026 Buying Guide: Glossy, Mini-LED &amp; OLED</h2>
+    buyingGuideHTML: `<h2>2026 Buying Guide: Glossy, Mini-LED &amp; OLED</h2>
 <h3>The "Glossy" Revolution</h3>
 <p>One of the biggest shifts in 2026 has been the move toward Glossy WOLED panels, like the ASUS ROG Strix listed above. Traditional matte coatings can make OLED blacks look slightly "grey" in lit rooms. Glossy panels maintain that infinite contrast and make colors pop, though they do require more light control in your room.</p>
 <h3>Mini-LED: The OLED Alternative</h3>
@@ -111,7 +126,6 @@ const CATEGORY_CONFIG = {
   },
 
   chairs: {
-    slug:            'chairs',
     emoji:           '🪑',
     pageTitle:       'Best Gaming Chairs UK 2026 | Stack Pick',
     metaDescription: 'Best gaming chairs for UK gamers 2026. Crowd-researched picks for every type of buyer — from budget to breathable mesh to back pain relief. Verified UK pricing on Amazon.',
@@ -121,7 +135,7 @@ const CATEGORY_CONFIG = {
     heroTitle:       'Best Gaming Chairs UK',
     heroSubtitle:    'Five chairs for five real problems. Crowd-researched picks based on what UK gamers actually ask about. Updated February 2026.',
     breadcrumbLabel: 'Gaming Chairs',
-    buyingGuide: `<h2>The 2026 Chair Buying Guide</h2>
+    buyingGuideHTML: `<h2>The 2026 Chair Buying Guide</h2>
 <h3>Gaming chair vs office chair — honest answer</h3>
 <p>This is the most debated question across r/battlestations, r/pcmasterrace and every gaming Discord. The honest answer: at the budget end (under £200), gaming chairs tend to beat office chairs for comfort and build quality. Once you're spending £300+, ergonomic design matters more than aesthetics, and purpose-built ergonomic chairs like the Sihoo Doro C300 will do more for your back than any racing-style bucket seat.</p>
 <h3>What actually matters for long sessions</h3>
@@ -135,151 +149,195 @@ const CATEGORY_CONFIG = {
 };
 
 // ---------------------------------------------------------------------------
-// Badge colour map — matches the original inline styles from the hand-written HTML
-// We only store non-default colours (default = no inline style, uses CSS class colour)
+// Badge colour map — non-default colours only (default = CSS class colour)
+// Keyed by product id, matching the id field in collections.json / products.json
 // ---------------------------------------------------------------------------
 const BADGE_COLORS = {
   // mice
-  'mice-razer-viper-v3-pro':          '#22c55e',
-  'mice-endgame-gear-op1w':           '#3b82f6',
-  'mice-lamzu-thorn-4k':              '#f97316',
-  'mice-atk-vxe-mad-r':              '#ef4444',
+  'mice-razer-viper-v3-pro':                  '#22c55e',
+  'mice-endgame-gear-op1w':                   '#3b82f6',
+  'mice-atk-vxe-mad-r-plus':                  '#ef4444',
   // keyboards
-  'keyboards-aula-f99-wireless':      '#8b5cf6',
-  'keyboards-keychron-c3-pro':        '#10b981',
-  // headsets — no inline overrides in original
+  'keyboards-aula-f99-wireless':              '#8b5cf6',
+  'keyboards-keychron-c3-pro':                '#10b981',
   // monitors
-  'monitors-asus-rog-xg27aqdmg':      '#ef4444',
-  // chairs — no inline overrides in original
-};
-
-// RRP data — products that show a crossed-out RRP in the original HTML
-const PRICE_RRP = {
-  'mice-razer-viper-v3-pro':               { rrp: '£159.99', saving: 'Save £42' },
-  'mice-logitech-g502x-plus':              { rrp: '£149.99', saving: 'Save £55' },
-  'keyboards-steelseries-apex-pro-tkl-gen3': { rrp: '£209.99', saving: 'Save £20' },
-  'keyboards-keychron-c3-pro':             { rrp: '£45.99',  saving: 'Save £6'  },
-  'monitors-msi-mag-274updf':              { rrp: '£449.00', saving: 'Save £50' },
+  'monitors-asus-rog-xg27aqdmg':              '#ef4444',
 };
 
 // ---------------------------------------------------------------------------
+// RRP data — products that show a crossed-out RRP and saving percentage
+// Keyed by product id
+// ---------------------------------------------------------------------------
+const PRICE_RRP = {
+  'mice-razer-viper-v3-pro':                  { rrp: '£159.99', saving: 'Save 26%' },
+  'mice-razer-deathadder-v3-pro':             { rrp: '£149.99', saving: 'Save 53%' },
+  'mice-logitech-g502x-plus':                 { rrp: '£149.99', saving: 'Save 37%' },
+  'keyboards-steelseries-apex-pro-tkl-gen3':  { rrp: '£209.99', saving: 'Save 12%' },
+  'keyboards-asus-rog-strix-scope-ii-96':     { rrp: '£169.99', saving: 'Save 27%' },
+  'keyboards-keychron-c3-pro':                { rrp: '£45.99',  saving: 'Save 13%' },
+  'headsets-sennheiser-hd560s':               { rrp: '£169.00', saving: 'Save 41%' },
+  'headsets-steelseries-arctis-nova-pro':     { rrp: '£329.99', saving: 'Save 22%' },
+  'headsets-hyperx-cloud-iii-s-wireless':     { rrp: '£129.99', saving: 'Save 10%' },
+  'headsets-bose-quietcomfort-ultra-gen2':    { rrp: '£449.95', saving: 'Save 11%' },
+  'headsets-razer-blackshark-v2-x':           { rrp: '£39.99',  saving: 'Save 11%' },
+  'chairs-corsair-tc100-relaxed':             { rrp: '£199.99', saving: 'Save 6%'  },
+  'chairs-sihoo-doro-c300':                   { rrp: '£339.99', saving: 'Save 21%' },
+  'chairs-noblechairs-hero':                  { rrp: '£399.00', saving: 'Save 12%' },
+};
+
+// ---------------------------------------------------------------------------
+// Validate all product records required by the generator.
+// FIX: 'brand' is now required here and must be present in products.json.
+// Returns true if valid, logs warnings and returns false if not.
+// ---------------------------------------------------------------------------
+const REQUIRED_PRODUCT_FIELDS = [
+  'id', 'category', 'brand', 'name', 'badge', 'price', 'priceRaw',
+  'inStock', 'affiliate', 'desc', 'emoji', 'pros', 'cons',
+];
+
+function validateProduct(p) {
+  const errors = [];
+  for (const field of REQUIRED_PRODUCT_FIELDS) {
+    if (p[field] == null) errors.push(`missing field "${field}"`);
+  }
+  if (!Array.isArray(p.pros))  errors.push('"pros" must be an array');
+  if (!Array.isArray(p.cons))  errors.push('"cons" must be an array');
+  if (typeof p.priceRaw !== 'number') errors.push('"priceRaw" must be a number');
+  if (typeof p.inStock  !== 'boolean') errors.push('"inStock" must be a boolean');
+  if (errors.length) {
+    console.warn(`  ⚠️  Product "${p.id || '(unknown id)'}" skipped: ${errors.join(', ')}`);
+    return false;
+  }
+  return true;
+}
+
+// ---------------------------------------------------------------------------
 // Build a single product card HTML string
+// All user-facing fields are passed through escapeHtml to prevent invalid HTML.
 // ---------------------------------------------------------------------------
 function buildProductCard(product) {
   const badgeColor = BADGE_COLORS[product.id] || null;
   const rrpData    = PRICE_RRP[product.id]    || null;
 
-  const badgeStyle = badgeColor ? ` style="background:${badgeColor};"` : '';
+  const badgeStyle = badgeColor ? ` style="background:${escapeHtml(badgeColor)};"` : '';
 
-  const rrpBlock = rrpData ? `
-              <span class="price-rrp-wrap">
-                <span class="price-rrp-label">RRP</span>
-                <span class="price-rrp">${rrpData.rrp}</span>
-              </span>
-              <span class="price-saving">${rrpData.saving}</span>` : '';
+  const rrpBlock = rrpData
+    ? `\n              <span class="price-rrp-wrap">` +
+      `<span class="price-rrp-label">RRP</span>` +
+      `<span class="price-rrp">${escapeHtml(rrpData.rrp)}</span></span>` +
+      `<span class="price-saving">${escapeHtml(rrpData.saving)}</span>`
+    : '';
 
   const prosHTML = product.pros.map(p =>
-    `              <li class="pro"><span class="pro-icon">✓</span> ${p}</li>`
+    `              <li class="pro"><span class="pro-icon">✓</span> ${escapeHtml(p)}</li>`
   ).join('\n');
 
   const consHTML = product.cons.map(c =>
-    `              <li class="con"><span class="con-icon">✕</span> ${c}</li>`
+    `              <li class="con"><span class="con-icon">✕</span> ${escapeHtml(c)}</li>`
   ).join('\n');
 
   return `        <div class="product-card">
-          <div class="product-image-placeholder" aria-hidden="true">${product.emoji}</div>
+          <div class="product-image-placeholder" aria-hidden="true">${escapeHtml(product.emoji)}</div>
           <div class="product-content">
-            <span class="product-badge"${badgeStyle}>${product.badge}</span>
-            <h3 class="product-title">${product.name}</h3>
+            <span class="product-badge"${badgeStyle}>${escapeHtml(product.badge)}</span>
+            <h3 class="product-title">${escapeHtml(product.name)}</h3>
             <div class="product-price-block">
               <span class="price-current-label">Amazon price</span>
-              <span class="price-current">${product.price}</span>${rrpBlock}
+              <span class="price-current">${escapeHtml(product.price)}</span>${rrpBlock}
             </div>
-            <p class="product-desc">${product.desc}</p>
+            <p class="product-desc">${escapeHtml(product.desc)}</p>
             <ul class="product-features">
 ${prosHTML}
 ${consHTML}
             </ul>
-            <a href="${product.affiliate}" target="_blank" rel="noopener sponsored" class="product-btn">View on Amazon →</a>
+            <a href="${escapeHtml(product.affiliate)}" target="_blank" rel="noopener sponsored" class="product-btn">View on Amazon →</a>
           </div>
         </div>`;
 }
 
 // ---------------------------------------------------------------------------
-// Build schema.org ItemList JSON-LD for a category
+// Build schema.org ItemList + BreadcrumbList JSON-LD for a category page
 // ---------------------------------------------------------------------------
-function buildSchemaItemList(config, products) {
-  const items = products.map((p, i) => ({
-    '@type':    'ListItem',
-    position:   i + 1,
-    item: {
-      '@type':  'Product',
-      name:     p.name,
-      brand:    { '@type': 'Brand', name: p.name.split(' ')[0] },
-      offers:   {
-        '@type':        'Offer',
-        priceCurrency:  'GBP',
-        price:          String(p.priceRaw),
-        availability:   p.inStock
-          ? 'https://schema.org/InStock'
-          : 'https://schema.org/OutOfStock',
-      },
-    },
-  }));
-
+function buildSchemaJSON(config, products) {
   const itemList = {
-    '@context':     'https://schema.org',
-    '@type':        'ItemList',
-    name:           config.pageTitle.replace(' | Stack Pick', ''),
-    url:            config.canonical,
-    numberOfItems:  products.length,
-    itemListElement: items,
+    '@context':      'https://schema.org',
+    '@type':         'ItemList',
+    name:            config.pageTitle.replace(' | Stack Pick', ''),
+    url:             config.canonical,
+    numberOfItems:   products.length,
+    itemListElement: products.map((p, i) => ({
+      '@type':    'ListItem',
+      position:   i + 1,
+      item: {
+        '@type': 'Product',
+        name:    p.name,
+        brand:   { '@type': 'Brand', name: p.brand },
+        offers:  {
+          '@type':       'Offer',
+          priceCurrency: 'GBP',
+          price:         String(p.priceRaw),
+          availability:  p.inStock
+            ? 'https://schema.org/InStock'
+            : 'https://schema.org/OutOfStock',
+        },
+      },
+    })),
   };
 
   const breadcrumb = {
     '@context': 'https://schema.org',
     '@type':    'BreadcrumbList',
     itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Home',              item: 'https://stackpick.co.uk/' },
-      { '@type': 'ListItem', position: 2, name: config.breadcrumbLabel, item: config.canonical },
+      { '@type': 'ListItem', position: 1, name: 'Home',                   item: 'https://stackpick.co.uk/' },
+      { '@type': 'ListItem', position: 2, name: config.breadcrumbLabel,   item: config.canonical },
     ],
   };
 
-  return `  <script type="application/ld+json">\n  ${JSON.stringify(itemList)}\n  </script>\n` +
-         `  <script type="application/ld+json">\n  ${JSON.stringify(breadcrumb)}\n  </script>`;
+  const toTag = obj =>
+    `<script type="application/ld+json">\n${JSON.stringify(obj, null, 2)}\n</script>`;
+
+  return [itemList, breadcrumb].map(toTag).join('\n');
 }
 
 // ---------------------------------------------------------------------------
 // Generate one category page
+// Products are ordered by their position in the all-picks collection baseProducts
+// array, preserving the editorial ranking defined in collections.json.
 // ---------------------------------------------------------------------------
-function generateCategory(config, products) {
-  const categoryProducts = products.filter(p => p.category === config.slug);
+function generateCategory(slug, config, productMap, allPicksOrder) {
+  // Filter to this category, then sort by editorial order from all-picks
+  const ordered = allPicksOrder
+    .filter(id => id.startsWith(slug + '-') && productMap.has(id))
+    .map(id => productMap.get(id));
 
-  const productCardsHTML = categoryProducts.map(buildProductCard).join('\n\n');
-  const schemaJSON       = buildSchemaItemList(config, categoryProducts);
+  if (ordered.length === 0) {
+    console.warn(`  ⚠️  No products found for category "${slug}" — page will render empty.`);
+  }
+
+  const productCardsHTML = ordered.map(buildProductCard).join('\n\n');
+  const schemaJSON       = buildSchemaJSON(config, ordered);
 
   const data = {
-    // head.html placeholders
-    pageTitle:       config.pageTitle,
-    metaDescription: config.metaDescription,
-    ogType:          'website',
-    ogTitle:         config.ogTitle,
-    ogDescription:   config.ogDescription,
-    canonical:       config.canonical,
-    emoji:           config.emoji,
-    schemaJSON:      schemaJSON,
-    // header/sidebar active page
-    activePage:      config.slug,
-    // category.html placeholders
-    heroTitle:       config.heroTitle,
-    heroSubtitle:    config.heroSubtitle,
-    breadcrumbLabel: config.breadcrumbLabel,
-    // rendered HTML blobs (injected via {{{...}}} raw — already safe HTML)
-    productCardsHTML: productCardsHTML,
-    buyingGuideHTML:  config.buyingGuide,
+    // <head> placeholders
+    pageTitle:        config.pageTitle,
+    metaDescription:  config.metaDescription,
+    ogType:           'website',
+    ogTitle:          config.ogTitle,
+    ogDescription:    config.ogDescription,
+    canonical:        config.canonical,
+    emoji:            config.emoji,
+    schemaJSON,
+    // navigation
+    activePage:       slug,
+    // page content
+    heroTitle:        config.heroTitle,
+    heroSubtitle:     config.heroSubtitle,
+    breadcrumbLabel:  config.breadcrumbLabel,
+    // rendered HTML blobs — injected raw, already escaped above
+    productCardsHTML,
+    buyingGuideHTML:  config.buyingGuideHTML,
   };
 
-  // renderPage handles partials + wraps in page-wrapper div
   return renderPage({ partialsDir: PARTIALS_DIR, template: TEMPLATE, data });
 }
 
@@ -287,18 +345,56 @@ function generateCategory(config, products) {
 // Main
 // ---------------------------------------------------------------------------
 function run() {
-  const products = JSON.parse(fs.readFileSync(DATA_FILE, 'utf8'));
+  // Load both data files
+  const collections = JSON.parse(fs.readFileSync(COLLECTIONS_FILE, 'utf8'));
+  const rawProducts = JSON.parse(fs.readFileSync(PRODUCTS_FILE, 'utf8'));
 
-  let count = 0;
-  for (const [slug, config] of Object.entries(CATEGORY_CONFIG)) {
-    const html       = generateCategory(config, products);
-    const outputPath = path.join(ROOT, slug, 'index.html');
-    writeFile(outputPath, html);
-    console.log(`  ✓ ${slug}/index.html`);
-    count++;
+  // The 'all-picks' collection defines the canonical product universe and
+  // editorial ordering used across all category pages.
+  const allPicks = collections.find(c => c.id === 'all-picks');
+  if (!allPicks) {
+    console.error('  ✗ Fatal: "all-picks" collection not found in collections.json');
+    process.exit(1);
+  }
+  const allPicksOrder = allPicks.baseProducts;
+
+  // Validate and index products by id for fast lookup
+  const productMap = new Map();
+  for (const p of rawProducts) {
+    if (validateProduct(p)) {
+      productMap.set(p.id, p);
+    }
   }
 
-  console.log(`\n  Generated ${count} category pages.`);
+  // Warn about any ID in collections.json that has no corresponding product record
+  for (const id of allPicksOrder) {
+    if (!productMap.has(id)) {
+      console.warn(`  ⚠️  collections.json references "${id}" but no matching product in products.json`);
+    }
+  }
+
+  let passed = 0;
+  let failed = 0;
+
+  for (const [slug, config] of Object.entries(CATEGORY_CONFIG)) {
+    try {
+      const html       = generateCategory(slug, config, productMap, allPicksOrder);
+      const outputPath = path.join(ROOT, slug, 'index.html');
+      writeFile(outputPath, html);
+      console.log(`  ✓ ${slug}/index.html`);
+      passed++;
+    } catch (err) {
+      console.error(`  ✗ Failed to generate "${slug}/index.html": ${err.message}`);
+      failed++;
+    }
+  }
+
+  console.log(`\n  Generated ${passed} category page(s).${failed ? ` Failed: ${failed}.` : ''}`);
 }
 
-run();
+// FIX: guard with require.main to prevent auto-execution when imported by build.js
+if (require.main === module) {
+  run();
+}
+
+module.exports = { run };

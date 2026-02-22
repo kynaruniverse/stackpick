@@ -12,35 +12,16 @@
     "emoji": "💷",
     "heroTitle": "Budget Gaming Picks Under £50",
     "heroSubtitle": "The best gear at the lowest prices. All on Amazon UK, all under £50.",
-    "intro": "You don't need to spend £200+ to game well. These are the genuinely good picks under £50 — not compromises, but the right tools for the budget.",
+    "breadcrumbLabel": "Budget Picks Under £50",
     "budgetLabel": "Under £50",
-    "totalLabel": null,
+    "intro": "You don't need to spend £200+ to game well. These are the genuinely good picks under £50 — not compromises, but the right tools for the budget.",
     "summaryTable": [
-      {
-        "emoji": "🖱️",
-        "category": "Mouse",
-        "pick": "ATK VXE MAD R",
-        "price": "£48"
-      },
-      {
-        "emoji": "🎧",
-        "category": "Headset",
-        "pick": "ASTRO A10 Gen 2",
-        "price": "£40"
-      },
-      {
-        "emoji": "⌨️",
-        "category": "Keyboard",
-        "pick": "Keychron C3 Pro",
-        "price": "£39"
-      },
-      {
-        "emoji": "🎯",
-        "category": "Mousepad",
-        "pick": "Logitech G640 Large",
-        "price": "~£28"
-      }
+      { "emoji": "🖱️", "category": "Mouse",     "pick": "ATK VXE MAD R",        "price": "£48"  },
+      { "emoji": "🎧", "category": "Headset",   "pick": "ASTRO A10 Gen 2",       "price": "£40"  },
+      { "emoji": "⌨️", "category": "Keyboard",  "pick": "Keychron C3 Pro",       "price": "£39"  },
+      { "emoji": "🎯", "category": "Mousepad",  "pick": "Logitech G640 Large",   "price": "~£28" }
     ],
+    "summaryTotals": [],
     "sections": [
       {
         "heading": "🖱️ Best Mice Under £50",
@@ -51,6 +32,8 @@
             "badge": "TOP PICK",
             "badgeColor": "#ef4444",
             "price": "£48",
+            "priceRrp": null,
+            "priceSaving": null,
             "affiliate": "https://amzn.to/3ZImZUM",
             "desc": "The Viper Killer — 36g ultra-light with the flagship 3950 sensor. Flagship specs for a third of the price. One of the lightest mice ever made.",
             "pros": [
@@ -73,6 +56,8 @@
             "badge": "TOP PICK",
             "badgeColor": "#ef4444",
             "price": "£40",
+            "priceRrp": null,
+            "priceSaving": null,
             "affiliate": "https://amzn.to/4rz9Vgo",
             "desc": "Damage-resistant flexible frame with a detachable cable. The budget headset that actually survives being knocked off your desk. Multi-platform (PC, PS5, Xbox, Switch).",
             "pros": [
@@ -95,6 +80,8 @@
             "badge": "TOP PICK",
             "badgeColor": "#ef4444",
             "price": "£39",
+            "priceRrp": null,
+            "priceSaving": null,
             "affiliate": "https://amzn.to/4kGDHNL",
             "desc": "Gasket mount, hot-swap, and QMK/VIA support under £40. The most common first mechanical keyboard on UK Reddit. No other mechanical keyboard at this price offers gasket mount.",
             "pros": [
@@ -118,6 +105,8 @@
             "badge": "TOP PICK",
             "badgeColor": "#ef4444",
             "price": "~£28",
+            "priceRrp": null,
+            "priceSaving": null,
             "affiliate": "https://amzn.to/3LogiG640",
             "desc": "The cloth pad Logitech designed to work with their own sensors. 460x400mm, medium speed surface, non-slip rubber base. Community-validated for years.",
             "pros": [
@@ -134,6 +123,8 @@
             "badge": "EXTENDED OPTION",
             "badgeColor": "",
             "price": "~£30",
+            "priceRrp": null,
+            "priceSaving": null,
             "affiliate": "https://amzn.to/3MM300Pro",
             "desc": "930x300mm extended pad covers keyboard and mouse on a single surface. Spill-resistant surface. Full desk coverage without spending £50+.",
             "pros": [
@@ -170,6 +161,12 @@
         "emoji": "👑",
         "title": "£1500 Complete Setup",
         "desc": "OLED monitor, Hall Effect keyboard, wireless everything."
+      },
+      {
+        "href": "/guides/gaming-setup-2500/",
+        "emoji": "💎",
+        "title": "£2500 Endgame Build",
+        "desc": "The best of the best, no compromises."
       }
     ]
   },
@@ -186,56 +183,20 @@
     "emoji": "💰",
     "heroTitle": "£500 Gaming Setup UK",
     "heroSubtitle": "Complete budget build for competitive gaming. Updated February 2026.",
-    "intro": "£500 for a complete peripheral setup is a tight but achievable budget. These picks prioritise performance-per-pound — no padding, no compromises on the things that actually matter in game.",
+    "breadcrumbLabel": "£500 Gaming Setup",
     "budgetLabel": "£500",
-    "totalLabel": "~£436 (peripherals inc. chair) / ~£248 (peripherals only)",
+    "intro": "£500 for a complete peripheral setup is a tight but achievable budget. These picks prioritise performance-per-pound — no padding, no compromises on the things that actually matter in game.",
     "summaryTable": [
-      {
-        "emoji": "🖥️",
-        "category": "Monitor",
-        "pick": "LG UltraGear 24GS65F",
-        "price": "£119.99"
-      },
-      {
-        "emoji": "🎧",
-        "category": "Headset",
-        "pick": "Razer BlackShark V2",
-        "price": "~£36"
-      },
-      {
-        "emoji": "⌨️",
-        "category": "Keyboard",
-        "pick": "Redragon K552 RGB",
-        "price": "~£32"
-      },
-      {
-        "emoji": "🖱️",
-        "category": "Mouse",
-        "pick": "Logitech G305 LIGHTSPEED",
-        "price": "~£32"
-      },
-      {
-        "emoji": "🎯",
-        "category": "Mousepad",
-        "pick": "Logitech G640 Large",
-        "price": "~£28"
-      },
-      {
-        "emoji": "🪑",
-        "category": "Chair",
-        "pick": "Corsair TC100 RELAXED",
-        "price": "£187"
-      }
+      { "emoji": "🖥️", "category": "Monitor",   "pick": "LG UltraGear 24GS65F",       "price": "£119.99" },
+      { "emoji": "🎧", "category": "Headset",   "pick": "Razer BlackShark V2",         "price": "~£36"    },
+      { "emoji": "⌨️", "category": "Keyboard",  "pick": "Redragon K552 RGB",           "price": "~£32"    },
+      { "emoji": "🖱️", "category": "Mouse",     "pick": "Logitech G305 LIGHTSPEED",   "price": "~£32"    },
+      { "emoji": "🎯", "category": "Mousepad",  "pick": "Logitech G640 Large",         "price": "~£28"    },
+      { "emoji": "🪑", "category": "Chair",     "pick": "Corsair TC100 RELAXED",       "price": "£187"    }
     ],
     "summaryTotals": [
-      {
-        "label": "Peripherals only",
-        "value": "~£248"
-      },
-      {
-        "label": "Full build (inc chair)",
-        "value": "~£436"
-      }
+      { "label": "Peripherals only",       "value": "~£248" },
+      { "label": "Full build (inc chair)", "value": "~£436" }
     ],
     "sections": [
       {
@@ -247,6 +208,8 @@
             "badge": "MONITOR",
             "badgeColor": "#ef4444",
             "price": "£119.99",
+            "priceRrp": null,
+            "priceSaving": null,
             "affiliate": "https://amzn.to/3LG24GS65F",
             "desc": "180Hz IPS, 1ms, 24in 1080p. The fastest IPS panel at this price in the UK. G-Sync Compatible + FreeSync Premium. At £120 there is nothing meaningfully better.",
             "pros": [
@@ -363,6 +326,12 @@
     },
     "relatedGuides": [
       {
+        "href": "/guides/budget-picks-under-50/",
+        "emoji": "💷",
+        "title": "Budget Picks Under £50",
+        "desc": "The best gear at the absolute lowest prices."
+      },
+      {
         "href": "/guides/gaming-setup-1000/",
         "emoji": "🎮",
         "title": "£1000 Complete Setup",
@@ -395,46 +364,18 @@
     "emoji": "🎮",
     "heroTitle": "£1000 Gaming Setup UK",
     "heroSubtitle": "Enthusiast-level build — every peripheral upgraded. Updated February 2026.",
-    "intro": "£1000 for peripherals hits the sweet spot where you're getting genuinely enthusiast-grade hardware across every category without paying the endgame tax. These picks are where most serious UK gamers land.",
+    "breadcrumbLabel": "£1000 Gaming Setup",
     "budgetLabel": "£1000",
-    "totalLabel": "~£993",
+    "intro": "£1000 for peripherals hits the sweet spot where you're getting genuinely enthusiast-grade hardware across every category without paying the endgame tax. These picks are where most serious UK gamers land.",
     "summaryTable": [
-      {
-        "emoji": "🖥️",
-        "category": "Monitor",
-        "pick": "AOC Gaming Q27G3XMN (1440p Mini-LED)",
-        "price": "£293"
-      },
-      {
-        "emoji": "🎧",
-        "category": "Headset",
-        "pick": "HyperX Cloud III S Wireless",
-        "price": "£116"
-      },
-      {
-        "emoji": "⌨️",
-        "category": "Keyboard",
-        "pick": "ASUS ROG Strix Scope II 96",
-        "price": "£123"
-      },
-      {
-        "emoji": "🖱️",
-        "category": "Mouse",
-        "pick": "Lamzu Thorn 4K Wireless",
-        "price": "£92.08"
-      },
-      {
-        "emoji": "🪑",
-        "category": "Chair",
-        "pick": "EUREKA Typhon Mesh",
-        "price": "£369"
-      }
+      { "emoji": "🖥️", "category": "Monitor",  "pick": "AOC Gaming Q27G3XMN (1440p Mini-LED)",  "price": "£293"    },
+      { "emoji": "🎧", "category": "Headset",  "pick": "HyperX Cloud III S Wireless",            "price": "£116"    },
+      { "emoji": "⌨️", "category": "Keyboard", "pick": "ASUS ROG Strix Scope II 96",             "price": "£123"    },
+      { "emoji": "🖱️", "category": "Mouse",    "pick": "Lamzu Thorn 4K Wireless",                "price": "£92.08"  },
+      { "emoji": "🪑", "category": "Chair",    "pick": "EUREKA Typhon Mesh",                     "price": "£369"    }
     ],
     "summaryTotals": [
-      {
-        "label": "Total",
-        "value": "~£993"
-      }
+      { "label": "Total", "value": "~£993" }
     ],
     "sections": [
       {
@@ -564,6 +505,12 @@
     },
     "relatedGuides": [
       {
+        "href": "/guides/budget-picks-under-50/",
+        "emoji": "💷",
+        "title": "Budget Picks Under £50",
+        "desc": "The best gear at the absolute lowest prices."
+      },
+      {
         "href": "/guides/gaming-setup-500/",
         "emoji": "💰",
         "title": "£500 Setup",
@@ -596,46 +543,18 @@
     "emoji": "👑",
     "heroTitle": "£1500 Gaming Setup UK",
     "heroSubtitle": "OLED, Hall Effect, wireless everything. Updated February 2026.",
-    "intro": "£1500 is where the setup crosses from enthusiast to premium — you get OLED, Hall Effect keyboard technology, and pro-grade wireless mice. Every item here is at or near the top of its category.",
+    "breadcrumbLabel": "£1500 Gaming Setup",
     "budgetLabel": "£1500",
-    "totalLabel": "~£1,382",
+    "intro": "£1500 is where the setup crosses from enthusiast to premium — you get OLED, Hall Effect keyboard technology, and pro-grade wireless mice. Every item here is at or near the top of its category.",
     "summaryTable": [
-      {
-        "emoji": "🖥️",
-        "category": "Monitor",
-        "pick": "ASUS ROG Strix OLED XG27AQDMG (1440p 240Hz WOLED)",
-        "price": "£429"
-      },
-      {
-        "emoji": "⌨️",
-        "category": "Keyboard",
-        "pick": "SteelSeries Apex Pro TKL Gen 3",
-        "price": "£184"
-      },
-      {
-        "emoji": "🖱️",
-        "category": "Mouse",
-        "pick": "Razer Viper V3 Pro",
-        "price": "£119"
-      },
-      {
-        "emoji": "🎧",
-        "category": "Headset",
-        "pick": "SteelSeries Arctis Nova Pro Wireless",
-        "price": "£256"
-      },
-      {
-        "emoji": "🪑",
-        "category": "Chair",
-        "pick": "AndaSeat Kaiser 4",
-        "price": "£394"
-      }
+      { "emoji": "🖥️", "category": "Monitor",  "pick": "ASUS ROG Strix OLED XG27AQDMG (1440p 240Hz WOLED)", "price": "£429" },
+      { "emoji": "⌨️", "category": "Keyboard", "pick": "SteelSeries Apex Pro TKL Gen 3",                      "price": "£184" },
+      { "emoji": "🖱️", "category": "Mouse",    "pick": "Razer Viper V3 Pro",                                  "price": "£119" },
+      { "emoji": "🎧", "category": "Headset",  "pick": "SteelSeries Arctis Nova Pro Wireless",                "price": "£256" },
+      { "emoji": "🪑", "category": "Chair",    "pick": "AndaSeat Kaiser 4",                                   "price": "£394" }
     ],
     "summaryTotals": [
-      {
-        "label": "Total",
-        "value": "~£1,382"
-      }
+      { "label": "Total", "value": "~£1,382" }
     ],
     "sections": [
       {
@@ -672,7 +591,7 @@
             "badgeColor": "",
             "price": "£184",
             "priceRrp": "£209.99",
-            "priceSaving": "Save £20",
+            "priceSaving": "Save £26",
             "affiliate": "https://amzn.to/4kHUmQV",
             "desc": "Hall Effect magnetic switches with best-in-class Rapid Trigger. The competitive edge that tournament players rely on — instant key reset for strafe responsiveness.",
             "pros": [
@@ -765,6 +684,12 @@
     },
     "relatedGuides": [
       {
+        "href": "/guides/budget-picks-under-50/",
+        "emoji": "💷",
+        "title": "Budget Picks Under £50",
+        "desc": "The best gear at the absolute lowest prices."
+      },
+      {
         "href": "/guides/gaming-setup-1000/",
         "emoji": "🎮",
         "title": "£1000 Setup",
@@ -797,46 +722,18 @@
     "emoji": "💎",
     "heroTitle": "£2500 Gaming Setup UK",
     "heroSubtitle": "The endgame build. Best-in-class on every component. Updated February 2026.",
-    "intro": "This is the build for people who are done upgrading. Every item here is at or near the best available in its category. This is not for casual gamers — this is for people who sit at their desk 6-10 hours a day and want to stop thinking about their setup.",
+    "breadcrumbLabel": "£2500 Endgame Build",
     "budgetLabel": "£2500",
-    "totalLabel": "~£2,512",
+    "intro": "This is the build for people who are done upgrading. Every item here is at or near the best available in its category. This is not for casual gamers — this is for people who sit at their desk 6-10 hours a day and want to stop thinking about their setup.",
     "summaryTable": [
-      {
-        "emoji": "🖥️",
-        "category": "Monitor",
-        "pick": "ASUS ROG Swift PG27AQDP (1440p 480Hz OLED)",
-        "price": "£899.00"
-      },
-      {
-        "emoji": "⌨️",
-        "category": "Keyboard",
-        "pick": "Wooting 60HE+",
-        "price": "£174.99"
-      },
-      {
-        "emoji": "🖱️",
-        "category": "Mouse",
-        "pick": "Logitech G Pro X Superlight 2",
-        "price": "£139.99"
-      },
-      {
-        "emoji": "🎧",
-        "category": "Headset / Audio",
-        "pick": "Sennheiser HD 560S + Focusrite Scarlett Solo",
-        "price": "£199.00"
-      },
-      {
-        "emoji": "🪑",
-        "category": "Chair",
-        "pick": "Herman Miller Aeron (Remastered)",
-        "price": "£1,099.00"
-      }
+      { "emoji": "🖥️", "category": "Monitor",        "pick": "ASUS ROG Swift PG27AQDP (1440p 480Hz OLED)",     "price": "£899.00"   },
+      { "emoji": "⌨️", "category": "Keyboard",       "pick": "Wooting 60HE+",                                  "price": "£174.99"   },
+      { "emoji": "🖱️", "category": "Mouse",          "pick": "Logitech G Pro X Superlight 2",                  "price": "£139.99"   },
+      { "emoji": "🎧", "category": "Headset / Audio","pick": "Sennheiser HD 560S + Focusrite Scarlett Solo",    "price": "£199.00"   },
+      { "emoji": "🪑", "category": "Chair",          "pick": "Herman Miller Aeron (Remastered)",                "price": "£1,099.00" }
     ],
     "summaryTotals": [
-      {
-        "label": "Total",
-        "value": "~£2,512"
-      }
+      { "label": "Total", "value": "~£2,512" }
     ],
     "sections": [
       {
@@ -966,6 +863,12 @@
       "body": "Not for everyone — and that is the point. If you game for 1-2 hours a week, the £500 build is the correct choice. This build is for people who spend significant time at their desk daily — working, streaming, or gaming seriously — and want to stop thinking about their setup.\n\nEvery item here is genuinely the best available in its category. You will not meaningfully upgrade any of these components for 5+ years.\n\nOn the monitor: 480Hz vs 240Hz OLED is justified specifically if you play competitive FPS at a high level and have the GPU to push 400+ FPS. For everything else, the £1500 build 240Hz OLED is just as good.\n\nOn the chair: the Herman Miller Aeron amortised over 10 years is £110/year for no back pain. If you sit at a desk 6+ hours a day, that is rational spending."
     },
     "relatedGuides": [
+      {
+        "href": "/guides/budget-picks-under-50/",
+        "emoji": "💷",
+        "title": "Budget Picks Under £50",
+        "desc": "The best gear at the absolute lowest prices."
+      },
       {
         "href": "/guides/gaming-setup-500/",
         "emoji": "💰",

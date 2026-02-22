@@ -2,15 +2,27 @@
   {
     "id": "mice-razer-viper-v3-pro",
     "category": "mice",
+    "brand": "Razer",
     "badge": "THE PRO STANDARD",
     "name": "Razer Viper V3 Pro",
     "shortName": "Viper V3 Pro",
-    "specs": ["54g Wireless", "35K Sensor", "8K Polling"],
+    "specs": [
+      "54g Wireless",
+      "35K Sensor",
+      "8K Polling"
+    ],
     "desc": "The 2026 Pro Standard. Trusted by the Valorant elite, the Viper V3 Pro weighs in at a surgical 54g. Outfitted with the Focus Pro 35K sensor and native 8K polling, it translates your intent into impact with near-zero latency.",
-    "pros": ["Gravity-defying 54g build—heavyweight tech in a featherweight frame.", "Bespoke performance: Native 8K polling dongle included right in the box.", "The new 'Pro Standard'—trusted by the top 1% of the 2026 VCT circuit."],
-    "cons": ["Commanding silhouette: Smaller hands may find the refined hump a bit too 'filling'.", "Right-hand biased: Symmetrical shape, but side buttons cater strictly to righties."],
+    "pros": [
+      "Gravity-defying 54g build — heavyweight tech in a featherweight frame.",
+      "Bespoke performance: Native 8K polling dongle included right in the box.",
+      "The new 'Pro Standard' — trusted by the top 1% of the 2026 VCT circuit."
+    ],
+    "cons": [
+      "Commanding silhouette: Smaller hands may find the refined hump a bit too 'filling'.",
+      "Right-hand biased: Symmetrical shape, but side buttons cater strictly to righties."
+    ],
     "price": "£119",
-    "priceRaw": 119.00,
+    "priceRaw": 119.0,
     "msrp": "£159.99",
     "savings": "26%",
     "affiliate": "https://amzn.to/4c1StN0",
@@ -18,20 +30,30 @@
     "emoji": "🖱️",
     "seam": "crimson",
     "loadoutCount": 4,
-    "tags": ["fps", "pro", "wireless", "lightweight"],
+    "tags": [
+      "fps",
+      "pro",
+      "wireless",
+      "lightweight"
+    ],
     "inStock": true,
     "nextDay": true
   },
   {
     "id": "mice-endgame-gear-op1w",
     "category": "mice",
+    "brand": "Endgame Gear",
     "badge": "THE CLAW SPECIALIST",
     "name": "Endgame Gear OP1w 4K V2",
     "shortName": "OP1w 4K V2",
-    "specs": ["59g Wireless", "PAW3950 Custom Sensor", "4K Polling"],
-    "desc": "The 'Claw King' refined for 2026. German-engineered with a focus on surgical precision, the OP1w 4K V2 features a custom PAW3950 sensor and tactile Kailh GX mechanical switches. It’s a narrow, nimble masterpiece built for pure performance over flashy aesthetics.",
+    "specs": [
+      "59g Wireless",
+      "PAW3950 Custom Sensor",
+      "4K Polling"
+    ],
+    "desc": "The 'Claw King' refined for 2026. German-engineered with a focus on surgical precision, the OP1w 4K V2 features a custom PAW3950 sensor and tactile Kailh GX mechanical switches. It's a narrow, nimble masterpiece built for pure performance over flashy aesthetics.",
     "pros": [
-      "Unrivaled click feel—pre-sorted Kailh GX mechanical switches for peak tactility.",
+      "Unrivaled click feel — pre-sorted Kailh GX mechanical switches for peak tactility.",
       "Bespoke customisation: Swappable main switches and internal 'GX Speed Mode'.",
       "Elite tracking: Custom 30K PAW3950 sensor with 750 IPS for flawless flicks."
     ],
@@ -46,18 +68,28 @@
     "emoji": "🖱️",
     "seam": "crimson",
     "loadoutCount": 2,
-    "tags": ["fps", "claw-grip", "wireless", "competitive"],
+    "tags": [
+      "fps",
+      "claw-grip",
+      "wireless",
+      "competitive"
+    ],
     "inStock": true,
     "nextDay": false
   },
   {
     "id": "mice-razer-deathadder-v3-pro",
     "category": "mice",
+    "brand": "Razer",
     "badge": "THE ERGO GOAT",
     "name": "Razer DeathAdder V3 Pro",
     "shortName": "DeathAdder V3 Pro",
-    "specs": ["63g Ultra-light", "Focus Pro 30K Sensor", "8K Polling Ready"],
-    "desc": "The icon, perfected for the 2026 circuit. The DeathAdder V3 Pro takes the most successful ergonomic shape in history and strips it down to a 63g competitive frame. It’s the ‘Executive Suite’ of gaming—natural, supportive, and relentlessly fast.",
+    "specs": [
+      "63g Ultra-light",
+      "Focus Pro 30K Sensor",
+      "8K Polling Ready"
+    ],
+    "desc": "The icon, perfected for the 2026 circuit. The DeathAdder V3 Pro takes the most successful ergonomic shape in history and strips it down to a 63g competitive frame. It's the 'Executive Suite' of gaming — natural, supportive, and relentlessly fast.",
     "pros": [
       "World-class ergonomics: A refined, tilted shell designed to eliminate wrist fatigue.",
       "Surgical precision: Focus Pro 30K sensor delivers 99.8% resolution accuracy.",
@@ -76,17 +108,27 @@
     "emoji": "🖱️",
     "seam": "crimson",
     "loadoutCount": 5,
-    "tags": ["ergonomic", "wireless", "fps", "pro"],
+    "tags": [
+      "ergonomic",
+      "wireless",
+      "fps",
+      "pro"
+    ],
     "inStock": true,
     "nextDay": true
   },
   {
     "id": "mice-logitech-g502x-plus",
     "category": "mice",
+    "brand": "Logitech",
     "badge": "THE DO-IT-ALL LEGEND",
     "name": "Logitech G502 X Plus",
     "shortName": "G502 X Plus",
-    "specs": ["106g Wireless", "HERO 25K Sensor", "13 Programmable Controls"],
+    "specs": [
+      "106g Wireless",
+      "HERO 25K Sensor",
+      "13 Programmable Controls"
+    ],
     "desc": "The 'Heavyweight Champion' of versatility. Redesigned with Lightforce hybrid switches and the iconic dual-mode infinite scroll wheel, the G502 X Plus is the ultimate command center for those who refuse to choose between elite gaming and total productivity.",
     "pros": [
       "Maximum utility: 13 programmable buttons including a reversible/removable DPI shift.",
@@ -94,7 +136,7 @@
       "Endless endurance: Up to 130 hours of battery life (lighting off) and Powerplay wireless charging support."
     ],
     "cons": [
-      "Weight class: At 106g, it’s significantly more 'planted' than competitive FPS-specific mice.",
+      "Weight class: At 106g, it's significantly more 'planted' than competitive FPS-specific mice.",
       "Bold aesthetic: The 8-zone RGB and aggressive shape might be too loud for minimalist setups."
     ],
     "price": "£94",
@@ -106,18 +148,29 @@
     "emoji": "🖱️",
     "seam": "crimson",
     "loadoutCount": 2,
-    "tags": ["all-rounder", "mmo", "wireless", "premium", "creator"],
+    "tags": [
+      "all-rounder",
+      "mmo",
+      "wireless",
+      "premium",
+      "creator"
+    ],
     "inStock": true,
     "nextDay": true
   },
   {
     "id": "mice-atk-vxe-mad-r-plus",
     "category": "mice",
+    "brand": "ATK",
     "badge": "BUDGET BEAST",
     "name": "ATK VXE MAD R+ (White)",
     "shortName": "VXE MAD R+",
-    "specs": ["42g Ultra-light", "PAW3395/3950 Sensor", "8K Polling"],
-    "desc": "The 'Viper Killer' evolved. The MAD R+ delivers flagship performance with a dual-mode 8K polling rate and an upgraded 500mAh battery. It’s a 42g featherweight powerhouse that offers tournament-grade specs without the 'big brand' tax.",
+    "specs": [
+      "42g Ultra-light",
+      "PAW3395/3950 Sensor",
+      "8K Polling"
+    ],
+    "desc": "The 'Viper Killer' evolved. The MAD R+ delivers flagship performance with a dual-mode 8K polling rate and an upgraded 500mAh battery. It's a 42g featherweight powerhouse that offers tournament-grade specs without the 'big brand' tax.",
     "pros": [
       "Unbeatable value: Flagship sensor and 8K polling for under £50.",
       "Upgraded endurance: 500mAh battery provides significantly more playtime than the standard R model.",
@@ -134,18 +187,29 @@
     "emoji": "🖱️",
     "seam": "crimson",
     "loadoutCount": 2,
-    "tags": ["budget", "fps", "lightweight", "value", "competitive"],
+    "tags": [
+      "budget",
+      "fps",
+      "lightweight",
+      "value",
+      "competitive"
+    ],
     "inStock": true,
     "nextDay": true
   },
   {
     "id": "keyboards-steelseries-apex-pro-tkl-gen3",
     "category": "keyboards",
+    "brand": "SteelSeries",
     "badge": "SPEED KING (HE)",
     "name": "SteelSeries Apex Pro TKL Gen 3",
     "shortName": "Apex Pro TKL",
-    "specs": ["OmniPoint 3.0 (HE)", "Rapid Trigger & Rapid Tap", "OLED Smart Display"],
-    "desc": "The apex of competitive hardware. Re-engineered with OmniPoint 3.0 HyperMagnetic switches, the Gen 3 delivers 20x faster actuation and the brand-new 'Protection Mode' to eliminate misclicks. It’s not just a keyboard; it’s a tournament-grade unfair advantage.",
+    "specs": [
+      "OmniPoint 3.0 (HE)",
+      "Rapid Trigger & Rapid Tap",
+      "OLED Smart Display"
+    ],
+    "desc": "The apex of competitive hardware. Re-engineered with OmniPoint 3.0 HyperMagnetic switches, the Gen 3 delivers 20x faster actuation and the brand-new 'Protection Mode' to eliminate misclicks. It's not just a keyboard; it's a tournament-grade unfair advantage.",
     "pros": [
       "Surgical responsiveness: OmniPoint 3.0 switches with 0.1mm to 4.0mm adjustable actuation.",
       "Pro-exclusive features: Includes 'Protection Mode' to lower sensitivity on surrounding keys and 'Rapid Tap' for elite counter-strafing.",
@@ -164,17 +228,27 @@
     "emoji": "⌨️",
     "seam": "cobalt",
     "loadoutCount": 3,
-    "tags": ["fps", "competitive", "hall-effect", "tkl"],
+    "tags": [
+      "fps",
+      "competitive",
+      "hall-effect",
+      "tkl"
+    ],
     "inStock": true,
     "nextDay": true
   },
   {
     "id": "keyboards-asus-rog-strix-scope-ii-96",
     "category": "keyboards",
+    "brand": "ASUS",
     "badge": "BEST ALL-ROUNDER",
     "name": "ASUS ROG Strix Scope II 96 Wireless",
     "shortName": "Scope II 96",
-    "specs": ["96% Efficiency Layout", "ROG NX Snow Switches", "1500hr Battery"],
+    "specs": [
+      "96% Efficiency Layout",
+      "ROG NX Snow Switches",
+      "1500hr Battery"
+    ],
     "desc": "The ultimate 'Swiss Army Knife' of keyboards. The Scope II 96 packs full-size utility into a TKL-sized footprint, featuring hot-swappable NX Snow switches and an industry-leading 1,500-hour battery life. It's built like a tank and sounds like a dream.",
     "pros": [
       "Elite battery life: Up to 1,500 hours of playtime with lighting off via SpeedNova wireless.",
@@ -194,18 +268,28 @@
     "emoji": "⌨️",
     "seam": "cobalt",
     "loadoutCount": 3,
-    "tags": ["wireless", "all-rounder", "silent", "productivity"],
+    "tags": [
+      "wireless",
+      "all-rounder",
+      "silent",
+      "productivity"
+    ],
     "inStock": true,
     "nextDay": true
   },
   {
     "id": "keyboards-aula-f99-wireless",
     "category": "keyboards",
+    "brand": "AULA",
     "badge": "CREAMY ACOUSTICS",
     "name": "Aula F99 Wireless",
     "shortName": "Aula F99",
-    "specs": ["Gasket Mount", "8000mAh Battery", "96% Layout"],
-    "desc": "The 'Sound King' of 2026. Designed with a gasket-mount structure and five layers of sound-absorbing foam, the F99 delivers a deep, 'creamy' typing experience that rivals keyboards triple its price. It’s the enthusiast's choice for those on a budget.",
+    "specs": [
+      "Gasket Mount",
+      "8000mAh Battery",
+      "96% Layout"
+    ],
+    "desc": "The 'Sound King' of 2026. Designed with a gasket-mount structure and five layers of sound-absorbing foam, the F99 delivers a deep, 'creamy' typing experience that rivals keyboards triple its price. It's the enthusiast's choice for those on a budget.",
     "pros": [
       "Acoustic perfection: Five-layer dampening and pre-lubed switches provide a world-class sound profile.",
       "Massive capacity: A dual 4000mAh (8000mAh total) battery for weeks of wireless use.",
@@ -222,17 +306,27 @@
     "emoji": "⌨️",
     "seam": "cobalt",
     "loadoutCount": 2,
-    "tags": ["budget", "gasket", "wireless", "thocky"],
+    "tags": [
+      "budget",
+      "gasket",
+      "wireless",
+      "thocky"
+    ],
     "inStock": true,
     "nextDay": false
   },
   {
     "id": "keyboards-keychron-q1-max",
     "category": "keyboards",
+    "brand": "Keychron",
     "badge": "THE PREMIUM TANK",
     "name": "Keychron Q1 Max Wireless",
     "shortName": "Q1 Max",
-    "specs": ["Full CNC Aluminium", "Gateron Jupiter Banana", "2.4GHz/BT Wireless"],
+    "specs": [
+      "Full CNC Aluminium",
+      "Gateron Jupiter Banana",
+      "2.4GHz/BT Wireless"
+    ],
     "desc": "The 'Endgame' 75% layout. Crafted from a solid block of 6063 aluminum, the Q1 Max adds 2.4GHz wireless and a double-gasket design to the world's most popular enthusiast board. It doesn't just sit on your desk; it anchors it.",
     "pros": [
       "Indestructible build: A heavy, precision-machined aluminum chassis that eliminates all rattle.",
@@ -250,18 +344,28 @@
     "emoji": "⌨️",
     "seam": "cobalt",
     "loadoutCount": 2,
-    "tags": ["premium", "aluminium", "wireless", "75-percent"],
+    "tags": [
+      "premium",
+      "aluminium",
+      "wireless",
+      "75-percent"
+    ],
     "inStock": true,
     "nextDay": false
   },
   {
     "id": "keyboards-keychron-c3-pro",
     "category": "keyboards",
+    "brand": "Keychron",
     "badge": "BUDGET CHAMPION",
     "name": "Keychron C3 Pro",
     "shortName": "C3 Pro",
-    "specs": ["Gasket Mount Design", "QMK/VIA Support", "Double-Shot ABS"],
-    "desc": "The ultimate gateway to mechanical keyboards. For under £40, the C3 Pro offers a premium gasket-mount structure and full QMK/VIA programmability—features usually reserved for boards triple its price.",
+    "specs": [
+      "Gasket Mount Design",
+      "QMK/VIA Support",
+      "Double-Shot ABS"
+    ],
+    "desc": "The ultimate gateway to mechanical keyboards. For under £40, the C3 Pro offers a premium gasket-mount structure and full QMK/VIA programmability — features usually reserved for boards triple its price.",
     "pros": [
       "Unbeatable value: The cheapest way to get a genuine gasket-mount typing experience.",
       "Fully programmable: Use QMK/VIA to remap every single key and layer via your browser.",
@@ -280,22 +384,38 @@
     "emoji": "⌨️",
     "seam": "cobalt",
     "loadoutCount": 3,
-    "tags": ["budget", "gasket", "value", "tkl"],
+    "tags": [
+      "budget",
+      "gasket",
+      "value",
+      "tkl"
+    ],
     "inStock": true,
     "nextDay": true
   },
   {
     "id": "headsets-sennheiser-hd560s",
     "category": "headsets",
+    "brand": "Sennheiser",
     "badge": "OVERALL BEST",
     "name": "Sennheiser HD 560S",
     "shortName": "HD 560S",
-    "specs": ["Open-back", "120Ω Impedance", "Analytical Sound"],
+    "specs": [
+      "Open-back",
+      "120Ω Impedance",
+      "Analytical Sound"
+    ],
     "desc": "The 'Wallhack' for your ears. With surgical directional audio and E.A.R. angled drivers, it offers a neutral soundstage that makes tracking footsteps feel like cheating.",
-    "pros": ["Best-in-class spatial awareness", "Ultra-lightweight velour comfort"],
-    "cons": ["No built-in mic", "Leaks sound (open-back)"],
+    "pros": [
+      "Best-in-class spatial awareness",
+      "Ultra-lightweight velour comfort"
+    ],
+    "cons": [
+      "No built-in mic",
+      "Leaks sound (open-back)"
+    ],
     "price": "£99",
-    "priceRaw": 99.00,
+    "priceRaw": 99.0,
     "msrp": "£169.00",
     "savings": "41%",
     "affiliate": "https://amzn.to/4tHtncv",
@@ -303,20 +423,36 @@
     "emoji": "🎧",
     "seam": "slate",
     "loadoutCount": 3,
-    "tags": ["audiophile", "open-back", "fps", "competitive"],
+    "tags": [
+      "audiophile",
+      "open-back",
+      "fps",
+      "competitive"
+    ],
     "inStock": true,
     "nextDay": true
   },
   {
     "id": "headsets-steelseries-arctis-nova-pro",
     "category": "headsets",
+    "brand": "SteelSeries",
     "badge": "PREMIUM WIRELESS",
     "name": "SteelSeries Arctis Nova Pro Wireless",
     "shortName": "Nova Pro",
-    "specs": ["Hot-swap Battery", "Multi-System Hub", "ANC"],
+    "specs": [
+      "Hot-swap Battery",
+      "Multi-System Hub",
+      "ANC"
+    ],
     "desc": "The ultimate command center. Features an 'Infinity Power' system with two swappable batteries and a base station that swaps between PC and Console instantly.",
-    "pros": ["Never runs out of battery", "Simultaneous 2.4GHz & Bluetooth"],
-    "cons": ["Very high price point", "Internal ANC sensor can touch ears"],
+    "pros": [
+      "Never runs out of battery",
+      "Simultaneous 2.4GHz & Bluetooth"
+    ],
+    "cons": [
+      "Very high price point",
+      "Internal ANC sensor can touch ears"
+    ],
     "price": "£256",
     "priceRaw": 256.21,
     "msrp": "£329.99",
@@ -326,20 +462,36 @@
     "emoji": "🎧",
     "seam": "slate",
     "loadoutCount": 2,
-    "tags": ["premium", "wireless", "anc", "multi-platform"],
+    "tags": [
+      "premium",
+      "wireless",
+      "anc",
+      "multi-platform"
+    ],
     "inStock": true,
     "nextDay": false
   },
   {
     "id": "headsets-hyperx-cloud-iii-s-wireless",
     "category": "headsets",
+    "brand": "HyperX",
     "badge": "BEST COMFORT",
-    "name": "HyperX Cloud III Wireless",
-    "shortName": "Cloud III",
-    "specs": ["120hr Battery", "53mm Drivers", "DTS:X Spatial"],
+    "name": "HyperX Cloud III S Wireless",
+    "shortName": "Cloud III S",
+    "specs": [
+      "120hr Battery",
+      "53mm Drivers",
+      "DTS:X Spatial"
+    ],
     "desc": "Built for the marathon. Features a jaw-dropping 120-hour battery life and HyperX's legendary signature memory foam for a 'cloud-like' fit during long grinds.",
-    "pros": ["Industry-leading battery life", "Extremely durable metal frame"],
-    "cons": ["Passive noise isolation only", "Sound profile is gaming-flat"],
+    "pros": [
+      "Industry-leading battery life",
+      "Extremely durable metal frame"
+    ],
+    "cons": [
+      "Passive noise isolation only",
+      "Sound profile is gaming-flat"
+    ],
     "price": "£116",
     "priceRaw": 116.44,
     "msrp": "£129.99",
@@ -349,20 +501,36 @@
     "emoji": "🎧",
     "seam": "slate",
     "loadoutCount": 3,
-    "tags": ["comfort", "wireless", "marathon", "durable"],
+    "tags": [
+      "comfort",
+      "wireless",
+      "marathon",
+      "durable"
+    ],
     "inStock": true,
     "nextDay": true
   },
   {
     "id": "headsets-bose-quietcomfort-ultra-gen2",
     "category": "headsets",
+    "brand": "Bose",
     "badge": "BEST ANC",
-    "name": "Bose QuietComfort Ultra (Gen 2)",
+    "name": "Bose QuietComfort Ultra Gen 2",
     "shortName": "QC Ultra Gen 2",
-    "specs": ["Lossless USB-C Audio", "World-Class ANC", "Spatial Audio"],
+    "specs": [
+      "Lossless USB-C Audio",
+      "World-Class ANC",
+      "Spatial Audio"
+    ],
     "desc": "Absolute silence. The Gen 2 update adds wired lossless USB-C support and 'Cinema Mode' spatial audio, making it the perfect hybrid for gaming and travel.",
-    "pros": ["Unmatched noise cancellation", "New lossless wired support"],
-    "cons": ["Most expensive in the lineup", "Battery required for wired use"],
+    "pros": [
+      "Unmatched noise cancellation",
+      "New lossless wired support"
+    ],
+    "cons": [
+      "Most expensive in the lineup",
+      "Battery required for wired use"
+    ],
     "price": "£399",
     "priceRaw": 399.95,
     "msrp": "£449.95",
@@ -372,20 +540,36 @@
     "emoji": "🎧",
     "seam": "slate",
     "loadoutCount": 2,
-    "tags": ["premium", "anc", "travel", "lossless"],
+    "tags": [
+      "premium",
+      "anc",
+      "travel",
+      "lossless"
+    ],
     "inStock": true,
     "nextDay": true
   },
   {
     "id": "headsets-razer-blackshark-v2-x",
     "category": "headsets",
+    "brand": "Razer",
     "badge": "BUDGET PICK",
     "name": "Razer BlackShark V2 X",
     "shortName": "BlackShark V2 X",
-    "specs": ["50mm TriForce Drivers", "Cardioid Mic", "240g Build"],
+    "specs": [
+      "50mm TriForce Drivers",
+      "Cardioid Mic",
+      "240g Build"
+    ],
     "desc": "The budget king. Replaces the old A10 by offering superior 50mm drivers and advanced passive noise cancellation in a featherweight, comfortable chassis.",
-    "pros": ["Elite mic clarity for the price", "Excellent sound for FPS gaming"],
-    "cons": ["Fixed, non-detachable cable", "Plastic-heavy construction"],
+    "pros": [
+      "Elite mic clarity for the price",
+      "Excellent sound for FPS gaming"
+    ],
+    "cons": [
+      "Fixed, non-detachable cable",
+      "Plastic-heavy construction"
+    ],
     "price": "£35",
     "priceRaw": 35.54,
     "msrp": "£39.99",
@@ -395,17 +579,27 @@
     "emoji": "🎧",
     "seam": "slate",
     "loadoutCount": 2,
-    "tags": ["budget", "wired", "competitive", "value"],
+    "tags": [
+      "budget",
+      "wired",
+      "competitive",
+      "value"
+    ],
     "inStock": true,
     "nextDay": true
   },
   {
     "id": "monitors-asus-rog-xg27aqdmg",
     "category": "monitors",
+    "brand": "ASUS",
     "badge": "BEST OVERALL (OLED)",
     "name": "ASUS ROG Strix OLED XG27AQDMG",
     "shortName": "ROG XG27 OLED",
-    "specs": ["27\" 1440p", "Glossy WOLED 240Hz", "0.03ms (GtG)"],
+    "specs": [
+      "27\" 1440p",
+      "Glossy WOLED 240Hz",
+      "0.03ms (GtG)"
+    ],
     "desc": "The first of its kind: a 27\" glossy WOLED that provides ink-black levels and vibrant colors without the typical matte grain. Features a custom heatsink and ASUS OLED Care to effectively neutralize burn-in risk.",
     "pros": [
       "Stunning 3rd Gen WOLED panel with extreme 1300 nits peak brightness.",
@@ -417,23 +611,33 @@
       "Lacks HDMI 2.1 (uses HDMI 2.0), limiting consoles to 1440p/120Hz."
     ],
     "price": "£429",
-    "priceRaw": 429.00,
+    "priceRaw": 429.0,
     "affiliate": "https://amzn.to/4aX25Y9",
     "url": "/monitors/",
     "emoji": "🖥️",
     "seam": "amber",
     "loadoutCount": 3,
-    "tags": ["oled", "glossy", "1440p", "competitive"],
+    "tags": [
+      "oled",
+      "glossy",
+      "1440p",
+      "competitive"
+    ],
     "inStock": true,
     "nextDay": false
   },
   {
     "id": "monitors-aoc-24g4xe",
     "category": "monitors",
+    "brand": "AOC",
     "badge": "BEST BUDGET",
     "name": "AOC Gaming 24G4XE",
     "shortName": "AOC 24G4XE",
-    "specs": ["24\" 1080p", "Fast IPS 180Hz", "0.5ms (MPRT)"],
+    "specs": [
+      "24\" 1080p",
+      "Fast IPS 180Hz",
+      "0.5ms (MPRT)"
+    ],
     "desc": "The absolute entry-level king. It shatters the 'budget' stigma by offering a color-accurate Fast IPS panel at 180Hz with G-Sync compatibility for a seamless, tear-free experience.",
     "pros": [
       "Fast IPS technology ensures minimal motion blur for high-speed shooters.",
@@ -451,17 +655,27 @@
     "emoji": "🖥️",
     "seam": "amber",
     "loadoutCount": 3,
-    "tags": ["budget", "1080p", "fast-ips", "value"],
+    "tags": [
+      "budget",
+      "1080p",
+      "fast-ips",
+      "value"
+    ],
     "inStock": true,
     "nextDay": true
   },
   {
     "id": "monitors-samsung-odyssey-g80sd",
     "category": "monitors",
+    "brand": "Samsung",
     "badge": "BEST PREMIUM 4K",
-    "name": "Samsung 32\" Odyssey G80SD",
+    "name": "Samsung Odyssey G80SD",
     "shortName": "Odyssey G80SD",
-    "specs": ["32\" 4K", "QD-OLED 240Hz", "Matte Anti-Glare"],
+    "specs": [
+      "32\" 4K",
+      "QD-OLED 240Hz",
+      "Matte Anti-Glare"
+    ],
     "desc": "A hybrid powerhouse. This 32\" QD-OLED masterpiece features a matte finish to kill reflections and includes TizenOS Smart TV apps, allowing it to function as a standalone streaming hub.",
     "pros": [
       "QD-OLED tech delivers the widest color gamut and pure whites in the 4K space.",
@@ -473,23 +687,33 @@
       "TizenOS menu system can feel bloated for users who just want a monitor."
     ],
     "price": "£740",
-    "priceRaw": 740.30,
+    "priceRaw": 740.3,
     "affiliate": "https://amzn.to/4cy1qh1",
     "url": "/monitors/",
     "emoji": "🖥️",
     "seam": "amber",
     "loadoutCount": 2,
-    "tags": ["premium", "4k", "qd-oled", "smart-tv"],
+    "tags": [
+      "premium",
+      "4k",
+      "qd-oled",
+      "smart-tv"
+    ],
     "inStock": true,
     "nextDay": false
   },
   {
     "id": "monitors-aoc-q27g3xmn",
     "category": "monitors",
+    "brand": "AOC",
     "badge": "BEST HDR VALUE",
     "name": "AOC Gaming Q27G3XMN",
     "shortName": "AOC Q27G3XMN",
-    "specs": ["27\" 1440p", "Mini-LED 180Hz", "HDR1000"],
+    "specs": [
+      "27\" 1440p",
+      "Mini-LED 180Hz",
+      "HDR1000"
+    ],
     "desc": "The only monitor under £300 that delivers a 'true' HDR experience. With 336 local dimming zones and a peak brightness of 1000 nits, it provides the punchy contrast IPS panels can't touch.",
     "pros": [
       "Stunning HDR1000 performance that rivals panels twice its price.",
@@ -507,17 +731,27 @@
     "emoji": "🖥️",
     "seam": "amber",
     "loadoutCount": 2,
-    "tags": ["hdr", "1440p", "mini-led", "value"],
+    "tags": [
+      "hdr",
+      "1440p",
+      "mini-led",
+      "value"
+    ],
     "inStock": true,
-    "nextDay": true
+    "nextDay": false
   },
   {
     "id": "monitors-msi-mag-274updf",
     "category": "monitors",
+    "brand": "MSI",
     "badge": "BEST ART & PLAY",
     "name": "MSI MAG 274UPDF E16M",
     "shortName": "MSI MAG 274UPDF",
-    "specs": ["27\" 4K/1080p", "Mini-LED Dual Mode", "HDR1000"],
+    "specs": [
+      "27\" 4K/1080p",
+      "Mini-LED Dual Mode",
+      "HDR1000"
+    ],
     "desc": "A 'Shape-Shifter' monitor. Use the 4K 160Hz mode for creative work and immersive RPGs, or flip to 'Dual-Mode' 1080p at a blistering 320Hz for professional-grade esports performance.",
     "pros": [
       "AI Dual Mode: High resolution for work, high refresh for competition.",
@@ -525,7 +759,7 @@
       "Rapid IPS panel ensures a 0.5ms response time with zero ghosting."
     ],
     "cons": [
-      "USB-C is only 15W Power Delivery—not enough to charge most laptops.",
+      "USB-C is only 15W Power Delivery — not enough to charge most laptops.",
       "HDR1000 on IPS can still show minor blooming around small bright objects."
     ],
     "price": "£398",
@@ -535,17 +769,27 @@
     "emoji": "🖥️",
     "seam": "amber",
     "loadoutCount": 2,
-    "tags": ["dual-mode", "4k", "mini-led", "esports"],
+    "tags": [
+      "dual-mode",
+      "4k",
+      "mini-led",
+      "esports"
+    ],
     "inStock": true,
     "nextDay": false
   },
   {
     "id": "chairs-andaseat-kaiser-4",
     "category": "chairs",
+    "brand": "AndaSeat",
     "badge": "BEST OVERALL",
     "name": "AndaSeat Kaiser 4",
     "shortName": "Kaiser 4",
-    "specs": ["6D Armrests", "Pop-out Lumbar", "Magnetic Headrest"],
+    "specs": [
+      "6D Armrests",
+      "Pop-out Lumbar",
+      "Magnetic Headrest"
+    ],
     "desc": "The new king of adjustability. The Kaiser 4 introduces industry-first 6D armrests that tilt and rotate for mobile/handheld gaming, alongside a 4-level 'pop-out' gas-actuated lumbar system that adapts to your spine's natural curve.",
     "pros": [
       "Revolutionary 6D armrests: Perfect for supporting your arms while using a phone or Steam Deck.",
@@ -563,17 +807,27 @@
     "emoji": "🪑",
     "seam": "jade",
     "loadoutCount": 3,
-    "tags": ["premium", "6d-arms", "linen-fabric", "heavy-duty"],
+    "tags": [
+      "premium",
+      "6d-arms",
+      "linen-fabric",
+      "heavy-duty"
+    ],
     "inStock": true,
     "nextDay": false
   },
   {
     "id": "chairs-corsair-tc100-relaxed",
     "category": "chairs",
+    "brand": "Corsair",
     "badge": "BEST BUDGET",
     "name": "Corsair TC100 Relaxed",
     "shortName": "TC100 Relaxed",
-    "specs": ["Wider Seat Base", "Breathable Fabric", "160° Recline"],
+    "specs": [
+      "Wider Seat Base",
+      "Breathable Fabric",
+      "160° Recline"
+    ],
     "desc": "Designed for those who find standard racing chairs too restrictive. The 'Relaxed' series features a wider 375mm seat and subtle bolstering, allowing you to sit cross-legged or lean back in comfort without the 'bucket seat' squeeze.",
     "pros": [
       "Roomy design: Broad seat base is much more comfortable for larger frames.",
@@ -593,17 +847,27 @@
     "emoji": "🪑",
     "seam": "jade",
     "loadoutCount": 2,
-    "tags": ["budget", "relaxed-fit", "fabric", "value"],
+    "tags": [
+      "budget",
+      "relaxed-fit",
+      "fabric",
+      "value"
+    ],
     "inStock": true,
     "nextDay": true
   },
   {
     "id": "chairs-eureka-typhon",
     "category": "chairs",
+    "brand": "Eureka",
     "badge": "BEST MESH",
     "name": "EUREKA Typhon Gaming Chair",
     "shortName": "Typhon Mesh",
-    "specs": ["Self-Adaptive Lumbar", "CloudSilk Mesh", "G-Force Equalizer"],
+    "specs": [
+      "Self-Adaptive Lumbar",
+      "CloudSilk Mesh",
+      "G-Force Equalizer"
+    ],
     "desc": "The 'anti-heat' solution. Using a full-body CloudSilk mesh, the Typhon keeps you cool during 12-hour sessions while the 'G-Force Equalizer' seat base automatically distributes your weight to prevent pressure points.",
     "pros": [
       "Zero heat trap: Full mesh seat and backrest provide maximum airflow.",
@@ -621,17 +885,27 @@
     "emoji": "🪑",
     "seam": "jade",
     "loadoutCount": 2,
-    "tags": ["mesh", "breathable", "ergonomic", "modern"],
+    "tags": [
+      "mesh",
+      "breathable",
+      "ergonomic",
+      "modern"
+    ],
     "inStock": true,
     "nextDay": false
   },
   {
     "id": "chairs-sihoo-doro-c300",
     "category": "chairs",
+    "brand": "Sihoo",
     "badge": "BEST FOR YOUR BACK",
     "name": "Sihoo Doro C300",
     "shortName": "Doro C300",
-    "specs": ["Domino Lumbar", "3D Headrest", "Waterfall Seat"],
+    "specs": [
+      "Domino Lumbar",
+      "3D Headrest",
+      "Waterfall Seat"
+    ],
     "desc": "A medical-grade approach to gaming. The Doro C300 features the 'Domino' dynamic lumbar system that maintains contact with your lower back at all times, even when reclining. It is a posture-correcting powerhouse for serious desk users.",
     "pros": [
       "Superior lumbar tech: The support panel moves vertically and horizontally with your spine.",
@@ -651,20 +925,30 @@
     "emoji": "🪑",
     "seam": "jade",
     "loadoutCount": 3,
-    "tags": ["ergonomic", "back-health", "mesh", "award-winning"],
+    "tags": [
+      "ergonomic",
+      "back-health",
+      "mesh",
+      "award-winning"
+    ],
     "inStock": true,
     "nextDay": false
   },
   {
     "id": "chairs-noblechairs-hero",
     "category": "chairs",
+    "brand": "Noblechairs",
     "badge": "MOST COMFORTABLE",
-    "name": "Noblechairs Hero",
-    "shortName": "Noblechairs Hero",
-    "specs": ["Integrated Lumbar", "Steel Frame", "Cold-Cure Foam"],
+    "name": "noblechairs HERO",
+    "shortName": "noblechairs HERO",
+    "specs": [
+      "Integrated Lumbar",
+      "Steel Frame",
+      "Cold-Cure Foam"
+    ],
     "desc": "Designed in collaboration with esports professionals. The HERO is a sturdy, wide-base chair featuring a built-in dial-adjustable lumbar system (no pillows needed) and a firm cold-cure foam that maintains its shape for a decade.",
     "pros": [
-      "Integrated support: Use a side dial to adjust lumbar depth—no more slipping pillows.",
+      "Integrated support: Use a side dial to adjust lumbar depth — no more slipping pillows.",
       "Professional build: Solid steel frame and reinforced aluminum base support up to 150kg.",
       "Sophisticated style: Minimalist stitching makes it look perfect for streamers and executives alike."
     ],
@@ -681,7 +965,12 @@
     "emoji": "🪑",
     "seam": "jade",
     "loadoutCount": 2,
-    "tags": ["comfort", "premium-build", "firm-support", "professional"],
+    "tags": [
+      "comfort",
+      "premium-build",
+      "firm-support",
+      "professional"
+    ],
     "inStock": true,
     "nextDay": true
   }

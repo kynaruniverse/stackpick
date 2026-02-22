@@ -8,13 +8,13 @@
  *   {{{varName}}}                   — raw/unescaped output (for HTML blobs like schemaJSON)
  *   {{#each arrayName}}...{{/each}} — loop over array; use {{this}} for primitive values
  *                                     or {{propName}} for object properties
- *   {{#if varName}}...{{/if}}       — conditional block (truthy check)
+ *   {{#if varName}}...{{/if}}       — conditional block (truthy check); nesting supported
  *   {{#if_active "slug" activePage}}...{{/if_active}} — outputs content if slug === activePage
  *
  * No dependencies — Node.js built-ins only.
  */
 
-const fs   = require('fs');
+const fs = require('fs');
 const path = require('path');
 
 // ---------------------------------------------------------------------------
@@ -23,11 +23,11 @@ const path = require('path');
 function escapeHtml(str) {
   if (str === null || str === undefined) return '';
   return String(str)
-    .replace(/&/g,  '&amp;')
-    .replace(/</g,  '&lt;')
-    .replace(/>/g,  '&gt;')
-    .replace(/"/g,  '&quot;')
-    .replace(/'/g,  '&#39;');
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
 }
 
 // ---------------------------------------------------------------------------
@@ -35,45 +35,56 @@ function escapeHtml(str) {
 // ---------------------------------------------------------------------------
 function render(template, data) {
   let out = template;
-
+  
   // 1. {{#each arrayName}} ... {{/each}}
+  //    Processed first so nested inner directives are resolved via recursive render().
   out = out.replace(/\{\{#each\s+(\w+)\}\}([\s\S]*?)\{\{\/each\}\}/g, (_, key, block) => {
     const arr = data[key];
     if (!Array.isArray(arr) || arr.length === 0) return '';
     return arr.map(item => {
-      if (typeof item === 'object' && item !== null) {
-        // render the inner block with item properties as data
-        return render(block, Object.assign({}, data, item));
-      }
-      // primitive — expose as {{this}}
-      return render(block, Object.assign({}, data, { this: item }));
+      const ctx = (typeof item === 'object' && item !== null) ?
+        Object.assign({}, data, item) // item properties override parent scope
+        :
+        Object.assign({}, data, { this: item }); // primitive — expose as {{this}}
+      return render(block, ctx);
     }).join('');
   });
-
+  
   // 2. {{#if_active "slug" varName}} ... {{/if_active}}
-  out = out.replace(/\{\{#if_active\s+"([^"]+)"\s+(\w+)\}\}([\s\S]*?)\{\{\/if_active\}\}/g,
-    (_, slug, varName, block) => {
-      return data[varName] === slug ? block : '';
-    }
+  //    Block is passed through render() so inner {{var}}, {{#if}}, {{#each}}
+  //    directives inside the active branch are fully expanded.
+  out = out.replace(
+    /\{\{#if_active\s+"([^"]+)"\s+(\w+)\}\}([\s\S]*?)\{\{\/if_active\}\}/g,
+    (_, slug, varName, block) => data[varName] === slug ? render(block, data) : ''
   );
-
+  
   // 3. {{#if varName}} ... {{/if}}
-  out = out.replace(/\{\{#if\s+(\w+)\}\}([\s\S]*?)\{\{\/if\}\}/g, (_, key, block) => {
-    return data[key] ? render(block, data) : '';
-  });
-
-  // 4. {{{rawVar}}} — triple braces, no escaping (for JSON-LD blobs, etc.)
+  //    Processed innermost-first (leaf blocks with no nested {{#if}} inside them)
+  //    by repeating until the string stabilises. This correctly handles any depth
+  //    of nesting without requiring a full recursive-descent parser.
+  //    A "leaf" {{#if}} is one whose content contains no further {{#if ...}} opener.
+  const leafIfRe = /\{\{#if\s+(\w+)\}\}((?:(?!\{\{#if\s)[\s\S])*?)\{\{\/if\}\}/g;
+  let prev;
+  do {
+    prev = out;
+    out = out.replace(leafIfRe, (_, key, block) =>
+      data[key] ? render(block, data) : ''
+    );
+  } while (out !== prev);
+  
+  // 4. {{{rawVar}}} — triple braces, no escaping (for JSON-LD blobs, pre-built HTML, etc.)
+  //    Must run before step 5 to avoid the double-brace regex partially consuming these.
   out = out.replace(/\{\{\{(\w+)\}\}\}/g, (_, key) => {
     const val = data[key];
     return val !== undefined && val !== null ? String(val) : '';
   });
-
-  // 5. {{var}} — escaped substitution
+  
+  // 5. {{var}} — escaped substitution (runs last, catches any vars exposed by earlier steps)
   out = out.replace(/\{\{(\w+)\}\}/g, (_, key) => {
     const val = data[key];
     return val !== undefined && val !== null ? escapeHtml(String(val)) : '';
   });
-
+  
   return out;
 }
 
@@ -81,7 +92,15 @@ function render(template, data) {
 // renderFile — load a template file and render it with data
 // ---------------------------------------------------------------------------
 function renderFile(templatePath, data) {
-  const template = fs.readFileSync(templatePath, 'utf8');
+  if (!fs.existsSync(templatePath)) {
+    throw new Error(`Template not found: ${templatePath}`);
+  }
+  let template;
+  try {
+    template = fs.readFileSync(templatePath, 'utf8');
+  } catch (err) {
+    throw new Error(`Failed to read template "${templatePath}": ${err.message}`);
+  }
   return render(template, data);
 }
 
@@ -95,21 +114,28 @@ function renderFile(templatePath, data) {
 //     data        : object passed to all render calls
 //   })
 //
-// The partials (head, header, sidebar, footer, bottom-nav) are rendered
-// individually with the same data object, then concatenated.
+// DOM structure (outermost → innermost):
+//   head partial
+//   header partial
+//   sidebar partial
+//   <div class="page-wrapper">
+//     [page template content]
+//   </div>
+//   footer partial
+//   bottom-nav partial
 // ---------------------------------------------------------------------------
 function renderPage({ partialsDir, template, data }) {
   const partial = name =>
     renderFile(path.join(partialsDir, name + '.html'), data);
-
+  
   return [
     partial('head'),
     partial('header'),
     partial('sidebar'),
     '  <div class="page-wrapper">',
     render(template, data),
-    partial('footer'),
     '  </div><!-- end .page-wrapper -->',
+    partial('footer'),
     partial('bottom-nav'),
   ].join('\n');
 }
@@ -118,8 +144,12 @@ function renderPage({ partialsDir, template, data }) {
 // writeFile — write output HTML, creating directories as needed
 // ---------------------------------------------------------------------------
 function writeFile(outputPath, content) {
-  fs.mkdirSync(path.dirname(outputPath), { recursive: true });
-  fs.writeFileSync(outputPath, content, 'utf8');
+  try {
+    fs.mkdirSync(path.dirname(outputPath), { recursive: true });
+    fs.writeFileSync(outputPath, content, 'utf8');
+  } catch (err) {
+    throw new Error(`Failed to write "${outputPath}": ${err.message}`);
+  }
 }
 
 module.exports = { render, renderFile, renderPage, writeFile, escapeHtml };

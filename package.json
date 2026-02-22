@@ -2,12 +2,18 @@
   "name": "stackpick",
   "version": "1.0.0",
   "description": "StackPick static site generator",
+  "private": true,
   "scripts": {
-    "build": "node _generator/build.js",
-    "build:categories": "node _generator/generate-categories.js",
-    "build:validate": "node _generator/lib/validate.js"
+    "build":             "node _generator/build.js",
+    "build:validate":    "node _generator/lib/validate.js",
+    "build:categories":  "node _generator/generate-categories.js",
+    "build:comparisons": "node _generator/generate-comparisons.js",
+    "build:guides":      "node _generator/generate-guides.js",
+    "build:sitemap":     "node _generator/generate-sitemap.js",
+    "build:export":      "node _generator/export-js-data.js"
   },
   "engines": {
     "node": ">=18.0.0"
-  }
+  },
+  "license": "UNLICENSED"
 }

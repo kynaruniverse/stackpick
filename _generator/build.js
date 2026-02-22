@@ -11,7 +11,8 @@
  *   2. Generate category pages (mice, keyboards, headsets, monitors, chairs)
  *   3. Generate comparison pages
  *   4. Generate guide pages
- *   5. Generate sitemap.xml + export assets/js/data/*.js
+ *   5. Generate sitemap.xml
+ *   6. Export assets/js/data/*.js
  */
 
 const path = require('path');
@@ -21,9 +22,11 @@ console.log('\n🔨 StackPick build starting...\n');
 
 // ---------------------------------------------------------------------------
 // Step 1: Validate data
+// NOTE: validate.js only auto-runs (and exits) when invoked directly.
+//       Here we import and call runValidation() exactly once.
 // ---------------------------------------------------------------------------
 console.log('Step 1 — Validating data...');
-const { runValidation } = require('./lib/validate.js');
+const { runValidation } = require('./lib/validate');
 const valid = runValidation();
 if (!valid) {
   console.error('Build aborted: fix validation errors above.\n');
@@ -34,26 +37,56 @@ if (!valid) {
 // Step 2: Category pages
 // ---------------------------------------------------------------------------
 console.log('\nStep 2 — Generating category pages...');
-require('./generate-categories.js');
+try {
+  require('./generate-categories');
+} catch (err) {
+  console.error('Step 2 failed:', err.message);
+  process.exit(1);
+}
 
 // ---------------------------------------------------------------------------
 // Step 3: Comparison pages
 // ---------------------------------------------------------------------------
 console.log('\nStep 3 — Generating comparison pages...');
-require('./generate-comparisons.js');
+try {
+  require('./generate-comparisons');
+} catch (err) {
+  console.error('Step 3 failed:', err.message);
+  process.exit(1);
+}
 
 // ---------------------------------------------------------------------------
 // Step 4: Guide pages
 // ---------------------------------------------------------------------------
 console.log('\nStep 4 — Generating guide pages...');
-require('./generate-guides.js');
+try {
+  require('./generate-guides');
+} catch (err) {
+  console.error('Step 4 failed:', err.message);
+  process.exit(1);
+}
 
 // ---------------------------------------------------------------------------
-// Step 5: Sitemap + JS data export
+// Step 5: Sitemap
 // ---------------------------------------------------------------------------
-console.log('\nStep 5 — Generating sitemap + exporting JS data files...');
-require('./generate-sitemap.js');
-require('./export-js-data.js');
+console.log('\nStep 5 — Generating sitemap.xml...');
+try {
+  require('./generate-sitemap');
+} catch (err) {
+  console.error('Step 5 failed:', err.message);
+  process.exit(1);
+}
+
+// ---------------------------------------------------------------------------
+// Step 6: Export JS data files
+// ---------------------------------------------------------------------------
+console.log('\nStep 6 — Exporting JS data files...');
+try {
+  require('./export-js-data');
+} catch (err) {
+  console.error('Step 6 failed:', err.message);
+  process.exit(1);
+}
 
 // ---------------------------------------------------------------------------
 // Done

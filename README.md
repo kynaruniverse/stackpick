@@ -11,7 +11,7 @@ Stack Pick helps UK gamers find the right gear without wading through US-centric
 - Static HTML/CSS/JS (no frameworks)
 - Google Analytics 4
 - Amazon UK Affiliate links
-- Hosted on [your host here]
+- Hosted on GitHub Pages
 
 ## 📁 Project Structure
 
@@ -69,8 +69,8 @@ Track:
 
 - Live site: https://stackpick.co.uk
 - Amazon Associates: https://affiliate-program.amazon.co.uk
-- Google Search Console: [Add your link]
-- Google Analytics: [Add your link]
+- Google Search Console: https://search.google.com/u/3/search-console?resource_id=https%3A%2F%2Fstackpick.co.uk%2F
+- Google Analytics: https://analytics.google.com/analytics/web/#/a384698246p524820178/reports/intelligenthome
 
 ## 📝 Content Update Schedule
 
