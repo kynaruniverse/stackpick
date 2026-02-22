@@ -174,7 +174,8 @@ function buildSchemaJSON(comp) {
 const REQUIRED_FIELDS = [
   'slug', 'title', 'metaTitle', 'metaDescription', 'canonical',
   'datePublished', 'intro', 'specTable', 'sections', 'verdict',
-  'productA', 'productB', 'relatedLinks',
+  'productA', 'productB',
+  // 'relatedLinks' is optional — buildRelatedLinksHTML handles null/empty gracefully
 ];
 const REQUIRED_PRODUCT_FIELDS = ['name', 'badge', 'price', 'affiliate', 'desc'];
 

@@ -945,7 +945,7 @@ window.SP_PRODUCTS =
   {
     "id": "chairs-noblechairs-hero",
     "category": "chairs",
-    "brand": "Noblechairs",
+    "brand": "noblechairs",
     "badge": "MOST COMFORTABLE",
     "name": "noblechairs HERO",
     "shortName": "noblechairs HERO",
