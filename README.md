@@ -1,102 +1,126 @@
 # Stack Pick
 
-UK-focused gaming gear recommendations. Researched picks for headsets, keyboards, mice, monitors, and chairs.
+UK gaming gear recommendations. Curated picks for headsets, keyboards, mice, monitors, and chairs — verified UK pricing, no sponsored content.
 
-## 🎯 What This Is
-
-Stack Pick helps UK gamers find the right gear without wading through US-centric reviews, sponsored content, or 50-item "best of" lists. We research what the UK gaming community actually recommends and verify UK pricing/availability.
-
-## 🏗️ Tech Stack
-
-- Static HTML/CSS/JS (no frameworks)
-- Google Analytics 4
-- Amazon UK Affiliate links
-- Hosted on GitHub Pages
-
-## 📁 Project Structure
-
-```
-/
-├── index.html              # Homepage
-├── about/                  # About page
-├── headsets/               # Headsets category
-├── keyboards/              # Keyboards category
-├── mice/                   # Mice category
-├── monitors/               # Monitors category
-├── chairs/                 # Chairs category
-├── guides/                 # Setup guides
-├── comparisons/            # Product comparisons
-├── assets/
-│   ├── css/style.css      # Main stylesheet
-│   ├── js/main.js         # Core functionality
-│   ├── js/theme-toggle.js # Dark mode
-│   └── js/analytics.js    # GA4 tracking
-├── sitemap.xml
-├── robots.txt
-└── README.md
-```
-
-## 🚀 Deployment
-
-1. Update prices weekly (check Amazon UK)
-2. Update `lastmod` dates in sitemap.xml
-3. Verify all affiliate links are working
-4. Test on mobile + desktop
-5. Deploy to production
-
-## ✅ Pre-Launch Checklist
-
-- [ ] Replace all placeholder images with real product photos
-- [ ] Verify all Amazon affiliate links
-- [ ] Check prices are current
-- [ ] Submit sitemap to Google Search Console
-- [ ] Test dark mode on all pages
-- [ ] Validate HTML (W3C validator)
-- [ ] Check mobile responsiveness
-- [ ] Test page load speed (GTmetrix)
-
-## 📊 Analytics
-
-Google Analytics 4: `G-ZTN7H3L6DV`
-
-Track:
-- Page views
-- Affiliate click-through rate
-- Category popularity
-- Mobile vs desktop usage
-
-## 🔗 Important Links
-
-- Live site: https://stackpick.co.uk
-- Amazon Associates: https://affiliate-program.amazon.co.uk
-- Google Search Console: https://search.google.com/u/3/search-console?resource_id=https%3A%2F%2Fstackpick.co.uk%2F
-- Google Analytics: https://analytics.google.com/analytics/web/#/a384698246p524820178/reports/intelligenthome
-
-## 📝 Content Update Schedule
-
-- **Weekly**: Price checks, product availability
-- **Monthly**: New product additions, guide updates
-- **Quarterly**: Full site content review
-
-## 🛠️ To-Do
-
-- [ ] Add more setup guides (£500, £1000, £1500 builds)
-- [ ] Create comparison pages (brand vs brand)
-- [ ] Add FAQ sections to each category
-- [ ] Build email list for deal alerts
-- [ ] Add product schema markup for SEO
-- [ ] Create TikTok/Twitter content calendar
-
-## 💰 Monetization
-
-- Amazon UK Associates (primary)
-- Future: Display ads (after 50k sessions/month)
-- Future: Email newsletter sponsorships
-
-## 📧 Contact
-
-For site issues or suggestions: hello@stackpick.co.uk
+**Live site:** [stackpick.co.uk](https://stackpick.co.uk)
 
 ---
 
-**Last Updated:** February 2026
+## What This Is
+
+Stack Pick helps UK gamers find the right gear without wading through US-centric reviews or bloated 50-item lists. Every pick is researched against what the UK gaming community actually buys, with pricing verified on Amazon UK.
+
+---
+
+## Tech Stack
+
+| Layer | Detail |
+|---|---|
+| Site | Static HTML / CSS / JS — no frameworks |
+| Generator | Custom Node.js build system (zero npm dependencies) |
+| Hosting | GitHub Pages |
+| Analytics | Google Analytics 4 |
+| Monetisation | Amazon UK Associates |
+
+---
+
+## Project Structure
+
+```
+/
+├── _data/                          # ← Edit these to update the site
+│   ├── products.json               #   All product data
+│   ├── collections.json            #   Homepage wall collections
+│   ├── comparisons.json            #   Comparison pages
+│   └── guides.json                 #   Setup guide pages
+│
+├── _generator/                     # Build system — do not edit generated output
+│   ├── build.js                    #   Main entry point (npm run build)
+│   ├── generate-categories.js
+│   ├── generate-comparisons.js
+│   ├── generate-guides.js
+│   ├── generate-sitemap.js
+│   ├── export-js-data.js
+│   └── lib/
+│       ├── validate.js
+│       └── render.js
+│
+├── _templates/                     # HTML templates and partials
+│   ├── category.html
+│   ├── comparison.html
+│   ├── guide.html
+│   └── _partials/
+│
+├── assets/
+│   ├── css/
+│   │   ├── style.css               # Category / guide / comparison styles
+│   │   ├── wall.css                # Homepage wall styles
+│   │   └── wall-tokens.css         # Homepage CSS tokens
+│   └── js/
+│       ├── wall.js                 # Homepage wall logic
+│       ├── app.js                  # Theme, nav, PWA install prompt
+│       ├── analytics.js            # GA4 tracking
+│       └── data/                   # AUTO-GENERATED — do not edit
+│           ├── products.js
+│           └── collections.js
+│
+├── index.html                      # Homepage (loadout wall)
+├── about/
+├── search/
+├── sw.js                           # Service worker (PWA / offline)
+├── manifest.json                   # PWA manifest
+├── robots.txt
+├── sitemap.xml                     # AUTO-GENERATED
+├── WORKFLOW.md                     # How to add products, guides, comparisons
+└── README.md
+```
+
+> **Category folders** (`/mice/`, `/keyboards/`, etc.), **comparison folders**, **guide folders**, and `sitemap.xml` are all auto-generated by the build. Never edit them directly.
+
+---
+
+## Making Changes
+
+All content changes start in `_data/`. After editing any JSON file, run:
+
+```
+npm run build
+git add -A && git commit -m "Describe your change" && git push
+```
+
+See **[WORKFLOW.md](./WORKFLOW.md)** for full instructions on adding products, comparisons, and guides.
+
+---
+
+## Build Commands
+
+| Command | What it does |
+|---|---|
+| `npm run build` | Full build — validate, generate all pages, sitemap, JS data, stamp SW version |
+| `npm run build:validate` | Validate `_data/` JSON only |
+| `npm run build:categories` | Regenerate category pages only |
+| `npm run build:comparisons` | Regenerate comparison pages only |
+| `npm run build:guides` | Regenerate guide pages only |
+| `npm run build:sitemap` | Regenerate sitemap only |
+| `npm run build:export` | Regenerate JS data files only |
+
+---
+
+## Content Update Schedule
+
+| Frequency | Task |
+|---|---|
+| Weekly | Price checks on all products |
+| Monthly | New product additions, guide updates |
+| Quarterly | Full content review, buying guide copy |
+
+---
+
+## Contact
+
+hello@stackpick.co.uk
+
+---
+
+*Last updated: February 2026*
+

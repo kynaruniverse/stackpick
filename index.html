@@ -65,7 +65,7 @@
 
   <!-- SKIP LINK -->
   <a href="#wall" class="skip-link">Skip to loadout wall</a>
-  
+
   <noscript>
     <div style="font-family:sans-serif;padding:2rem;text-align:center;color:#F2F0EB;background:#0A0A0F;min-height:100vh;">
       <p style="font-size:1.5rem;font-weight:700;margin-bottom:1rem;">⚡ StackPick</p>
@@ -111,8 +111,6 @@
   </header>
 
 
-
-
   <!-- ═══════════════════════════════════════════════════════════
        PREFERENCES SIDE SHEET
        ═══════════════════════════════════════════════════════════ -->
@@ -123,7 +121,7 @@
     <div class="prefs-sheet__body">
       <div class="pref-row">
         <span class="pref-row__label">Local Feed</span>
-        <span class="pref-row__value"><span class="locator-pill__dot"></span> UK / LIVE</span>
+        <span class="pref-row__value"><span class="locator-pill__dot" aria-hidden="true"></span> UK / LIVE</span>
       </div>
       <div class="pref-row">
         <span class="pref-row__label">Currency</span>
@@ -140,13 +138,13 @@
     </div>
 
     <nav class="prefs-sheet__links" aria-label="Site navigation">
-      <div class="prefs-sheet__nav-group">Hardware Categories</div>
+      <p class="prefs-sheet__nav-group" role="presentation">Hardware Categories</p>
       <a href="/headsets/" class="prefs-sheet__nav-link">Audio Gear</a>
       <a href="/keyboards/" class="prefs-sheet__nav-link">Input Decks</a>
       <a href="/mice/" class="prefs-sheet__nav-link">Pointing Devices</a>
       <a href="/monitors/" class="prefs-sheet__nav-link">Visual Arrays</a>
       <a href="/chairs/" class="prefs-sheet__nav-link">Seating</a>
-      <div class="prefs-sheet__nav-group">Resources</div>
+      <p class="prefs-sheet__nav-group" role="presentation">Resources</p>
       <a href="/guides/" class="prefs-sheet__nav-link">Assembly Guides</a>
       <a href="/comparisons/" class="prefs-sheet__nav-link">Spec Shootouts</a>
       <a href="/search/" class="prefs-sheet__nav-link">Search</a>
@@ -161,8 +159,7 @@
   <!-- ═══════════════════════════════════════════════════════════
        ZONE 2A: STORY STRIP — Mobile / tablet patch rail
        ═══════════════════════════════════════════════════════════ -->
-  <nav class="story-strip" id="story-strip"
-       aria-label="Browse collections" role="navigation">
+  <nav class="story-strip" id="story-strip" aria-label="Browse collections">
     <div class="story-strip__track" id="story-track" role="list" aria-label="Collection patches">
       <!-- Patches rendered by wall.js from collections.js -->
     </div>
@@ -181,7 +178,7 @@
   <!-- ═══════════════════════════════════════════════════════════
        ZONE 2B: PATCH RAIL — Desktop fixed left column
        ═══════════════════════════════════════════════════════════ -->
-  <aside class="patch-rail" id="patch-rail" aria-label="Browse collections" role="navigation">
+  <nav class="patch-rail" id="patch-rail" aria-label="Browse collections">
     <a href="/" class="patch-rail__logo" aria-label="Stack Pick — Home">
       <span class="patch-rail__logo-text">SP</span>
     </a>
@@ -193,7 +190,7 @@
         <span class="patch-rail__theme-icon" aria-hidden="true">🌙</span>
       </button>
     </div>
-  </aside>
+  </nav>
 
 
   <!-- ═══════════════════════════════════════════════════════════
@@ -204,7 +201,7 @@
     <!-- Pull-to-shuffle gesture zone -->
     <div class="shuffle-trigger" id="shuffle-trigger" aria-hidden="true" role="presentation">
       <div class="shuffle-trigger__ring-wrap">
-        <svg class="shuffle-trigger__ring-svg" viewBox="0 0 40 40">
+        <svg class="shuffle-trigger__ring-svg" viewBox="0 0 40 40" aria-hidden="true">
           <circle class="shuffle-trigger__track" cx="20" cy="20" r="18" fill="none" stroke-width="3"></circle>
           <circle class="shuffle-trigger__arc" id="shuffle-trigger-arc" cx="20" cy="20" r="18" fill="none" stroke-width="3" stroke-dasharray="113.1" stroke-dashoffset="113.1"></circle>
         </svg>
@@ -215,20 +212,17 @@
       <span class="shuffle-trigger__label" id="shuffle-trigger-label">Pull to shuffle</span>
     </div>
 
-
-
     <!-- Shuffle state banner -->
     <div class="shuffle-banner" id="shuffle-banner" aria-live="polite" aria-atomic="true" role="status">
       <div class="shuffle-banner__content">
         <span class="shuffle-banner__dice" id="shuffle-banner-dice" aria-hidden="true">🎲</span>
         <div class="shuffle-banner__meta">
           <span class="shuffle-banner__text" id="shuffle-banner-text">Shuffled picks</span>
-          <div class="shuffle-banner__dots" id="shuffle-banner-dots"></div>
+          <div class="shuffle-banner__dots" id="shuffle-banner-dots" aria-hidden="true"></div>
         </div>
       </div>
       <button class="shuffle-banner__reset" id="shuffle-reset" aria-label="Reset to default collection">Reset</button>
     </div>
-
 
     <!-- Wall header -->
     <div class="wall__header" id="wall-header">
@@ -264,9 +258,9 @@
 
       <!-- Loading shimmer state — replaced immediately on DOMContentLoaded -->
       <div class="card-stack__loading" id="card-stack-loading" aria-busy="true" aria-label="Loading products">
-        <div class="loading-shimmer loading-shimmer--card"></div>
-        <div class="loading-shimmer loading-shimmer--card"></div>
-        <div class="loading-shimmer loading-shimmer--card"></div>
+        <div class="loading-shimmer loading-shimmer--card" aria-hidden="true"></div>
+        <div class="loading-shimmer loading-shimmer--card" aria-hidden="true"></div>
+        <div class="loading-shimmer loading-shimmer--card" aria-hidden="true"></div>
       </div>
 
     </div>
@@ -278,7 +272,7 @@
        ZONE 4: UTILITY RACK — Mobile bottom nav
        Hidden ≥ 900px (desktop uses patch-rail)
        ═══════════════════════════════════════════════════════════ -->
-  <nav class="utility-rack" id="utility-rack" aria-label="Main navigation" role="navigation">
+  <nav class="utility-rack" id="utility-rack" aria-label="Main navigation">
 
     <div class="rack-box rack-box--active" data-tab="browse"
          role="button" tabindex="0" aria-pressed="true" aria-label="Browse products">
@@ -306,7 +300,6 @@
         <span class="rack-box__label">Latest</span>
       </div>
     </div>
-
 
     <div class="rack-box" data-tab="profile"
          role="button" tabindex="0" aria-pressed="false" aria-label="Preferences and settings">
@@ -338,6 +331,23 @@
   <script src="/assets/js/data/products.js" defer></script>
   <script src="/assets/js/data/collections.js" defer></script>
   <script src="/assets/js/wall.js" defer></script>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       SERVICE WORKER REGISTRATION
+       Registers sw.js for offline support and PWA install prompt.
+       Runs after load so it never blocks page rendering.
+       ═══════════════════════════════════════════════════════════ -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('/sw.js').then(function (reg) {
+          console.log('[SW] Registered — scope:', reg.scope);
+        }).catch(function (err) {
+          console.warn('[SW] Registration failed:', err);
+        });
+      });
+    }
+  </script>
 
 </body>
 </html>

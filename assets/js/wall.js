@@ -16,6 +16,13 @@
     monitors:  '#FF9500',
     chairs:    '#00C853',
   };
+  var SEAM_MAP = {
+  crimson: '#FF2D55',
+  cobalt:  '#0057FF',
+  slate:   '#8E8EA0',
+  amber:   '#FF9500',
+  jade:    '#00C853'
+  };
   var SEAM_GLOWS = {
     mice:      'rgba(255,45,85,0.15)',
     keyboards: 'rgba(0,87,255,0.15)',
@@ -137,7 +144,7 @@
   var RACK_CONTENT = {
     browse:   [{ label: '\uD83C\uDFA7 Headsets', href: '/headsets/' }, { label: '\u2328\uFE0F Keyboards', href: '/keyboards/' }, { label: '\uD83D\uDDB1\uFE0F Mice', href: '/mice/' }, { label: '\uD83D\uDDA5\uFE0F Monitors', href: '/monitors/' }, { label: '\uD83E\uDE91 Chairs', href: '/chairs/' }],
     loadouts: [{ label: '\uD83D\uDCCB Setup Guides', href: '/guides/' }, { label: '\u2696\uFE0F Comparisons', href: '/comparisons/' }, { label: '\uD83C\uDFAE \u00A3500 Build', href: '/guides/gaming-setup-500/' }, { label: '\uD83D\uDD25 \u00A31000 Build', href: '/guides/gaming-setup-1000/' }, { label: '\uD83D\uDC8E \u00A32500 Build', href: '/guides/gaming-setup-2500/' }],
-    drops:    [{ label: '\u26A1 Latest Picks', href: '/comparisons/' }, { label: '\u2696\uFE0F Mouse Showdown', href: '/comparisons/logitech-superlight-2-vs-razer-viper-v3-pro/' }, { label: '\uD83D\uDDA5\uFE0F Monitor Battle', href: '/comparisons/asus-pg27aqdp-vs-pg32ucdm/' }, { label: '\uD83E\uDE91 Chair Face-Off', href: '/comparisons/secretlab-titan-evo-vs-herman-miller-aeron/' }],
+    drops:    [{ label: '\uD83D\uDDB1\uFE0F Mouse Showdown', href: '/comparisons/razer-viper-v3-pro-vs-logitech-g502x-plus/' }, { label: '\u2328\uFE0F Keyboard Battle', href: '/comparisons/steelseries-apex-pro-tkl-gen3-vs-keychron-q1-max/' }, { label: '\uD83C\uDFA7 Headset Showdown', href: '/comparisons/sennheiser-hd560s-vs-steelseries-arctis-nova-pro/' }, { label: '\uD83D\uDDA5\uFE0F Monitor Battle', href: '/comparisons/asus-rog-xg27aqdmg-vs-samsung-odyssey-g80sd/' }, { label: '\uD83E\uDE91 Chair Face-Off', href: '/comparisons/andaseat-kaiser-4-vs-noblechairs-hero/' }],
     profile:  [{ label: '\u2139\uFE0F About StackPick', href: '/about/' }, { label: '\uD83D\uDD0D Search', href: '/search/' }],
   };
   var RACK_TITLES = { browse: 'Quick Browse', loadouts: 'Setup Guides', drops: 'New Drops', profile: 'More' };
@@ -205,8 +212,8 @@
   }
 
   function buildCard(product, index, animDelay) {
-    var seam = SEAM_COLOURS[product.category] || '#8E8EA0';
-    var glow = SEAM_GLOWS[product.category]   || 'rgba(142,142,160,0.15)';
+    var seam = SEAM_MAP[product.seam] || SEAM_COLOURS[product.category] || '#8E8EA0';
+    var glow = seam + '26';
     var offsetClass = index % 2 === 0 ? 'box-card--offset-right' : 'box-card--offset-left';
     var article = document.createElement('article');
     article.className = 'box-card ' + offsetClass + ' box-card--entering';
@@ -476,7 +483,7 @@
     section.className = 'loadout-cluster box-card--entering';
     section.setAttribute('aria-label', title + ' loadout');
     var miniBoxes = display.map(function (p, i) {
-      var seam = SEAM_COLOURS[p.category] || '#8E8EA0';
+      var seam = SEAM_MAP[p.seam] || SEAM_COLOURS[p.category] || '#8E8EA0';
       return '<div class="loadout-cluster__mini-box loadout-cluster__mini-box--' + (i + 1) + '" style="border-right:2px solid ' + seam + ';"><span class="mini-box__silhouette">' + p.emoji + '</span></div>';
     }).join('');
     section.innerHTML = '<div class="loadout-cluster__stack">' + miniBoxes + '</div><div class="loadout-cluster__meta"><h3 class="loadout-cluster__title">' + escapeHTML(title) + '</h3><span class="loadout-cluster__items">' + products.length + ' items in range</span><span class="loadout-cluster__total">' + escapeHTML(totalFmt) + ' combined</span><a class="loadout-cluster__cta" href="/guides/">See Setup Guides \u2192</a></div>';
@@ -530,19 +537,39 @@
    */
 
   function initScroll() {
-    var ticking  = false;
+    var ticking = false;
     var JIGGLE_T = 300;
+    
+    // 6G: Define a horizontal lag factor (usually slightly less than vertical)
+    var SHADOW_LAG_X = 0.08; 
+  
     window.addEventListener('scroll', function () {
       if (ticking) return;
       window.requestAnimationFrame(function () {
         var scrollY = window.scrollY;
-
-        /* 6E: corrected parallax — shadow lags behind card */
-        var shadowOffset = scrollY * SHADOW_LAG;
-        document.querySelectorAll('.box-card__shadow-layer').forEach(function (l) {
-          l.style.transform = 'translateY(' + shadowOffset + 'px)';
+        var viewportCenterX = window.innerWidth / 2;
+  
+        /* 6G: Dynamic 2D Parallax */
+        var shadowOffsetY = scrollY * SHADOW_LAG;
+  
+        document.querySelectorAll('.box-card').forEach(function (card) {
+          var shadowLayer = card.querySelector('.box-card__shadow-layer');
+          if (!shadowLayer) return;
+  
+          // Get the card's position relative to the viewport
+          var rect = card.getBoundingClientRect();
+          var cardCenterX = rect.left + (rect.width / 2);
+          
+          // Calculate horizontal distance from center
+          // If card is to the right (positive), shadow shifts left (negative)
+          var distanceFromCenter = cardCenterX - viewportCenterX;
+          var shadowOffsetX = distanceFromCenter * -SHADOW_LAG_X;
+  
+          // Apply combined 2D transform
+          shadowLayer.style.transform = 'translate(' + shadowOffsetX + 'px, ' + shadowOffsetY + 'px)';
         });
-
+  
+        // Existing jiggle logic...
         if (scrollY > state.jiggleScrollY + JIGGLE_T) {
           state.jiggleScrollY = scrollY;
           document.querySelectorAll('.patch--active').forEach(function (p) {
@@ -557,6 +584,7 @@
       ticking = true;
     }, { passive: true });
   }
+
 
 
   /* 11  PULL-TO-SHUFFLE */
@@ -855,7 +883,7 @@
     initPrefsSheet(); initRack(); renderPatches();
     var products = SP_getCollectionProducts(state.activeCollectionId);
     renderCollection(products); updateWallHeader(state.activeCollectionId, products.length);
-    initSortMenu(); initScroll(); initPullToShuffle(); initShuffleBanner(); initServiceWorker(); 
+    initSortMenu(); initScroll(); initPullToShuffle(); initShuffleBanner(); initServiceWorker();
     console.log('%c\u26A1 StackPick%c v6F \u2014 ' + SP_PRODUCTS.length + ' products, ' + SP_COLLECTIONS.length + ' collections loaded', 'color:#C8FF00;font-weight:800;font-family:monospace;font-size:13px;', 'color:#8E8EA0;font-family:monospace;font-size:13px;');
   }
 

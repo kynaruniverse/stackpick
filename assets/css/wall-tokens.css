@@ -1,86 +1,76 @@
 /* ============================================================
-   STACK PICK — wall-tokens.css  v6
-   Design tokens: palette · typography · spacing · z-index
-   Imported by wall.css — must load first.
+   STACK PICK — wall-tokens.css  v7
+   Single source of truth for ALL pages.
+   Loaded first by index.html (wall) and style.css imports none —
+   instead style.css reads from the same custom properties set here
+   via the shared <html> element.
+
+   RULE: index.html loads wall-tokens.css + wall.css
+         All other pages load wall-tokens.css + style.css
+         Never load wall.css and style.css together.
+
+   CONTENTS
+   01  Raw palette constants
+   02  Root tokens — LIGHT mode (default)
+   03  Dark mode overrides  [data-theme="dark"]
+   04  Category seam map
+   05  Patch colour map
+   06  Keyframes library
    Last updated: February 2026
    ============================================================ */
 
 
-/* ─────────────────────────────────────────────────────────────
-   ROOT — DARK MODE (default — wall body is always dark first)
-   ───────────────────────────────────────────────────────────── */
+/* ============================================================
+   01  RAW PALETTE CONSTANTS
+   These never change between themes — they are named colours
+   only. Surface / text / border tokens reference these below.
+   ============================================================ */
 :root {
 
-  /* ── WALL PALETTE ── */
-  --ink:           #0A0A0F;   /* near-black with blue undertone — the "wall" bg */
-  --ink-mid:       #141420;   /* card surface in dark mode */
-  --ink-lift:      #1E1E2E;   /* elevated surface — box fronts */
-  --ink-high:      #28283C;   /* hover / pressed state */
-  --grain-overlay: rgba(255,255,255,0.028); /* noise texture base */
+  /* ── Warm neutrals ── */
+  --chalk:       #F2F0EB;   /* warm off-white — light mode base (not pure white) */
+  --chalk-mid:   #E8E5DE;   /* light mode card surface */
+  --chalk-lift:  #EFEDE7;   /* light mode elevated panel */
+  --chalk-high:  #DEDAD2;   /* light mode hover / pressed */
+  --chalk-muted: #B8B5AE;   /* light mode tertiary text */
 
-  --chalk:         #F2F0EB;   /* warm off-white — light mode base */
-  --chalk-mid:     #E8E5DE;   /* light mode surface */
-  --chalk-lift:    #FFFFFF;   /* light mode elevated */
-  --chalk-muted:   #B8B5AE;   /* light mode secondary text */
+  --ink:         #0A0A0F;   /* near-black with blue undertone */
+  --ink-mid:     #141420;   /* dark mode card surface */
+  --ink-lift:    #1E1E2E;   /* dark mode elevated panel */
+  --ink-high:    #28283C;   /* dark mode hover / pressed */
 
-  /* ── VOLT ACCENT ── */
-  --volt:          #C8FF00;   /* electric yellow-green — primary accent */
-  --volt-dim:      #8FB800;   /* volt at 70% — secondary accent */
-  --volt-glow:     rgba(200,255,0,0.15); /* ambient glow */
-  --volt-glow-lg:  rgba(200,255,0,0.08); /* large glow for cards */
-  --volt-text:     #0A0A0F;   /* text on volt background */
+  /* ── Volt accent — unchanged in both themes ── */
+  --volt:        #C8FF00;   /* electric yellow-green — primary accent */
+  --volt-dim:    #8FB800;   /* volt at ~70% — secondary accent */
+  --volt-text:   #0A0A0F;   /* text on volt background (always dark) */
 
-  /* ── CATEGORY SEAM COLOURS ── */
-  --cobalt:        #0057FF;   /* keyboard seam */
-  --crimson:       #FF2D55;   /* mouse seam */
-  --amber:         #FF9500;   /* monitor seam */
-  --jade:          #00C853;   /* chair seam */
-  --slate:         #8E8EA0;   /* headset seam */
-  --purple:        #7B2FBE;   /* creator/extras seam */
+  /* ── Category seam colours ── */
+  --cobalt:      #0057FF;   /* keyboards */
+  --crimson:     #FF2D55;   /* mice */
+  --amber:       #FF9500;   /* monitors */
+  --jade:        #00C853;   /* chairs */
+  --slate:       #8E8EA0;   /* headsets */
+  --purple:      #7B2FBE;   /* creator / extras */
 
-  /* ── CURRENT THEME SURFACE TOKENS (dark default) ── */
-  --surface-base:   var(--ink);
-  --surface-card:   var(--ink-mid);
-  --surface-lift:   var(--ink-lift);
-  --surface-high:   var(--ink-high);
-  --text-primary:   var(--chalk);
-  --text-secondary: rgba(242,240,235,0.55);
-  --text-tertiary:  rgba(242,240,235,0.30);
-  --border:         rgba(255,255,255,0.07);
-  --border-strong:  rgba(255,255,255,0.13);
-
-  /* ── TYPOGRAPHY ── */
+  /* ── Typography ── */
   --font-display: 'Barlow Condensed', 'Impact', Arial Narrow, sans-serif;
   --font-body:    'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-mono:    'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
 
-  /* ── TYPE SCALE ── */
-  --text-xs:   0.6875rem;   /* 11px */
-  --text-sm:   0.8125rem;   /* 13px */
-  --text-base: 1rem;        /* 16px */
-  --text-lg:   1.125rem;    /* 18px */
-  --text-xl:   1.375rem;    /* 22px */
-  --text-2xl:  1.75rem;     /* 28px */
-  --text-3xl:  2.25rem;     /* 36px */
-  --text-4xl:  3rem;        /* 48px */
-  --text-5xl:  3.75rem;     /* 60px */
-  --text-6xl:  4.5rem;      /* 72px */
+  /* ── Type scale ── */
+  --text-xs:   0.6875rem;  /* 11px */
+  --text-sm:   0.8125rem;  /* 13px */
+  --text-base: 1rem;       /* 16px */
+  --text-lg:   1.125rem;   /* 18px */
+  --text-xl:   1.375rem;   /* 22px */
+  --text-2xl:  1.75rem;    /* 28px */
+  --text-3xl:  2.25rem;    /* 36px */
+  --text-4xl:  3rem;       /* 48px */
+  --text-5xl:  3.75rem;    /* 60px */
+  --text-6xl:  4.5rem;     /* 72px */
 
-  /* ── DIMENSION TOKENS ── */
-  --seam-width:         4px;
-  --card-radius:        12px;
-  --card-radius-sm:     var(--radius); /* alias — same as --radius (8px) */
-  --patch-size:         72px;   /* mobile patch diameter */
-  --patch-size-lg:      80px;   /* desktop rail patch diameter */
-  --persona-strip-h:    72px;   /* mobile persona strip height */
-  --persona-strip-h-lg: 108px;  /* desktop persona strip height — FIX: was missing */
-  --story-strip-h:      104px;  /* mobile patch rail height */
-  --patch-rail-w:       100px;  /* desktop left rail width */
-  --utility-rack-h:     68px;   /* mobile bottom nav height */
-
-  /* ── SPACING SCALE ── */
-  /* NOTE: --sp-7 and --sp-9 are intentionally omitted to match
-     the 4pt grid — use --sp-6 (1.5rem) or --sp-8 (2rem) instead. */
+  /* ── Spacing scale (4pt grid) ──
+     --sp-7 and --sp-9 intentionally omitted. */
   --sp-1:  0.25rem;
   --sp-2:  0.5rem;
   --sp-3:  0.75rem;
@@ -92,99 +82,164 @@
   --sp-12: 3rem;
   --sp-16: 4rem;
 
-  /* ── RADIUS ── */
+  /* ── Radius ── */
   --radius-sm:   4px;
   --radius:      8px;
   --radius-lg:   12px;
   --radius-xl:   16px;
   --radius-pill: 9999px;
 
-  /* ── SHADOW / DEPTH ── */
-  --shadow-sm:    0 1px 3px rgba(0,0,0,0.4);
-  --shadow:       0 4px 16px rgba(0,0,0,0.5), 0 1px 3px rgba(0,0,0,0.3);
-  --shadow-card:  0 8px 32px rgba(0,0,0,0.6), 0 2px 6px rgba(0,0,0,0.4);
-  --shadow-lifted:0 16px 48px rgba(0,0,0,0.7), 0 4px 12px rgba(0,0,0,0.5);
-  --shadow-volt:  0 0 24px var(--volt-glow), 0 0 48px var(--volt-glow-lg);
-  --focus-ring:   0 0 0 2px var(--ink), 0 0 0 4px var(--volt);
+  /* ── Dimension tokens (wall-specific layout) ── */
+  --seam-width:         4px;
+  --card-radius:        12px;
+  --patch-size:         72px;    /* mobile patch diameter */
+  --patch-size-lg:      80px;    /* desktop rail patch diameter */
+  --persona-strip-h:    72px;    /* mobile persona strip height */
+  --persona-strip-h-lg: 108px;   /* desktop persona strip height */
+  --story-strip-h:      104px;   /* mobile story strip height */
+  --patch-rail-w:       100px;   /* desktop left rail width */
+  --utility-rack-h:     68px;    /* mobile bottom nav height */
+  --wall-max-w:         680px;
+  --wall-padding:       var(--sp-4);
+  --card-gap:           var(--sp-3);
 
-  /* ── TRANSITIONS ── */
-  --ease-spring:   cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-bounce:   cubic-bezier(0.34, 1.56, 0.64, 1);
-  --ease-smooth:   cubic-bezier(0.645, 0.045, 0.355, 1.000);
-  --ease-snap:     cubic-bezier(0.87, 0, 0.13, 1);
-  --t-fast:        150ms;
-  --t-base:        250ms;
-  --t-slow:        400ms;
-  --t-flip:        550ms;
-  --t-drawer:      350ms;
+  /* ── Layout (inner pages) ── */
+  --header-height:     56px;
+  --bottom-nav-height: 62px;
+  --sidebar-width:     224px;
+  --container-max:     1200px;
+  --content-max:       760px;
 
-  /* ── LAYOUT ── */
-  --wall-max-w:    680px;
-  --wall-padding:  var(--sp-4);
-  --card-gap:      var(--sp-3);
+  /* ── Transitions ── */
+  --ease-spring:  cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-bounce:  cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-smooth:  cubic-bezier(0.645, 0.045, 0.355, 1.000);
+  --ease-snap:    cubic-bezier(0.87, 0, 0.13, 1);
+  --t-fast:       150ms;
+  --t-base:       250ms;
+  --t-slow:       400ms;
+  --t-flip:       550ms;
+  --t-drawer:     350ms;
 
-  /* ── STAMP / BADGE ── */
-  --stamp-ink:     rgba(255,255,255,0.06);
-  --stamp-border:  rgba(255,255,255,0.12);
-  --stamp-text:    var(--text-secondary);
-  --nav-group-text: rgba(242,240,235,0.28); /* prefs sheet section label */
-
-  /* ── Z-INDEX SCALE ── */
-  /* NOTE: --z-persona, --z-rail, --z-rack share 200 intentionally.
+  /* ── Z-index scale ──
+     --z-persona / --z-rail / --z-rack intentionally share 200.
      Persona strip and patch rail never coexist on the same breakpoint.
-     Utility rack and patch rail never coexist on the same breakpoint.
-     --z-story is not a separate token — story-strip uses --z-sticky (100)
-     and sits below persona strip by design. */
-  --z-base:        1;
-  --z-card:        10;
-  --z-sticky:      100;
-  --z-persona:     200;
-  --z-rail:        200;
-  --z-rack:        200;
-  --z-overlay:     300;
-  --z-sheet:       400;
-  --z-preview:     500;
-  --z-banner:      600;
-  --z-top:         9999;
+     Utility rack and patch rail never coexist on the same breakpoint. */
+  --z-base:     1;
+  --z-card:     10;
+  --z-sticky:   100;
+  --z-persona:  200;
+  --z-rail:     200;
+  --z-rack:     200;
+  --z-overlay:  300;
+  --z-sheet:    400;
+  --z-preview:  500;
+  --z-banner:   600;
+  --z-top:      9999;
 }
 
 
-/* ─────────────────────────────────────────────────────────────
-   LIGHT MODE OVERRIDES
-   Applied when [data-theme="light"] on <html>
-   ───────────────────────────────────────────────────────────── */
-[data-theme="light"] {
-  --surface-base:   var(--chalk);
-  --surface-card:   var(--chalk-lift);
-  --surface-lift:   var(--chalk-mid);
-  --surface-high:   #DEDAD2;
-  --text-primary:   #0A0A0F;
-  --text-secondary: rgba(10,10,15,0.55);
-  --text-tertiary:  rgba(10,10,15,0.30);
-  --border:         rgba(0,0,0,0.07);
-  --border-strong:  rgba(0,0,0,0.14);
+/* ============================================================
+   02  ROOT TOKENS — LIGHT MODE (default)
+   ============================================================ */
+:root {
 
-  --shadow-sm:    0 1px 3px rgba(0,0,0,0.1);
-  --shadow:       0 4px 16px rgba(0,0,0,0.1), 0 1px 3px rgba(0,0,0,0.08);
-  --shadow-card:  0 8px 32px rgba(0,0,0,0.12), 0 2px 6px rgba(0,0,0,0.08);
-  --shadow-lifted:0 16px 48px rgba(0,0,0,0.16), 0 4px 12px rgba(0,0,0,0.1);
-  --shadow-volt:  0 0 24px rgba(143,184,0,0.25), 0 0 48px rgba(143,184,0,0.12);
-  --focus-ring:   0 0 0 2px var(--chalk), 0 0 0 4px var(--cobalt);
+  /* ── Theme-switching surfaces ── */
+  --surface-base:    var(--chalk);
+  --surface-card:    var(--chalk-lift);
+  --surface-lift:    var(--chalk-mid);
+  --surface-high:    var(--chalk-high);
 
-  --stamp-ink:     rgba(0,0,0,0.04);
-  --stamp-border:  rgba(0,0,0,0.10);
-  --stamp-text:    var(--text-secondary);
-  --nav-group-text: rgba(10,10,15,0.28);
+  /* ── Text ── */
+  --text-primary:    #18181B;
+  --text-secondary:  rgba(24,24,27,0.58);
+  --text-tertiary:   rgba(24,24,27,0.35);
 
-  --volt-glow:     rgba(143,184,0,0.20);
-  --volt-glow-lg:  rgba(143,184,0,0.10);
+  /* ── Borders ── */
+  --border:          rgba(0,0,0,0.07);
+  --border-strong:   rgba(0,0,0,0.14);
+
+  /* ── Volt glow — muted in light mode ── */
+  --volt-glow:       rgba(143,184,0,0.22);
+  --volt-glow-lg:    rgba(143,184,0,0.10);
+
+  /* ── Shadows — lighter in light mode ── */
+  --shadow-sm:       0 1px 3px rgba(0,0,0,0.08);
+  --shadow:          0 4px 16px rgba(0,0,0,0.10), 0 1px 3px rgba(0,0,0,0.06);
+  --shadow-card:     0 8px 32px rgba(0,0,0,0.10), 0 2px 6px rgba(0,0,0,0.06);
+  --shadow-lifted:   0 16px 48px rgba(0,0,0,0.14), 0 4px 12px rgba(0,0,0,0.08);
+  --shadow-volt:     0 0 24px var(--volt-glow), 0 0 48px var(--volt-glow-lg);
+  --shadow-lg:       0 2px 8px rgba(0,0,0,0.06), 0 12px 32px rgba(0,0,0,0.08);
+
+  /* ── Focus ring — cobalt outline on light bg ── */
+  --focus-ring:      0 0 0 2px var(--chalk), 0 0 0 4px var(--cobalt);
+
+  /* ── Stamp / badge ── */
+  --stamp-ink:       rgba(0,0,0,0.04);
+  --stamp-border:    rgba(0,0,0,0.10);
+  --stamp-text:      var(--text-secondary);
+  --nav-group-text:  rgba(24,24,27,0.30);
+
+  /* ── Semantic colours ── */
+  --color-success:   #16A34A;
+  --color-danger:    #DC2626;
+  --color-warning:   #D97706;
 }
 
 
-/* ─────────────────────────────────────────────────────────────
-   CATEGORY SEAM MAP — utility custom props per category
-   JS sets data-category on .box-card — CSS picks up the vars
-   ───────────────────────────────────────────────────────────── */
+/* ============================================================
+   03  DARK MODE OVERRIDES
+   Applied when [data-theme="dark"] on <html>
+   ============================================================ */
+[data-theme="dark"] {
+
+  /* ── Surfaces ── */
+  --surface-base:    var(--ink);
+  --surface-card:    var(--ink-mid);
+  --surface-lift:    var(--ink-lift);
+  --surface-high:    var(--ink-high);
+
+  /* ── Text ── */
+  --text-primary:    var(--chalk);
+  --text-secondary:  rgba(242,240,235,0.55);
+  --text-tertiary:   rgba(242,240,235,0.30);
+
+  /* ── Borders ── */
+  --border:          rgba(255,255,255,0.07);
+  --border-strong:   rgba(255,255,255,0.13);
+
+  /* ── Volt glow — richer in dark mode ── */
+  --volt-glow:       rgba(200,255,0,0.15);
+  --volt-glow-lg:    rgba(200,255,0,0.08);
+
+  /* ── Shadows — deeper in dark mode ── */
+  --shadow-sm:       0 1px 3px rgba(0,0,0,0.4);
+  --shadow:          0 4px 16px rgba(0,0,0,0.5), 0 1px 3px rgba(0,0,0,0.3);
+  --shadow-card:     0 8px 32px rgba(0,0,0,0.6), 0 2px 6px rgba(0,0,0,0.4);
+  --shadow-lifted:   0 16px 48px rgba(0,0,0,0.7), 0 4px 12px rgba(0,0,0,0.5);
+  --shadow-volt:     0 0 24px var(--volt-glow), 0 0 48px var(--volt-glow-lg);
+  --shadow-lg:       0 2px 8px rgba(0,0,0,0.5), 0 12px 32px rgba(0,0,0,0.4);
+
+  /* ── Focus ring — volt ring on dark bg ── */
+  --focus-ring:      0 0 0 2px var(--ink), 0 0 0 4px var(--volt);
+
+  /* ── Stamp / badge ── */
+  --stamp-ink:       rgba(255,255,255,0.06);
+  --stamp-border:    rgba(255,255,255,0.12);
+  --stamp-text:      var(--text-secondary);
+  --nav-group-text:  rgba(242,240,235,0.28);
+
+  /* ── Semantic colours (adjusted for dark bg readability) ── */
+  --color-success:   #4ADE80;
+  --color-danger:    #F87171;
+  --color-warning:   #FCD34D;
+}
+
+
+/* ============================================================
+   04  CATEGORY SEAM MAP
+   JS sets data-category on .box-card — CSS picks up the vars.
+   ============================================================ */
 [data-category="headsets"]  { --cat-seam: var(--slate);   --cat-glow: rgba(142,142,160,0.15); }
 [data-category="keyboards"] { --cat-seam: var(--cobalt);  --cat-glow: rgba(0,87,255,0.15);   }
 [data-category="mice"]      { --cat-seam: var(--crimson); --cat-glow: rgba(255,45,85,0.15);  }
@@ -192,39 +247,24 @@
 [data-category="chairs"]    { --cat-seam: var(--jade);    --cat-glow: rgba(0,200,83,0.15);   }
 
 
-/* ─────────────────────────────────────────────────────────────
-   PATCH COLOUR MAP — used in story-strip + patch-rail
-   data-collection on patch button drives CSS currentColor
-   ───────────────────────────────────────────────────────────── */
-.patch[data-collection="sweaty-fps"]   { --patch-color: var(--crimson); }
-.patch[data-collection="study-mode"]   { --patch-color: var(--cobalt);  }
-.patch[data-collection="kynar-setup"]  { --patch-color: var(--volt);    }
-.patch[data-collection="under-100"]    { --patch-color: var(--jade);    }
-.patch[data-collection="cozy-station"] { --patch-color: var(--amber);   }
-.patch[data-collection="wireless-only"]{ --patch-color: var(--slate);   }
-.patch[data-collection="creator-bay"]  { --patch-color: var(--purple);  }
-.patch[data-collection="all-picks"]    { --patch-color: var(--chalk);   }
+/* ============================================================
+   05  PATCH COLOUR MAP
+   data-collection on patch button drives CSS currentColor.
+   ============================================================ */
+.patch[data-collection="sweaty-fps"]    { --patch-color: var(--crimson); }
+.patch[data-collection="study-mode"]    { --patch-color: var(--cobalt);  }
+.patch[data-collection="kynar-setup"]   { --patch-color: var(--volt);    }
+.patch[data-collection="under-100"]     { --patch-color: var(--jade);    }
+.patch[data-collection="cozy-station"]  { --patch-color: var(--amber);   }
+.patch[data-collection="wireless-only"] { --patch-color: var(--slate);   }
+.patch[data-collection="creator-bay"]   { --patch-color: var(--purple);  }
+.patch[data-collection="all-picks"]     { --patch-color: var(--chalk);   }
 
 
-/* ─────────────────────────────────────────────────────────────
-   PREFS SHEET — section group label
-   FIX: token --nav-group-text was defined but had no selector
-   ───────────────────────────────────────────────────────────── */
-.prefs-sheet__nav-group {
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  font-weight: 600;
-  letter-spacing: 0.10em;
-  text-transform: uppercase;
-  color: var(--nav-group-text);
-  padding: var(--sp-3) 0 var(--sp-1);
-  user-select: none;
-}
-
-
-/* ─────────────────────────────────────────────────────────────
-   KEYFRAMES LIBRARY
-   ───────────────────────────────────────────────────────────── */
+/* ============================================================
+   06  KEYFRAMES LIBRARY
+   All @keyframes used across wall.css and style.css live here.
+   ============================================================ */
 
 /* Volt pulse — locator dot + active patch glow */
 @keyframes pulse-dot {
@@ -234,30 +274,72 @@
 
 /* Volt ring breathe — active patch */
 @keyframes volt-breathe {
-  0%, 100% { box-shadow: 0 0 0 0 var(--volt-glow); }
-  50%       { box-shadow: 0 0 0 8px transparent;    }
+  0%, 100% { box-shadow: 0 0 0 0   var(--volt-glow); }
+  50%       { box-shadow: 0 0 0 8px transparent;      }
 }
 
-/* Patch jiggle — scroll trigger */
+/* Patch jiggle — on scroll trigger */
 @keyframes patch-jiggle {
-  0%   { transform: rotate(0deg) scale(1);    }
-  20%  { transform: rotate(-6deg) scale(1.04);}
-  40%  { transform: rotate(5deg) scale(1.04); }
-  60%  { transform: rotate(-4deg) scale(1.02);}
-  80%  { transform: rotate(3deg) scale(1.01); }
-  100% { transform: rotate(0deg) scale(1);    }
+  0%   { transform: rotate(0deg)  scale(1);    }
+  20%  { transform: rotate(-6deg) scale(1.04); }
+  40%  { transform: rotate(5deg)  scale(1.04); }
+  60%  { transform: rotate(-4deg) scale(1.02); }
+  80%  { transform: rotate(3deg)  scale(1.01); }
+  100% { transform: rotate(0deg)  scale(1);    }
+}
+
+/* Patch overshoot — fires on triggerShuffle() deal moment */
+@keyframes patch-overshoot {
+  0%   { transform: scale(1)    translateY(0);                        }
+  22%  { transform: scale(1.20) translateY(-10px) rotate(-4deg);      }
+  45%  { transform: scale(0.90) translateY(3px)   rotate(2deg);       }
+  65%  { transform: scale(1.07) translateY(-4px)  rotate(-1deg);      }
+  82%  { transform: scale(0.97) translateY(1px);                      }
+  100% { transform: scale(1)    translateY(0);                        }
+}
+
+/* Patch charged — volt corona pulse */
+@keyframes patch-charged {
+  from {
+    box-shadow:
+      0 0 0 1px var(--patch-color, var(--volt-dim)),
+      0 0 8px  var(--patch-color, var(--volt-glow)),
+      0 0 24px var(--patch-color, var(--volt-glow-lg));
+  }
+  to {
+    box-shadow:
+      0 0 0 2px var(--patch-color, var(--volt)),
+      0 0 16px var(--patch-color, var(--volt-glow)),
+      0 0 40px var(--patch-color, var(--volt-glow-lg));
+    transform: scale(1.06);
+  }
 }
 
 /* Card enter — stagger on collection swap */
 @keyframes card-enter {
-  from {
-    opacity: 0;
-    transform: translateY(24px) scale(0.97);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
+  from { opacity: 0; transform: translateY(24px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0)    scale(1);    }
+}
+
+/* Card toss out — deck physics */
+@keyframes card-toss-out {
+  0%   { transform: translate3d(0, 0, 0)       rotateX(0)     rotateY(0);    opacity: 1; }
+  30%  { transform: translate3d(20px, -40px, 100px) rotateX(-10deg) rotateY(5deg); opacity: 1; }
+  100% { transform: translate3d(0, 100px, -500px)   rotateX(-90deg) rotateY(0);   opacity: 0; }
+}
+
+/* Card deal in — deck physics */
+@keyframes card-deal-in {
+  0%   { transform: translate3d(0, -150px, -400px) rotateX(45deg); opacity: 0; }
+  60%  { opacity: 1; }
+  100% { transform: translate3d(0, 0, 0) rotateX(0); opacity: 1; }
+}
+
+/* Deck vibrate — shuffle shake */
+@keyframes deck-vibrate {
+  0%, 100% { transform: translateX(0); }
+  25%       { transform: translateX(-2px) rotate(-0.5deg); }
+  75%       { transform: translateX(2px)  rotate(0.5deg);  }
 }
 
 /* Shuffle compress */
@@ -273,6 +355,21 @@
   to   { transform: translateY(0);     opacity: 1; }
 }
 
+/* Banner pulse — fires when shuffle step updates */
+@keyframes banner-pulse {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.015); box-shadow: 0 0 0 2px var(--volt-glow); }
+  100% { transform: scale(1); box-shadow: none; }
+}
+
+/* Dice spin */
+@keyframes dice-spin {
+  0%   { transform: rotate(0deg)   scale(0.8); opacity: 0.4; }
+  40%  { transform: rotate(-30deg) scale(1.2); opacity: 1;   }
+  70%  { transform: rotate(20deg)  scale(1.1);                }
+  100% { transform: rotate(0deg)   scale(1);   opacity: 1;   }
+}
+
 /* Stamp emboss pulse */
 @keyframes stamp-emboss {
   0%   { letter-spacing: 0.12em; }
@@ -286,7 +383,13 @@
   to   { transform: translateY(-4px) scale(1.04); }
 }
 
-/* Shimmer (for loading states) */
+/* Rack hold ring */
+@keyframes rack-hold-ring {
+  from { clip-path: inset(0 100% 0 0); }
+  to   { clip-path: inset(0 0% 0 0);   }
+}
+
+/* Shimmer — loading states */
 @keyframes shimmer {
   0%   { background-position: -200% center; }
   100% { background-position:  200% center; }
@@ -297,12 +400,8 @@
   to { transform: rotate(360deg); }
 }
 
-/* Patch overshoot — fires on triggerShuffle() deal moment */
-@keyframes patch-overshoot {
-  0%   { transform: scale(1)    translateY(0);            }
-  22%  { transform: scale(1.20) translateY(-10px) rotate(-4deg); }
-  45%  { transform: scale(0.90) translateY(3px)  rotate(2deg);  }
-  65%  { transform: scale(1.07) translateY(-4px) rotate(-1deg); }
-  82%  { transform: scale(0.97) translateY(1px);           }
-  100% { transform: scale(1)    translateY(0);            }
+/* Panel slide up — more panel on inner pages */
+@keyframes panelUp {
+  from { transform: translateY(16px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
 }

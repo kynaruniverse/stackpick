@@ -1,8 +1,62 @@
+# ============================================================
+#  STACK PICK — Netlify / Cloudflare Pages headers
+#  Controls security, caching, and content policy site-wide.
+# ============================================================
+
+
+# ── Global security headers (applied to every response) ──────
 /*
   X-Frame-Options: DENY
   X-Content-Type-Options: nosniff
+  X-XSS-Protection: 1; mode=block
   Referrer-Policy: strict-origin-when-cross-origin
-  Content-Security-Policy: default-src 'self'; script-src 'self' https://www.googletagmanager.com https://www.google-analytics.com 'unsafe-inline'; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://www.google-analytics.com; frame-ancestors 'none'
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()
+  Content-Security-Policy: default-src 'self'; script-src 'self' https://www.googletagmanager.com https://www.google-analytics.com 'unsafe-inline'; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://www.google-analytics.com https://www.googletagmanager.com; frame-ancestors 'none'
 
+
+# ── Service worker — never cache ─────────────────────────────
+# Must always be fresh so version updates reach users immediately.
 /sw.js
   Cache-Control: no-cache, no-store, must-revalidate
+
+
+# ── HTML pages — never cache ──────────────────────────────────
+# Ensures users always get the latest generated content.
+# SW handles offline availability independently.
+/*.html
+  Cache-Control: no-cache, no-store, must-revalidate
+
+/*/index.html
+  Cache-Control: no-cache, no-store, must-revalidate
+
+
+# ── Static assets — cache aggressively ───────────────────────
+# SW versioning (sp-YYYYMMDD-HHMMSS) busts the cache on every
+# build, so immutable is safe here. 1 year = 31536000 seconds.
+/assets/css/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/assets/js/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/assets/images/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/assets/icons/*
+  Cache-Control: public, max-age=31536000, immutable
+
+
+# ── PWA files — short cache ───────────────────────────────────
+# manifest.json needs to update when shortcuts or icons change.
+# 1 hour gives a reasonable balance between freshness and speed.
+/manifest.json
+  Cache-Control: public, max-age=3600, must-revalidate
+
+
+# ── Sitemap and robots — short cache ─────────────────────────
+# Updated on every build — keep fresh for crawlers.
+/sitemap.xml
+  Cache-Control: public, max-age=3600, must-revalidate
+
+/robots.txt
+  Cache-Control: public, max-age=3600, must-revalidate

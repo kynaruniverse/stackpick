@@ -6,56 +6,91 @@ Everything you need to add products, comparisons, and guides. One source of trut
 
 ## The Golden Rule
 
-> Edit a `_data/` JSON file → run `npm run build` → push.  
-> That's it. You never touch generated HTML files directly.
+> Edit a `_data/` JSON file → run `npm run build` → push.
+> That's it. Never touch generated HTML files directly.
+
+The computer creates the category pages, comparison pages, and guide pages automatically.
+If you edit them by hand, your changes will be deleted the next time you build.
 
 ---
 
-## Setup (one-time)
+## Contents
 
-Make sure Node.js is installed:
+1. [Setup](#1-setup)
+2. [Daily Build Command](#2-daily-build-command)
+3. [How to Add a Product](#3-how-to-add-a-product)
+4. [How to Add a Badge Colour](#4-how-to-add-a-badge-colour)
+5. [How to Add a Crossed-Out RRP](#5-how-to-add-a-crossed-out-rrp)
+6. [How to Add a Comparison Page](#6-how-to-add-a-comparison-page)
+7. [How to Add a Guide Page](#7-how-to-add-a-guide-page)
+8. [How to Update a Price](#8-how-to-update-a-price)
+9. [How to Update Affiliate Links](#9-how-to-update-affiliate-links)
+10. [File Map](#10-file-map)
+11. [Files You Should Never Edit Directly](#11-files-you-should-never-edit-directly)
+12. [Quick Reference Table](#12-quick-reference-table)
+
+---
+
+## 1. Setup
+
+One-time only. Make sure Node.js is installed:
+
 ```
 node -v
 ```
-Should show v18 or higher. If not, install from nodejs.org.
 
-Install nothing else — the generator uses zero npm dependencies.
+Should show `v18` or higher. If not, install from [nodejs.org](https://nodejs.org).
+
+No other dependencies — the generator uses zero npm packages.
 
 ---
 
-## Daily Build Command
+## 2. Daily Build Command
+
+Run this any time you edit a `_data/` file:
 
 ```
 npm run build
 ```
 
-Or equivalently:
+Then push to deploy:
+
 ```
-node _generator/build.js
+git add -A
+git commit -m "Describe what you changed"
+git push
 ```
 
-Run this any time you edit a `_data/` file. Then push to deploy.
+**That's the entire deploy process.**
 
 ---
 
-## How to Add a New Product
+## 3. How to Add a Product
 
 ### Step 1 — Open `_data/products.json`
 
-Add a new object to the array. Copy an existing product and edit it. Every field is required.
+Add a new object to the array. Copy an existing product as your starting point and fill in every field — all fields are required.
 
 **Full schema:**
+
 ```json
 {
   "id": "mice-logitech-g303-shroud",
   "category": "mice",
+  "brand": "Logitech",
   "badge": "SHROUD EDITION",
   "name": "Logitech G303 Shroud Edition",
   "shortName": "G303 Shroud",
   "specs": ["75g Wireless", "HERO 25K Sensor", "1K Polling"],
   "desc": "Logitech's collab with shroud — a compact wireless mouse with a proven shape.",
-  "pros": ["Compact shape great for small-to-medium hands", "HERO 25K sensor is rock solid"],
-  "cons": ["Shape is love-it-or-hate-it", "1000Hz only (no high-poll adapter)"],
+  "pros": [
+    "Compact shape great for small-to-medium hands",
+    "HERO 25K sensor is rock solid"
+  ],
+  "cons": [
+    "Shape is love-it-or-hate-it",
+    "1000Hz only (no high-poll adapter)"
+  ],
   "price": "£79",
   "priceRaw": 79.00,
   "affiliate": "https://amzn.to/XXXXXXXX",
@@ -73,21 +108,22 @@ Add a new object to the array. Copy an existing product and edit it. Every field
 
 | Field | Type | Notes |
 |---|---|---|
-| `id` | string | Unique. Format: `{category}-{brand}-{model}` (kebab-case, no spaces) |
-| `category` | string | Must be one of: `mice`, `keyboards`, `headsets`, `monitors`, `chairs` |
-| `badge` | string | Short label shown on card. E.g. "THE PRO STANDARD", "BUDGET PICK" |
+| `id` | string | Unique. Format: `{category}-{brand}-{model}` in kebab-case |
+| `category` | string | One of: `mice` `keyboards` `headsets` `monitors` `chairs` |
+| `brand` | string | Brand name for schema.org e.g. `"Razer"` |
+| `badge` | string | Short label on card e.g. `"THE PRO STANDARD"`, `"BUDGET PICK"` |
 | `name` | string | Full product name |
 | `shortName` | string | Short version for tight spaces |
-| `specs` | array | 3 short spec strings shown as pill tags |
+| `specs` | array | Exactly 3 short spec strings shown as pill tags |
 | `desc` | string | 1–2 sentence description |
 | `pros` | array | 2–3 pros (shown with ✓) |
 | `cons` | array | 1–2 cons (shown with ✕) |
 | `price` | string | Display price e.g. `"£79"` |
-| `priceRaw` | number | Numeric price for schema.org (no £ symbol) |
-| `affiliate` | string | Full Amazon affiliate URL (amzn.to/...) |
+| `priceRaw` | number | Numeric price for schema.org — no £ symbol |
+| `affiliate` | string | Full Amazon affiliate URL starting with `https://amzn.to/` |
 | `url` | string | Category page path e.g. `"/mice/"` |
 | `emoji` | string | Emoji shown on card |
-| `seam` | string | Colour accent name (used by wall.js) |
+| `seam` | string | Colour accent name used by wall.js |
 | `loadoutCount` | number | How many loadouts this product appears in |
 | `tags` | array | Tag strings used for filtering |
 | `inStock` | boolean | `true` or `false` |
@@ -113,7 +149,7 @@ git add -A && git commit -m "Add Logitech G303 Shroud to mice" && git push
 
 ---
 
-## How to Add a Badge Colour
+## 4. How to Add a Badge Colour
 
 If your new product needs a custom badge colour (not the default grey), add it to the `BADGE_COLORS` map in `_generator/generate-categories.js`:
 
@@ -124,19 +160,22 @@ const BADGE_COLORS = {
 };
 ```
 
-Available colours from the existing set:
-- `#22c55e` — green
-- `#3b82f6` — blue  
-- `#f97316` — orange
-- `#ef4444` — red
-- `#8b5cf6` — purple
-- `#10b981` — teal
+**Available colours from the existing set:**
 
-Or use any hex value.
+| Colour | Hex |
+|---|---|
+| Green | `#22c55e` |
+| Blue | `#3b82f6` |
+| Orange | `#f97316` |
+| Red | `#ef4444` |
+| Purple | `#8b5cf6` |
+| Teal | `#10b981` |
+
+Or use any hex value you like.
 
 ---
 
-## How to Add a Crossed-Out RRP
+## 5. How to Add a Crossed-Out RRP
 
 If the product is on sale and you want to show a strikethrough RRP, add it to `PRICE_RRP` in `_generator/generate-categories.js`:
 
@@ -149,13 +188,14 @@ const PRICE_RRP = {
 
 ---
 
-## How to Add a Comparison Page
+## 6. How to Add a Comparison Page
 
 ### Step 1 — Open `_data/comparisons.json`
 
-Add a new object to the array. Use an existing comparison as a reference.
+Add a new object to the array. Use an existing comparison as your reference.
 
-**Minimal structure:**
+**Full schema:**
+
 ```json
 {
   "slug": "logitech-g303-shroud-vs-razer-viper-v3-pro",
@@ -190,20 +230,20 @@ Add a new object to the array. Use an existing comparison as a reference.
     "linkHref": "/mice/"
   },
   "specTable": [
-    { "label": "Weight",       "a": "75g",       "b": "54g",             "winner": "b" },
-    { "label": "Sensor",       "a": "HERO 25K",  "b": "Focus Pro 35K",   "winner": "" },
-    { "label": "Max Polling",  "a": "1000Hz",    "b": "4000Hz (adapter)","winner": "b" },
-    { "label": "Battery",      "a": "~130 hours","b": "~95 hours",        "winner": "a" },
-    { "label": "Shape",        "a": "Ergonomic", "b": "Ambidextrous",    "winner": "" }
+    { "label": "Weight",      "a": "75g",        "b": "54g",              "winner": "b" },
+    { "label": "Sensor",      "a": "HERO 25K",   "b": "Focus Pro 35K",    "winner": ""  },
+    { "label": "Max Polling", "a": "1000Hz",     "b": "4000Hz (adapter)", "winner": "b" },
+    { "label": "Battery",     "a": "~130 hours", "b": "~95 hours",        "winner": "a" },
+    { "label": "Shape",       "a": "Ergonomic",  "b": "Ambidextrous",     "winner": ""  }
   ],
   "sections": [
     {
       "heading": "Weight — Viper V3 Pro wins",
-      "body": "At 54g the Viper V3 Pro is significantly lighter than the G303 Shroud at 75g. Both are comfortable for long sessions but if raw weight is your priority, Razer wins here."
+      "body": "At 54g the Viper V3 Pro is significantly lighter than the G303 Shroud at 75g..."
     },
     {
       "heading": "Shape — personal preference",
-      "body": "The G303 has a compact ergonomic hump that suits small-to-medium hands with fingertip or claw grip. The Viper V3 Pro is ambidextrous and suits a wider range of hand sizes and grip styles."
+      "body": "The G303 has a compact ergonomic hump that suits small-to-medium hands..."
     }
   ],
   "buySection": {
@@ -227,11 +267,13 @@ Add a new object to the array. Use an existing comparison as a reference.
   },
   "verdict": "If you're chasing the lightest ambidextrous option, Viper V3 Pro. If you want a compact ergonomic shape with exceptional battery life at a lower price, the G303 Shroud is the smarter buy.",
   "relatedLinks": [
-    { "href": "/mice/", "label": "Best Gaming Mice UK" },
-    { "href": "/comparisons/", "label": "All Comparisons" }
+    { "href": "/mice/",          "label": "Best Gaming Mice UK" },
+    { "href": "/comparisons/",   "label": "All Comparisons" }
   ]
 }
 ```
+
+**Spec table `winner` field:** Set to `"a"` or `"b"` to highlight that product's cell. Leave blank `""` for a tie or no clear winner.
 
 ### Step 2 — Build and push
 
@@ -240,24 +282,25 @@ npm run build
 git add -A && git commit -m "Add G303 vs Viper V3 Pro comparison" && git push
 ```
 
-The new page will be live at `/comparisons/logitech-g303-shroud-vs-razer-viper-v3-pro/`.
+The new page goes live at `/comparisons/logitech-g303-shroud-vs-razer-viper-v3-pro/`.
 
 ---
 
-## How to Add a Guide Page
+## 7. How to Add a Guide Page
 
 ### Step 1 — Open `_data/guides.json`
 
-Add a new object to the array.
+Add a new object to the array. Use an existing guide as your reference.
 
-**Minimal structure:**
+**Full schema:**
+
 ```json
 {
   "slug": "gaming-setup-750",
   "title": "£750 Gaming Setup Guide UK 2026",
   "budget": "£750",
   "metaTitle": "£750 Gaming Setup Guide UK 2026 | Stack Pick",
-  "metaDescription": "Best gaming setup for £750 in the UK. Our expert picks for mouse, keyboard, headset, and monitor at a £750 budget.",
+  "metaDescription": "Best gaming setup for £750 in the UK. Expert picks for mouse, keyboard, headset, and monitor.",
   "ogTitle": "£750 Gaming Setup Guide UK | Stack Pick",
   "ogDescription": "The best gaming peripherals you can buy for £750 in the UK.",
   "canonical": "https://stackpick.co.uk/guides/gaming-setup-750/",
@@ -265,10 +308,10 @@ Add a new object to the array.
   "emoji": "🎮",
   "intro": "A £750 budget sits in the sweet spot — enough for genuinely great gear without overspending on diminishing returns.",
   "summaryTable": [
-    { "emoji": "🖱️", "category": "Mouse",    "pick": "Razer Viper V3 Pro",            "price": "£110" },
-    { "emoji": "⌨️", "category": "Keyboard", "pick": "Keychron Q1 Max",               "price": "£169" },
-    { "emoji": "🎧", "category": "Headset",  "pick": "HyperX Cloud III S Wireless",   "price": "£129" },
-    { "emoji": "🖥️", "category": "Monitor",  "pick": "AOC Q27G3XMN",                  "price": "£279" }
+    { "emoji": "🖱️", "category": "Mouse",    "pick": "Razer Viper V3 Pro",          "price": "£110" },
+    { "emoji": "⌨️", "category": "Keyboard", "pick": "Keychron Q1 Max",             "price": "£169" },
+    { "emoji": "🎧", "category": "Headset",  "pick": "HyperX Cloud III S Wireless", "price": "£129" },
+    { "emoji": "🖥️", "category": "Monitor",  "pick": "AOC Q27G3XMN",                "price": "£279" }
   ],
   "summaryTotals": [
     { "label": "Total", "value": "~£687" }
@@ -291,7 +334,7 @@ Add a new object to the array.
       ]
     }
   ],
-  "buyingGuide": "<h2>How We Spent the £750</h2><p>We prioritised monitor and mouse — the two peripherals with the biggest real-world impact on competitive play. The keyboard and headset picks are excellent at their price without being overkill.</p>",
+  "buyingGuide": "<h2>How We Spent the £750</h2><p>We prioritised monitor and mouse — the two peripherals with the biggest real-world impact on competitive play.</p>",
   "relatedGuides": [
     { "href": "/guides/gaming-setup-500/",  "label": "£500 Setup Guide",  "emoji": "💰" },
     { "href": "/guides/gaming-setup-1000/", "label": "£1000 Setup Guide", "emoji": "🎮" }
@@ -308,74 +351,79 @@ git add -A && git commit -m "Add £750 setup guide" && git push
 
 ---
 
-## How to Update a Price
+## 8. How to Update a Price
 
 1. Open `_data/products.json`
-2. Find the product by `id`
-3. Update `price` (display string) and `priceRaw` (number)
-4. If there's an RRP/saving update, edit `PRICE_RRP` in `_generator/generate-categories.js`
+2. Find the product by its `id`
+3. Update `price` (the display string e.g. `"£89"`) and `priceRaw` (the number e.g. `89.00`)
+4. If there is a sale price with a crossed-out RRP, also update `PRICE_RRP` in `_generator/generate-categories.js`
 5. Run `npm run build` and push
 
 ---
 
-## How to Update Affiliate Links
+## 9. How to Update Affiliate Links
 
 1. Open `_data/products.json`
-2. Find the product by `id`
-3. Update the `affiliate` field
-4. Run `npm run build` and push
+2. Find the product by its `id`
+3. Update the `affiliate` field with the new URL
 
-For comparison/guide affiliate links:
-- Comparisons → `_data/comparisons.json` → `productA.affiliate` / `productB.affiliate`
-- Guides → `_data/guides.json` → `sections[n].products[n].affiliate`
+For comparison and guide affiliate links, the locations are slightly different:
+
+- **Comparisons** → `_data/comparisons.json` → `productA.affiliate` or `productB.affiliate`
+- **Guides** → `_data/guides.json` → `sections[n].products[n].affiliate`
+
+Then run `npm run build` and push.
 
 ---
 
-## Complete File Map
+## 10. File Map
 
 ```
-Where to edit                    What it controls
-────────────────────────────────────────────────────────────────
-_data/products.json              All product data (cards on category pages + wall)
-_data/collections.json           Homepage wall collections and shuffle variants
-_data/comparisons.json           All comparison pages
-_data/guides.json                All guide pages
+Where to edit                          What it controls
+────────────────────────────────────────────────────────────────────────
+_data/products.json                    All product data (cards + wall)
+_data/collections.json                 Homepage wall collections & shuffle variants
+_data/comparisons.json                 All comparison pages
+_data/guides.json                      All guide pages
 
-_generator/generate-categories.js   Badge colours + RRP data per product
-_templates/category.html            Layout of category pages
-_templates/comparison.html          Layout of comparison pages
-_templates/guide.html               Layout of guide pages
-_templates/_partials/               Shared head, header, sidebar, footer, nav
+_generator/generate-categories.js      Badge colours + RRP data per product
+_templates/category.html               Layout of category pages
+_templates/comparison.html             Layout of comparison pages
+_templates/guide.html                  Layout of guide pages
+_templates/_partials/                  Shared head, header, sidebar, footer, nav
 
-assets/css/style.css             All category/comparison/guide CSS
-assets/css/wall-tokens.css       Homepage wall CSS tokens
-assets/js/wall.js                Homepage wall logic — DO NOT EDIT (hand-crafted)
-assets/js/analytics.js           GA4 — DO NOT EDIT
-assets/js/app.js                 Theme toggle, nav — DO NOT EDIT
+assets/css/style.css                   All category/comparison/guide CSS
+assets/css/wall-tokens.css             Homepage wall CSS tokens
+assets/js/wall.js                      Homepage wall logic — DO NOT EDIT
+assets/js/analytics.js                 GA4 — DO NOT EDIT
+assets/js/app.js                       Theme toggle, nav — DO NOT EDIT
 
-assets/js/data/products.js       AUTO-GENERATED — DO NOT EDIT
-assets/js/data/collections.js    AUTO-GENERATED — DO NOT EDIT
-sitemap.xml                      AUTO-GENERATED — DO NOT EDIT
+assets/js/data/products.js             AUTO-GENERATED — DO NOT EDIT
+assets/js/data/collections.js          AUTO-GENERATED — DO NOT EDIT
+sitemap.xml                            AUTO-GENERATED — DO NOT EDIT
 ```
 
 ---
 
-## Files You Should Never Edit Directly
+## 11. Files You Should Never Edit Directly
 
-These are either auto-generated or hand-crafted and not part of the generator:
+These are either auto-generated by the build or hand-crafted systems. Editing them directly will either be overwritten on the next build, or break something that is difficult to debug.
 
-- `assets/js/data/products.js` — auto-generated by `export-js-data.js`
-- `assets/js/data/collections.js` — auto-generated by `export-js-data.js`
-- `sitemap.xml` — auto-generated by `generate-sitemap.js`
-- `mice/index.html`, `keyboards/index.html`, etc. — auto-generated by `generate-categories.js`
-- `comparisons/[slug]/index.html` — auto-generated by `generate-comparisons.js`
-- `guides/[slug]/index.html` — auto-generated by `generate-guides.js`
-- `assets/js/wall.js` — hand-crafted homepage wall logic, separate system
-- `assets/js/analytics.js` — GA4 setup, never touch
+**Auto-generated on every build — edits will be lost:**
+- `assets/js/data/products.js`
+- `assets/js/data/collections.js`
+- `sitemap.xml`
+- `mice/index.html`, `keyboards/index.html`, `headsets/index.html`, `monitors/index.html`, `chairs/index.html`
+- `comparisons/[slug]/index.html`
+- `guides/[slug]/index.html`
+
+**Hand-crafted — do not touch without good reason:**
+- `assets/js/wall.js` — homepage wall logic, complex and interdependent
+- `assets/js/analytics.js` — GA4 setup, never alter
 
 ---
 
-## Quick Reference — Common Tasks
+## 12. Quick Reference Table
 
 | Task | File to edit | Command |
 |---|---|---|
@@ -385,8 +433,8 @@ These are either auto-generated or hand-crafted and not part of the generator:
 | Add a comparison | `_data/comparisons.json` | `npm run build` |
 | Add a guide | `_data/guides.json` | `npm run build` |
 | Update homepage collections | `_data/collections.json` | `npm run build` |
-| Change badge colour | `_generator/generate-categories.js` | `npm run build` |
-| Add RRP/saving display | `_generator/generate-categories.js` | `npm run build` |
+| Change a badge colour | `_generator/generate-categories.js` | `npm run build` |
+| Add RRP / saving display | `_generator/generate-categories.js` | `npm run build` |
 
 ---
 

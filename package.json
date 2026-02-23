@@ -10,7 +10,9 @@
     "build:comparisons": "node _generator/generate-comparisons.js",
     "build:guides":      "node _generator/generate-guides.js",
     "build:sitemap":     "node _generator/generate-sitemap.js",
-    "build:export":      "node _generator/export-js-data.js"
+    "build:export":      "node _generator/export-js-data.js",
+    "check":             "node _generator/lib/validate.js",
+    "start":             "npm run build"
   },
   "engines": {
     "node": ">=18.0.0"

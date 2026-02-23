@@ -103,11 +103,11 @@
     "priceRaw": 69.99,
     "msrp": "£149.99",
     "savings": "53%",
-    "affiliate": "https://amzn.to/3Y1RmE6",
+    "affiliate": "https://amzn.to/4awtAHV",
     "url": "/mice/",
     "emoji": "🖱️",
     "seam": "crimson",
-    "loadoutCount": 5,
+    "loadoutCount": 3,
     "tags": [
       "ergonomic",
       "wireless",
@@ -280,7 +280,7 @@
   {
     "id": "keyboards-aula-f99-wireless",
     "category": "keyboards",
-    "brand": "AULA",
+    "brand": "Aula",
     "badge": "CREAMY ACOUSTICS",
     "name": "Aula F99 Wireless",
     "shortName": "Aula F99",
@@ -388,7 +388,7 @@
       "budget",
       "gasket",
       "value",
-      "tkl"
+      "wired"
     ],
     "inStock": true,
     "nextDay": true
@@ -407,12 +407,13 @@
     ],
     "desc": "The 'Wallhack' for your ears. With surgical directional audio and E.A.R. angled drivers, it offers a neutral soundstage that makes tracking footsteps feel like cheating.",
     "pros": [
-      "Best-in-class spatial awareness",
-      "Ultra-lightweight velour comfort"
+      "Surgical soundstage: E.A.R. angled drivers create a wide, accurate stereo image — enemy footsteps become pinpoint data points.",
+      "Ultra-lightweight comfort: 240g open-back build with velour earpads designed for marathon sessions without fatigue.",
+      "Unmatched value: Audiophile-grade neutral tuning at a price that shames dedicated gaming headsets twice the cost."
     ],
     "cons": [
-      "No built-in mic",
-      "Leaks sound (open-back)"
+      "Open-back trade-off: Sound leaks in both directions — not suited for noisy environments or late-night sessions.",
+      "No built-in mic: Requires a separate clip-on or desktop mic, adding cost and desk clutter for multiplayer gaming."
     ],
     "price": "£99",
     "priceRaw": 99.0,
@@ -446,12 +447,13 @@
     ],
     "desc": "The ultimate command center. Features an 'Infinity Power' system with two swappable batteries and a base station that swaps between PC and Console instantly.",
     "pros": [
-      "Never runs out of battery",
-      "Simultaneous 2.4GHz & Bluetooth"
+      "Infinity Power system: Two swappable batteries with a charging dock ensure you never hit 0% mid-session.",
+      "Multi-system command: The base station switches between PC and console instantly via a single button press.",
+      "Premium ANC: Active noise cancellation and simultaneous 2.4GHz + Bluetooth for flexible use across all devices."
     ],
     "cons": [
-      "Very high price point",
-      "Internal ANC sensor can touch ears"
+      "Premium price premium: The feature set is unmatched, but you're paying top-tier money for the SteelSeries ecosystem.",
+      "ANC microphone fit: The internal ANC sensor sits close to the ear and may cause discomfort during extended wear."
     ],
     "price": "£256",
     "priceRaw": 256.21,
@@ -485,12 +487,13 @@
     ],
     "desc": "Built for the marathon. Features a jaw-dropping 120-hour battery life and HyperX's legendary signature memory foam for a 'cloud-like' fit during long grinds.",
     "pros": [
-      "Industry-leading battery life",
-      "Extremely durable metal frame"
+      "Marathon-grade endurance: Industry-leading 120-hour battery life means weeks of gaming between charges.",
+      "Legendary comfort: HyperX's signature memory foam earcups and steel-reinforced headband are built for all-day wear.",
+      "Spatial audio out of the box: DTS Headphone:X Spatial support provides convincing surround sound for positional gaming."
     ],
     "cons": [
-      "Passive noise isolation only",
-      "Sound profile is gaming-flat"
+      "Passive isolation only: No active noise cancellation — relies solely on the physical seal of the earcups.",
+      "Gaming-tuned sound: The V-shaped EQ profile prioritizes bass and treble, which won't suit audiophile listeners."
     ],
     "price": "£116",
     "priceRaw": 116.44,
@@ -524,12 +527,13 @@
     ],
     "desc": "Absolute silence. The Gen 2 update adds wired lossless USB-C support and 'Cinema Mode' spatial audio, making it the perfect hybrid for gaming and travel.",
     "pros": [
-      "Unmatched noise cancellation",
-      "New lossless wired support"
+      "Class-leading noise cancellation: Industry-benchmark ANC that silences offices, flights, and family members with ease.",
+      "Lossless wired audio: New USB-C connection delivers a full lossless signal — a first for the QuietComfort lineup.",
+      "Immersive spatial audio: 'Cinema Mode' creates a convincing wide soundstage for both gaming and film."
     ],
     "cons": [
-      "Most expensive in the lineup",
-      "Battery required for wired use"
+      "Premium price tag: The most expensive headset in the lineup — you're paying for the Bose name and ANC crown.",
+      "Battery dependency: Even in wired lossless mode, the battery must have some charge — it won't function completely dead."
     ],
     "price": "£399",
     "priceRaw": 399.95,
@@ -563,12 +567,13 @@
     ],
     "desc": "The budget king. Replaces the old A10 by offering superior 50mm drivers and advanced passive noise cancellation in a featherweight, comfortable chassis.",
     "pros": [
-      "Elite mic clarity for the price",
-      "Excellent sound for FPS gaming"
+      "Pro-grade mic for the money: The cardioid mic delivers crisp, broadcast-quality voice clarity that embarrasses its price bracket.",
+      "Tuned for FPS: The 50mm TriForce drivers deliver a punchy, directional soundstage optimized for footstep tracking.",
+      "Featherweight comfort: At 240g with memory foam cushions, it disappears during long grinding sessions."
     ],
     "cons": [
-      "Fixed, non-detachable cable",
-      "Plastic-heavy construction"
+      "Fixed cable compromise: The non-detachable cable is the main trade-off — expect wear at the connector over time.",
+      "Plastic-heavy construction: Lacks the premium feel of the metal-frame options above, but the build is solid for the price."
     ],
     "price": "£35",
     "priceRaw": 35.54,
@@ -718,7 +723,7 @@
     "pros": [
       "Stunning HDR1000 performance that rivals panels twice its price.",
       "VA panel provides a high native contrast ratio for deep, ink-like blacks.",
-      "Mini-LED backlighting significantly reduces 'IPS glow' in dark scenes."
+      "Mini-LED backlighting with 336 dimming zones dramatically improves local contrast compared to standard VA panels."
     ],
     "cons": [
       "VA Smearing: Fast dark-to-light motion can have slight trailing.",
@@ -756,7 +761,7 @@
     "pros": [
       "AI Dual Mode: High resolution for work, high refresh for competition.",
       "Mini-LED with 1,152 dimming zones offers pinpoint HDR precision.",
-      "Rapid IPS panel ensures a 0.5ms response time with zero ghosting."
+      "Rapid IPS panel ensures a 0.5ms response time with minimal ghosting."
     ],
     "cons": [
       "USB-C is only 15W Power Delivery — not enough to charge most laptops.",
@@ -840,8 +845,6 @@
     ],
     "price": "£187",
     "priceRaw": 187.97,
-    "msrp": "£199.99",
-    "savings": "6%",
     "affiliate": "https://amzn.to/4aCwuK2",
     "url": "/chairs/",
     "emoji": "🪑",
@@ -859,7 +862,7 @@
   {
     "id": "chairs-eureka-typhon",
     "category": "chairs",
-    "brand": "Eureka",
+    "brand": "EUREKA",
     "badge": "BEST MESH",
     "name": "EUREKA Typhon Gaming Chair",
     "shortName": "Typhon Mesh",

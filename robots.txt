@@ -1,16 +1,59 @@
 # robots.txt for stackpick.co.uk
-# Updated: February 17, 2026
+# Updated: February 2026
+
+# ============================================================
+#  GLOBAL RULES
+# ============================================================
 
 User-agent: *
 Allow: /
-Crawl-delay: 1
 
-# Sitemap
+# Block raw JS data files — not pages, no indexing value
+Disallow: /assets/js/data/
+
+# Block search query parameters — prevents infinite URL variations
+Disallow: /search/?q=
+
+# Block internal generator and template source files
+Disallow: /_generator/
+Disallow: /_templates/
+Disallow: /_data/
+
+# Block offline fallback page — not useful in search results
+Disallow: /offline.html
+
+
+# ============================================================
+#  BOT-SPECIFIC RULES
+# ============================================================
+
+# GPTBot (OpenAI) — block AI training scraping
+User-agent: GPTBot
+Disallow: /
+
+# Google-Extended (Gemini/Bard training data) — block AI training
+User-agent: Google-Extended
+Disallow: /
+
+# CCBot (Common Crawl — feeds many AI training datasets)
+User-agent: CCBot
+Disallow: /
+
+# anthropic-ai
+User-agent: anthropic-ai
+Disallow: /
+
+# Bytespider (TikTok/ByteDance scraper — aggressive crawler)
+User-agent: Bytespider
+Disallow: /
+
+# PetalBot (Huawei — high volume, low value for affiliate sites)
+User-agent: PetalBot
+Disallow: /
+
+
+# ============================================================
+#  SITEMAP
+# ============================================================
+
 Sitemap: https://stackpick.co.uk/sitemap.xml
-
-# Block common bad bots (optional - uncomment if needed)
-# User-agent: AhrefsBot
-# Disallow: /
-# 
-# User-agent: SemrushBot
-# Disallow: /
