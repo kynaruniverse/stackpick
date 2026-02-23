@@ -1,11 +1,25 @@
-# --- System & Environment ---
+# ============================================================
+#  STACK PICK — .gitignore
+# ============================================================
+
+
+# ── System & Environment ──────────────────────────────────────
 .DS_Store
+Thumbs.db
 node_modules/
 *.log
 .env
 
-# --- Auto-Generated Site Content ---
-# These are built by generate-categories.js
+
+# ── Editor & IDE ──────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+
+
+# ── Auto-Generated Category Pages ────────────────────────────
+# Built by generate-categories.js — never edit directly
 /chairs/
 /desks/
 /headsets/
@@ -16,16 +30,16 @@ node_modules/
 /speakers/
 /extras/
 
-# These are built by generate-comparisons.js and generate-guides.js
-# We ignore the subfolders containing index.html, but keep the parent folder
+
+# ── Auto-Generated Comparison & Guide Subpages ───────────────
+# Ignores slug subfolders (e.g. /comparisons/mouse-vs-mouse/)
+# but keeps the parent /comparisons/ and /guides/ folders tracked
 /comparisons/*/
 /guides/*/
 
-# --- Auto-Generated Assets & SEO ---
-# These are built by export-js-data.js and generate-sitemap.js
+
+# ── Auto-Generated Assets & SEO ──────────────────────────────
+# Built by export-js-data.js and generate-sitemap.js
 /assets/js/data/collections.js
 /assets/js/data/products.js
 /sitemap.xml
-
-# --- Search Page ---
-/search/
