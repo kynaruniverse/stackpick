@@ -77,10 +77,7 @@ const STATIC_PAGES = [
   { loc: '/comparisons/', changefreq: 'weekly',  priority: '0.7' },
   { loc: '/search/',      changefreq: 'weekly',  priority: '0.6' },
   { loc: '/about/',       changefreq: 'monthly', priority: '0.5' },
-  { loc: '/pcs/',         changefreq: 'monthly', priority: '0.5', placeholder: true },
-  { loc: '/desks/',       changefreq: 'monthly', priority: '0.5', placeholder: true },
-  { loc: '/speakers/',    changefreq: 'monthly', priority: '0.5', placeholder: true },
-  { loc: '/extras/',      changefreq: 'monthly', priority: '0.5', placeholder: true },
+  
 ];
 
 // ---------------------------------------------------------------------------

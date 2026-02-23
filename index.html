@@ -70,7 +70,7 @@
     <div style="font-family:sans-serif;padding:2rem;text-align:center;color:#F2F0EB;background:#0A0A0F;min-height:100vh;">
       <p style="font-size:1.5rem;font-weight:700;margin-bottom:1rem;">⚡ StackPick</p>
       <p style="margin-bottom:1.5rem;color:rgba(242,240,235,0.6);">JavaScript is required to run the loadout wall. Browse by category instead:</p>
-      <p><a href="/headsets/" style="color:#C8FF00;margin:0 0.75rem;">Headsets</a><a href="/keyboards/" style="color:#C8FF00;margin:0 0.75rem;">Keyboards</a><a href="/mice/" style="color:#C8FF00;margin:0 0.75rem;">Mice</a><a href="/monitors/" style="color:#C8FF00;margin:0 0.75rem;">Monitors</a><a href="/chairs/" style="color:#C8FF00;margin:0 0.75rem;">Chairs</a></p>
+      <p><a href="/headsets/" style="color:#C8FF00;margin:0 0.75rem;">Headsets</a><a href="/keyboards/" style="color:#C8FF00;margin:0 0.75rem;">Keyboards</a><a href="/mice/" style="color:#C8FF00;margin:0 0.75rem;">Mice</a><a href="/monitors/" style="color:#C8FF00;margin:0 0.75rem;">Monitors</a><a href="/chairs/" style="color:#C8FF00;margin:0 0.75rem;">Chairs</a><a href="/search/" style="color:#C8FF00;margin:0 0.75rem;">Search</a></p>
     </div>
   </noscript>
 
@@ -337,17 +337,7 @@
        Registers sw.js for offline support and PWA install prompt.
        Runs after load so it never blocks page rendering.
        ═══════════════════════════════════════════════════════════ -->
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', function () {
-        navigator.serviceWorker.register('/sw.js').then(function (reg) {
-          console.log('[SW] Registered — scope:', reg.scope);
-        }).catch(function (err) {
-          console.warn('[SW] Registration failed:', err);
-        });
-      });
-    }
-  </script>
+  
 
 </body>
 </html>

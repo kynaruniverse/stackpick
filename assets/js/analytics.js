@@ -56,7 +56,7 @@
     // ============================================================
 
     gtag('config', 'G-ZTN7H3L6DV', {
-        anonymize_ip:                       true,   // IPv4 last octet masked
+        // anonymize_ip is always true in GA4 by default — no config needed
         allow_google_signals:               false,  // no remarketing audiences
         allow_ad_personalization_signals:   false,  // no ad personalisation
         cookie_flags:                       'SameSite=None;Secure',
@@ -106,8 +106,8 @@
             [25, 50, 75, 100].forEach(function (milestone) {
                 if (pct >= milestone && !_scrollTracked[milestone]) {
                     _scrollTracked[milestone] = true;
-                    gtag('event', 'scroll', {
-                        percent_scrolled: milestone,    // GA4 native dimension
+                    gtag('event', 'scroll_depth', {
+                        percent_scrolled: milestone,
                         page_path:        window.location.pathname,
                     });
                 }
@@ -156,13 +156,6 @@
                     affiliation:   'Amazon Associates',
                     link_url:      href,
                 }],
-            });
-
-            // Simple named event — used for GA4 goal setup
-            gtag('event', 'affiliate_click', {
-                link_url:  href,
-                link_text: text,
-                page_path: page,
             });
 
             return; // prevent double-fire as outbound

@@ -1,20 +1,25 @@
 <!DOCTYPE html>
-<html lang="en-GB">
+<html lang="en-GB" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#3B82F6" media="(prefers-color-scheme: light)">
-    <meta name="theme-color" content="#1E293B" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#0A0A0F" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#F2F0EB" media="(prefers-color-scheme: light)">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="StackPick">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="description" content="About Stack Pick — honest gaming gear recommendations for UK gamers. How we research, our affiliate disclosure, and our promise to you.">
+    <meta name="author" content="Stack Pick">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://stackpick.co.uk/about/">
     <meta property="og:title" content="About Stack Pick | UK Gaming Gear Recommendations">
     <meta property="og:description" content="Honest gaming gear recommendations for UK gamers. How we research, our affiliate disclosure, and our promise.">
     <meta property="og:image" content="https://stackpick.co.uk/assets/images/og-image.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="About Stack Pick | UK Gaming Gear Recommendations">
+    <meta name="twitter:description" content="Honest gaming gear recommendations for UK gamers. How we research, our affiliate disclosure, and our promise.">
+    <meta name="twitter:image" content="https://stackpick.co.uk/assets/images/og-image.jpg">
     <title>About Stack Pick | UK Gaming Gear Recommendations</title>
     <link rel="canonical" href="https://stackpick.co.uk/about/">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎮</text></svg>">
@@ -23,12 +28,27 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preload" href="/assets/css/style.css" as="style">
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" as="style">
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/style.css">
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZTN7H3L6DV"></script>
-    <script src="/assets/js/analytics.js" defer></script>
-</head>
+        <script src="/assets/js/analytics.js" defer></script>
+
+        <!-- Apply saved theme before paint to prevent flash -->
+        <script>
+        (function () {
+            try {
+                var saved = localStorage.getItem('sp-theme');
+                if (saved) {
+                    document.documentElement.setAttribute('data-theme', saved);
+                } else if (window.matchMedia('(prefers-color-scheme: light)').matches) {
+                    document.documentElement.setAttribute('data-theme', 'light');
+                }
+            } catch (e) { /* localStorage blocked — default dark theme stays */ }
+        }());
+        </script>
+    </head>
 <body>
 
     <a href="#main-content" class="skip-link">Skip to main content</a>
@@ -76,7 +96,7 @@
             <a href="/comparisons/" class="sidebar-link"><span class="nav-icon">⚖️</span> Comparisons</a>
             <a href="/search/" class="sidebar-link"><span class="nav-icon">🔍</span> Search</a>
         </div>
-    </div>
+    </aside>
 
     <!-- BOTTOM NAV -->
     <nav class="bottom-nav" aria-label="Mobile navigation">
@@ -115,6 +135,18 @@
     </nav>
 
     <script src="/assets/js/app.js" defer></script>
-     
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function () {
+                navigator.serviceWorker.register('/sw.js').then(function (reg) {
+                    console.log('[SW] Registered — scope:', reg.scope);
+                }).catch(function (err) {
+                    console.warn('[SW] Registration failed:', err);
+                });
+            });
+        }
+    </script>
+
 </body>
 </html>

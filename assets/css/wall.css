@@ -221,21 +221,12 @@ img {
     var(--volt) 60%,
     var(--chalk) 100%
   );
-  background-size: 200% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 /* Reduced motion: strip the gradient clip */
-@media (prefers-reduced-motion: reduce) {
-  .persona-strip__headline {
-    animation: none !important;
-    -webkit-text-fill-color: var(--chalk);
-    background: none;
-    color: var(--chalk);
-  }
-}
 
 .persona-strip__sub {
   font-family: var(--font-body);
@@ -1746,7 +1737,7 @@ img {
   position: absolute;
   bottom: var(--sp-3);
   right: calc(var(--seam-width) + var(--sp-3));
-  z-index: 20;
+  z-index: calc(var(--z-card) + 10);
   width: 28px;
   height: 28px;
   border-radius: 50%;
@@ -1841,7 +1832,7 @@ img {
 
 .box-card--tossing {
   animation: card-toss-out 0.6s var(--ease-smooth) forwards !important;
-  z-index: 100;
+  z-index: var(--z-sticky);
 }
 
 .box-card--dealing {

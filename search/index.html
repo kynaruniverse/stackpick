@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#0A0A0F" media="(prefers-color-scheme: dark)">
     <meta name="theme-color" content="#F2F0EB" media="(prefers-color-scheme: light)">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="StackPick">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="author" content="Stack Pick">
@@ -24,6 +24,7 @@
     <title>Search | Stack Pick</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="preload" href="/assets/css/style.css" as="style">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
     <link rel="manifest" href="/manifest.json">
@@ -59,17 +60,17 @@
             width: 100%;
             padding: 1rem 1rem 1rem 3rem;
             font-size: 1.1rem;
-            font-family: var(--font-sans);
-            border: 2px solid var(--border-color);
+            font-family: var(--font-body);
+            border: 2px solid var(--border-default);
             border-radius: var(--radius-lg);
-            background: var(--card-bg);
+            background: var(--surface-card);
             color: var(--text-primary);
             transition: border-color 0.15s, box-shadow 0.15s;
             outline: none;
         }
         .search-input:focus {
-            border-color: var(--accent-primary);
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+            border-color: var(--volt);
+            box-shadow: 0 0 0 3px rgba(200, 255, 0, 0.15);
         }
         .search-icon {
             position: absolute;
@@ -102,21 +103,21 @@
         }
         .filter-btn {
             padding: 0.35rem 0.85rem;
-            border-radius: var(--radius-full);
-            border: 1px solid var(--border-color);
-            background: var(--card-bg);
+            border-radius: var(--radius-pill, 999px);
+            border: 1px solid var(--border-default);
+            background: var(--surface-card);
             color: var(--text-secondary);
             font-size: 0.8rem;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.15s;
-            font-family: var(--font-sans);
+            font-family: var(--font-body);
         }
         .filter-btn:hover,
         .filter-btn.active {
-            border-color: var(--accent-primary);
-            color: var(--accent-primary);
-            background: rgba(59, 130, 246, 0.08);
+            border-color: var(--volt);
+            color: var(--volt);
+            background: rgba(200, 255, 0, 0.08);
         }
         .search-meta {
             color: var(--text-secondary);
@@ -130,8 +131,8 @@
             margin-top: 0.75rem;
         }
         .result-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
+            background: var(--surface-card);
+            border: 1px solid var(--border-default);
             border-radius: var(--radius-lg);
             padding: 1rem 1.25rem;
             display: flex;
@@ -143,8 +144,8 @@
             color: inherit;
         }
         .result-card:hover {
-            border-color: var(--accent-primary);
-            box-shadow: var(--shadow);
+            border-color: var(--volt);
+            box-shadow: var(--shadow-card);
         }
         .result-icon {
             font-size: 2rem;
@@ -183,7 +184,7 @@
         .result-price {
             font-size: 0.9rem;
             font-weight: 700;
-            color: var(--accent-primary);
+            color: var(--volt);
             flex-shrink: 0;
         }
         .result-price-wrap {
@@ -196,7 +197,7 @@
             font-size: 1.1rem;
         }
         mark {
-            background: rgba(59, 130, 246, 0.18);
+            background: rgba(200, 255, 0, 0.2);
             color: var(--text-primary);
             border-radius: 2px;
             padding: 0 1px;
@@ -219,17 +220,17 @@
         }
         .suggestion-pill {
             padding: 0.35rem 0.85rem;
-            border-radius: var(--radius-full);
-            border: 1px solid var(--border-color);
-            background: var(--card-bg);
-            color: var(--accent-primary);
+            border-radius: var(--radius-pill, 999px);
+            border: 1px solid var(--border-default);
+            background: var(--surface-card);
+            color: var(--volt);
             font-size: 0.82rem;
             cursor: pointer;
-            font-family: var(--font-sans);
+            font-family: var(--font-body);
             transition: background 0.15s;
         }
         .suggestion-pill:hover {
-            background: rgba(59, 130, 246, 0.08);
+            background: rgba(200, 255, 0, 0.08);
         }
         .search-index-error {
             text-align: center;

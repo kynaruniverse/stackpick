@@ -5,8 +5,14 @@
   
   <script>
     (function() {
-      const savedTheme = localStorage.getItem('theme') || 'dark';
-      document.documentElement.setAttribute('data-theme', savedTheme);
+      try {
+        var savedTheme = localStorage.getItem('sp-theme');
+        if (savedTheme) {
+          document.documentElement.setAttribute('data-theme', savedTheme);
+        } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+          document.documentElement.setAttribute('data-theme', 'light');
+        }
+      } catch (e) {}
     })();
   </script>
 
@@ -15,6 +21,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="StackPick">
+  <meta name="mobile-web-app-capable" content="yes">
 
   <title>{{pageTitle}}</title>
   <meta name="description" content="{{metaDescription}}">
@@ -45,6 +52,6 @@
   <link rel="stylesheet" href="/assets/css/style.css">
 
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZTN7H3L6DV"></script>
-  <script src="/assets/js/analytics.js"></script>
+  <script src="/assets/js/analytics.js" defer></script>
   {{{schemaJSON}}}
 </head>

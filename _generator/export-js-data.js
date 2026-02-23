@@ -160,6 +160,7 @@ function exportSearchIndex(products, timestamp) {
       ...(p.specs  || []),
       ...(p.tags   || []),
       ...(p.pros   || []),
+      ...(p.cons   || []),
     ].filter(Boolean).join(' ').toLowerCase();
 
     entries.push({

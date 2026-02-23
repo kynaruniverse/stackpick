@@ -53,18 +53,18 @@
 <script src="/assets/js/app.js" defer></script>
 <script>
   // 1. Highlight Active Nav Item
-  const currentPath = window.location.pathname;
-  document.querySelectorAll('.bottom-nav-link').forEach(link => {
+  var currentPath = window.location.pathname;
+  document.querySelectorAll('.bottom-nav-link').forEach(function(link) {
     if (link.getAttribute('href') === currentPath || link.dataset.navPath === currentPath) {
       link.classList.add('active');
     }
   });
 
-  // 2. Price Badge Injection (Optimized)
-  document.querySelectorAll('.price-current:not(:has(.price-badge))').forEach(el => {
-    const badge = document.createElement('span');
+  // 2. Price Badge Injection
+  document.querySelectorAll('.price-current:not(:has(.price-badge))').forEach(function(el) {
+    var badge = document.createElement('span');
     badge.className = 'price-badge';
-    badge.textContent = 'Feb 2026';
+    badge.textContent = new Date().toLocaleDateString('en-GB', { month: 'short', year: 'numeric' });
     el.appendChild(badge);
   });
 </script>

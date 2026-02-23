@@ -249,11 +249,13 @@ function buildSchemaJSON(config, products) {
       item: {
         '@type': 'Product',
         name:    p.name,
+        url:     p.affiliate,
         brand:   { '@type': 'Brand', name: p.brand },
         offers:  {
           '@type':       'Offer',
           priceCurrency: 'GBP',
           price:         String(p.priceRaw),
+          url:           p.affiliate,
           availability:  p.inStock
             ? 'https://schema.org/InStock'
             : 'https://schema.org/OutOfStock',

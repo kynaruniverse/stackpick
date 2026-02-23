@@ -143,7 +143,7 @@
   }
   var RACK_CONTENT = {
     browse:   [{ label: '\uD83C\uDFA7 Headsets', href: '/headsets/' }, { label: '\u2328\uFE0F Keyboards', href: '/keyboards/' }, { label: '\uD83D\uDDB1\uFE0F Mice', href: '/mice/' }, { label: '\uD83D\uDDA5\uFE0F Monitors', href: '/monitors/' }, { label: '\uD83E\uDE91 Chairs', href: '/chairs/' }],
-    loadouts: [{ label: '\uD83D\uDCCB Setup Guides', href: '/guides/' }, { label: '\u2696\uFE0F Comparisons', href: '/comparisons/' }, { label: '\uD83C\uDFAE \u00A3500 Build', href: '/guides/gaming-setup-500/' }, { label: '\uD83D\uDD25 \u00A31000 Build', href: '/guides/gaming-setup-1000/' }, { label: '\uD83D\uDC8E \u00A32500 Build', href: '/guides/gaming-setup-2500/' }],
+    loadouts: [{ label: '\uD83D\uDCCB Setup Guides', href: '/guides/' }, { label: '\u2696\uFE0F Comparisons', href: '/comparisons/' }, { label: '\uD83D\uDCB0 Budget Picks', href: '/guides/budget-picks-under-50/' }, { label: '\uD83C\uDFAE \u00A3500 Build', href: '/guides/gaming-setup-500/' }, { label: '\uD83D\uDD25 \u00A31000 Build', href: '/guides/gaming-setup-1000/' }, { label: '\uD83D\uDC8E \u00A32500 Build', href: '/guides/gaming-setup-2500/' }],
     drops:    [{ label: '\uD83D\uDDB1\uFE0F Mouse Showdown', href: '/comparisons/razer-viper-v3-pro-vs-logitech-g502x-plus/' }, { label: '\u2328\uFE0F Keyboard Battle', href: '/comparisons/steelseries-apex-pro-tkl-gen3-vs-keychron-q1-max/' }, { label: '\uD83C\uDFA7 Headset Showdown', href: '/comparisons/sennheiser-hd560s-vs-steelseries-arctis-nova-pro/' }, { label: '\uD83D\uDDA5\uFE0F Monitor Battle', href: '/comparisons/asus-rog-xg27aqdmg-vs-samsung-odyssey-g80sd/' }, { label: '\uD83E\uDE91 Chair Face-Off', href: '/comparisons/andaseat-kaiser-4-vs-noblechairs-hero/' }],
     profile:  [{ label: '\u2139\uFE0F About StackPick', href: '/about/' }, { label: '\uD83D\uDD0D Search', href: '/search/' }],
   };
@@ -151,7 +151,7 @@
   function buildRackHTML(tab) {
     var items = RACK_CONTENT[tab] || [], title = RACK_TITLES[tab] || tab;
     var h = '<p style="font-family:var(--font-display);font-size:1.1rem;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-tertiary);margin-bottom:var(--sp-3);">' + title + '</p>';
-    return h + '<div class="rack-sheet__content">' + items.map(function (it) { return '<a href="' + it.href + '" class="rack-sheet__link-item"><span>' + it.label + '</span><span class="rack-sheet__link-arrow">\u2192</span></a>'; }).join('') + '</div>';
+    return h + items.map(function (it) { return '<a href="' + it.href + '" class="rack-sheet__link-item"><span>' + it.label + '</span><span class="rack-sheet__link-arrow">\u2192</span></a>'; }).join('');
   }
   function initRack() {
     _rackSheet = document.getElementById('rack-sheet'); _rackOverlay = document.getElementById('rack-sheet-overlay');
@@ -194,7 +194,7 @@
   function buildDrawerStats(product) {
     var rows = '';
     (product.pros || []).forEach(function (pro, i) { rows += '<div class="drawer-stat"><span class="drawer-stat__key">' + (i === 0 ? 'Pros' : '') + '</span><span class="drawer-stat__val">\u2713\u00A0' + escapeHTML(pro) + '</span></div>'; });
-    (product.cons || []).forEach(function (con) { rows += '<div class="drawer-stat drawer-stat--con"><span class="drawer-stat__key">Watch</span><span class="drawer-stat__val">\u2715\u00A0' + escapeHTML(con) + '</span></div>'; });
+    (product.cons || []).forEach(function (con, i) { rows += '<div class="drawer-stat drawer-stat--con"><span class="drawer-stat__key">' + (i === 0 ? 'Watch' : '') + '</span><span class="drawer-stat__val">\u2715\u00A0' + escapeHTML(con) + '</span></div>'; });
     return rows;
   }
   function buildAltPicks(product) {
@@ -204,10 +204,10 @@
     return alts.map(function (alt) {
       var href = alt.url || alt.affiliate;
       var isExternal = !alt.url;
-      var rel = isExternal ? 'noopener sponsored' : '';
+      var rel = isExternal ? 'noopener sponsored' : null;
       var target = isExternal ? '_blank' : '_self';
       var label = isExternal ? 'View ' + escapeHTML(alt.name) + ' on Amazon UK' : 'See ' + escapeHTML(alt.name);
-      return '<li class="alt-pick"><span class="alt-pick__name">' + escapeHTML(alt.shortName) + '</span><span class="alt-pick__price">' + escapeHTML(alt.price) + '</span><a class="alt-pick__link" href="' + href + '" target="' + target + '" rel="' + rel + '" aria-label="' + label + '">\u2192</a></li>';
+      return '<li class="alt-pick"><span class="alt-pick__name">' + escapeHTML(alt.shortName) + '</span><span class="alt-pick__price">' + escapeHTML(alt.price) + '</span><a class="alt-pick__link" href="' + href + '" target="' + target + '"' + (rel ? ' rel="' + rel + '"' : '') + ' aria-label="' + label + '">\u2192</a></li>';
     }).join('');
   }
 
@@ -339,7 +339,7 @@
           previewHeader.innerHTML = '<span class="patch-preview__collection-emoji">' + col.emoji + '</span> <span>' + escapeHTML(col.label) + '</span>';
         }
         previewCards.innerHTML = products.map(function (p) {
-          var seam = SEAM_COLOURS[p.category] || '#8E8EA0';
+          var seam = SEAM_MAP[p.seam] || SEAM_COLOURS[p.category] || '#8E8EA0';
           return '<div class="patch-preview__mini-card" style="--mini-seam:' + seam + ';"><span class="patch-preview__mini-emoji">' + p.emoji + '</span><span class="patch-preview__mini-name">' + escapeHTML(p.shortName) + '</span><span class="patch-preview__mini-price">' + escapeHTML(p.price) + '</span></div>';
         }).join('');
         preview.classList.add('patch-preview--open');
@@ -607,6 +607,7 @@
       if (!state.pull.active) return;
       var rawDelta = e.touches[0].clientY - state.pull.startY;
       if (rawDelta <= 0) { _resetPullVisuals(stack, trigger); state.pull.active = false; return; }
+      e.preventDefault(); // stop page scroll during pull gesture
       var resistDelta = rawDelta < PULL_MAX ? rawDelta * PULL_RESIST : (PULL_MAX * PULL_RESIST) + (rawDelta - PULL_MAX) * (PULL_RESIST * 0.15);
       state.pull.currentDelta = rawDelta;
       if (rawDelta > PULL_SHOW_AT) {
@@ -622,7 +623,7 @@
         if (navigator.vibrate) navigator.vibrate(HAPTIC_TRIGGERED);
         document.querySelectorAll('.patch--active').forEach(function (p) { p.classList.add('patch--charged'); });
       }
-    }, { passive: true });
+    }, { passive: false });
 
     document.addEventListener('touchend', function (e) {
       if (!state.pull.active) return;
@@ -768,8 +769,8 @@
     if (diceEl) { diceEl.classList.remove('shuffle-banner__dice--spin'); void diceEl.offsetWidth; diceEl.classList.add('shuffle-banner__dice--spin'); }
     if (dotsEl && step != null && totalSteps != null) {
       var dotHTML = '';
-      for (var d = 0; d <= totalSteps; d++) {
-        var isCurrent = (d === 0 && step === 0) || (d > 0 && d === step);
+      for (var d = 1; d <= totalSteps; d++) {
+        var isCurrent = (d === step);
         dotHTML += '<span class="shuffle-banner__dot' + (isCurrent ? ' shuffle-banner__dot--active' : '') + '" aria-hidden="true"></span>';
       }
       dotsEl.innerHTML = dotHTML;

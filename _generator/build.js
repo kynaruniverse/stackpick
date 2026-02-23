@@ -33,7 +33,7 @@ console.log('Step 0 — Cleaning old build files...');
 // 1. Delete top-level category/page folders
 const dirsToClean = [
   'mice', 'keyboards', 'headsets', 'monitors', 'chairs',
-  'desks', 'speakers', 'pcs', 'extras', 'search'
+  'desks', 'speakers', 'pcs', 'extras'
 ];
 
 dirsToClean.forEach(dir => {

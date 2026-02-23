@@ -512,7 +512,7 @@
 
             // Animate in — ease-spring from wall-tokens
             banner.style.opacity    = '0';
-            banner.style.transform  = (banner.style.transform || '') + ' translateY(16px)';
+            banner.style.transform  = 'translateY(16px)';
             banner.style.transition =
                 'opacity 300ms var(--ease-spring, cubic-bezier(0.16,1,0.3,1)), ' +
                 'transform 300ms var(--ease-spring, cubic-bezier(0.16,1,0.3,1))';
@@ -520,14 +520,14 @@
             requestAnimationFrame(function () {
                 requestAnimationFrame(function () {
                     banner.style.opacity   = '1';
-                    banner.style.transform = banner.style.transform.replace('translateY(16px)', 'translateY(0)');
+                    banner.style.transform = 'translateY(0)';
                 });
             });
         }
 
         function _hideBanner(banner) {
             banner.style.opacity   = '0';
-            banner.style.transform = (banner.style.transform || '') + ' translateY(8px)';
+            banner.style.transform = 'translateY(8px)';
             setTimeout(function () { banner.remove(); }, 320);
         }
 
