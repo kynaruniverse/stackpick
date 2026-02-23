@@ -1,5 +1,8 @@
-    <section class="hero">
+<div class="page-wrapper" data-category="{{categoryID}}">
+    
+    <section class="hero" data-category-initial="{{categoryInitial}}">
       <div class="hero-container">
+        <div class="hero-eyebrow">{{categoryLabel}}</div>
         <h1>{{heroTitle}}</h1>
         <p>{{heroSubtitle}}</p>
       </div>
@@ -22,9 +25,10 @@
         </div>
       </section>
 
-      <section class="section">
+      <section class="section" id="guide">
         <div class="buying-guide">
           {{{buyingGuideHTML}}}
         </div>
       </section>
     </main>
+</div>

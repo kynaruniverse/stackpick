@@ -45,7 +45,6 @@
 /* ============================================================
    01  GOOGLE FONTS IMPORT
    ============================================================ */
-@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Outfit:wght@400;450;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 
 /* ============================================================
@@ -822,7 +821,7 @@ header::before {
 
 .product-badge {
   display: inline-block;
-  background: rgba(143,184,0,0.09);
+  background: var(--volt-glow);
   color: var(--volt-dim);
   border: 1px solid rgba(143,184,0,0.22);
   padding: 3px 10px;

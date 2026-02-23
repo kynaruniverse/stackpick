@@ -245,6 +245,8 @@
 [data-category="mice"]      { --cat-seam: var(--crimson); --cat-glow: rgba(255,45,85,0.15);  }
 [data-category="monitors"]  { --cat-seam: var(--amber);   --cat-glow: rgba(255,149,0,0.15);  }
 [data-category="chairs"]    { --cat-seam: var(--jade);    --cat-glow: rgba(0,200,83,0.15);   }
+[data-category="extras"]    { --cat-seam: var(--purple);  --cat-glow: rgba(123,47,190,0.15); }
+
 
 
 /* ============================================================
