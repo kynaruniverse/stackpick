@@ -1,4 +1,31 @@
+# --- System & Environment ---
 .DS_Store
 node_modules/
 *.log
 .env
+
+# --- Auto-Generated Site Content ---
+# These are built by generate-categories.js
+/chairs/
+/desks/
+/headsets/
+/keyboards/
+/mice/
+/monitors/
+/pcs/
+/speakers/
+/extras/
+
+# These are built by generate-comparisons.js and generate-guides.js
+# We ignore the subfolders containing index.html, but keep the parent folder
+/comparisons/*/
+/guides/*/
+
+# --- Auto-Generated Assets & SEO ---
+# These are built by export-js-data.js and generate-sitemap.js
+/assets/js/data/collections.js
+/assets/js/data/products.js
+/sitemap.xml
+
+# --- Search Page ---
+/search/
