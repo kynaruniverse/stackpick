@@ -15,20 +15,15 @@
     headsets:  '#8E8EA0',
     monitors:  '#FF9500',
     chairs:    '#00C853',
+    extras:    '#7B2FBE',
   };
   var SEAM_MAP = {
   crimson: '#FF2D55',
   cobalt:  '#0057FF',
   slate:   '#8E8EA0',
   amber:   '#FF9500',
-  jade:    '#00C853'
-  };
-  var SEAM_GLOWS = {
-    mice:      'rgba(255,45,85,0.15)',
-    keyboards: 'rgba(0,87,255,0.15)',
-    headsets:  'rgba(142,142,160,0.15)',
-    monitors:  'rgba(255,149,0,0.15)',
-    chairs:    'rgba(0,200,83,0.15)',
+  jade:    '#00C853',
+  purple:  '#7B2FBE'
   };
 
   var state = {
@@ -441,7 +436,7 @@
     if (!window.SP_getCollection) return;
     var col = SP_getCollection(collectionId);
     if (!col) return;
-    state.isTransitioning = true; state.shuffleStep = 0; state.activeCollectionId = collectionId;
+    state.isTransitioning = true; state.shuffleStep = 0; state.sortMode = 'default'; state.activeCollectionId = collectionId;
     hideShuffleBanner(); html.classList.add('wall-body--transitioning');
     var stack = document.getElementById('card-stack');
     if (stack) {
@@ -451,6 +446,10 @@
     setTimeout(function () {
       if (stack) { stack.style.transition = ''; stack.style.opacity = ''; stack.style.transform = ''; }
       var products = SP_getCollectionProducts(collectionId);
+      document.querySelectorAll('.wall__sort-option').forEach(function (o) {
+        o.classList.toggle('wall__sort-option--active', o.dataset.sort === 'default' || !o.dataset.sort);
+        o.setAttribute('aria-selected', (o.dataset.sort === 'default' || !o.dataset.sort) ? 'true' : 'false');
+      });
       renderCollection(products); updatePatchActiveStates(collectionId);
       updateWallHeader(collectionId, products.length); closeSortMenu();
       var wall = document.getElementById('wall');

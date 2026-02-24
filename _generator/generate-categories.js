@@ -48,6 +48,9 @@ const TEMPLATE         = fs.readFileSync(path.join(TEMPLATE_DIR, 'category.html'
 // All copy taken verbatim from the original hand-written HTML pages.
 // Note: key names here intentionally match the template placeholder names.
 // ---------------------------------------------------------------------------
+const BUILD_MONTH = new Date().toLocaleDateString('en-GB', { month: 'long', year: 'numeric' });
+const BUILD_MONTH_SHORT = new Date().toLocaleDateString('en-GB', { month: 'short', year: 'numeric' });
+
 const CATEGORY_CONFIG = {
   mice: {
     emoji:           '🖱️',
@@ -57,14 +60,14 @@ const CATEGORY_CONFIG = {
     ogDescription:   'Stop using heavy, laggy mice. We\'ve researched the best 4K/8K wireless and budget-beating gaming mice in the UK.',
     canonical:       'https://stackpick.co.uk/mice/',
     heroTitle:       'Best Gaming Mice (UK)',
-    heroSubtitle:    'From sub-40g "super-clones" to the 8K polling pros use. Updated Feb 2026.',
+    heroSubtitle:    `From sub-40g "super-clones" to the 8K polling pros use. Updated ${BUILD_MONTH_SHORT}.`,
     breadcrumbLabel: 'Gaming Mice',
     buyingGuideHTML: `<h2>The 2026 Mouse Guide</h2>
 <h3>Polling Rate: 1K vs 4K vs 8K</h3>
 <p>Standard mice report to your PC 1,000 times per second (1K). In 2026, <strong>4K and 8K polling</strong> report up to 8,000 times. On a 240Hz or 360Hz monitor, this makes mouse movement look significantly smoother and reduces input lag by microseconds.</p>
 <h3>Optical vs Mechanical Switches</h3>
 <p>Legacy mechanical switches eventually wear out and "double-click." <strong>Optical switches</strong> (like Razer's Gen-3 or Logitech's Lightforce) use a beam of light to register clicks. They are faster and, more importantly, effectively impossible to break.</p>
-<p class="last-updated"><em>Last updated: February 2026. Prices checked weekly.</em></p>`,
+<p class="last-updated"><em>Last updated: ${BUILD_MONTH}. Prices checked weekly.</em></p>`,
   },
 
   keyboards: {
@@ -75,14 +78,14 @@ const CATEGORY_CONFIG = {
     ogDescription:   'From Hall Effect Rapid Trigger to creamy gasket-mount acoustics — the keyboards UK gamers actually buy. Real prices, no BS.',
     canonical:       'https://stackpick.co.uk/keyboards/',
     heroTitle:       'Best Gaming Keyboards (UK)',
-    heroSubtitle:    'Hall Effect, wireless, and budget mechanical picks. Updated Feb 2026.',
+    heroSubtitle:    `Hall Effect, wireless, and budget mechanical picks. Updated ${BUILD_MONTH_SHORT}.`,
     breadcrumbLabel: 'Gaming Keyboards',
     buyingGuideHTML: `<h2>The 2026 Buying Guide</h2>
 <h3>What is "Rapid Trigger"?</h3>
 <p>Standard keyboards actuate at a fixed point. <strong>Hall Effect (HE)</strong> boards like the <strong>Apex Pro</strong> use magnets to track every millimetre. Rapid Trigger resets the key the instant you lift your finger, letting you stop or strafe faster than physically possible on a normal board.</p>
 <h3>Why "Creamy" sounds better</h3>
 <p>Traditional "Clicky" keyboards are loud and hollow. "Creamy" boards like the <strong>Aula F99</strong> use pre-lubed switches and gasket mounts to dampen vibrations, creating a deep, satisfying "thock" sound that feels much more premium.</p>
-<p class="last-updated"><em>Last updated: February 2026. Prices checked weekly.</em></p>`,
+<p class="last-updated"><em>Last updated: ${BUILD_MONTH}. Prices checked weekly.</em></p>`,
   },
 
   headsets: {
@@ -93,14 +96,14 @@ const CATEGORY_CONFIG = {
     ogDescription:   'From £40 wired picks to premium wireless with hot-swap batteries — the headsets UK gamers actually rate. Real prices, no BS.',
     canonical:       'https://stackpick.co.uk/headsets/',
     heroTitle:       'Best Gaming Headsets (UK)',
-    heroSubtitle:    'From open-back audiophile to wireless premium. Updated Feb 2026.',
+    heroSubtitle:    `From open-back audiophile to wireless premium. Updated ${BUILD_MONTH_SHORT}.`,
     breadcrumbLabel: 'Gaming Headsets',
     buyingGuideHTML: `<h2>The 2026 Headset Guide</h2>
 <h3>Open-back vs Closed-back</h3>
 <p><strong>Open-back</strong> headphones (like the Sennheiser HD 560S) let sound in and out — creating a wider, more natural soundstage that makes footstep positioning in FPS significantly clearer. The trade-off: everyone nearby can hear your game, and ambient noise bleeds in. <strong>Closed-back</strong> gaming headsets isolate you from the room — better for noisy environments and voice chat.</p>
 <h3>Wireless latency — solved</h3>
 <p>The days of noticeable wireless audio lag are over. 2.4GHz wireless (used by HyperX, SteelSeries, and Logitech) operates at sub-5ms latency — imperceptible in gaming. The remaining reason to choose wired is budget: wired headsets deliver better hardware per pound at the same price point.</p>
-<p class="last-updated"><em>Last updated: February 2026. Prices checked weekly.</em></p>`,
+<p class="last-updated"><em>Last updated: ${BUILD_MONTH}. Prices checked weekly.</em></p>`,
   },
 
   monitors: {
@@ -111,7 +114,7 @@ const CATEGORY_CONFIG = {
     ogDescription:   'From glossy WOLED to HDR1000 Mini-LED — the monitors UK gamers are actually buying. Real prices, no BS.',
     canonical:       'https://stackpick.co.uk/monitors/',
     heroTitle:       'Best Gaming Monitors (UK)',
-    heroSubtitle:    'OLED, Mini-LED, and the budget IPS that punches above its weight. Updated Feb 2026.',
+    heroSubtitle:    `OLED, Mini-LED, and the budget IPS that punches above its weight. Updated ${BUILD_MONTH_SHORT}.`,
     breadcrumbLabel: 'Gaming Monitors',
     buyingGuideHTML: `<h2>2026 Buying Guide: Glossy, Mini-LED &amp; OLED</h2>
 <h3>The "Glossy" Revolution</h3>
@@ -122,7 +125,7 @@ const CATEGORY_CONFIG = {
 <p>New for this year, monitors like the MSI MAG feature <strong>Dual-Mode</strong>. This allows you to run in 4K for single-player games, then switch to 1080p at a much higher refresh rate (320Hz+) for competitive shooters like Valorant or CS2.</p>
 <h3>How We Pick</h3>
 <p>We analyze community sentiment from r/Monitors and Discord tech hubs. Everything listed is verified for UK stock and pricing, checked weekly.</p>
-<p class="last-updated"><em>Last updated: February 2026. Prices checked daily.</em></p>`,
+<p class="last-updated"><em>Last updated: ${BUILD_MONTH}. Prices checked daily.</em></p>`,
   },
 
   chairs: {
@@ -133,7 +136,7 @@ const CATEGORY_CONFIG = {
     ogDescription:   'Five chairs for five real problems. Budget, mesh, back pain, comfort, and the best overall — all available on Amazon UK.',
     canonical:       'https://stackpick.co.uk/chairs/',
     heroTitle:       'Best Gaming Chairs UK',
-    heroSubtitle:    'Five chairs for five real problems. Crowd-researched picks based on what UK gamers actually ask about. Updated February 2026.',
+    heroSubtitle:    `Five chairs for five real problems. Crowd-researched picks based on what UK gamers actually ask about. Updated ${BUILD_MONTH}.`,
     breadcrumbLabel: 'Gaming Chairs',
     buyingGuideHTML: `<h2>The 2026 Chair Buying Guide</h2>
 <h3>Gaming chair vs office chair — honest answer</h3>
@@ -144,7 +147,7 @@ const CATEGORY_CONFIG = {
 <p>PU leatherette looks great and feels premium out of the box, but gets hot in summer and typically starts cracking after 2–3 years of heavy use. Mesh breathes significantly better and tends to age more gracefully — but can feel firmer. If you run hot or game in a warm room, mesh is worth the switch. The Eureka Typhon and Sihoo Doro C300 are both full mesh and fix the sweaty chair problem entirely.</p>
 <h3>How we picked these</h3>
 <p>We cross-referenced Reddit's r/battlestations, r/pcmasterrace and dedicated chair communities with hands-on reviews from PC Gamer, TechRadar and Tom's Guide, then filtered by what's actually available and priced honestly on Amazon UK. No grey imports, no US-only stock. Prices are checked weekly.</p>
-<p class="last-updated"><em>Last updated: February 2026. Prices checked weekly.</em></p>`,
+<p class="last-updated"><em>Last updated: ${BUILD_MONTH}. Prices checked weekly.</em></p>`,
   },
 };
 

@@ -39,7 +39,7 @@ const REQUIRED_PRODUCT_FIELDS = [
   'url', 'emoji', 'inStock'
 ];
 
-const EXTRA_FIELDS = ['seam', 'loadoutCount', 'tags'];
+const EXTRA_FIELDS = ['seam', 'loadoutCount', 'tags', 'nextDay'];
 
 const REQUIRED_COMPARISON_FIELDS = [
   'slug', 'title', 'metaTitle', 'metaDescription',
@@ -55,7 +55,7 @@ const REQUIRED_GUIDE_FIELDS = [
 ];
 
 const VALID_CATEGORIES = ['mice', 'keyboards', 'headsets', 'monitors', 'chairs', 'desks', 'speakers', 'pcs', 'extras'];
-const VALID_SEAMS      = ['crimson', 'cobalt', 'slate', 'amber', 'jade'];
+const VALID_SEAMS      = ['crimson', 'cobalt', 'slate', 'amber', 'jade', 'purple'];
 const DATE_RE          = /^\d{4}-\d{2}-\d{2}$/;
 const SPECS_LENGTH     = 3;
 
@@ -134,6 +134,11 @@ function validateProducts(products) {
     // inStock must be a boolean
     if (p.inStock !== undefined && typeof p.inStock !== 'boolean') {
       error(`${prefix}: inStock must be true or false`);
+    }
+
+    // nextDay must be a boolean
+    if (p.nextDay !== undefined && typeof p.nextDay !== 'boolean') {
+      error(`${prefix}: nextDay must be true or false`);
     }
 
     // loadoutCount must be a non-negative integer
