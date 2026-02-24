@@ -3,15 +3,15 @@
 <div class="bottom-nav-more-panel" id="more-panel" role="dialog" aria-modal="true" aria-labelledby="panel-title">
   <p class="more-panel-title" id="panel-title">All categories</p>
   <div class="more-panel-grid">
-    <a href="/monitors/" class="more-panel-link"><span class="nav-icon">🖥️</span>Monitors</a>
-    <a href="/chairs/" class="more-panel-link"><span class="nav-icon">🪑</span>Chairs</a>
-    <a href="/guides/" class="more-panel-link"><span class="nav-icon">📋</span>Guides</a>
-    <a href="/comparisons/" class="more-panel-link"><span class="nav-icon">⚖️</span>Compare</a>
-    <a href="/about/" class="more-panel-link"><span class="nav-icon">ℹ️</span>About</a>
-    <a href="/search/" class="more-panel-link"><span class="nav-icon">🔍</span>Search</a>
-    <a href="/pcs/" class="more-panel-link"><span class="nav-icon">💻</span>PCs</a>
-    <a href="/desks/" class="more-panel-link"><span class="nav-icon">🪵</span>Desks</a>
-    <a href="/extras/" class="more-panel-link"><span class="nav-icon">✨</span>Extras</a>
+    <a href="/monitors/"    class="more-panel-link"><span class="nav-icon" aria-hidden="true">🖥️</span>Monitors</a>
+    <a href="/chairs/"      class="more-panel-link"><span class="nav-icon" aria-hidden="true">🪑</span>Chairs</a>
+    <a href="/guides/"      class="more-panel-link"><span class="nav-icon" aria-hidden="true">📋</span>Guides</a>
+    <a href="/comparisons/" class="more-panel-link"><span class="nav-icon" aria-hidden="true">⚖️</span>Compare</a>
+    <a href="/about/"       class="more-panel-link"><span class="nav-icon" aria-hidden="true">ℹ️</span>About</a>
+    <a href="/search/"      class="more-panel-link"><span class="nav-icon" aria-hidden="true">🔍</span>Search</a>
+    <a href="/pcs/"         class="more-panel-link"><span class="nav-icon" aria-hidden="true">💻</span>PCs</a>
+    <a href="/desks/"       class="more-panel-link"><span class="nav-icon" aria-hidden="true">🪵</span>Desks</a>
+    <a href="/extras/"      class="more-panel-link"><span class="nav-icon" aria-hidden="true">✨</span>Extras</a>
   </div>
 </div>
 
@@ -19,52 +19,50 @@
   <ul class="bottom-nav-items">
     <li class="bottom-nav-item">
       <a href="/" class="bottom-nav-link" data-nav-path="/">
-        <span class="nav-icon">🏠</span>
+        <span class="nav-icon" aria-hidden="true">🏠</span>
         <span class="nav-label">Home</span>
       </a>
     </li>
     <li class="bottom-nav-item">
       <a href="/headsets/" class="bottom-nav-link" data-nav-path="/headsets/">
-        <span class="nav-icon">🎧</span>
+        <span class="nav-icon" aria-hidden="true">🎧</span>
         <span class="nav-label">Audio</span>
       </a>
     </li>
     <li class="bottom-nav-item">
       <a href="/keyboards/" class="bottom-nav-link" data-nav-path="/keyboards/">
-        <span class="nav-icon">⌨️</span>
+        <span class="nav-icon" aria-hidden="true">⌨️</span>
         <span class="nav-label">Keys</span>
       </a>
     </li>
     <li class="bottom-nav-item">
       <a href="/mice/" class="bottom-nav-link" data-nav-path="/mice/">
-        <span class="nav-icon">🖱️</span>
+        <span class="nav-icon" aria-hidden="true">🖱️</span>
         <span class="nav-label">Mice</span>
       </a>
     </li>
     <li class="bottom-nav-item">
-      <button class="bottom-nav-link" id="more-btn" aria-label="Open categories menu" aria-expanded="false" aria-controls="more-panel">
-        <span class="nav-icon">⊞</span>
+      <button class="bottom-nav-link" id="more-btn"
+              aria-label="Open categories menu" aria-expanded="false" aria-controls="more-panel">
+        <span class="nav-icon" aria-hidden="true">⊞</span>
         <span class="nav-label">More</span>
       </button>
     </li>
   </ul>
 </nav>
 
-<script src="/assets/js/app.js" defer></script>
-<script>
-  // 1. Highlight Active Nav Item
-  var currentPath = window.location.pathname;
-  document.querySelectorAll('.bottom-nav-link').forEach(function(link) {
-    if (link.getAttribute('href') === currentPath || link.dataset.navPath === currentPath) {
-      link.classList.add('active');
-    }
-  });
+<!--
+  app.js handles:
+    — theme toggle (section 01, via theme.js globals)
+    — prefs sheet open/close (section 02)
+    — bottom-nav active state (section 03)
+    — smooth scroll (section 04)
+    — affiliate click tracking (section 05)
+    — PWA install banner (section 06)
+    — More panel open/close (section 07 — see below)
 
-  // 2. Price Badge Injection
-  document.querySelectorAll('.price-current:not(:has(.price-badge))').forEach(function(el) {
-    var badge = document.createElement('span');
-    badge.className = 'price-badge';
-    badge.textContent = new Date().toLocaleDateString('en-GB', { month: 'short', year: 'numeric' });
-    el.appendChild(badge);
-  });
-</script>
+  The inline active-link and price-badge scripts that were previously
+  here have been moved into app.js to avoid CSP violations (inline
+  scripts are blocked by the nonce-based CSP set in _headers).
+-->
+<script src="/assets/js/app.js" defer></script>

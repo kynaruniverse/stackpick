@@ -27,109 +27,7 @@
     //  The icon lives inside a <span class="theme-toggle__icon">
     //  child of the button — we update the span, not textContent.
     //  Also updates the desktop patch-rail theme button if present.
-    // ============================================================
-
-    var html        = document.documentElement;
-    var themeToggle = document.getElementById('theme-toggle');
-
-    // ── 01a  Helpers ──────────────────────────────────────────
-
-    function getSystemTheme() {
-        return (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)
-            ? 'dark'
-            : 'light';
-    }
-
-    function getSavedTheme() {
-        try { return localStorage.getItem('sp-theme'); }
-        catch (e) { return null; }
-    }
-
-    function saveTheme(theme) {
-        try { localStorage.setItem('sp-theme', theme); }
-        catch (e) { /* private browsing — silent fail */ }
-    }
-
-    // ── 01b  Apply & sync all theme buttons ──────────────────
-
-    function applyTheme(theme) {
-        html.setAttribute('data-theme', theme);
-        _syncThemeButtons(theme);
-    }
-
-    function _syncThemeButtons(theme) {
-        var isDark = theme === 'dark';
-        var icon   = isDark ? '☀️' : '🌙';
-        var label  = isDark ? 'Switch to light mode' : 'Switch to dark mode';
-
-        // Mobile header toggle
-        if (themeToggle) {
-            var iconSpan = themeToggle.querySelector('.theme-toggle__icon');
-            if (iconSpan) {
-                iconSpan.textContent = icon;
-            } else {
-                themeToggle.textContent = icon;
-            }
-            themeToggle.setAttribute('aria-label', label);
-        }
-
-        // Desktop patch-rail theme button (category pages share the same rail HTML)
-        var railThemeBtn = document.querySelector('.patch-rail__theme-btn');
-        if (railThemeBtn) {
-            var railIcon = railThemeBtn.querySelector('.patch-rail__theme-icon');
-            if (railIcon) {
-                railIcon.textContent = icon;
-            } else {
-                railThemeBtn.textContent = icon;
-            }
-            railThemeBtn.setAttribute('aria-label', label);
-        }
-
-        // Prefs sheet theme value label
-        var prefThemeVal = document.getElementById('pref-theme-val');
-        if (prefThemeVal) {
-            prefThemeVal.textContent = isDark ? 'Dark' : 'Light';
-        }
-    }
-
-    function toggleTheme() {
-        var current = html.getAttribute('data-theme') || 'light';
-        var next    = current === 'dark' ? 'light' : 'dark';
-        applyTheme(next);
-        saveTheme(next);
-    }
-
-    // ── 01c  Initialise ───────────────────────────────────────
-
-    applyTheme(getSavedTheme() || getSystemTheme());
-
-    if (themeToggle) {
-        themeToggle.addEventListener('click', toggleTheme);
-    }
-
-    // Desktop patch-rail theme button (delegation)
-    document.addEventListener('click', function (e) {
-        if (e.target.closest('.patch-rail__theme-btn')) {
-            toggleTheme();
-        }
-    });
-
-    // Sidebar theme button (#theme-toggle-sidebar)
-    var sidebarThemeBtn = document.getElementById('theme-toggle-sidebar');
-    if (sidebarThemeBtn) {
-        sidebarThemeBtn.addEventListener('click', toggleTheme);
-    }
-
-    // Follow OS preference only when user has no saved preference
-    if (window.matchMedia) {
-        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function (e) {
-            if (!getSavedTheme()) {
-                applyTheme(e.matches ? 'dark' : 'light');
-            }
-        });
-    }
-
-
+    // ===================================================
     // ============================================================
     //  02  PREFS SHEET
     //
@@ -426,88 +324,11 @@
             return banner;
         }
 
-        // ── 06c  Styles ───────────────────────────────────────
-
-        function injectStyles() {
-            if (document.getElementById('pwa-banner-styles')) return; // idempotent
-            var style = document.createElement('style');
-            style.id  = 'pwa-banner-styles';
-            style.textContent = [
-                '#pwa-install-banner {',
-                '  position: fixed;',
-                '  bottom: calc(var(--utility-rack-h, 68px) + env(safe-area-inset-bottom) + 8px);',
-                '  left: var(--sp-4, 1rem);',
-                '  right: var(--sp-4, 1rem);',
-                '  z-index: var(--z-banner, 600);',
-                '  pointer-events: none;',
-                '}',
-                '@media (min-width: 900px) {',
-                '  #pwa-install-banner {',
-                '    bottom: var(--sp-6, 1.5rem);',
-                '    left: 50%;',
-                '    right: auto;',
-                '    width: 480px;',
-                '    transform: translateX(-50%);',
-                '  }',
-                '}',
-                '.pwa-banner-inner {',
-                '  background: var(--surface-card, #141420);',
-                '  border: 1px solid var(--border-strong, rgba(255,255,255,0.13));',
-                '  border-radius: var(--radius-lg, 12px);',
-                '  padding: 0.85rem 1rem;',
-                '  display: flex;',
-                '  align-items: center;',
-                '  gap: 0.75rem;',
-                '  box-shadow: var(--shadow-card, 0 8px 32px rgba(0,0,0,0.6));',
-                '  pointer-events: all;',
-                '}',
-                '.pwa-banner-text {',
-                '  flex: 1;',
-                '  font-family: var(--font-body, var(--font-sans, sans-serif));',
-                '  font-size: var(--text-sm, 0.8125rem);',
-                '  line-height: 1.4;',
-                '  color: var(--text-primary, #F2F0EB);',
-                '}',
-                '.pwa-banner-icon { margin-right: 0.25rem; }',
-                '.pwa-banner-actions {',
-                '  display: flex;',
-                '  gap: 0.5rem;',
-                '  align-items: center;',
-                '  flex-shrink: 0;',
-                '}',
-                '.pwa-btn-install {',
-                '  background: var(--volt, #C8FF00);',
-                '  color: var(--volt-text, #0A0A0F);',
-                '  border: none;',
-                '  border-radius: var(--radius, 8px);',
-                '  padding: 0.45rem 0.9rem;',
-                '  font-family: var(--font-display, var(--font-sans, sans-serif));',
-                '  font-size: var(--text-xs, 0.6875rem);',
-                '  font-weight: 800;',
-                '  letter-spacing: 0.08em;',
-                '  text-transform: uppercase;',
-                '  cursor: pointer;',
-                '  transition: background 150ms;',
-                '}',
-                '.pwa-btn-install:hover { background: var(--volt-dim, #8FB800); }',
-                '.pwa-btn-dismiss {',
-                '  background: transparent;',
-                '  color: var(--text-secondary, rgba(242,240,235,0.55));',
-                '  border: none;',
-                '  cursor: pointer;',
-                '  font-size: 1rem;',
-                '  padding: 0.25rem 0.5rem;',
-                '}',
-            ].join('\n');
-            document.head.appendChild(style);
-        }
-
         // ── 06d  Show / hide ──────────────────────────────────
 
         function showBanner() {
             try { if (sessionStorage.getItem(BANNER_KEY)) return; } catch (e) {}
             var banner = createBanner();
-            injectStyles();
             document.body.appendChild(banner);
 
             // Animate in — ease-spring from wall-tokens
@@ -550,3 +371,94 @@
     }());
 
 }());
+
+// ============================================================
+    //  07  BOTTOM NAV — active state + More panel
+    //
+    //  Active state: matches current path against data-nav-path
+    //  attributes using normalisePath so trailing slashes don't
+    //  cause mismatches.
+    //
+    //  More panel: the #more-btn button toggles #more-panel and
+    //  #more-overlay. Clicking the overlay or pressing Escape closes.
+    // ============================================================
+
+    // ── 07a  Active link highlight ────────────────────────────
+
+    var navCurrentPath = normalisePath(window.location.pathname);
+
+    document.querySelectorAll('.bottom-nav-link[data-nav-path]').forEach(function (link) {
+        var linkPath = normalisePath(link.getAttribute('data-nav-path') || '');
+        if (linkPath === navCurrentPath) {
+            link.classList.add('active');
+            link.setAttribute('aria-current', 'page');
+        }
+    });
+
+    // ── 07b  More panel ───────────────────────────────────────
+
+    var moreBtn     = document.getElementById('more-btn');
+    var morePanel   = document.getElementById('more-panel');
+    var moreOverlay = document.getElementById('more-overlay');
+
+    function isMoreOpen() {
+        return morePanel && morePanel.classList.contains('more-panel--open');
+    }
+
+    function openMore() {
+        if (!morePanel || !moreOverlay || !moreBtn) return;
+        morePanel.classList.add('more-panel--open');
+        moreOverlay.classList.remove('aria-hidden');
+        morePanel.setAttribute('aria-hidden', 'false');
+        moreOverlay.setAttribute('aria-hidden', 'false');
+        moreBtn.setAttribute('aria-expanded', 'true');
+        var first = morePanel.querySelector('a');
+        if (first) first.focus();
+    }
+
+    function closeMore() {
+        if (!morePanel || !moreOverlay || !moreBtn) return;
+        morePanel.classList.remove('more-panel--open');
+        morePanel.setAttribute('aria-hidden', 'true');
+        moreOverlay.setAttribute('aria-hidden', 'true');
+        moreBtn.setAttribute('aria-expanded', 'false');
+        moreBtn.focus();
+    }
+
+    if (moreBtn) {
+        moreBtn.addEventListener('click', function () {
+            isMoreOpen() ? closeMore() : openMore();
+        });
+    }
+
+    if (moreOverlay) {
+        moreOverlay.addEventListener('click', closeMore);
+    }
+
+    // Escape key closes More panel (alongside prefs sheet close in section 02)
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && isMoreOpen()) {
+            closeMore();
+        }
+    });
+
+    // ── 07c  Price badge injection ────────────────────────────
+    //
+    //  Appends a "Month Year" freshness badge to any .price-current
+    //  element that doesn't already contain one.
+    //  Wrapped in try/catch so a CSS selector error on older browsers
+    //  doesn't silently kill the active-link logic above.
+
+    try {
+        var priceBadgeDate = new Date().toLocaleDateString('en-GB', { month: 'short', year: 'numeric' });
+        document.querySelectorAll('.price-current').forEach(function (el) {
+            if (!el.querySelector('.price-badge')) {
+                var badge = document.createElement('span');
+                badge.className   = 'price-badge';
+                badge.textContent = priceBadgeDate;
+                el.appendChild(badge);
+            }
+        });
+    } catch (e) {
+        // Price badge injection failed — non-fatal, continue
+    }

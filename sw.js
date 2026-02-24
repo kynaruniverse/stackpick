@@ -21,6 +21,7 @@ const PAGE_CACHE  = `${VERSION}-pages`;
 const IMAGE_CACHE = `${VERSION}-images`;
 
 // ── Assets cached immediately on install (app shell) ──────────
+// Assets that exist before any build step — always safe to precache.
 const SHELL_ASSETS = [
   '/',
   '/offline.html',
@@ -37,15 +38,18 @@ const SHELL_ASSETS = [
   // ── Category page shell (used on all non-wall pages) ──
   '/assets/css/style.css',
   '/assets/js/app.js',
+];
 
-  // ── Category pages (affiliate plumbing — never remove) ──
+// Pages generated at build time — only precache when the build has run.
+// On a fresh clone or a dev server without a full build these will 404,
+// so they are kept separate and fetched opportunistically by the
+// network-first page strategy rather than blocking the install step.
+const BUILT_PAGE_ASSETS = [
   '/headsets/',
   '/keyboards/',
   '/mice/',
   '/monitors/',
   '/chairs/',
-
-  // ── Supporting pages ──
   '/guides/',
   '/comparisons/',
   '/search/',

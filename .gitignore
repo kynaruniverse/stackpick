@@ -42,4 +42,21 @@ node_modules/
 # Built by export-js-data.js and generate-sitemap.js
 /assets/js/data/collections.js
 /assets/js/data/products.js
+/assets/js/data/search-index.js
 /sitemap.xml
+
+
+# ── Build-Stamped Source Files ────────────────────────────────
+# These files contain __CSP_NONCE__ and __SP_VERSION__ placeholders
+# that get stamped with real values during the build, then restored.
+# They should never be committed mid-build with live values baked in.
+# If a build crashes between Step 2 and Step 9, restore manually:
+#   _headers:                      replace nonce-<value> with nonce-__CSP_NONCE__
+#   _templates/_partials/head.html replace nonce="<value>" with nonce="__CSP_NONCE__"
+#   sw.js:                         replace "sp-NNNNNNNNNNNNNN" with __SP_VERSION__
+#
+# Uncomment the lines below ONLY if you want to fully exclude these
+# from git tracking (advanced — requires a separate deploy pipeline).
+# _headers
+# _templates/_partials/head.html
+# sw.js

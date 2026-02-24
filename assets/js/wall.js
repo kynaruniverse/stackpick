@@ -62,39 +62,10 @@
   var HAPTIC_NO_VARIANT = [8, 8, 8];
 
   // 6E: Shadow lags at this fraction of scroll — simulates fixed light source
-  var SHADOW_LAG = 0.12;
+  var SHADOW_LAG_Y = 0.12;
 
 
-  /* 01  THEME */
-
-  function getSystemTheme() {
-    return (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
-  }
-  function getSavedTheme() { try { return localStorage.getItem('sp-theme'); } catch (e) { return null; } }
-  function saveTheme(t) { try { localStorage.setItem('sp-theme', t); } catch (e) {} }
-  function applyTheme(theme) {
-    html.setAttribute('data-theme', theme);
-    var isDark = theme === 'dark';
-    var icon   = isDark ? '\u2600\uFE0F' : '\uD83C\uDF19';
-    var label  = isDark ? 'Switch to light mode' : 'Switch to dark mode';
-    document.querySelectorAll('.theme-toggle').forEach(function (btn) {
-      var sp = btn.querySelector('.theme-toggle__icon');
-      if (sp) sp.textContent = icon;
-      btn.setAttribute('aria-label', label);
-    });
-    var railBtn = document.getElementById('patch-rail-theme');
-    if (railBtn) { var rs = railBtn.querySelector('.patch-rail__theme-icon'); if (rs) rs.textContent = icon; }
-    var pv = document.getElementById('pref-theme-val');
-    if (pv) pv.textContent = isDark ? 'Dark' : 'Light';
-  }
-  function toggleTheme() {
-    var next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-    applyTheme(next); saveTheme(next);
-  }
-  applyTheme(getSavedTheme() || getSystemTheme());
-
-
-  /* 02  PREFERENCES SHEET */
+  /* 1  PREFERENCES SHEET */
 
   function initPrefsSheet() {
     var sheet   = document.getElementById('prefs-sheet');
@@ -114,21 +85,13 @@
     if (chip)    chip.addEventListener('click', openSheet);
     if (close)   close.addEventListener('click', closeSheet);
     if (overlay) overlay.addEventListener('click', closeSheet);
-    document.querySelectorAll('.theme-toggle').forEach(function (btn) { btn.addEventListener('click', toggleTheme); });
-    var railTheme = document.getElementById('patch-rail-theme');
-    if (railTheme) railTheme.addEventListener('click', toggleTheme);
-    if (window.matchMedia) {
-      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function (e) {
-        if (!getSavedTheme()) applyTheme(e.matches ? 'dark' : 'light');
-      });
-    }
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape') { closeSheet(); closeRackSheet(); closeSortMenu(); }
     });
   }
 
 
-  /* 03  UTILITY RACK + RACK SHEET */
+  /* 02 UTILITY RACK + RACK SHEET */
 
   var _rackSheet = null, _rackOverlay = null;
   function closeRackSheet() {
@@ -172,9 +135,15 @@
   }
 
 
-  /* 04  CARD BUILDER UTILITIES */
+  /* 03  CARD BUILDER UTILITIES */
 
   function escapeHTML(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  function safeHref(url) {
+    if (!url) return '#';
+    var lower = String(url).trim().toLowerCase();
+    return (lower.startsWith('https://') || lower.startsWith('http://') || lower.startsWith('/'))
+      ? url : '#';
+  }
   function buildSpecs(specs) { return (specs || []).map(function (s) { return '<span class="spec-pill">' + escapeHTML(s) + '</span>'; }).join(''); }
   function buildStamps(product) {
     var out = '<span class="stamp stamp--uk-stock">\uD83C\uDDEC\uD83C\uDDE7 UK Stock</span>';
@@ -197,12 +166,13 @@
     var alts = window.SP_PRODUCTS.filter(function (p) { return p.category === product.category && p.id !== product.id; }).slice(0, 3);
     if (!alts.length) return '<li style="color:var(--text-tertiary);font-size:var(--text-sm);padding:var(--sp-3);">More picks coming soon.</li>';
     return alts.map(function (alt) {
-      var href = alt.url || alt.affiliate;
-      var isExternal = !alt.url;
-      var rel = isExternal ? 'noopener sponsored' : null;
-      var target = isExternal ? '_blank' : '_self';
-      var label = isExternal ? 'View ' + escapeHTML(alt.name) + ' on Amazon UK' : 'See ' + escapeHTML(alt.name);
-      return '<li class="alt-pick"><span class="alt-pick__name">' + escapeHTML(alt.shortName) + '</span><span class="alt-pick__price">' + escapeHTML(alt.price) + '</span><a class="alt-pick__link" href="' + href + '" target="' + target + '"' + (rel ? ' rel="' + rel + '"' : '') + ' aria-label="' + label + '">\u2192</a></li>';
+      function safeHref(url) {
+          if (!url) return '#';
+          var lower = String(url).trim().toLowerCase();
+          return (lower.startsWith('https://') || lower.startsWith('http://') || lower.startsWith('/'))
+              ? url : '#';
+      }
+      var href = safeHref(alt.url || alt.affiliate);
     }).join('');
   }
 
@@ -243,7 +213,7 @@
             '<div class="box-card__drawer-specs">' + buildDrawerStats(product) + '</div>',
             '<div class="box-card__drawer-price">',
               '<span class="box-card__price">' + escapeHTML(product.price) + '</span>',
-              '<a class="box-card__cta" href="' + product.affiliate + '" target="_blank" rel="noopener sponsored" aria-label="View ' + escapeHTML(product.name) + ' on Amazon UK">View on Amazon \u2192</a>',
+              '<a class="box-card__cta" href="' + safeHref(product.affiliate) + '" target="_blank" rel="noopener sponsored" aria-label="View ' + escapeHTML(product.name) + ' on Amazon UK">View on Amazon →</a>',
             '</div>',
           '</div>',
         '</div>',
@@ -404,6 +374,7 @@
   }
 
   function renderCollection(products) {
+    _cardCache = null;
     var stack = document.getElementById('card-stack');
     if (!stack) return;
     var shimmer = document.getElementById('card-stack-loading');
@@ -426,6 +397,11 @@
     });
     stack.appendChild(frag);
     updateWallHeader(state.activeCollectionId, sorted.length);
+    var _cardCache = null;
+    function getCachedCards() {
+        if (!_cardCache) _cardCache = Array.from(document.querySelectorAll('.box-card'));
+        return _cardCache;
+    }
   }
 
 
@@ -549,7 +525,16 @@
         var viewportCenterX = window.innerWidth / 2;
   
         /* 6G: Dynamic 2D Parallax */
-        var shadowOffsetY = scrollY * SHADOW_LAG;
+        var shadowOffsetY = scrollY * SHADOW_LAG_Y;
+        
+        var vh = window.innerHeight;
+        getCachedCards().forEach(function (card) {
+            var shadowLayer = card._shadowLayer || (card._shadowLayer = card.querySelector('.box-card__shadow-layer'));
+            if (!shadowLayer) return;
+            var rect = card.getBoundingClientRect();
+            if (rect.bottom < -200 || rect.top > vh + 200) return; // skip off-screen cards
+            shadowLayer.style.transform = 'translate(' + (x) + 'px, ' + (y) + 'px)';
+        });  
   
         document.querySelectorAll('.box-card').forEach(function (card) {
           var shadowLayer = card.querySelector('.box-card__shadow-layer');

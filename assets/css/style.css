@@ -1503,3 +1503,70 @@ nav a[aria-current="page"] { color: var(--volt-dim); }
   a { text-decoration: underline; color: #000; }
   a[href]::after { content: " (" attr(href) ")"; font-size: 0.8em; }
 }
+
+/* ── PWA Install Banner ───────────────────────────────────────── */
+#pwa-install-banner {
+  position: fixed;
+  bottom: calc(var(--utility-rack-h, 68px) + env(safe-area-inset-bottom) + 8px);
+  left: var(--sp-4, 1rem);
+  right: var(--sp-4, 1rem);
+  z-index: var(--z-banner, 600);
+  pointer-events: none;
+}
+@media (min-width: 900px) {
+  #pwa-install-banner {
+    bottom: var(--sp-6, 1.5rem);
+    left: 50%;
+    right: auto;
+    width: 480px;
+    transform: translateX(-50%);
+  }
+}
+.pwa-banner-inner {
+  background: var(--surface-card, #141420);
+  border: 1px solid var(--border-strong, rgba(255,255,255,0.13));
+  border-radius: var(--radius-lg, 12px);
+  padding: 0.85rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  box-shadow: var(--shadow-card, 0 8px 32px rgba(0,0,0,0.6));
+  pointer-events: all;
+}
+.pwa-banner-text {
+  flex: 1;
+  font-family: var(--font-body, var(--font-sans, sans-serif));
+  font-size: var(--text-sm, 0.8125rem);
+  line-height: 1.4;
+  color: var(--text-primary, #F2F0EB);
+}
+.pwa-banner-icon { margin-right: 0.25rem; }
+.pwa-banner-actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex-shrink: 0;
+}
+.pwa-btn-install {
+  background: var(--volt, #C8FF00);
+  color: var(--volt-text, #0A0A0F);
+  border: none;
+  border-radius: var(--radius, 8px);
+  padding: 0.45rem 0.9rem;
+  font-family: var(--font-display, var(--font-sans, sans-serif));
+  font-size: var(--text-xs, 0.6875rem);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 150ms;
+}
+.pwa-btn-install:hover { background: var(--volt-dim, #8FB800); }
+.pwa-btn-dismiss {
+  background: transparent;
+  color: var(--text-secondary, rgba(242,240,235,0.55));
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 0.25rem 0.5rem;
+}

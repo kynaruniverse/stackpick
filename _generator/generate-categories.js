@@ -358,6 +358,16 @@ function run() {
   let passed = 0;
   let failed = 0;
 
+  // Warn about products whose category has no page config.
+  // These are valid categories in VALID_CATEGORIES (validate.js passes them)
+  // but have no CATEGORY_CONFIG entry, so they produce no page.
+  const allCats = [...new Set(products.map(p => p.category))];
+  allCats.forEach(cat => {
+    if (!CATEGORY_CONFIG[cat]) {
+      const count = products.filter(p => p.category === cat).length;
+      console.warn(`  ⚠ No page config for category "${cat}" — ${count} product(s) will not get a category page`);
+    }
+  });
   for (const [slug, config] of Object.entries(CATEGORY_CONFIG)) {
     try {
       const html       = generateCategory(slug, config, productMap, allPicksOrder);

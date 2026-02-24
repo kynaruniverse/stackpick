@@ -1,9 +1,15 @@
 <!DOCTYPE html>
-<html lang="en-GB" data-theme="dark"> <head>
+<html lang="en-GB" data-theme="dark">
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  
-  <script>
+
+  <!--
+    Theme flash prevention — runs synchronously before any CSS loads.
+    The nonce attribute is a build-time placeholder replaced by
+    _generator/build.js Step 2. Never edit the nonce value directly.
+  -->
+  <script nonce="__CSP_NONCE__">
     (function() {
       try {
         var savedTheme = localStorage.getItem('sp-theme');
@@ -53,5 +59,6 @@
 
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZTN7H3L6DV"></script>
   <script src="/assets/js/analytics.js" defer></script>
+  <script src="/assets/js/theme.js" defer></script>
   {{{schemaJSON}}}
 </head>

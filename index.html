@@ -2,6 +2,25 @@
 <html lang="en-GB" data-theme="dark" data-collection="all-picks" data-shuffle-step="0">
 <head>
   <meta charset="UTF-8">
+
+  <!--
+    Theme flash prevention — runs synchronously before any CSS loads.
+    Reads saved preference from localStorage and applies it immediately
+    so users never see a flash from dark to light on page load.
+    index.html handles this inline since it does not use the head.html
+    partial (which carries the nonce-stamped version for category pages).
+  -->
+  <script>
+    (function() {
+      try {
+        var t = localStorage.getItem('sp-theme');
+        if (t) document.documentElement.setAttribute('data-theme', t);
+        else if (window.matchMedia('(prefers-color-scheme: light)').matches)
+          document.documentElement.setAttribute('data-theme', 'light');
+      } catch(e) {}
+    })();
+  </script>
+
   <meta name="google-site-verification" content="FeboAnqcLjlONS3xZMwC55zCneE0qAR33PYKEPIZeJg" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="theme-color" content="#0A0A0F" media="(prefers-color-scheme: dark)">
@@ -39,7 +58,7 @@
   <link rel="stylesheet" href="/assets/css/wall-tokens.css">
   <link rel="stylesheet" href="/assets/css/wall.css">
 
-  <!-- GA4 property ID G-ZTN7H3L6DV preserved verbatim -->
+  <!-- GA4 — async so it never blocks rendering -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZTN7H3L6DV"></script>
 
   <script type="application/ld+json">
@@ -240,18 +259,18 @@
       </div>
     </div>
 
-    <!-- Sort dropdown -->
-    <div class="wall__sort-menu" id="wall-sort-menu" role="listbox"
-         aria-label="Sort options" aria-hidden="true">
-      <button class="wall__sort-option wall__sort-option--active"
-              role="option" aria-selected="true" data-sort="default">Default</button>
-      <button class="wall__sort-option" role="option"
-              aria-selected="false" data-sort="price-asc">Price: Low → High</button>
-      <button class="wall__sort-option" role="option"
-              aria-selected="false" data-sort="price-desc">Price: High → Low</button>
-      <button class="wall__sort-option" role="option"
-              aria-selected="false" data-sort="popular">Most Popular</button>
-    </div>
+    <!-- Sort dropdown — ul/li with role=option avoids the button+option double-role ARIA issue -->
+    <ul class="wall__sort-menu" id="wall-sort-menu" role="listbox"
+        aria-label="Sort options" aria-hidden="true">
+      <li class="wall__sort-option wall__sort-option--active"
+          role="option" aria-selected="true" data-sort="default" tabindex="0">Default</li>
+      <li class="wall__sort-option"
+          role="option" aria-selected="false" data-sort="price-asc" tabindex="-1">Price: Low → High</li>
+      <li class="wall__sort-option"
+          role="option" aria-selected="false" data-sort="price-desc" tabindex="-1">Price: High → Low</li>
+      <li class="wall__sort-option"
+          role="option" aria-selected="false" data-sort="popular" tabindex="-1">Most Popular</li>
+    </ul>
 
     <!-- Card stack — JS renders box cards + loadout clusters here -->
     <div class="card-stack" id="card-stack" role="list" aria-label="Product cards">
@@ -324,20 +343,19 @@
 
 
   <!-- ═══════════════════════════════════════════════════════════
-       SCRIPTS — load order: analytics → data → controller
-       analytics.js: PRESERVED VERBATIM (GA4 G-ZTN7H3L6DV)
+       SCRIPTS
+       Load order: analytics → theme → data → wall controller
+       analytics.js  — GA4, must be first
+       theme.js      — applies saved theme before wall renders
+       products.js   — SP_PRODUCTS global (generated at build time)
+       collections.js — SP_COLLECTIONS global (generated at build time)
+       wall.js       — homepage controller, reads SP_PRODUCTS + SP_COLLECTIONS
        ═══════════════════════════════════════════════════════════ -->
   <script src="/assets/js/analytics.js" defer></script>
+  <script src="/assets/js/theme.js" defer></script>
   <script src="/assets/js/data/products.js" defer></script>
   <script src="/assets/js/data/collections.js" defer></script>
   <script src="/assets/js/wall.js" defer></script>
-
-  <!-- ═══════════════════════════════════════════════════════════
-       SERVICE WORKER REGISTRATION
-       Registers sw.js for offline support and PWA install prompt.
-       Runs after load so it never blocks page rendering.
-       ═══════════════════════════════════════════════════════════ -->
-  
 
 </body>
 </html>
