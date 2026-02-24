@@ -17,7 +17,7 @@
  * Edit the _data/*.json source files instead.
  *
  * Run standalone: node _generator/export-js-data.js
- * Called by:      _generator/build.js (Step 6)
+ * Called by:      _generator/build.js (Step 7)
  */
 
 const fs   = require('fs');
@@ -212,9 +212,12 @@ function exportSearchIndex(products, timestamp) {
       });
     }
 
+    // FIX: was g.budget — guides.json uses the key "budgetLabel", not "budget".
+    // Using g.budget always resolved to undefined, causing price: null and
+    // dropping the budget string from search tags entirely.
     const tags = [
       g.title,
-      g.budget        || '',
+      g.budgetLabel   || '',
       g.metaDescription || '',
       g.intro         || '',
       ...sectionProductNames,
@@ -225,7 +228,7 @@ function exportSearchIndex(products, timestamp) {
       icon:  g.emoji || '📋',
       title: g.title,
       desc:  g.metaDescription || g.intro || '',
-      price: g.budget || null,
+      price: g.budgetLabel || null,   // FIX: was g.budget (always undefined)
       url,
       tags,
     });

@@ -16,10 +16,30 @@
     "budgetLabel": "Under £50",
     "intro": "You don't need to spend £200+ to game well. These are the genuinely good picks under £50 — not compromises, but the right tools for the budget.",
     "summaryTable": [
-      { "emoji": "🖱️", "category": "Mouse",     "pick": "ATK VXE MAD R+",       "price": "£48"  },
-      { "emoji": "🎧", "category": "Headset",   "pick": "ASTRO A10 Gen 2",       "price": "£40"  },
-      { "emoji": "⌨️", "category": "Keyboard",  "pick": "Keychron C3 Pro",       "price": "£39"  },
-      { "emoji": "🎯", "category": "Mousepad",  "pick": "Logitech G640 Large",   "price": "~£28" }
+      {
+        "emoji": "🖱️",
+        "category": "Mouse",
+        "pick": "ATK VXE MAD R+",
+        "price": "£48"
+      },
+      {
+        "emoji": "🎧",
+        "category": "Headset",
+        "pick": "ASTRO A10 Gen 2",
+        "price": "£40"
+      },
+      {
+        "emoji": "⌨️",
+        "category": "Keyboard",
+        "pick": "Keychron C3 Pro",
+        "price": "£39"
+      },
+      {
+        "emoji": "🎯",
+        "category": "Mousepad",
+        "pick": "Logitech G640 Large",
+        "price": "~£28"
+      }
     ],
     "summaryTotals": [],
     "sections": [
@@ -32,8 +52,6 @@
             "badge": "TOP PICK",
             "badgeColor": "#ef4444",
             "price": "£48",
-            "priceRrp": null,
-            "priceSaving": null,
             "affiliate": "https://amzn.to/3ZImZUM",
             "desc": "The Viper Killer — 42g ultra-light with the flagship 3950 sensor. Flagship specs for a third of the price. One of the lightest mice ever made.",
             "pros": [
@@ -43,7 +61,9 @@
             ],
             "cons": [
               "Build quality is plastic-heavy"
-            ]
+            ],
+            "msrp": null,
+            "savings": null
           }
         ]
       },
@@ -56,8 +76,6 @@
             "badge": "TOP PICK",
             "badgeColor": "#ef4444",
             "price": "£40",
-            "priceRrp": null,
-            "priceSaving": null,
             "affiliate": "https://amzn.to/4rz9Vgo",
             "desc": "Damage-resistant flexible frame with a detachable cable. The budget headset that actually survives being knocked off your desk. Multi-platform (PC, PS5, Xbox, Switch).",
             "pros": [
@@ -67,7 +85,9 @@
             ],
             "cons": [
               "Wired only"
-            ]
+            ],
+            "msrp": null,
+            "savings": null
           }
         ]
       },
@@ -80,8 +100,6 @@
             "badge": "TOP PICK",
             "badgeColor": "#ef4444",
             "price": "£39",
-            "priceRrp": null,
-            "priceSaving": null,
             "affiliate": "https://amzn.to/4kGDHNL",
             "desc": "Gasket mount, hot-swap, and QMK/VIA support under £40. The most common first mechanical keyboard on UK Reddit. No other mechanical keyboard at this price offers gasket mount.",
             "pros": [
@@ -92,7 +110,9 @@
             "cons": [
               "No wireless (USB-C only)",
               "Red-only backlight (no RGB)"
-            ]
+            ],
+            "msrp": null,
+            "savings": null
           }
         ]
       },
@@ -105,9 +125,7 @@
             "badge": "TOP PICK",
             "badgeColor": "#ef4444",
             "price": "~£28",
-            "priceRrp": null,
-            "priceSaving": null,
-            "affiliate": "https://amzn.to/3LogiG640",
+            "affiliate": "TODO:REPLACE_WITH_REAL_AFFILIATE_URL",
             "desc": "The cloth pad Logitech designed to work with their own sensors. 460x400mm, medium speed surface, non-slip rubber base. Community-validated for years.",
             "pros": [
               "Consistent tracking surface",
@@ -116,16 +134,16 @@
             ],
             "cons": [
               "Edges fray over time without stitching"
-            ]
+            ],
+            "msrp": null,
+            "savings": null
           },
           {
             "name": "Corsair MM300 Pro Extended",
             "badge": "EXTENDED OPTION",
             "badgeColor": "",
             "price": "~£30",
-            "priceRrp": null,
-            "priceSaving": null,
-            "affiliate": "https://amzn.to/3MM300Pro",
+            "affiliate": "TODO:REPLACE_WITH_REAL_AFFILIATE_URL",
             "desc": "930x300mm extended pad covers keyboard and mouse on a single surface. Spill-resistant surface. Full desk coverage without spending £50+.",
             "pros": [
               "Full desk coverage",
@@ -134,7 +152,9 @@
             ],
             "cons": [
               "Slightly faster surface — not for everyone"
-            ]
+            ],
+            "msrp": null,
+            "savings": null
           }
         ]
       }
@@ -187,16 +207,52 @@
     "budgetLabel": "£500",
     "intro": "£500 for a complete peripheral setup is a tight but achievable budget. These picks prioritise performance-per-pound — no padding, no compromises on the things that actually matter in game.",
     "summaryTable": [
-      { "emoji": "🖥️", "category": "Monitor",   "pick": "LG UltraGear 24GS65F",       "price": "£119.99" },
-      { "emoji": "🎧", "category": "Headset",   "pick": "Razer BlackShark V2",         "price": "~£36"    },
-      { "emoji": "⌨️", "category": "Keyboard",  "pick": "Redragon K552 RGB",           "price": "~£32"    },
-      { "emoji": "🖱️", "category": "Mouse",     "pick": "Logitech G305 LIGHTSPEED",   "price": "~£32"    },
-      { "emoji": "🎯", "category": "Mousepad",  "pick": "Logitech G640 Large",         "price": "~£28"    },
-      { "emoji": "🪑", "category": "Chair",     "pick": "Corsair TC100 RELAXED",       "price": "£187"    }
+      {
+        "emoji": "🖥️",
+        "category": "Monitor",
+        "pick": "LG UltraGear 24GS65F",
+        "price": "£119.99"
+      },
+      {
+        "emoji": "🎧",
+        "category": "Headset",
+        "pick": "Razer BlackShark V2",
+        "price": "~£36"
+      },
+      {
+        "emoji": "⌨️",
+        "category": "Keyboard",
+        "pick": "Redragon K552 RGB",
+        "price": "~£32"
+      },
+      {
+        "emoji": "🖱️",
+        "category": "Mouse",
+        "pick": "Logitech G305 LIGHTSPEED",
+        "price": "~£32"
+      },
+      {
+        "emoji": "🎯",
+        "category": "Mousepad",
+        "pick": "Logitech G640 Large",
+        "price": "~£28"
+      },
+      {
+        "emoji": "🪑",
+        "category": "Chair",
+        "pick": "Corsair TC100 RELAXED",
+        "price": "£187"
+      }
     ],
     "summaryTotals": [
-      { "label": "Peripherals only",       "value": "~£248" },
-      { "label": "Full build (inc chair)", "value": "~£436" }
+      {
+        "label": "Peripherals only",
+        "value": "~£248"
+      },
+      {
+        "label": "Full build (inc chair)",
+        "value": "~£436"
+      }
     ],
     "sections": [
       {
@@ -208,9 +264,7 @@
             "badge": "MONITOR",
             "badgeColor": "#ef4444",
             "price": "£119.99",
-            "priceRrp": null,
-            "priceSaving": null,
-            "affiliate": "https://amzn.to/3LG24GS65F",
+            "affiliate": "TODO:REPLACE_WITH_REAL_AFFILIATE_URL",
             "desc": "180Hz IPS, 1ms, 24in 1080p. The fastest IPS panel at this price in the UK. G-Sync Compatible + FreeSync Premium. At £120 there is nothing meaningfully better.",
             "pros": [
               "180Hz — fastest at this price tier",
@@ -219,7 +273,9 @@
             ],
             "cons": [
               "1080p only — upgrade to 1440p later"
-            ]
+            ],
+            "msrp": null,
+            "savings": null
           }
         ]
       },
@@ -232,9 +288,7 @@
             "badge": "HEADSET",
             "badgeColor": "",
             "price": "~£36",
-            "priceRrp": "£59.99",
-            "priceSaving": "Save ~£24",
-            "affiliate": "https://amzn.to/3BlacksharkV2",
+            "affiliate": "TODO:REPLACE_WITH_REAL_AFFILIATE_URL",
             "desc": "THX Spatial Audio, 50mm titanium drivers, detachable HyperClear mic. Competes with £80-100 headsets on audio quality. Best-value gaming headset in the UK right now.",
             "pros": [
               "THX Spatial Audio for footstep clarity",
@@ -243,7 +297,9 @@
             ],
             "cons": [
               "Wired only"
-            ]
+            ],
+            "msrp": "£59.99",
+            "savings": "Save ~£24"
           }
         ]
       },
@@ -256,9 +312,7 @@
             "badge": "KEYBOARD",
             "badgeColor": "",
             "price": "~£32",
-            "priceRrp": "£35.99",
-            "priceSaving": null,
-            "affiliate": "https://amzn.to/3K552RGB",
+            "affiliate": "TODO:REPLACE_WITH_REAL_AFFILIATE_URL",
             "desc": "Real mechanical Outemu Red switches, metal plate construction, RGB. The 60% layout maximises mouse space. Community-proven at this price for years — no better mechanical keyboard under £35.",
             "pros": [
               "Real mechanical switches — not membrane",
@@ -267,7 +321,9 @@
             ],
             "cons": [
               "No F-keys (Fn layer workaround)"
-            ]
+            ],
+            "msrp": "£35.99",
+            "savings": null
           }
         ]
       },
@@ -280,9 +336,7 @@
             "badge": "MOUSE",
             "badgeColor": "",
             "price": "~£32",
-            "priceRrp": null,
-            "priceSaving": null,
-            "affiliate": "https://amzn.to/3LogiG305",
+            "affiliate": "TODO:REPLACE_WITH_REAL_AFFILIATE_URL",
             "desc": "Wireless with LIGHTSPEED 2.4GHz — zero perceptible latency vs wired. HERO sensor is flawless with zero acceleration. 250-hour battery from one AA.",
             "pros": [
               "LIGHTSPEED wireless = wired latency",
@@ -291,7 +345,9 @@
             ],
             "cons": [
               "AA battery = 99g (heavier than ultralight)"
-            ]
+            ],
+            "msrp": null,
+            "savings": null
           }
         ]
       },
@@ -304,8 +360,6 @@
             "badge": "CHAIR",
             "badgeColor": "",
             "price": "£187",
-            "priceRrp": null,
-            "priceSaving": null,
             "affiliate": "https://amzn.to/4aCwuK2",
             "desc": "Wide relaxed seat with a leatherette and mesh hybrid back. Corsair brand reliability without the premium pricing. The most comfortable budget gaming chair in the UK right now.",
             "pros": [
@@ -315,7 +369,9 @@
             ],
             "cons": [
               "Lumbar pillow rather than built-in support"
-            ]
+            ],
+            "msrp": null,
+            "savings": null
           }
         ]
       }
@@ -368,14 +424,42 @@
     "budgetLabel": "£1000",
     "intro": "£1000 for peripherals hits the sweet spot where you're getting genuinely enthusiast-grade hardware across every category without paying the endgame tax. These picks are where most serious UK gamers land.",
     "summaryTable": [
-      { "emoji": "🖥️", "category": "Monitor",  "pick": "AOC Gaming Q27G3XMN (1440p Mini-LED)",  "price": "£293"    },
-      { "emoji": "🎧", "category": "Headset",  "pick": "HyperX Cloud III S Wireless",            "price": "£116"    },
-      { "emoji": "⌨️", "category": "Keyboard", "pick": "ASUS ROG Strix Scope II 96",             "price": "£123"    },
-      { "emoji": "🖱️", "category": "Mouse",    "pick": "Lamzu Thorn 4K Wireless",                "price": "£92.08"  },
-      { "emoji": "🪑", "category": "Chair",    "pick": "EUREKA Typhon Mesh",                     "price": "£369"    }
+      {
+        "emoji": "🖥️",
+        "category": "Monitor",
+        "pick": "AOC Gaming Q27G3XMN (1440p Mini-LED)",
+        "price": "£293"
+      },
+      {
+        "emoji": "🎧",
+        "category": "Headset",
+        "pick": "HyperX Cloud III S Wireless",
+        "price": "£116"
+      },
+      {
+        "emoji": "⌨️",
+        "category": "Keyboard",
+        "pick": "ASUS ROG Strix Scope II 96",
+        "price": "£123"
+      },
+      {
+        "emoji": "🖱️",
+        "category": "Mouse",
+        "pick": "Lamzu Thorn 4K Wireless",
+        "price": "£92.08"
+      },
+      {
+        "emoji": "🪑",
+        "category": "Chair",
+        "pick": "EUREKA Typhon Mesh",
+        "price": "£369"
+      }
     ],
     "summaryTotals": [
-      { "label": "Total", "value": "~£993" }
+      {
+        "label": "Total",
+        "value": "~£993"
+      }
     ],
     "sections": [
       {
@@ -387,8 +471,6 @@
             "badge": "MONITOR",
             "badgeColor": "#ef4444",
             "price": "£293",
-            "priceRrp": null,
-            "priceSaving": null,
             "affiliate": "https://amzn.to/4kFwZHI",
             "desc": "27in 1440p Mini-LED at 180Hz with HDR1000 — 700-1000 nits of stunning brightness. The best-value HDR monitor in the UK at this price.",
             "pros": [
@@ -398,7 +480,9 @@
             ],
             "cons": [
               "Mini-LED blooming visible in dark scenes"
-            ]
+            ],
+            "msrp": null,
+            "savings": null
           }
         ]
       },
@@ -411,8 +495,6 @@
             "badge": "HEADSET",
             "badgeColor": "",
             "price": "£116",
-            "priceRrp": null,
-            "priceSaving": null,
             "affiliate": "https://amzn.to/4apWJo8",
             "desc": "Legendary comfort, full metal frame, 120-hour battery. The long-session champion. If you game for 4+ hours at a time, nothing else competes at this price.",
             "pros": [
@@ -422,7 +504,9 @@
             ],
             "cons": [
               "Sound is flat — great for games, okay for music"
-            ]
+            ],
+            "msrp": null,
+            "savings": null
           }
         ]
       },
@@ -435,8 +519,6 @@
             "badge": "KEYBOARD",
             "badgeColor": "",
             "price": "£123",
-            "priceRrp": null,
-            "priceSaving": null,
             "affiliate": "https://amzn.to/4c2dVRR",
             "desc": "Pre-lubed NX Snow switches, 96% wireless layout with number row, 1500-hour battery. The perfect work and play keyboard that you stop thinking about.",
             "pros": [
@@ -446,7 +528,9 @@
             ],
             "cons": [
               "ROG software can be bulky"
-            ]
+            ],
+            "msrp": null,
+            "savings": null
           }
         ]
       },
@@ -459,8 +543,6 @@
             "badge": "MOUSE",
             "badgeColor": "",
             "price": "£92.08",
-            "priceRrp": null,
-            "priceSaving": null,
             "affiliate": "https://amzn.to/4rZaG2l",
             "desc": "52g ergonomic wireless with 4K polling included. High-back shape for all-day palm support. One of the most comfortable gaming mice ever made.",
             "pros": [
@@ -470,7 +552,9 @@
             ],
             "cons": [
               "White version is often pricier (£120+)"
-            ]
+            ],
+            "msrp": null,
+            "savings": null
           }
         ]
       },
@@ -483,8 +567,6 @@
             "badge": "CHAIR",
             "badgeColor": "",
             "price": "£369",
-            "priceRrp": null,
-            "priceSaving": null,
             "affiliate": "https://amzn.to/4tDne0R",
             "desc": "Full mesh everywhere — seat, back, and headrest. Gaming chair looks without the heat trap. 4D armrests with adaptive lumbar support.",
             "pros": [
@@ -494,7 +576,9 @@
             ],
             "cons": [
               "Less cushioned feel than foam chairs"
-            ]
+            ],
+            "msrp": null,
+            "savings": null
           }
         ]
       }
@@ -547,14 +631,42 @@
     "budgetLabel": "£1500",
     "intro": "£1500 is where the setup crosses from enthusiast to premium — you get OLED, Hall Effect keyboard technology, and pro-grade wireless mice. Every item here is at or near the top of its category.",
     "summaryTable": [
-      { "emoji": "🖥️", "category": "Monitor",  "pick": "ASUS ROG Strix OLED XG27AQDMG (1440p 240Hz WOLED)", "price": "£429" },
-      { "emoji": "⌨️", "category": "Keyboard", "pick": "SteelSeries Apex Pro TKL Gen 3",                      "price": "£184" },
-      { "emoji": "🖱️", "category": "Mouse",    "pick": "Razer Viper V3 Pro",                                  "price": "£119" },
-      { "emoji": "🎧", "category": "Headset",  "pick": "SteelSeries Arctis Nova Pro Wireless",                "price": "£256" },
-      { "emoji": "🪑", "category": "Chair",    "pick": "AndaSeat Kaiser 4",                                   "price": "£394" }
+      {
+        "emoji": "🖥️",
+        "category": "Monitor",
+        "pick": "ASUS ROG Strix OLED XG27AQDMG (1440p 240Hz WOLED)",
+        "price": "£429"
+      },
+      {
+        "emoji": "⌨️",
+        "category": "Keyboard",
+        "pick": "SteelSeries Apex Pro TKL Gen 3",
+        "price": "£184"
+      },
+      {
+        "emoji": "🖱️",
+        "category": "Mouse",
+        "pick": "Razer Viper V3 Pro",
+        "price": "£119"
+      },
+      {
+        "emoji": "🎧",
+        "category": "Headset",
+        "pick": "SteelSeries Arctis Nova Pro Wireless",
+        "price": "£256"
+      },
+      {
+        "emoji": "🪑",
+        "category": "Chair",
+        "pick": "AndaSeat Kaiser 4",
+        "price": "£394"
+      }
     ],
     "summaryTotals": [
-      { "label": "Total", "value": "~£1,382" }
+      {
+        "label": "Total",
+        "value": "~£1,382"
+      }
     ],
     "sections": [
       {
@@ -566,8 +678,6 @@
             "badge": "MONITOR",
             "badgeColor": "#ef4444",
             "price": "£429",
-            "priceRrp": null,
-            "priceSaving": null,
             "affiliate": "https://amzn.to/4aX25Y9",
             "desc": "27in 1440p WOLED at 240Hz with 0.03ms response. True black levels, HDR that actually works, and no blooming. The first monitor that makes you understand what the fuss is about.",
             "pros": [
@@ -577,7 +687,9 @@
             ],
             "cons": [
               "Glossy panel needs a darker room"
-            ]
+            ],
+            "msrp": null,
+            "savings": null
           }
         ]
       },
@@ -590,8 +702,6 @@
             "badge": "KEYBOARD",
             "badgeColor": "",
             "price": "£184",
-            "priceRrp": "£209.99",
-            "priceSaving": "Save £26",
             "affiliate": "https://amzn.to/4kHUmQV",
             "desc": "Hall Effect magnetic switches with best-in-class Rapid Trigger. The competitive edge that tournament players rely on — instant key reset for strafe responsiveness.",
             "pros": [
@@ -601,7 +711,9 @@
             ],
             "cons": [
               "Expensive brand-name markup vs Wooting alternatives"
-            ]
+            ],
+            "msrp": "£209.99",
+            "savings": "Save £26"
           }
         ]
       },
@@ -614,8 +726,6 @@
             "badge": "MOUSE",
             "badgeColor": "",
             "price": "£119",
-            "priceRrp": null,
-            "priceSaving": null,
             "affiliate": "https://amzn.to/4c1StN0",
             "desc": "54g wireless with the Focus Pro 35K sensor and 8000Hz polling. The pro standard in 2026. Ambidextrous shape works for all hand sizes and grip styles.",
             "pros": [
@@ -625,7 +735,9 @@
             ],
             "cons": [
               "Larger shape is not for small hands"
-            ]
+            ],
+            "msrp": null,
+            "savings": null
           }
         ]
       },
@@ -638,8 +750,6 @@
             "badge": "HEADSET",
             "badgeColor": "",
             "price": "£256",
-            "priceRrp": null,
-            "priceSaving": null,
             "affiliate": "https://amzn.to/3OkA3NA",
             "desc": "Hot-swap battery system (never dies mid-session), dual-source connectivity (PC + console simultaneously), ANC. The Swiss army knife of gaming headsets.",
             "pros": [
@@ -649,7 +759,9 @@
             ],
             "cons": [
               "Price is high, though the feature set justifies it"
-            ]
+            ],
+            "msrp": null,
+            "savings": null
           }
         ]
       },
@@ -662,8 +774,6 @@
             "badge": "CHAIR",
             "badgeColor": "",
             "price": "£394",
-            "priceRrp": null,
-            "priceSaving": null,
             "affiliate": "https://amzn.to/4qPy6pT",
             "desc": "6D armrests, magnetic memory foam headrest, 180kg weight capacity. The gaming chair that earns its premium price tag through build quality and adjustability.",
             "pros": [
@@ -673,7 +783,9 @@
             ],
             "cons": [
               "Pricey — but this is genuinely what you get for the money"
-            ]
+            ],
+            "msrp": null,
+            "savings": null
           }
         ]
       }
@@ -726,14 +838,42 @@
     "budgetLabel": "£2500",
     "intro": "This is the build for people who are done upgrading. Every item here is at or near the best available in its category. This is not for casual gamers — this is for people who sit at their desk 6-10 hours a day and want to stop thinking about their setup.",
     "summaryTable": [
-      { "emoji": "🖥️", "category": "Monitor",        "pick": "ASUS ROG Swift PG27AQDP (1440p 480Hz OLED)",     "price": "£899.00"   },
-      { "emoji": "⌨️", "category": "Keyboard",       "pick": "Wooting 60HE+",                                  "price": "£174.99"   },
-      { "emoji": "🖱️", "category": "Mouse",          "pick": "Logitech G Pro X Superlight 2",                  "price": "£139.99"   },
-      { "emoji": "🎧", "category": "Headset / Audio","pick": "Sennheiser HD 560S + Focusrite Scarlett Solo",    "price": "£199.00"   },
-      { "emoji": "🪑", "category": "Chair",          "pick": "Herman Miller Aeron (Remastered)",                "price": "£1,099.00" }
+      {
+        "emoji": "🖥️",
+        "category": "Monitor",
+        "pick": "ASUS ROG Swift PG27AQDP (1440p 480Hz OLED)",
+        "price": "£899.00"
+      },
+      {
+        "emoji": "⌨️",
+        "category": "Keyboard",
+        "pick": "Wooting 60HE+",
+        "price": "£174.99"
+      },
+      {
+        "emoji": "🖱️",
+        "category": "Mouse",
+        "pick": "Logitech G Pro X Superlight 2",
+        "price": "£139.99"
+      },
+      {
+        "emoji": "🎧",
+        "category": "Headset / Audio",
+        "pick": "Sennheiser HD 560S + Focusrite Scarlett Solo",
+        "price": "£199.00"
+      },
+      {
+        "emoji": "🪑",
+        "category": "Chair",
+        "pick": "Herman Miller Aeron (Remastered)",
+        "price": "£1,099.00"
+      }
     ],
     "summaryTotals": [
-      { "label": "Total", "value": "~£2,512" }
+      {
+        "label": "Total",
+        "value": "~£2,512"
+      }
     ],
     "sections": [
       {
@@ -745,9 +885,7 @@
             "badge": "MONITOR",
             "badgeColor": "#ef4444",
             "price": "£899.00",
-            "priceRrp": null,
-            "priceSaving": null,
-            "affiliate": "https://amzn.to/3MGpVhC",
+            "affiliate": "TODO:REPLACE_WITH_REAL_AFFILIATE_URL",
             "desc": "27in 1440p WOLED, 480Hz, 0.03ms. MLA+ technology — 20% brighter OLED. World highest refresh OLED at 1440p. For pro-level competitive gaming.",
             "pros": [
               "480Hz — the competitive ceiling",
@@ -756,7 +894,9 @@
             ],
             "cons": [
               "Needs a powerful GPU to push 400+ FPS for 480Hz to matter"
-            ]
+            ],
+            "msrp": null,
+            "savings": null
           }
         ]
       },
@@ -769,9 +909,7 @@
             "badge": "KEYBOARD",
             "badgeColor": "",
             "price": "£174.99",
-            "priceRrp": null,
-            "priceSaving": null,
-            "affiliate": "https://amzn.to/3Wooting60HE",
+            "affiliate": "TODO:REPLACE_WITH_REAL_AFFILIATE_URL",
             "desc": "Hall Effect magnetic switches with Rapid Trigger at 0.1mm resolution. No moving contact points — the switches last effectively forever. The competitive standard at this level.",
             "pros": [
               "Rapid Trigger at 0.1mm resolution",
@@ -780,7 +918,9 @@
             ],
             "cons": [
               "60% layout — no function row (Fn layer)"
-            ]
+            ],
+            "msrp": null,
+            "savings": null
           }
         ]
       },
@@ -793,9 +933,7 @@
             "badge": "MOUSE",
             "badgeColor": "",
             "price": "£139.99",
-            "priceRrp": null,
-            "priceSaving": null,
-            "affiliate": "https://amzn.to/3Superlight2",
+            "affiliate": "TODO:REPLACE_WITH_REAL_AFFILIATE_URL",
             "desc": "60g wireless LIGHTSPEED with HERO 2 sensor and LIGHTFORCE hybrid switches. The most trusted wireless gaming mouse across professional esports. Right-hand only.",
             "pros": [
               "LIGHTFORCE switches — best click feel on wireless",
@@ -804,7 +942,9 @@
             ],
             "cons": [
               "Right-hand only — ambidextrous users should look at Viper V3 Pro"
-            ]
+            ],
+            "msrp": null,
+            "savings": null
           }
         ]
       },
@@ -817,8 +957,6 @@
             "badge": "AUDIO",
             "badgeColor": "#8b5cf6",
             "price": "£199.00",
-            "priceRrp": null,
-            "priceSaving": null,
             "affiliate": "https://amzn.to/4tHtncv",
             "desc": "Reference-level sound staging from the HD 560S with a clean amplified signal from the Scarlett Solo. Footstep positioning in FPS is dramatically clearer than any closed-back gaming headset. The Scarlett also doubles as a professional mic interface.",
             "pros": [
@@ -829,7 +967,9 @@
             "cons": [
               "Open-back — not ideal in noisy environments",
               "Requires a separate microphone"
-            ]
+            ],
+            "msrp": null,
+            "savings": null
           }
         ]
       },
@@ -842,9 +982,7 @@
             "badge": "CHAIR",
             "badgeColor": "#8b5cf6",
             "price": "£1,099.00",
-            "priceRrp": null,
-            "priceSaving": null,
-            "affiliate": "https://amzn.to/3HermanAeron",
+            "affiliate": "TODO:REPLACE_WITH_REAL_AFFILIATE_URL",
             "desc": "PostureFit SL supports both sacrum and lumbar simultaneously. 8Z Pellicle mesh seat distributes weight across the whole back. 12-year warranty. Designed for people who sit at a desk all day.",
             "pros": [
               "PostureFit SL — true spine support",
@@ -853,7 +991,9 @@
             ],
             "cons": [
               "£1099 — this is an investment, not an impulse buy"
-            ]
+            ],
+            "msrp": null,
+            "savings": null
           }
         ]
       }

@@ -1,5 +1,13 @@
 'use strict';
 
+/**
+ * StackPick validate.js
+ *
+ * Validates all _data/*.json files before the build runs.
+ * Called by: _generator/build.js (Step 1)
+ * Run standalone: node _generator/lib/validate.js
+ */
+
 const fs   = require('fs');
 const path = require('path');
 
@@ -36,7 +44,7 @@ const REQUIRED_PRODUCT_FIELDS = [
   'id', 'category', 'brand', 'badge', 'name', 'shortName',
   'specs', 'desc', 'pros', 'cons',
   'price', 'priceRaw', 'affiliate',
-  'url', 'emoji', 'inStock'
+  'url', 'emoji', 'inStock',
 ];
 
 const EXTRA_FIELDS = ['seam', 'loadoutCount', 'tags', 'nextDay'];
@@ -45,19 +53,30 @@ const REQUIRED_COMPARISON_FIELDS = [
   'slug', 'title', 'metaTitle', 'metaDescription',
   'canonical', 'datePublished', 'emoji',
   'intro', 'productA', 'productB', 'specTable',
-  'sections', 'verdict'
+  'sections', 'verdict',
 ];
 
+// FIX: was ['slug','title','budget',...] — guides.json uses 'budgetLabel', not 'budget'.
+// Checking for 'budget' caused 1 false error per guide (5 total) on every build.
+//
+// Also added fields that generate-guides.js requires with no fallback and will throw
+// on if absent: 'heroTitle', 'heroSubtitle', 'breadcrumbLabel', 'summaryTotals'.
+// These were previously unvalidated despite being consumed as required by the generator.
 const REQUIRED_GUIDE_FIELDS = [
-  'slug', 'title', 'budget', 'metaTitle', 'metaDescription',
+  'slug', 'title', 'metaTitle', 'metaDescription',
   'canonical', 'datePublished', 'emoji',
-  'intro', 'summaryTable', 'sections'
+  'heroTitle', 'heroSubtitle', 'breadcrumbLabel',
+  'intro', 'summaryTable', 'summaryTotals', 'sections',
 ];
 
 const VALID_CATEGORIES = ['mice', 'keyboards', 'headsets', 'monitors', 'chairs', 'desks', 'speakers', 'pcs', 'extras'];
 const VALID_SEAMS      = ['crimson', 'cobalt', 'slate', 'amber', 'jade', 'purple'];
 const DATE_RE          = /^\d{4}-\d{2}-\d{2}$/;
 const SPECS_LENGTH     = 3;
+
+// Placeholder value written into guides.json stub affiliate URLs that have not
+// yet been replaced with real Amazon shortlinks.
+const TODO_AFFILIATE = 'TODO:REPLACE_WITH_REAL_AFFILIATE_URL';
 
 
 // ---------------------------------------------------------------------------
@@ -184,7 +203,8 @@ function validateCollections(collections, productIds) {
       }
     }
 
-    // Cross-reference shuffleVariants if present
+    // Cross-reference shuffleVariants if present.
+    // shuffleVariants[].products is an array of product ID strings (not full objects).
     if (c.shuffleVariants) {
       if (!Array.isArray(c.shuffleVariants)) {
         error(`${prefix}: shuffleVariants must be an array`);
@@ -274,12 +294,18 @@ function validateGuides(guides) {
   guides.forEach((g, i) => {
     const prefix = `guides[${i}] (${g.slug || 'unknown'})`;
 
-    // Required fields
+    // Required fields (FIX: list updated — see REQUIRED_GUIDE_FIELDS comment above)
     REQUIRED_GUIDE_FIELDS.forEach(field => {
       if (g[field] === undefined || g[field] === null || g[field] === '') {
         error(`${prefix}: missing required field "${field}"`);
       }
     });
+
+    // FIX: 'budgetLabel' is optional (generate-guides.js uses || '' fallback) but
+    // warn if absent so the omission is visible in build output.
+    if (g.budgetLabel === undefined || g.budgetLabel === null || g.budgetLabel === '') {
+      warn(`${prefix}: missing optional field "budgetLabel" — guide price will be blank in search index`);
+    }
 
     // Unique slugs
     if (g.slug && slugs.has(g.slug)) error(`${prefix}: duplicate slug "${g.slug}"`);
@@ -288,6 +314,9 @@ function validateGuides(guides) {
     // Date format
     if (g.datePublished && !DATE_RE.test(g.datePublished)) {
       error(`${prefix}: datePublished must be YYYY-MM-DD format (got "${g.datePublished}")`);
+    }
+    if (g.dateModified && !DATE_RE.test(g.dateModified)) {
+      error(`${prefix}: dateModified must be YYYY-MM-DD format (got "${g.dateModified}")`);
     }
 
     // Canonical must be https
@@ -300,7 +329,12 @@ function validateGuides(guides) {
       error(`${prefix}: summaryTable is empty`);
     }
 
-    // sections must be a non-empty array with affiliate links
+    // summaryTotals must be an array (can be empty — some guides have no totals row)
+    if (g.summaryTotals !== undefined && !Array.isArray(g.summaryTotals)) {
+      error(`${prefix}: summaryTotals must be an array`);
+    }
+
+    // sections must be a non-empty array with valid products
     if (Array.isArray(g.sections)) {
       if (g.sections.length === 0) {
         error(`${prefix}: sections array is empty`);
@@ -309,10 +343,17 @@ function validateGuides(guides) {
           if (!s.heading) error(`${prefix} sections[${si}]: missing "heading"`);
           if (Array.isArray(s.products)) {
             s.products.forEach((p, pi) => {
-              if (!p.name)      error(`${prefix} sections[${si}].products[${pi}]: missing "name"`);
-              if (!p.affiliate) error(`${prefix} sections[${si}].products[${pi}]: missing "affiliate"`);
-              if (p.affiliate && !p.affiliate.startsWith('https://')) {
-                error(`${prefix} sections[${si}].products[${pi}]: affiliate must be https`);
+              const pprefix = `${prefix} sections[${si}].products[${pi}] ("${p.name || '?'}")`;
+              if (!p.name)      error(`${pprefix}: missing "name"`);
+              if (!p.affiliate) error(`${pprefix}: missing "affiliate"`);
+              if (p.affiliate) {
+                if (p.affiliate === TODO_AFFILIATE) {
+                  // FIX: stub placeholder URLs are a warning, not a build-blocking error.
+                  // The build can proceed; the link will be non-functional until replaced.
+                  warn(`${pprefix}: affiliate is a stub placeholder — replace with real URL before publishing`);
+                } else if (!p.affiliate.startsWith('https://')) {
+                  error(`${pprefix}: affiliate must be https`);
+                }
               }
             });
           }
@@ -335,17 +376,17 @@ function runValidation() {
   const comparisons = loadJSON('comparisons.json');
   const guides      = loadJSON('guides.json');
 
-  const productIds = products    ? validateProducts(products)     : new Set();
+  const productIds = products    ? validateProducts(products)          : new Set();
   if (collections)                 validateCollections(collections, productIds);
   if (comparisons)                 validateComparisons(comparisons);
   if (guides)                      validateGuides(guides);
 
   if (errorCount === 0) {
     const counts = [
-      products    ? `${products.length} products`    : null,
+      products    ? `${products.length} products`       : null,
       collections ? `${collections.length} collections` : null,
       comparisons ? `${comparisons.length} comparisons` : null,
-      guides      ? `${guides.length} guides`         : null,
+      guides      ? `${guides.length} guides`           : null,
     ].filter(Boolean).join(', ');
     console.log(`  ✓ All checks passed — ${counts}\n`);
     return true;

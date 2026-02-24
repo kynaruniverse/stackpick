@@ -11,7 +11,7 @@
  * Dynamic pages (comparisons, guides) are read from data files.
  *
  * Run standalone: node _generator/generate-sitemap.js
- * Called by:      _generator/build.js (Step 5)
+ * Called by:      _generator/build.js (Step 6)
  */
 
 const fs   = require('fs');
@@ -77,7 +77,6 @@ const STATIC_PAGES = [
   { loc: '/comparisons/', changefreq: 'weekly',  priority: '0.7' },
   { loc: '/search/',      changefreq: 'weekly',  priority: '0.6' },
   { loc: '/about/',       changefreq: 'monthly', priority: '0.5' },
-  
 ];
 
 // ---------------------------------------------------------------------------
