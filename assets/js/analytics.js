@@ -158,7 +158,7 @@
                 }],
             });
             
-            gtag('event', 'affiliate_click', {   // ← add this
+            gtag('event', 'affiliate_click', {
                 link_url:  href,
                 link_text: text,
                 page_path: page,

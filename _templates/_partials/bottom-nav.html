@@ -1,17 +1,15 @@
 <div class="more-panel-overlay" id="more-overlay" aria-hidden="true"></div>
 
-<div class="bottom-nav-more-panel" id="more-panel" role="dialog" aria-modal="true" aria-labelledby="panel-title">
-  <p class="more-panel-title" id="panel-title">All categories</p>
+<div class="bottom-nav-more-panel" id="more-panel" role="dialog" aria-modal="true"
+     aria-labelledby="panel-title" aria-hidden="true">
+  <p class="more-panel-title" id="panel-title">More</p>
   <div class="more-panel-grid">
     <a href="/monitors/"    class="more-panel-link"><span class="nav-icon" aria-hidden="true">🖥️</span>Monitors</a>
     <a href="/chairs/"      class="more-panel-link"><span class="nav-icon" aria-hidden="true">🪑</span>Chairs</a>
     <a href="/guides/"      class="more-panel-link"><span class="nav-icon" aria-hidden="true">📋</span>Guides</a>
     <a href="/comparisons/" class="more-panel-link"><span class="nav-icon" aria-hidden="true">⚖️</span>Compare</a>
-    <a href="/about/"       class="more-panel-link"><span class="nav-icon" aria-hidden="true">ℹ️</span>About</a>
     <a href="/search/"      class="more-panel-link"><span class="nav-icon" aria-hidden="true">🔍</span>Search</a>
-    <a href="/pcs/"         class="more-panel-link"><span class="nav-icon" aria-hidden="true">💻</span>PCs</a>
-    <a href="/desks/"       class="more-panel-link"><span class="nav-icon" aria-hidden="true">🪵</span>Desks</a>
-    <a href="/extras/"      class="more-panel-link"><span class="nav-icon" aria-hidden="true">✨</span>Extras</a>
+    <a href="/about/"       class="more-panel-link"><span class="nav-icon" aria-hidden="true">ℹ️</span>About</a>
   </div>
 </div>
 
@@ -52,17 +50,16 @@
 </nav>
 
 <!--
-  app.js handles:
-    — theme toggle (section 01, via theme.js globals)
-    — prefs sheet open/close (section 02)
-    — bottom-nav active state (section 03)
-    — smooth scroll (section 04)
-    — affiliate click tracking (section 05)
-    — PWA install banner (section 06)
-    — More panel open/close (section 07 — see below)
-
-  The inline active-link and price-badge scripts that were previously
-  here have been moved into app.js to avoid CSP violations (inline
-  scripts are blocked by the nonce-based CSP set in _headers).
+  Scripts loaded here (end of body, after all partials):
+    app.js handles all interactivity for category/guide/comparison pages:
+      section 01 — theme init (delegates to theme.js SP_initTheme)
+      section 02 — prefs sheet
+      section 03 — nav active states
+      section 04 — smooth scroll
+      section 05 — affiliate + outbound click tracking
+      section 06 — PWA install banner
+      section 07 — bottom-nav active state + More panel + price badges
 -->
 <script src="/assets/js/app.js" defer></script>
+</body>
+</html>

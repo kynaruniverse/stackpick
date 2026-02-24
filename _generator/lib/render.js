@@ -115,14 +115,14 @@ function renderFile(templatePath, data) {
 //   })
 //
 // DOM structure (outermost → innermost):
-//   head partial
-//   header partial
-//   sidebar partial
+//   head partial        — opens <html><head>...</head>
+//   header partial      — opens <body>, skip link, <header>
+//   sidebar partial     — <aside>
 //   <div class="page-wrapper">
 //     [page template content]
 //   </div>
-//   footer partial
-//   bottom-nav partial
+//   footer partial      — <footer>
+//   bottom-nav partial  — mobile nav, app.js script tag, </body></html>
 // ---------------------------------------------------------------------------
 function renderPage({ partialsDir, template, data }) {
   const partial = name =>

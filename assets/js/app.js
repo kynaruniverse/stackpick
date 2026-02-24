@@ -1,19 +1,21 @@
 // ============================================================
-//  STACK PICK — app.js  v6
+//  STACK PICK — app.js  v7
 //  Phase 6F — Category pages, guides, comparisons, search, about.
 //  NOT loaded on index.html (wall.js handles the homepage).
 //
 //  DEPENDS ON:
 //    analytics.js  — must load before this (GA4 gtag global)
+//    theme.js      — must load before this (SP_initTheme global)
 //    style.css     — design tokens for category pages
 //
 //  CONTENTS
-//  01  Theme — detection, apply, persist, system-sync
+//  01  Theme init — delegates entirely to theme.js via SP_initTheme()
 //  02  Prefs sheet — open/close/overlay/keyboard
-//  03  Nav active states — rack-box + prefs-sheet links
+//  03  Nav active states — bottom-nav + prefs-sheet links
 //  04  Smooth scroll — anchor links
 //  05  Affiliate & outbound click tracking (GA4)
 //  06  PWA install prompt — volt-themed banner
+//  07  Bottom nav — active state + More panel
 // ============================================================
 
 (function () {
@@ -23,11 +25,16 @@
     // ============================================================
     //  01  THEME
     //
-    //  Detection priority: saved localStorage → system preference.
-    //  The icon lives inside a <span class="theme-toggle__icon">
-    //  child of the button — we update the span, not textContent.
-    //  Also updates the desktop patch-rail theme button if present.
-    // ===================================================
+    //  All theme logic lives in theme.js.
+    //  SP_initTheme() reads the saved/system preference, applies it,
+    //  wires all toggle buttons, and listens for OS preference changes.
+    // ============================================================
+
+    if (typeof window.SP_initTheme === 'function') {
+        window.SP_initTheme();
+    }
+
+
     // ============================================================
     //  02  PREFS SHEET
     //
@@ -81,10 +88,10 @@
     if (prefsClose)   prefsClose.addEventListener('click', closePrefs);
     if (prefsOverlay) prefsOverlay.addEventListener('click', closePrefs);
 
-    // Close on Escape (also closes rack sheet & sort menu if present)
     document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape' && isPrefsOpen()) {
-            closePrefs();
+        if (e.key === 'Escape') {
+            if (isPrefsOpen()) closePrefs();
+            if (isMoreOpen())  closeMore();
         }
     });
 
@@ -99,21 +106,16 @@
     // ============================================================
     //  03  NAV ACTIVE STATES
     //
-    //  Sets active highlight on:
-    //    .prefs-sheet__nav-link  — side sheet nav links (volt colour)
-    //    .rack-box[data-tab]     — utility rack shoebox tiles
-    //
+    //  Sets active highlight on .prefs-sheet__nav-link elements.
+    //  Bottom-nav active state is handled in section 07.
     //  wall.js owns rack-box state on the homepage.
-    //  This block covers all other pages.
     // ============================================================
-
-    var currentPath     = window.location.pathname;
 
     function normalisePath(p) {
         return p.length > 1 ? p.replace(/\/$/, '') : p;
     }
 
-    var normCurrentPath = normalisePath(currentPath);
+    var normCurrentPath = normalisePath(window.location.pathname);
 
     // ── 03a  Prefs sheet nav links ────────────────────────────
 
@@ -124,44 +126,13 @@
         }
     });
 
-    // ── 03b  Utility rack tabs ────────────────────────────────
+    // ── 03b  Sidebar nav links ────────────────────────────────
 
-    (function () {
-        // Maps a path prefix → rack data-tab value.
-        // Category paths all map to 'browse' so the Browse tile stays active
-        // when users are on /headsets/, /keyboards/, etc.
-        var tabMap = {
-            '/headsets':    'browse',
-            '/keyboards':   'browse',
-            '/mice':        'browse',
-            '/monitors':    'browse',
-            '/chairs':      'browse',
-            '/pcs':         'browse',
-            '/desks':       'browse',
-            '/speakers':    'browse',
-            '/extras':      'browse',
-            '/guides':      'loadouts',
-            '/comparisons': 'drops',
-            '/search':      'profile',
-            '/about':       'profile',
-        };
-
-        var activeTab = null;
-        Object.keys(tabMap).forEach(function (prefix) {
-            if (normCurrentPath === prefix ||
-                normCurrentPath.indexOf(prefix + '/') === 0) {
-                activeTab = tabMap[prefix];
-            }
-        });
-
-        if (activeTab) {
-            document.querySelectorAll('.rack-box').forEach(function (box) {
-                var isActive = box.getAttribute('data-tab') === activeTab;
-                box.classList.toggle('rack-box--active', isActive);
-                box.setAttribute('aria-pressed', isActive ? 'true' : 'false');
-            });
+    document.querySelectorAll('.sidebar-link[href]').forEach(function (link) {
+        if (normalisePath(link.getAttribute('href')) === normCurrentPath) {
+            link.classList.add('sidebar-link--active');
         }
-    }());
+    });
 
 
     // ============================================================
@@ -199,17 +170,12 @@
     // ============================================================
     //  05  AFFILIATE & OUTBOUND CLICK TRACKING
     //
-    //  GA4 event schema matches analytics.js to avoid duplicate
-    //  but conflicting events:
+    //  GA4 event schema:
     //    affiliate_click — amzn.to / amazon.co.uk links
     //    outbound_click  — all other external links
     //
     //  analytics.js fires select_item (GA4 ecommerce standard) on
-    //  the same affiliate clicks; this fires the simpler named
-    //  event used for goal funnels in GA4.
-    //
-    //  NOTE: analytics.js is loaded before this script and handles
-    //  its own click listener. Both fire intentionally — one for
+    //  the same affiliate clicks. Both fire intentionally — one for
     //  ecommerce reporting, one for simple goal tracking.
     // ============================================================
 
@@ -222,7 +188,6 @@
         var text = (el.textContent || '').trim().slice(0, 100);
         var page = window.location.pathname;
 
-        // ── Amazon affiliate clicks ───────────────────────────
         if (href.includes('amzn.to') || href.includes('amazon.co.uk')) {
             if (typeof gtag === 'function') {
                 gtag('event', 'affiliate_click', {
@@ -231,10 +196,9 @@
                     page_path: page,
                 });
             }
-            return; // don't double-fire as outbound
+            return;
         }
 
-        // ── General outbound clicks ───────────────────────────
         if (el.hostname && el.hostname !== window.location.hostname) {
             if (typeof gtag === 'function') {
                 gtag('event', 'outbound_click', {
@@ -249,32 +213,19 @@
     // ============================================================
     //  06  PWA INSTALL PROMPT
     //
-    //  Shown after 30 s on Android/Chrome (deferred prompt) and
+    //  Shown after 30s on Android/Chrome (deferred prompt) and
     //  iOS Safari (manual share-sheet guide).
     //  Dismissed state stored in sessionStorage — clears on tab close.
     //
-    //  Design tokens used (defined in wall-tokens.css + style.css):
-    //    --surface-card / --border-strong / --volt / --volt-text
-    //    --volt-dim / --text-primary / --text-secondary
-    //    --radius-lg / --radius / --font-display / --font-body
-    //    --text-sm / --text-xs / --shadow-card
-    //    --utility-rack-h (68px) — banner clears the bottom nav
-    //    --sp-4 / --sp-6 / --z-banner
+    //  Styles for the banner live in style.css — no inline injection.
     // ============================================================
 
     (function () {
-        var BANNER_KEY    = 'sp-pwa-dismissed';
+        var BANNER_KEY     = 'sp-pwa-dismissed';
         var deferredPrompt = null;
 
-        // ── 06a  Guards ───────────────────────────────────────
-
-        // Already installed (standalone PWA)
         if (window.matchMedia('(display-mode: standalone)').matches) return;
-
-        // Already dismissed this session
         try { if (sessionStorage.getItem(BANNER_KEY)) return; } catch (e) {}
-
-        // ── 06b  Banner DOM ───────────────────────────────────
 
         function createBanner() {
             var banner = document.createElement('div');
@@ -293,13 +244,11 @@
                 '  </div>' +
                 '</div>';
 
-            // Dismiss
             banner.querySelector('#pwa-dismiss-btn').addEventListener('click', function () {
                 _hideBanner(banner);
                 try { sessionStorage.setItem(BANNER_KEY, '1'); } catch (e) {}
             });
 
-            // Install / iOS guide
             banner.querySelector('#pwa-install-btn').addEventListener('click', function () {
                 if (deferredPrompt) {
                     deferredPrompt.prompt();
@@ -311,7 +260,6 @@
                         _hideBanner(banner);
                     });
                 } else {
-                    // iOS Safari — show manual instructions
                     var msg = document.getElementById('pwa-banner-msg');
                     if (msg) {
                         msg.innerHTML =
@@ -324,14 +272,11 @@
             return banner;
         }
 
-        // ── 06d  Show / hide ──────────────────────────────────
-
         function showBanner() {
             try { if (sessionStorage.getItem(BANNER_KEY)) return; } catch (e) {}
             var banner = createBanner();
             document.body.appendChild(banner);
 
-            // Animate in — ease-spring from wall-tokens
             banner.style.opacity    = '0';
             banner.style.transform  = 'translateY(16px)';
             banner.style.transition =
@@ -352,16 +297,12 @@
             setTimeout(function () { banner.remove(); }, 320);
         }
 
-        // ── 06e  Platform detection & timing ─────────────────
-
-        // Android / Chrome — use native deferred prompt
         window.addEventListener('beforeinstallprompt', function (e) {
             e.preventDefault();
             deferredPrompt = e;
             setTimeout(showBanner, 30000);
         });
 
-        // iOS Safari — no native prompt; show manual guide after 30 s
         var isIOS    = /iphone|ipad|ipod/i.test(navigator.userAgent);
         var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
         if (isIOS && isSafari) {
@@ -370,26 +311,24 @@
 
     }());
 
-}());
 
-// ============================================================
+    // ============================================================
     //  07  BOTTOM NAV — active state + More panel
     //
     //  Active state: matches current path against data-nav-path
     //  attributes using normalisePath so trailing slashes don't
     //  cause mismatches.
     //
-    //  More panel: the #more-btn button toggles #more-panel and
-    //  #more-overlay. Clicking the overlay or pressing Escape closes.
+    //  More panel: #more-btn toggles #more-panel and #more-overlay.
+    //  Clicking the overlay or pressing Escape closes it.
+    //  Escape is handled centrally in the keydown listener in 02b.
     // ============================================================
 
     // ── 07a  Active link highlight ────────────────────────────
 
-    var navCurrentPath = normalisePath(window.location.pathname);
-
     document.querySelectorAll('.bottom-nav-link[data-nav-path]').forEach(function (link) {
         var linkPath = normalisePath(link.getAttribute('data-nav-path') || '');
-        if (linkPath === navCurrentPath) {
+        if (linkPath === normCurrentPath) {
             link.classList.add('active');
             link.setAttribute('aria-current', 'page');
         }
@@ -408,7 +347,6 @@
     function openMore() {
         if (!morePanel || !moreOverlay || !moreBtn) return;
         morePanel.classList.add('more-panel--open');
-        moreOverlay.classList.remove('aria-hidden');
         morePanel.setAttribute('aria-hidden', 'false');
         moreOverlay.setAttribute('aria-hidden', 'false');
         moreBtn.setAttribute('aria-expanded', 'true');
@@ -435,19 +373,11 @@
         moreOverlay.addEventListener('click', closeMore);
     }
 
-    // Escape key closes More panel (alongside prefs sheet close in section 02)
-    document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape' && isMoreOpen()) {
-            closeMore();
-        }
-    });
-
     // ── 07c  Price badge injection ────────────────────────────
     //
     //  Appends a "Month Year" freshness badge to any .price-current
     //  element that doesn't already contain one.
-    //  Wrapped in try/catch so a CSS selector error on older browsers
-    //  doesn't silently kill the active-link logic above.
+    //  Wrapped in try/catch so a failure here doesn't affect anything above.
 
     try {
         var priceBadgeDate = new Date().toLocaleDateString('en-GB', { month: 'short', year: 'numeric' });
@@ -460,5 +390,7 @@
             }
         });
     } catch (e) {
-        // Price badge injection failed — non-fatal, continue
+        // non-fatal
     }
+
+}());

@@ -9,14 +9,6 @@
 
   var html = document.documentElement;
 
-  var SEAM_COLOURS = {
-    mice:      '#FF2D55',
-    keyboards: '#0057FF',
-    headsets:  '#8E8EA0',
-    monitors:  '#FF9500',
-    chairs:    '#00C853',
-    extras:    '#7B2FBE',
-  };
   var SEAM_MAP = {
   crimson: '#FF2D55',
   cobalt:  '#0057FF',
@@ -166,18 +158,17 @@
     var alts = window.SP_PRODUCTS.filter(function (p) { return p.category === product.category && p.id !== product.id; }).slice(0, 3);
     if (!alts.length) return '<li style="color:var(--text-tertiary);font-size:var(--text-sm);padding:var(--sp-3);">More picks coming soon.</li>';
     return alts.map(function (alt) {
-      function safeHref(url) {
-          if (!url) return '#';
-          var lower = String(url).trim().toLowerCase();
-          return (lower.startsWith('https://') || lower.startsWith('http://') || lower.startsWith('/'))
-              ? url : '#';
-      }
       var href = safeHref(alt.url || alt.affiliate);
+      return '<li class="alt-pick"><a class="alt-pick__link" href="' + href + '" target="_blank" rel="noopener sponsored">' +
+        '<span class="alt-pick__emoji" aria-hidden="true">' + escapeHTML(alt.emoji || '') + '</span>' +
+        '<span class="alt-pick__name">' + escapeHTML(alt.name || '') + '</span>' +
+        '<span class="alt-pick__price">' + escapeHTML(alt.price || '') + '</span>' +
+        '</a></li>';
     }).join('');
   }
 
   function buildCard(product, index, animDelay) {
-    var seam = SEAM_MAP[product.seam] || SEAM_COLOURS[product.category] || '#8E8EA0';
+    var seam = SEAM_MAP[product.seam] || '#8E8EA0';
     var glow = seam + '26';
     var offsetClass = index % 2 === 0 ? 'box-card--offset-right' : 'box-card--offset-left';
     var article = document.createElement('article');
@@ -304,7 +295,7 @@
           previewHeader.innerHTML = '<span class="patch-preview__collection-emoji">' + col.emoji + '</span> <span>' + escapeHTML(col.label) + '</span>';
         }
         previewCards.innerHTML = products.map(function (p) {
-          var seam = SEAM_MAP[p.seam] || SEAM_COLOURS[p.category] || '#8E8EA0';
+          var seam = SEAM_MAP[p.seam] || '#8E8EA0';
           return '<div class="patch-preview__mini-card" style="--mini-seam:' + seam + ';"><span class="patch-preview__mini-emoji">' + p.emoji + '</span><span class="patch-preview__mini-name">' + escapeHTML(p.shortName) + '</span><span class="patch-preview__mini-price">' + escapeHTML(p.price) + '</span></div>';
         }).join('');
         preview.classList.add('patch-preview--open');
@@ -373,6 +364,13 @@
     return arr;
   }
 
+  // Card cache — invalidated on each renderCollection, used by initScroll
+  var _cardCache = null;
+  function getCachedCards() {
+    if (!_cardCache) _cardCache = Array.from(document.querySelectorAll('.box-card'));
+    return _cardCache;
+  }
+
   function renderCollection(products) {
     _cardCache = null;
     var stack = document.getElementById('card-stack');
@@ -397,11 +395,6 @@
     });
     stack.appendChild(frag);
     updateWallHeader(state.activeCollectionId, sorted.length);
-    var _cardCache = null;
-    function getCachedCards() {
-        if (!_cardCache) _cardCache = Array.from(document.querySelectorAll('.box-card'));
-        return _cardCache;
-    }
   }
 
 
@@ -458,7 +451,7 @@
     section.className = 'loadout-cluster box-card--entering';
     section.setAttribute('aria-label', title + ' loadout');
     var miniBoxes = display.map(function (p, i) {
-      var seam = SEAM_MAP[p.seam] || SEAM_COLOURS[p.category] || '#8E8EA0';
+      var seam = SEAM_MAP[p.seam] || '#8E8EA0';
       return '<div class="loadout-cluster__mini-box loadout-cluster__mini-box--' + (i + 1) + '" style="border-right:2px solid ' + seam + ';"><span class="mini-box__silhouette">' + p.emoji + '</span></div>';
     }).join('');
     section.innerHTML = '<div class="loadout-cluster__stack">' + miniBoxes + '</div><div class="loadout-cluster__meta"><h3 class="loadout-cluster__title">' + escapeHTML(title) + '</h3><span class="loadout-cluster__items">' + products.length + ' items in range</span><span class="loadout-cluster__total">' + escapeHTML(totalFmt) + ' combined</span><a class="loadout-cluster__cta" href="/guides/">See Setup Guides \u2192</a></div>';
@@ -515,45 +508,30 @@
     var ticking = false;
     var JIGGLE_T = 300;
     
-    // 6G: Define a horizontal lag factor (usually slightly less than vertical)
-    var SHADOW_LAG_X = 0.08; 
+    // Horizontal lag factor — slightly less than vertical
+    var SHADOW_LAG_X = 0.08;
   
     window.addEventListener('scroll', function () {
       if (ticking) return;
       window.requestAnimationFrame(function () {
         var scrollY = window.scrollY;
         var viewportCenterX = window.innerWidth / 2;
-  
-        /* 6G: Dynamic 2D Parallax */
         var shadowOffsetY = scrollY * SHADOW_LAG_Y;
-        
         var vh = window.innerHeight;
+
+        // 2D parallax shadow — cached card refs, skips off-screen cards
         getCachedCards().forEach(function (card) {
-            var shadowLayer = card._shadowLayer || (card._shadowLayer = card.querySelector('.box-card__shadow-layer'));
-            if (!shadowLayer) return;
-            var rect = card.getBoundingClientRect();
-            if (rect.bottom < -200 || rect.top > vh + 200) return; // skip off-screen cards
-            shadowLayer.style.transform = 'translate(' + (x) + 'px, ' + (y) + 'px)';
-        });  
-  
-        document.querySelectorAll('.box-card').forEach(function (card) {
-          var shadowLayer = card.querySelector('.box-card__shadow-layer');
+          var shadowLayer = card._shadowLayer || (card._shadowLayer = card.querySelector('.box-card__shadow-layer'));
           if (!shadowLayer) return;
-  
-          // Get the card's position relative to the viewport
           var rect = card.getBoundingClientRect();
-          var cardCenterX = rect.left + (rect.width / 2);
-          
-          // Calculate horizontal distance from center
-          // If card is to the right (positive), shadow shifts left (negative)
+          if (rect.bottom < -200 || rect.top > vh + 200) return;
+          var cardCenterX  = rect.left + (rect.width / 2);
           var distanceFromCenter = cardCenterX - viewportCenterX;
           var shadowOffsetX = distanceFromCenter * -SHADOW_LAG_X;
-  
-          // Apply combined 2D transform
           shadowLayer.style.transform = 'translate(' + shadowOffsetX + 'px, ' + shadowOffsetY + 'px)';
         });
-  
-        // Existing jiggle logic...
+
+        // Patch jiggle on scroll
         if (scrollY > state.jiggleScrollY + JIGGLE_T) {
           state.jiggleScrollY = scrollY;
           document.querySelectorAll('.patch--active').forEach(function (p) {
@@ -865,6 +843,7 @@
       if (stack) stack.innerHTML = '<p style="color:var(--text-tertiary);padding:var(--sp-8);font-family:var(--font-mono);font-size:var(--text-sm);">Could not load product data.</p>';
       return;
     }
+    if (typeof window.SP_initTheme === 'function') window.SP_initTheme();
     initPrefsSheet(); initRack(); renderPatches();
     var products = SP_getCollectionProducts(state.activeCollectionId);
     renderCollection(products); updateWallHeader(state.activeCollectionId, products.length);

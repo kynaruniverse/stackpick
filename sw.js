@@ -37,6 +37,7 @@ const SHELL_ASSETS = [
 
   // ── Category page shell (used on all non-wall pages) ──
   '/assets/css/style.css',
+  '/assets/js/theme.js',
   '/assets/js/app.js',
 ];
 
