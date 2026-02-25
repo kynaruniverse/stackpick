@@ -248,3 +248,200 @@ header nav a[aria-current="page"] { color: var(--color-accent); }
   body { padding: 0; background: white; color: black; }
   .btn-primary, .btn-secondary { border: 1px solid black; color: black; background: none; box-shadow: none; }
 }
+
+
+/* ============================================================
+   GUIDE GRID — guides/index.html + comparisons/index.html
+   ============================================================ */
+
+.guide-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-md);
+}
+
+.guide-card {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-lg);
+  background: var(--color-bg-surface-1);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-card);
+  padding: var(--card-padding);
+  text-decoration: none;
+  transition:
+    border-color var(--transition-base),
+    box-shadow var(--transition-base),
+    transform var(--transition-spring);
+}
+
+.guide-card:hover {
+  border-color: var(--color-border-strong);
+  box-shadow: 0 0 var(--glow-blur) calc(var(--glow-blur) * 2) var(--color-accent-glow);
+  transform: translateY(-2px);
+}
+
+.guide-card__icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-bg-surface-2);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius);
+}
+
+.guide-card__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.guide-card__budget {
+  font-family: var(--font-mono);
+  font-size: var(--mono-size-sm);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  display: block;
+  margin-bottom: var(--spacing-xxs);
+}
+
+.guide-card__title {
+  font-family: var(--font-display);
+  font-size: var(--h4-size);
+  font-weight: var(--display-weight);
+  letter-spacing: var(--display-letter-spacing);
+  color: var(--color-text-primary);
+  line-height: var(--display-line-height);
+  margin-bottom: var(--spacing-xxs);
+}
+
+.guide-card__desc {
+  font-size: var(--body-font-size-sm);
+  color: var(--color-text-muted);
+  line-height: var(--body-line-height);
+}
+
+.guide-card__arrow {
+  font-size: 1.125rem;
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+  transition: color var(--transition-base), transform var(--transition-base);
+}
+
+.guide-card:hover .guide-card__arrow {
+  color: var(--color-accent);
+  transform: translateX(3px);
+}
+
+/* ── Also grid (2-col cross-link cards) ── */
+.also-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-md);
+}
+
+.also-card {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  background: var(--color-bg-surface-1);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-card);
+  padding: var(--spacing-lg) var(--card-padding);
+  text-decoration: none;
+  transition:
+    border-color var(--transition-base),
+    box-shadow var(--transition-base),
+    transform var(--transition-spring);
+}
+
+.also-card:hover {
+  border-color: var(--color-accent-dim);
+  background: var(--color-accent-subtle);
+  transform: translateY(-2px);
+}
+
+.also-card__icon {
+  font-size: 1.75rem;
+  flex-shrink: 0;
+}
+
+.also-card__title {
+  font-family: var(--font-display);
+  font-size: var(--h4-size);
+  font-weight: var(--display-weight);
+  letter-spacing: var(--display-letter-spacing);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-xxs);
+}
+
+.also-card__desc {
+  font-size: var(--body-font-size-sm);
+  color: var(--color-text-muted);
+  line-height: var(--body-line-height);
+}
+
+.also-card__arrow {
+  font-size: 1.125rem;
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+  margin-left: auto;
+  transition: color var(--transition-base), transform var(--transition-base);
+}
+
+.also-card:hover .also-card__arrow {
+  color: var(--color-accent);
+  transform: translateX(3px);
+}
+
+/* section-head (shared with wall.css — kept in sync) */
+.section-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--spacing-md);
+}
+
+.section-head__label {
+  font-family: var(--font-mono);
+  font-size: var(--mono-size-sm);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin-bottom: var(--spacing-xs);
+  display: block;
+}
+
+.section-head__title {
+  font-family: var(--font-display);
+  font-size: var(--h2-size);
+  font-weight: var(--display-weight);
+  letter-spacing: var(--display-letter-spacing);
+  color: var(--color-text-primary);
+  line-height: var(--display-line-height);
+}
+
+/* last-updated text (used in comparison template) */
+.last-updated {
+  font-family: var(--font-mono);
+  font-size: var(--mono-size-sm);
+  color: var(--color-text-muted);
+  margin-top: var(--spacing-xl);
+}
+
+/* ── Desktop — guide grid 2 cols ── */
+@media (min-width: 640px) {
+  .guide-grid { grid-template-columns: 1fr 1fr; }
+  .also-grid  { grid-template-columns: 1fr 1fr; }
+}
+
+/* Single-col on desktop with sidebar (page-wrapper grid shrinks main) */
+@media (min-width: 1024px) {
+  .guide-grid { grid-template-columns: 1fr 1fr; }
+}

@@ -1,391 +1,426 @@
 <!DOCTYPE html>
 <html lang="en-GB" data-theme="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#F2F0EB" media="(prefers-color-scheme: light)">
-    <meta name="theme-color" content="#0A0A0F" media="(prefers-color-scheme: dark)">
-    <meta name="robots" content="noindex">
-    <title>You're offline — Stack Pick</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
-    <style>
-        /* ── Reset ── */
-        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#0D0D0D" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#F5F5F5" media="(prefers-color-scheme: light)">
+  <meta name="robots" content="noindex">
+  <title>You're offline — StackPick</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x26A1;</text></svg>">
 
-        /* ── Tokens — matches wall-tokens.css ── */
-        :root {
-            --bg-primary:       #F2F0EB;
-            --bg-secondary:     #F8FAFC;
-            --text-primary:     #0F172A;
-            --text-secondary:   #64748B;
-            --accent-primary:   #C8FF00;
-            --accent-secondary: #8B5CF6;
-            --accent-text:      #0A0A0F;
-            --border-color:     #E2E8F0;
-        }
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
 
-        [data-theme="dark"] {
-            --bg-primary:       #0A0A0F;
-            --bg-secondary:     #141420;
-            --text-primary:     #F2F0EB;
-            --text-secondary:   rgba(242, 240, 235, 0.55);
-            --accent-primary:   #C8FF00;
-            --accent-secondary: #8B5CF6;
-            --accent-text:      #0A0A0F;
-            --border-color:     rgba(255, 255, 255, 0.1);
-        }
+  <style>
+    /* ── Reset ── */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-        /* ── Base ── */
-        html {
-            height: 100%;
-            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-            -webkit-font-smoothing: antialiased;
-        }
+    /* ── Force Marry tokens — inline so page works with no network ── */
+    :root {
+      --bg-base:        #0D0D0D;
+      --bg-surface-1:   #111111;
+      --bg-surface-2:   #1A1A1A;
+      --text-primary:   #F0EFEC;
+      --text-muted:     rgba(240,239,236,0.45);
+      --accent:         #FF4F1F;
+      --accent-subtle:  rgba(255,79,31,0.08);
+      --accent-dim:     rgba(255,79,31,0.25);
+      --accent-glow:    rgba(255,79,31,0.15);
+      --border-subtle:  #2A2A2A;
+      --border-strong:  #3A3A3A;
+      --font-display:   'Space Grotesk', system-ui, sans-serif;
+      --font-body:      'Inter', system-ui, sans-serif;
+      --font-mono:      'JetBrains Mono', monospace;
+      --radius:         8px;
+      --radius-pill:    100px;
+    }
 
-        body {
-            min-height: 100%;
-            background-color: var(--bg-primary);
-            color: var(--text-primary);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem 1.5rem;
-            text-align: center;
-        }
+    [data-theme="light"] {
+      --bg-base:        #F5F5F5;
+      --bg-surface-1:   #FFFFFF;
+      --bg-surface-2:   #EBEBEB;
+      --text-primary:   #0D0D0D;
+      --text-muted:     rgba(13,13,13,0.45);
+      --border-subtle:  #E0E0E0;
+      --border-strong:  #CCCCCC;
+    }
 
-        /* ── Icon ── */
-        .offline-icon {
-            font-size: 4rem;
-            line-height: 1;
-            margin-bottom: 1.5rem;
-            animation: pulse 2.5s ease-in-out infinite;
-        }
+    /* ── Base ── */
+    html {
+      height: 100%;
+      font-family: var(--font-body);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
 
-        @keyframes pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50%       { opacity: 0.6; transform: scale(0.95); }
-        }
+    body {
+      min-height: 100%;
+      background: var(--bg-base);
+      color: var(--text-primary);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1.5rem;
+      text-align: center;
+    }
 
-        /* ── Heading ── */
-        h1 {
-            font-size: clamp(1.5rem, 5vw, 2rem);
-            font-weight: 800;
-            color: var(--text-primary);
-            line-height: 1.2;
-            margin-bottom: 0.75rem;
-        }
+    /* ── Icon ── */
+    .offline-icon {
+      font-size: 3.5rem;
+      line-height: 1;
+      margin-bottom: 1.5rem;
+      animation: pulse 3s ease-in-out infinite;
+    }
 
-        h1 span {
-            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.4; }
+    }
 
-        /* ── Sub ── */
-        .sub {
-            font-size: 1rem;
-            color: var(--text-secondary);
-            line-height: 1.6;
-            max-width: 320px;
-            margin: 0 auto 2rem;
-        }
+    /* ── Eyebrow ── */
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+    }
 
-        /* ── Actions ── */
-        .actions {
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-            width: 100%;
-            max-width: 280px;
-        }
+    .eyebrow::before {
+      content: '';
+      display: block;
+      width: 16px;
+      height: 1px;
+      background: var(--accent);
+    }
 
-        .btn-primary {
-            display: block;
-            width: 100%;
-            padding: 0.875rem 1.5rem;
-            background: var(--accent-primary);
-            color: var(--accent-text);
-            font-size: 0.95rem;
-            font-weight: 700;
-            border: none;
-            border-radius: 0.65rem;
-            cursor: pointer;
-            text-decoration: none;
-            transition: opacity 0.15s ease, transform 0.15s ease;
-            -webkit-tap-highlight-color: transparent;
-            font-family: inherit;
-        }
+    /* ── Heading ── */
+    h1 {
+      font-family: var(--font-display);
+      font-size: clamp(1.75rem, 6vw, 2.5rem);
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      margin-bottom: 0.75rem;
+    }
 
-        .btn-primary:hover  { opacity: 0.88; }
-        .btn-primary:active { transform: scale(0.98); }
+    h1 em {
+      font-style: normal;
+      color: var(--accent);
+    }
 
-        .btn-secondary {
-            display: block;
-            width: 100%;
-            padding: 0.875rem 1.5rem;
-            background: transparent;
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-            font-weight: 500;
-            border: 1px solid var(--border-color);
-            border-radius: 0.65rem;
-            cursor: pointer;
-            text-decoration: none;
-            transition: border-color 0.15s ease, color 0.15s ease;
-            -webkit-tap-highlight-color: transparent;
-            font-family: inherit;
-        }
+    /* ── Sub ── */
+    .sub {
+      font-size: 0.9375rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      max-width: 340px;
+      margin: 0 auto 2rem;
+    }
 
-        .btn-secondary:hover {
-            border-color: var(--accent-primary);
-            color: var(--text-primary);
-        }
+    /* ── Status bar ── */
+    .status-bar {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      background: var(--bg-surface-1);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-pill);
+      padding: 0.375rem 0.875rem;
+      margin-bottom: 2rem;
+    }
 
-        /* ── Status bar ── */
-        .status-bar {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-            margin-bottom: 2rem;
-            gap: 0.4rem;
-        }
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #ef4444;
+      flex-shrink: 0;
+      animation: blink 1.5s ease-in-out infinite;
+    }
 
-        .status-dot {
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #ef4444;
-            flex-shrink: 0;
-            animation: blink 1.5s ease-in-out infinite;
-        }
+    .status-dot--online {
+      background: #3d9e6a;
+      animation: none;
+    }
 
-        .status-dot--online {
-            background: #22c55e;
-            animation: none;
-        }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.25; }
+    }
 
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50%       { opacity: 0.3; }
-        }
+    /* ── Actions ── */
+    .actions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.625rem;
+      width: 100%;
+      max-width: 280px;
+    }
 
-        /* ── Cached pages list ── */
-        .cached-section {
-            margin-top: 3rem;
-            width: 100%;
-            max-width: 360px;
-            text-align: left;
-        }
+    .btn-primary {
+      display: block;
+      width: 100%;
+      padding: 0.8125rem 1.5rem;
+      background: var(--accent);
+      color: #ffffff;
+      font-family: var(--font-display);
+      font-size: 0.8125rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+      -webkit-tap-highlight-color: transparent;
+      font-family: var(--font-display);
+    }
 
-        .cached-label {
-            font-size: 0.7rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            color: var(--text-secondary);
-            margin-bottom: 0.75rem;
-        }
+    .btn-primary:hover {
+      background: #e8401a;
+      box-shadow: 0 0 20px var(--accent-glow);
+      transform: translateY(-1px);
+    }
 
-        .cached-list {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 0.4rem;
-        }
+    .btn-primary:active { transform: translateY(0); }
 
-        .cached-list a {
-            display: flex;
-            align-items: center;
-            gap: 0.65rem;
-            padding: 0.7rem 0.875rem;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: 0.6rem;
-            color: var(--text-primary);
-            text-decoration: none;
-            font-size: 0.875rem;
-            font-weight: 500;
-            transition: border-color 0.15s ease;
-            -webkit-tap-highlight-color: transparent;
-        }
+    .btn-secondary {
+      display: block;
+      width: 100%;
+      padding: 0.8125rem 1.5rem;
+      background: transparent;
+      color: var(--text-muted);
+      font-family: var(--font-body);
+      font-size: 0.8125rem;
+      font-weight: 500;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius);
+      cursor: pointer;
+      text-decoration: none;
+      transition: border-color 0.18s ease, color 0.18s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
 
-        .cached-list a:hover {
-            border-color: var(--accent-primary);
-        }
+    .btn-secondary:hover {
+      border-color: var(--accent-dim);
+      color: var(--text-primary);
+    }
 
-        .cached-list .icon {
-            font-size: 1.1rem;
-            flex-shrink: 0;
-        }
+    /* ── Divider ── */
+    .divider {
+      width: 100%;
+      max-width: 360px;
+      height: 1px;
+      background: var(--border-subtle);
+      margin: 2.5rem 0;
+    }
 
-        /* ── Divider ── */
-        .divider {
-            width: 100%;
-            max-width: 360px;
-            height: 1px;
-            background: var(--border-color);
-            margin: 2.5rem 0;
-        }
+    /* ── Cached pages list ── */
+    .cached-section {
+      width: 100%;
+      max-width: 360px;
+      text-align: left;
+    }
 
-        /* ── Logo ── */
-        .logo {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--text-secondary);
-            text-decoration: none;
-            margin-top: 1rem;
-        }
+    .cached-label {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      margin-bottom: 0.75rem;
+    }
 
-        .logo span {
-            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
+    .cached-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.375rem;
+    }
 
-        /* ── Reduced motion ── */
-        @media (prefers-reduced-motion: reduce) {
-            .offline-icon,
-            .status-dot { animation: none; }
-        }
-    </style>
+    .cached-list a {
+      display: flex;
+      align-items: center;
+      gap: 0.625rem;
+      padding: 0.625rem 0.875rem;
+      background: var(--bg-surface-1);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius);
+      color: var(--text-primary);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: border-color 0.18s ease, background 0.18s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .cached-list a:hover {
+      border-color: var(--accent-dim);
+      background: var(--accent-subtle);
+    }
+
+    .cached-list .icon {
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+
+    /* ── Logo ── */
+    .logo {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: var(--text-muted);
+      text-decoration: none;
+      margin-top: 0.5rem;
+    }
+
+    .logo span { color: var(--accent); }
+
+    /* ── Reduced motion ── */
+    @media (prefers-reduced-motion: reduce) {
+      .offline-icon, .status-dot { animation: none; }
+      .btn-primary, .btn-secondary, .cached-list a { transition: none; }
+    }
+  </style>
 </head>
 <body>
 
-    <div class="offline-icon" aria-hidden="true">📡</div>
+  <div class="offline-icon" aria-hidden="true">📡</div>
 
-    <h1>You're offline<br><span>right now</span></h1>
+  <p class="eyebrow">No Connection</p>
+  <h1>You're <em>offline</em><br>right now</h1>
+  <p class="sub">No internet connection detected. Check your signal and try again — or browse what's already cached below.</p>
 
-    <p class="sub">No connection detected. Check your signal and try again — or browse what we've already loaded for you below.</p>
+  <div class="status-bar" id="status-bar" role="status" aria-live="polite">
+    <span class="status-dot" id="status-dot"></span>
+    <span id="status-text">No internet connection</span>
+  </div>
 
-    <div class="status-bar" id="status-bar" role="status" aria-live="polite">
-        <span class="status-dot" id="status-dot"></span>
-        <span id="status-text">No internet connection</span>
-    </div>
+  <div class="actions">
+    <button class="btn-primary" id="retry-btn">Try again</button>
+    <a href="/" class="btn-secondary">Back to home</a>
+  </div>
 
-    <div class="actions">
-        <button class="btn-primary" id="retry-btn">
-            Try again
-        </button>
-        <a href="/" class="btn-secondary">
-            Back to home
-        </a>
-    </div>
+  <div class="divider"></div>
 
-    <div class="divider"></div>
+  <div class="cached-section">
+    <p class="cached-label">Available offline</p>
+    <ul class="cached-list" id="cached-list">
+      <!-- Static fallback — JS replaces with real cache contents -->
+      <li><a href="/headsets/"><span class="icon">🎧</span>Headsets</a></li>
+      <li><a href="/keyboards/"><span class="icon">⌨️</span>Keyboards</a></li>
+      <li><a href="/mice/"><span class="icon">🖱️</span>Mice</a></li>
+      <li><a href="/monitors/"><span class="icon">🖥️</span>Monitors</a></li>
+      <li><a href="/chairs/"><span class="icon">🪑</span>Chairs</a></li>
+    </ul>
+  </div>
 
-    <div class="cached-section">
-        <p class="cached-label">Available offline</p>
-        <ul class="cached-list" id="cached-list">
-            <!-- Populated by JS from the SW cache — static fallback shown until then -->
-            <li><a href="/headsets/"><span class="icon">🎧</span>Headsets</a></li>
-            <li><a href="/keyboards/"><span class="icon">⌨️</span>Keyboards</a></li>
-            <li><a href="/mice/"><span class="icon">🖱️</span>Mice</a></li>
-            <li><a href="/monitors/"><span class="icon">🖥️</span>Monitors</a></li>
-            <li><a href="/chairs/"><span class="icon">🪑</span>Chairs</a></li>
-        </ul>
-    </div>
+  <div class="divider"></div>
 
-    <div class="divider"></div>
+  <a href="/" class="logo">Stack<span>Pick</span></a>
 
-    <a href="/" class="logo">Stack<span>Pick</span></a>
+  <script>
+  (function () {
+    'use strict';
 
-    <script>
-    (function () {
-        'use strict';
-
-        // ── Apply saved theme preference ──────────────────────────────────
-        try {
-            var saved = localStorage.getItem('sp-theme');
-            if (saved) {
-                document.documentElement.setAttribute('data-theme', saved);
-            } else if (window.matchMedia('(prefers-color-scheme: light)').matches) {
-                document.documentElement.setAttribute('data-theme', 'light');
-            }
-        } catch (e) { /* localStorage blocked — default dark theme stays */ }
+    // ── Apply saved theme ─────────────────────────────────────────────────
+    try {
+      var saved = localStorage.getItem('sp-theme');
+      if (saved) {
+        document.documentElement.setAttribute('data-theme', saved);
+      } else if (window.matchMedia('(prefers-color-scheme: light)').matches) {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+    } catch (e) { /* localStorage blocked — default dark stays */ }
 
 
-        // ── Retry button ──────────────────────────────────────────────────
-        document.getElementById('retry-btn').addEventListener('click', function () {
-            window.location.reload();
+    // ── Retry button ──────────────────────────────────────────────────────
+    document.getElementById('retry-btn').addEventListener('click', function () {
+      window.location.reload();
+    });
+
+
+    // ── Populate cached list from real SW cache ───────────────────────────
+    // Reads actual cache keys so the list reflects what's genuinely available.
+    // Falls back to the static HTML list on any error.
+    if ('caches' in window) {
+      var PAGE_ICONS = {
+        '/':             { icon: '🏠', label: 'Home' },
+        '/headsets/':    { icon: '🎧', label: 'Headsets' },
+        '/keyboards/':   { icon: '⌨️', label: 'Keyboards' },
+        '/mice/':        { icon: '🖱️', label: 'Mice' },
+        '/monitors/':    { icon: '🖥️', label: 'Monitors' },
+        '/chairs/':      { icon: '🪑', label: 'Chairs' },
+        '/guides/':      { icon: '📋', label: 'Setup Guides' },
+        '/comparisons/': { icon: '⚖️', label: 'Comparisons' },
+        '/search/':      { icon: '🔍', label: 'Search' },
+        '/about/':       { icon: 'ℹ️',  label: 'About' },
+      };
+
+      caches.keys().then(function (cacheNames) {
+        return Promise.all(cacheNames.map(function (name) {
+          return caches.open(name).then(function (cache) {
+            return cache.keys();
+          });
+        }));
+      }).then(function (keyArrays) {
+        var allKeys = [].concat.apply([], keyArrays);
+        var cachedPaths = allKeys.map(function (req) {
+          try { return new URL(req.url).pathname; }
+          catch (e) { return null; }
+        }).filter(function (p) { return p && PAGE_ICONS[p]; });
+
+        // Deduplicate, preserve PAGE_ICONS display order
+        var seen = {};
+        var unique = Object.keys(PAGE_ICONS).filter(function (p) {
+          return cachedPaths.indexOf(p) !== -1 && !seen[p] && (seen[p] = true);
         });
 
+        if (!unique.length) return; // keep static fallback
 
-        // ── Populate cached pages list from actual SW cache ───────────────
-        // Reads the real cache so the list reflects what's genuinely available,
-        // not just a hardcoded guess. Falls back to the static HTML list on error.
-        if ('caches' in window) {
-            var PAGE_ICONS = {
-                '/':             { icon: '🏠', label: 'Home' },
-                '/headsets/':    { icon: '🎧', label: 'Headsets' },
-                '/keyboards/':   { icon: '⌨️', label: 'Keyboards' },
-                '/mice/':        { icon: '🖱️', label: 'Mice' },
-                '/monitors/':    { icon: '🖥️', label: 'Monitors' },
-                '/chairs/':      { icon: '🪑', label: 'Chairs' },
-                '/guides/':      { icon: '📋', label: 'Setup Guides' },
-                '/comparisons/': { icon: '⚖️', label: 'Comparisons' },
-                '/about/':       { icon: 'ℹ️',  label: 'About' },
-            };
+        var list = document.getElementById('cached-list');
+        list.innerHTML = unique.map(function (p) {
+          var meta = PAGE_ICONS[p];
+          return '<li><a href="' + p + '"><span class="icon">' + meta.icon + '</span>' + meta.label + '</a></li>';
+        }).join('');
 
-            caches.keys().then(function (cacheNames) {
-                return Promise.all(cacheNames.map(function (name) {
-                    return caches.open(name).then(function (cache) {
-                        return cache.keys();
-                    });
-                }));
-            }).then(function (keyArrays) {
-                var allKeys = [].concat.apply([], keyArrays);
-                var cachedPaths = allKeys
-                    .map(function (req) {
-                        try { return new URL(req.url).pathname; }
-                        catch (e) { return null; }
-                    })
-                    .filter(function (p) { return p && PAGE_ICONS[p]; });
-
-                // Dedupe, preserve PAGE_ICONS display order
-                var seen = {};
-                var unique = Object.keys(PAGE_ICONS).filter(function (p) {
-                    return cachedPaths.indexOf(p) !== -1 && !seen[p] && (seen[p] = true);
-                });
-
-                if (unique.length === 0) return; // keep static fallback
-
-                var list = document.getElementById('cached-list');
-                list.innerHTML = unique.map(function (p) {
-                    var meta = PAGE_ICONS[p];
-                    return '<li><a href="' + p + '">' +
-                           '<span class="icon">' + meta.icon + '</span>' +
-                           meta.label +
-                           '</a></li>';
-                }).join('');
-
-            }).catch(function () { /* keep static fallback */ });
-        }
+      }).catch(function () { /* keep static fallback */ });
+    }
 
 
-        // ── Connection restored — update status then reload ───────────────
-        window.addEventListener('online', function () {
-            var dot  = document.getElementById('status-dot');
-            var text = document.getElementById('status-text');
-            var btn  = document.getElementById('retry-btn');
+    // ── Connection restored ───────────────────────────────────────────────
+    window.addEventListener('online', function () {
+      var dot  = document.getElementById('status-dot');
+      var text = document.getElementById('status-text');
+      var btn  = document.getElementById('retry-btn');
 
-            if (dot)  dot.classList.add('status-dot--online');
-            if (text) text.textContent = 'Connection restored — reloading…';
-            if (btn)  btn.disabled = true;
+      if (dot)  dot.classList.add('status-dot--online');
+      if (text) text.textContent = 'Connection restored — reloading…';
+      if (btn)  btn.disabled = true;
 
-            // Short delay so the user sees the status update before reload
-            setTimeout(function () {
-                window.location.reload();
-            }, 800);
-        });
+      setTimeout(function () { window.location.reload(); }, 800);
+    });
 
-    }());
-    </script>
+  }());
+  </script>
 
 </body>
 </html>
