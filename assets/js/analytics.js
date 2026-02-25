@@ -1,5 +1,5 @@
 // ============================================================
-//  STACK PICK — analytics.js  v6
+//  STACK PICK — analytics.js  v7
 //  GA4 property: G-ZTN7H3L6DV  (preserved verbatim — do not alter)
 //
 //  Loads on every page — must be the FIRST script tag.
@@ -8,19 +8,28 @@
 //
 //  PRIVACY:
 //    IP anonymisation on · Google signals off · Ad personalisation off
-//    Cookies: SameSite=None;Secure
+//
+//  FIXES vs v6:
+//    1. DOUBLE TRACKING BUG — affiliate_click was fired here AND in shared.js.
+//       Every Amazon click registered 2× affiliate_click in GA4, corrupting
+//       revenue goals. This file now fires ONLY select_item (GA4 ecommerce).
+//       affiliate_click is owned exclusively by shared.js/initAffiliateTracking().
+//
+//    2. Scroll listener now uses { passive: true } to stop blocking scroll
+//       thread. Previously the browser had to wait for the handler to complete
+//       before it could apply scroll — visibly impacted scroll performance.
 //
 //  CONTENTS
 //  01  dataLayer bootstrap & gtag shim
 //  02  GA4 config
 //  03  Page view
 //  04  Scroll depth milestones (25 / 50 / 75 / 100 %)
-//  05  Affiliate & outbound click tracking
+//  05  Outbound click tracking (affiliate select_item + outbound_click)
 //  06  File download tracking
 //  07  Site search query tracking
 //  08  JavaScript error tracking
 //  09  Unhandled promise rejection tracking
-//  10  Page performance timing (LCP proxy via load event)
+//  10  Page performance timing (LCP + load event fallback)
 // ============================================================
 
 (function () {
@@ -29,10 +38,6 @@
 
     // ============================================================
     //  01  DATALAYER BOOTSTRAP & GTAG SHIM
-    //
-    //  Standard Google tag shim.  Must run synchronously so that
-    //  subsequent gtag() calls in this file don't throw before
-    //  the GA4 script tag (loaded async in <head>) drains the queue.
     // ============================================================
 
     window.dataLayer = window.dataLayer || [];
@@ -41,9 +46,7 @@
         window.dataLayer.push(arguments);
     }
 
-    // Expose globally — app.js, wall.js, and inline snippets all use window.gtag
     window.gtag = gtag;
-
     gtag('js', new Date());
 
 
@@ -51,28 +54,18 @@
     //  02  GA4 CONFIG
     //
     //  Property:  G-ZTN7H3L6DV
-    //  Settings intentionally limit data collection to comply with
-    //  UK GDPR / ICO guidance for analytics-only (no ad) use.
     // ============================================================
 
     gtag('config', 'G-ZTN7H3L6DV', {
-        // anonymize_ip is always true in GA4 by default — no config needed
-        allow_google_signals:               false,  // no remarketing audiences
-        allow_ad_personalization_signals:   false,  // no ad personalisation
-        cookie_flags:                       'SameSite=None;Secure',
-        // Disable automatic page_view — we fire it manually in section 03
-        // so we control the timing and can include custom dimensions.
-        send_page_view:                     false,
+        allow_google_signals:             false,
+        allow_ad_personalization_signals: false,
+        cookie_flags:                     'SameSite=None;Secure',
+        send_page_view:                   false,
     });
 
 
     // ============================================================
     //  03  PAGE VIEW
-    //
-    //  Fired once on script load (covers both hard navigations and
-    //  the initial load of SPA-style pages).
-    //  wall.js does not re-fire this on collection switches — those
-    //  are tracked as patch_tap / shuffle_trigger events instead.
     // ============================================================
 
     gtag('event', 'page_view', {
@@ -85,9 +78,9 @@
     // ============================================================
     //  04  SCROLL DEPTH MILESTONES
     //
-    //  Fires once per milestone per page load: 25 / 50 / 75 / 100 %.
-    //  Uses requestAnimationFrame to avoid blocking the scroll thread.
-    //  Guarded against division-by-zero on short pages.
+    //  FIX: Added { passive: true } to the scroll event listener.
+    //  Without this, the browser had to pause scroll to call this
+    //  handler — causing measurable jank, especially on mobile.
     // ============================================================
 
     var _scrollTracked = { 25: false, 50: false, 75: false, 100: false };
@@ -115,23 +108,21 @@
 
             _scrollTicking = false;
         });
-    });
+    }, { passive: true }); // ← FIX: passive listener — does not block scroll thread
 
 
     // ============================================================
-    //  05  AFFILIATE & OUTBOUND CLICK TRACKING
+    //  05  OUTBOUND CLICK TRACKING
     //
-    //  Event schema — must match app.js section 05 and wall.js:
+    //  FIX: affiliate_click has been REMOVED from this handler.
+    //  It was previously duplicated here AND in shared.js, causing
+    //  2× affiliate_click events per click in GA4.
     //
-    //  Amazon affiliate links fire TWO events intentionally:
-    //    select_item     — GA4 ecommerce standard (for revenue reporting)
-    //    affiliate_click — simple named event (for GA4 goal funnels)
+    //  This handler now fires:
+    //    select_item     — GA4 ecommerce (for Amazon links only)
+    //    outbound_click  — for non-Amazon external links
     //
-    //  Other external links fire:
-    //    outbound_click  — matches app.js schema (link_url, link_domain)
-    //
-    //  After an affiliate click we return early so the same link
-    //  cannot also fire outbound_click.
+    //  affiliate_click is now exclusively owned by shared.js.
     // ============================================================
 
     document.addEventListener('click', function (e) {
@@ -143,10 +134,10 @@
         var text = (el.textContent || '').trim().slice(0, 100);
         var page = window.location.pathname;
 
-        // ── 05a  Amazon affiliate ─────────────────────────────
+        // ── 05a  Amazon affiliate — GA4 ecommerce only ────────
+        // NOTE: affiliate_click is NOT fired here. See shared.js.
 
         if (href.includes('amzn.to') || href.includes('amazon.co.uk')) {
-            // GA4 ecommerce — powers revenue attribution reports
             gtag('event', 'select_item', {
                 item_list_name: page,
                 items: [{
@@ -157,14 +148,7 @@
                     link_url:      href,
                 }],
             });
-            
-            gtag('event', 'affiliate_click', {
-                link_url:  href,
-                link_text: text,
-                page_path: page,
-            });
-
-            return; // prevent double-fire as outbound
+            return; // do not also fire outbound_click for Amazon links
         }
 
         // ── 05b  General outbound ─────────────────────────────
@@ -180,11 +164,6 @@
 
     // ============================================================
     //  06  FILE DOWNLOAD TRACKING
-    //
-    //  Fires when a link href ends with a known download extension.
-    //  Handled in a separate listener so it fires independently of
-    //  section 05 (a PDF hosted on amazon.co.uk would trigger both,
-    //  which is correct — affiliate click + download).
     // ============================================================
 
     var DOWNLOAD_EXTS = ['pdf', 'zip', 'doc', 'docx', 'xls', 'xlsx', 'csv', 'mp4', 'mp3'];
@@ -210,12 +189,6 @@
 
     // ============================================================
     //  07  SITE SEARCH QUERY TRACKING
-    //
-    //  Reads ?q= from the URL on page load — covers /search/ and
-    //  any future search result pages that use the same parameter.
-    //  GA4 also auto-detects search terms if you configure the
-    //  query parameter in Admin → Data Streams → Enhanced Measurement,
-    //  but this manual event adds page_path context.
     // ============================================================
 
     (function () {
@@ -232,11 +205,6 @@
 
     // ============================================================
     //  08  JAVASCRIPT ERROR TRACKING
-    //
-    //  Catches uncaught errors site-wide and logs them as GA4
-    //  exceptions.  fatal: false — an error doesn't mean the session
-    //  is unrecoverable, just that something went wrong.
-    //  Truncated to 150 chars to stay within GA4 string limits.
     // ============================================================
 
     window.addEventListener('error', function (e) {
@@ -253,10 +221,6 @@
 
     // ============================================================
     //  09  UNHANDLED PROMISE REJECTION TRACKING
-    //
-    //  Catches Promise rejections not caught by .catch() — common
-    //  source of silent failures in async code (fetch errors, etc).
-    //  Not supported in IE11 but that's not a target browser.
     // ============================================================
 
     window.addEventListener('unhandledrejection', function (e) {
@@ -273,13 +237,6 @@
 
     // ============================================================
     //  10  PAGE PERFORMANCE TIMING
-    //
-    //  Fires once after the page load event with a proxy for
-    //  Largest Contentful Paint — the window load time in ms.
-    //  For real LCP use the PerformanceObserver below; this acts
-    //  as a reliable fallback for browsers that don't support it.
-    //
-    //  Custom GA4 metric: page_load_ms (integer, milliseconds)
     // ============================================================
 
     (function () {
@@ -299,7 +256,7 @@
                 });
                 lcpObserver.observe({ type: 'largest-contentful-paint', buffered: true });
             } catch (err) {
-                // PerformanceObserver exists but LCP entry type not supported — fall through
+                // LCP entry type not supported — fall through to load event fallback
             }
         }
 
@@ -309,7 +266,6 @@
             var timing = window.performance && window.performance.timing;
             if (!timing) return;
 
-            // navigationStart → loadEventEnd gives total page load time
             var loadMs = timing.loadEventEnd - timing.navigationStart;
             if (loadMs <= 0) return;
 

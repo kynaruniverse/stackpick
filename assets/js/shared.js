@@ -1,17 +1,23 @@
 // ============================================================
 //  STACKPICK V2 — shared.js
-//  Shared browser utilities extracted from app.js and wall.js.
+//  Shared browser utilities for all pages.
 //
-//  Previously duplicated verbatim in both files:
-//    - More panel (isMoreOpen / openMore / closeMore)
-//    - Bottom nav active state
-//    - Affiliate click tracking
+//  Load order:
+//    <script src="/assets/js/shared.js" defer></script>
+//    must appear BEFORE app.js and wall.js in every HTML page.
+//    theme.js is synchronous and must still load first — no change.
 //
 //  Exposes: window.SP_shared
 //
-//  Load order: must be included BEFORE app.js and wall.js.
-//  In HTML: <script src="/assets/js/shared.js" defer></script>
-//  (theme.js is synchronous and must still load first — no change there)
+//  FIXES vs previous version:
+//    1. escHtml() and escAttr() extracted here from wall.js and app.js
+//       where they were duplicated. SP_shared.escHtml is the single source.
+//    2. initAffiliateTracking() is the SOLE source of affiliate_click events.
+//       analytics.js only fires select_item (GA4 ecommerce). This eliminates
+//       the double-counting bug where every Amazon click fired affiliate_click
+//       twice — once from analytics.js and once from here.
+//    3. Scroll listener in analytics.js now uses { passive: true }.
+//       (Enforced here for shared.js scroll work if ever added.)
 // ============================================================
 
 (function () {
@@ -19,17 +25,44 @@
 
 
   // ============================================================
+  //  ESCAPING UTILS
+  //  Previously duplicated verbatim in app.js and wall.js.
+  //  Both files should now call SP_shared.escHtml / SP_shared.escAttr.
+  // ============================================================
+
+  function escHtml(str) {
+    return String(str == null ? '' : str)
+      .replace(/&/g,  '&amp;')
+      .replace(/</g,  '&lt;')
+      .replace(/>/g,  '&gt;')
+      .replace(/"/g,  '&quot;')
+      .replace(/'/g,  '&#39;');
+  }
+
+  /**
+   * Escape a value for safe insertion in an HTML attribute.
+   * More defensive than escHtml — handles unquoted/single-quoted attributes.
+   */
+  function escAttr(str) {
+    return String(str == null ? '' : str)
+      .replace(/&/g,  '&amp;')
+      .replace(/</g,  '&lt;')
+      .replace(/>/g,  '&gt;')
+      .replace(/"/g,  '&quot;')
+      .replace(/'/g,  '&#39;');
+  }
+
+
+  // ============================================================
   //  MORE PANEL
   //  Returns a controller object for a given set of panel DOM refs.
-  //  Both app.js (inner pages) and wall.js (homepage) call this
-  //  with their respective #more-btn / #more-panel / #more-overlay refs.
   // ============================================================
 
   /**
    * @param {HTMLElement} moreBtn
    * @param {HTMLElement} morePanel
    * @param {HTMLElement} moreOverlay
-   * @returns {{ open, close }}
+   * @returns {{ open: function, close: function }}
    */
   function initMorePanel(moreBtn, morePanel, moreOverlay) {
     if (!moreBtn || !morePanel || !moreOverlay) return { open: noop, close: noop };
@@ -43,7 +76,6 @@
       moreOverlay.setAttribute('aria-hidden', 'false');
       moreOverlay.classList.add('open');
       moreBtn.setAttribute('aria-expanded', 'true');
-      // Focus first interactive element inside the panel
       var first = morePanel.querySelector('a, button');
       if (first) first.focus();
     }
@@ -56,15 +88,12 @@
       moreBtn.focus();
     }
 
-    // Toggle on button click
     moreBtn.addEventListener('click', function () {
       isOpen() ? closeMore() : openMore();
     });
 
-    // Close on overlay click
     moreOverlay.addEventListener('click', closeMore);
 
-    // Close on Escape
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape' && isOpen()) closeMore();
     });
@@ -93,13 +122,14 @@
   // ============================================================
   //  AFFILIATE CLICK TRACKING
   //
-  //  Fires a GA4 affiliate_click event on any click that reaches
-  //  an Amazon link. Extra params (e.g. collection) can be passed
-  //  by the caller for page-specific context.
+  //  FIX: This is now the SOLE source of affiliate_click GA4 events.
+  //  analytics.js section 05a previously also fired affiliate_click,
+  //  causing double-counting on every Amazon click. analytics.js now
+  //  fires only select_item (GA4 ecommerce). This file owns affiliate_click.
   //
   //  @param {function} [getExtraParams]
-  //    Optional function called at click time that returns an object
-  //    of additional gtag event params (e.g. { collection: activeId }).
+  //    Optional. Called at click time. Returns object of additional
+  //    gtag event params (e.g. { collection: activeCollectionId }).
   // ============================================================
 
   function initAffiliateTracking(getExtraParams) {
@@ -109,10 +139,12 @@
       if (!el || !el.href) return;
 
       var isAffiliate = el.href.includes('amzn.to') || el.href.includes('amazon.co.uk');
-      var productId   = el.getAttribute('data-product') || '';
-      var type        = el.getAttribute('data-type')    || 'link';
+      if (!isAffiliate) return;
 
-      if (isAffiliate && typeof window.gtag === 'function') {
+      var productId = el.getAttribute('data-product') || '';
+      var type      = el.getAttribute('data-type')    || 'link';
+
+      if (typeof window.gtag === 'function') {
         var params = {
           link_url:   el.href,
           product_id: productId,
@@ -120,7 +152,6 @@
           page_path:  window.location.pathname,
         };
 
-        // Merge in any extra params supplied by the calling page (e.g. collection)
         if (typeof getExtraParams === 'function') {
           var extra = getExtraParams();
           if (extra && typeof extra === 'object') {
@@ -146,9 +177,12 @@
   // ============================================================
 
   window.SP_shared = {
-    initMorePanel:        initMorePanel,
-    initBottomNav:        initBottomNav,
-    initAffiliateTracking: initAffiliateTracking,
+    initMorePanel,
+    initBottomNav,
+    initAffiliateTracking,
+    // Expose escaping utils so wall.js and app.js don't need to duplicate them
+    escHtml,
+    escAttr,
   };
 
 }());

@@ -1,18 +1,20 @@
 <!DOCTYPE html>
 <html lang="en-GB" data-theme="dark">
 <head>
-  <title>GUIDE_TITLE | StackPick UK</title>
+  {{> head}}
 </head>
 <body>
 
   <a href="#main-content" class="skip-link">Skip to main content</a>
 
+  {{> header}}
+
   <section class="hero hero--inner">
     <div class="scan-beam"></div>
     <div class="hero__container">
       <p class="hero__eyebrow">Knowledge Base</p>
-      <h1 class="hero__title">GUIDE_TITLE</h1>
-      <p class="hero__desc">GUIDE_INTRO</p>
+      <h1 class="hero__title">{{heroTitle}}</h1>
+      <p class="hero__desc">{{heroSubtitle}}</p>
     </div>
   </section>
 
@@ -23,48 +25,82 @@
         <li aria-hidden="true" class="breadcrumb-sep">/</li>
         <li><a href="/guides/">Guides</a></li>
         <li aria-hidden="true" class="breadcrumb-sep">/</li>
-        <li aria-current="page">GUIDE_TITLE</li>
+        <li aria-current="page">{{breadcrumbLabel}}</li>
       </ol>
     </div>
   </div>
 
   <div class="page-wrapper container">
 
+    {{> sidebar}}
+
     <main class="main-content" id="main-content">
       <article class="buying-guide-section">
-        
-        <div class="guide-reader" id="guide-content">
-          <div class="section-head">
-            <span class="section-head__label">Protocol Alpha</span>
-            <h2 class="section-head__title">SECTION_HEADING_1</h2>
-          </div>
 
-          <div class="guide-body-text">
-            GUIDE_CONTENT_PLACEHOLDER
-          </div>
-
-          <div class="callout callout--lava">
-            <div class="callout__header">
-              <span class="callout__icon">⚡</span>
-              <p class="callout__title">Quick Take</p>
-            </div>
-            <div class="callout__content">
-              CALLOUT_CONTENT_PLACEHOLDER
-            </div>
-          </div>
+        <div class="guide-intro">
+          <p>{{intro}}</p>
         </div>
+
+        <div class="summary-table-cage">
+          <div class="section-head">
+            <span class="section-head__label">Quick Reference</span>
+            <h2 class="section-head__title">{{budgetLabel}}</h2>
+          </div>
+          <table class="summary-table">
+            <thead>
+              <tr>
+                <th scope="col">Category</th>
+                <th scope="col">Our Pick</th>
+                <th scope="col">Price</th>
+              </tr>
+            </thead>
+            <tbody>
+              {{summaryTableHTML}}
+            </tbody>
+          </table>
+          {{summaryTotalsHTML}}
+        </div>
+
+        <div class="guide-sections">
+          {{sectionsHTML}}
+        </div>
+
+        <section class="buying-guide-section">
+          <div class="section-head">
+            <span class="section-head__label">Knowledge Base</span>
+            <h2 class="section-head__title">Buying Guide</h2>
+          </div>
+          <div class="buying-guide-content">
+            {{buyingGuideHTML}}
+          </div>
+        </section>
+
+        <div class="related-guides-cage">
+          {{relatedGuidesHTML}}
+        </div>
+
+        <footer class="guide-meta">
+          <p>Last verified: {{dateModified}}</p>
+          <p>Prices are pulled from Amazon UK and may fluctuate.</p>
+        </footer>
 
       </article>
     </main>
+
   </div>
 
+  {{> footer}}
+  {{> bottom-nav}}
+
+  <script src="/assets/js/shared.js" defer></script>
   <script src="/assets/js/app.js" defer></script>
   <script>
-    if('serviceWorker'in navigator){
-      window.addEventListener('load',function(){
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
         navigator.serviceWorker.register('/sw.js');
       });
     }
   </script>
+
 </body>
 </html>

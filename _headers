@@ -16,6 +16,7 @@ X-Content-Type-Options: nosniff
 Referrer-Policy: strict-origin-when-cross-origin
 Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()
 Content-Security-Policy: default-src 'self'; script-src 'self' https://www.googletagmanager.com https://www.google-analytics.com 'nonce-__CSP_NONCE__'; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://www.google-analytics.com https://www.googletagmanager.com; worker-src 'self'; frame-ancestors 'none'
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 
 
 # ── Service worker — never cache ─────────────────────────────
@@ -25,8 +26,6 @@ Cache-Control: no-cache, no-store, must-revalidate
 
 
 # ── HTML pages — never cache ──────────────────────────────────
-# Ensures users always get the latest generated content.
-# SW handles offline availability independently.
 /*.html
 Cache-Control: no-cache, no-store, must-revalidate
 
@@ -35,17 +34,12 @@ Cache-Control: no-cache, no-store, must-revalidate
 
 
 # ── Static assets — cache aggressively ───────────────────────
-# SW versioning (sp-YYYYMMDD-HHMMSS) busts the cache on every
-# build, so immutable is safe here. 1 year = 31536000 seconds.
+# SW versioning busts the cache on every build — immutable is safe.
 /assets/css/*
 Cache-Control: public, max-age=31536000, immutable
 
 /assets/js/*
 Cache-Control: public, max-age=31536000, immutable
-
-# ── JS data files — short cache (prices/stock change on every build) ─────────
-/assets/js/data/*
-Cache-Control: no-cache, must-revalidate
 
 /assets/images/*
 Cache-Control: public, max-age=31536000, immutable
@@ -54,15 +48,18 @@ Cache-Control: public, max-age=31536000, immutable
 Cache-Control: public, max-age=31536000, immutable
 
 
-# ── PWA files — short cache ───────────────────────────────────
-# manifest.json needs to update when shortcuts or icons change.
-# 1 hour gives a reasonable balance between freshness and speed.
+# ── JS data files — short cache ──────────────────────────────
+# Prices and stock change on every build. Don't serve stale data.
+/assets/js/data/*
+Cache-Control: no-cache, must-revalidate
+
+
+# ── PWA files ─────────────────────────────────────────────────
 /manifest.json
 Cache-Control: public, max-age=3600, must-revalidate
 
 
-# ── Sitemap and robots — short cache ─────────────────────────
-# Updated on every build — keep fresh for crawlers.
+# ── Sitemap and robots ────────────────────────────────────────
 /sitemap.xml
 Cache-Control: public, max-age=3600, must-revalidate
 

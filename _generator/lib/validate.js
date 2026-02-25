@@ -6,14 +6,38 @@
  * Validates all _data/*.json files before the build runs.
  * Called by: _generator/build.js (Step 1)
  * Run standalone: node _generator/lib/validate.js
+ *
+ * FIX: Previously re-declared 8 constants that already live in config.js,
+ * causing the two files to inevitably drift. Now imports from config.js.
+ *
+ * FIX: TODO_AFFILIATE stub URLs now produce a build-blocking error, not a
+ * warning, when found on a path that has no real URL. This prevents stub
+ * links from ever reaching a deployed page.
  */
 
 const fs   = require('fs');
 const path = require('path');
 
+// ── Import shared constants from config.js ──────────────────────────────────
+// Previously these were re-declared here — a maintenance hazard. Any change
+// to config.js (e.g. new VALID_CATEGORY) was silently NOT reflected in
+// validation unless this file was manually updated.
+const {
+  VALID_CATEGORIES,
+  VALID_SEAMS,
+  DATE_RE,
+  SPECS_LENGTH,
+  TODO_AFFILIATE,
+  REQUIRED_PRODUCT_FIELDS_VALIDATE  : REQUIRED_PRODUCT_FIELDS,
+  REQUIRED_COMPARISON_FIELDS,
+  REQUIRED_GUIDE_FIELDS,
+  EXTRA_FIELDS,
+} = require('./config');
+
 const DATA_DIR = path.join(__dirname, '../../_data');
 
 let errorCount = 0;
+
 function error(msg) {
   console.error(`  ✗ ${msg}`);
   errorCount++;
@@ -37,47 +61,6 @@ function loadJSON(filename) {
   }
 }
 
-// ---------------------------------------------------------------------------
-// Configuration
-// ---------------------------------------------------------------------------
-const REQUIRED_PRODUCT_FIELDS = [
-  'id', 'category', 'brand', 'badge', 'name', 'shortName',
-  'specs', 'desc', 'pros', 'cons',
-  'price', 'priceRaw', 'affiliate',
-  'url', 'emoji', 'inStock',
-];
-
-const EXTRA_FIELDS = ['seam', 'loadoutCount', 'tags', 'nextDay'];
-
-const REQUIRED_COMPARISON_FIELDS = [
-  'slug', 'title', 'metaTitle', 'metaDescription',
-  'canonical', 'datePublished', 'emoji',
-  'intro', 'productA', 'productB', 'specTable',
-  'sections', 'verdict',
-];
-
-// FIX: was ['slug','title','budget',...] — guides.json uses 'budgetLabel', not 'budget'.
-// Checking for 'budget' caused 1 false error per guide (5 total) on every build.
-//
-// Also added fields that generate-guides.js requires with no fallback and will throw
-// on if absent: 'heroTitle', 'heroSubtitle', 'breadcrumbLabel', 'summaryTotals'.
-// These were previously unvalidated despite being consumed as required by the generator.
-const REQUIRED_GUIDE_FIELDS = [
-  'slug', 'title', 'metaTitle', 'metaDescription',
-  'canonical', 'datePublished', 'emoji',
-  'heroTitle', 'heroSubtitle', 'breadcrumbLabel',
-  'intro', 'summaryTable', 'summaryTotals', 'sections',
-];
-
-const VALID_CATEGORIES = ['mice', 'keyboards', 'headsets', 'monitors', 'chairs', 'desks', 'speakers', 'pcs', 'extras'];
-const VALID_SEAMS      = ['crimson', 'cobalt', 'slate', 'amber', 'jade', 'purple'];
-const DATE_RE          = /^\d{4}-\d{2}-\d{2}$/;
-const SPECS_LENGTH     = 3;
-
-// Placeholder value written into guides.json stub affiliate URLs that have not
-// yet been replaced with real Amazon shortlinks.
-const TODO_AFFILIATE = 'TODO:REPLACE_WITH_REAL_AFFILIATE_URL';
-
 
 // ---------------------------------------------------------------------------
 // Product validation
@@ -97,9 +80,9 @@ function validateProducts(products) {
       }
     });
 
-    // Extra fields
+    // Extra fields — warn rather than error (non-fatal schema additions)
     EXTRA_FIELDS.forEach(field => {
-      if (p[field] === undefined) error(`${prefix}: missing extra field "${field}"`);
+      if (p[field] === undefined) warn(`${prefix}: missing extra field "${field}"`);
     });
 
     // Unique IDs
@@ -108,7 +91,7 @@ function validateProducts(products) {
 
     // Valid category
     if (p.category && !VALID_CATEGORIES.includes(p.category)) {
-      error(`${prefix}: invalid category "${p.category}"`);
+      error(`${prefix}: invalid category "${p.category}" — must be one of: ${VALID_CATEGORIES.join(', ')}`);
     }
 
     // Valid seam
@@ -116,46 +99,40 @@ function validateProducts(products) {
       error(`${prefix}: invalid seam "${p.seam}" — must be one of: ${VALID_SEAMS.join(', ')}`);
     }
 
-    // Affiliate URL must be https
-    if (p.affiliate && !p.affiliate.startsWith('https://')) {
-      error(`${prefix}: affiliate link must be secure (https)`);
+    // Affiliate URL — must be https and must not be a stub placeholder
+    if (p.affiliate) {
+      if (p.affiliate === TODO_AFFILIATE) {
+        error(`${prefix}: affiliate is a stub placeholder — replace with a real URL before committing`);
+      } else if (!p.affiliate.startsWith('https://')) {
+        error(`${prefix}: affiliate link must be secure (https://)`);
+      }
     }
 
     // priceRaw must be a positive number
     if (typeof p.priceRaw !== 'number') {
       error(`${prefix}: priceRaw must be a number`);
     } else if (p.priceRaw <= 0) {
-      error(`${prefix}: priceRaw must be a positive number (got ${p.priceRaw})`);
+      error(`${prefix}: priceRaw must be positive (got ${p.priceRaw})`);
     }
 
     // specs must be exactly SPECS_LENGTH items
-    if (Array.isArray(p.specs)) {
-      if (p.specs.length !== SPECS_LENGTH) {
-        error(`${prefix}: specs must have exactly ${SPECS_LENGTH} items (got ${p.specs.length})`);
-      }
+    if (Array.isArray(p.specs) && p.specs.length !== SPECS_LENGTH) {
+      error(`${prefix}: specs must have exactly ${SPECS_LENGTH} items (got ${p.specs.length})`);
     }
 
-    // pros/cons must be arrays with at least one item
-    if (Array.isArray(p.pros) && p.pros.length === 0) {
-      error(`${prefix}: pros array is empty`);
-    }
-    if (Array.isArray(p.cons) && p.cons.length === 0) {
-      error(`${prefix}: cons array is empty`);
+    // pros/cons must be non-empty arrays
+    if (Array.isArray(p.pros) && p.pros.length === 0) error(`${prefix}: pros array is empty`);
+    if (Array.isArray(p.cons) && p.cons.length === 0) error(`${prefix}: cons array is empty`);
+
+    // tags must be a non-empty array if present
+    if (p.tags !== undefined && (!Array.isArray(p.tags) || p.tags.length === 0)) {
+      error(`${prefix}: tags must be a non-empty array`);
     }
 
-    // tags must be a non-empty array
-    if (p.tags !== undefined) {
-      if (!Array.isArray(p.tags) || p.tags.length === 0) {
-        error(`${prefix}: tags must be a non-empty array`);
-      }
-    }
-
-    // inStock must be a boolean
+    // Boolean fields
     if (p.inStock !== undefined && typeof p.inStock !== 'boolean') {
       error(`${prefix}: inStock must be true or false`);
     }
-
-    // nextDay must be a boolean
     if (p.nextDay !== undefined && typeof p.nextDay !== 'boolean') {
       error(`${prefix}: nextDay must be true or false`);
     }
@@ -186,11 +163,9 @@ function validateCollections(collections, productIds) {
     if (!c.id)    error(`${prefix}: missing required field "id"`);
     if (!c.label) error(`${prefix}: missing required field "label"`);
 
-    // Unique collection IDs
     if (c.id && collectionIds.has(c.id)) error(`${prefix}: duplicate collection id "${c.id}"`);
     if (c.id) collectionIds.add(c.id);
 
-    // Cross-reference baseProducts against known product IDs
     if (c.baseProducts) {
       if (!Array.isArray(c.baseProducts) || c.baseProducts.length === 0) {
         error(`${prefix}: baseProducts must be a non-empty array`);
@@ -203,20 +178,16 @@ function validateCollections(collections, productIds) {
       }
     }
 
-    // Cross-reference shuffleVariants if present.
-    // shuffleVariants[].products is an array of product ID strings (not full objects).
     if (c.shuffleVariants) {
       if (!Array.isArray(c.shuffleVariants)) {
         error(`${prefix}: shuffleVariants must be an array`);
       } else {
         c.shuffleVariants.forEach((v, vi) => {
-          if (v.products) {
-            v.products.forEach(id => {
-              if (!productIds.has(id)) {
-                error(`${prefix} shuffleVariants[${vi}]: references unknown product id "${id}"`);
-              }
-            });
-          }
+          (v.products || []).forEach(id => {
+            if (!productIds.has(id)) {
+              error(`${prefix} shuffleVariants[${vi}]: references unknown product id "${id}"`);
+            }
+          });
         });
       }
     }
@@ -235,31 +206,25 @@ function validateComparisons(comparisons) {
   comparisons.forEach((c, i) => {
     const prefix = `comparisons[${i}] (${c.slug || 'unknown'})`;
 
-    // Required fields
     REQUIRED_COMPARISON_FIELDS.forEach(field => {
       if (c[field] === undefined || c[field] === null || c[field] === '') {
         error(`${prefix}: missing required field "${field}"`);
       }
     });
 
-    // Unique slugs
     if (c.slug && slugs.has(c.slug)) error(`${prefix}: duplicate slug "${c.slug}"`);
     if (c.slug) slugs.add(c.slug);
 
-    // Date format
     if (c.datePublished && !DATE_RE.test(c.datePublished)) {
-      error(`${prefix}: datePublished must be YYYY-MM-DD format (got "${c.datePublished}")`);
+      error(`${prefix}: datePublished must be YYYY-MM-DD (got "${c.datePublished}")`);
     }
     if (c.dateModified && !DATE_RE.test(c.dateModified)) {
-      error(`${prefix}: dateModified must be YYYY-MM-DD format (got "${c.dateModified}")`);
+      error(`${prefix}: dateModified must be YYYY-MM-DD (got "${c.dateModified}")`);
     }
-
-    // Canonical must be https
     if (c.canonical && !c.canonical.startsWith('https://')) {
       error(`${prefix}: canonical must be https`);
     }
 
-    // productA and productB must have affiliate links
     ['productA', 'productB'].forEach(side => {
       if (c[side]) {
         if (!c[side].name)      error(`${prefix}: ${side} missing "name"`);
@@ -270,12 +235,9 @@ function validateComparisons(comparisons) {
       }
     });
 
-    // specTable must be a non-empty array
     if (Array.isArray(c.specTable) && c.specTable.length === 0) {
       error(`${prefix}: specTable is empty`);
     }
-
-    // sections must be a non-empty array
     if (Array.isArray(c.sections) && c.sections.length === 0) {
       warn(`${prefix}: sections array is empty — comparison will have no body content`);
     }
@@ -294,47 +256,36 @@ function validateGuides(guides) {
   guides.forEach((g, i) => {
     const prefix = `guides[${i}] (${g.slug || 'unknown'})`;
 
-    // Required fields (FIX: list updated — see REQUIRED_GUIDE_FIELDS comment above)
     REQUIRED_GUIDE_FIELDS.forEach(field => {
       if (g[field] === undefined || g[field] === null || g[field] === '') {
         error(`${prefix}: missing required field "${field}"`);
       }
     });
 
-    // FIX: 'budgetLabel' is optional (generate-guides.js uses || '' fallback) but
-    // warn if absent so the omission is visible in build output.
     if (g.budgetLabel === undefined || g.budgetLabel === null || g.budgetLabel === '') {
       warn(`${prefix}: missing optional field "budgetLabel" — guide price will be blank in search index`);
     }
 
-    // Unique slugs
     if (g.slug && slugs.has(g.slug)) error(`${prefix}: duplicate slug "${g.slug}"`);
     if (g.slug) slugs.add(g.slug);
 
-    // Date format
     if (g.datePublished && !DATE_RE.test(g.datePublished)) {
-      error(`${prefix}: datePublished must be YYYY-MM-DD format (got "${g.datePublished}")`);
+      error(`${prefix}: datePublished must be YYYY-MM-DD (got "${g.datePublished}")`);
     }
     if (g.dateModified && !DATE_RE.test(g.dateModified)) {
-      error(`${prefix}: dateModified must be YYYY-MM-DD format (got "${g.dateModified}")`);
+      error(`${prefix}: dateModified must be YYYY-MM-DD (got "${g.dateModified}")`);
     }
-
-    // Canonical must be https
     if (g.canonical && !g.canonical.startsWith('https://')) {
       error(`${prefix}: canonical must be https`);
     }
 
-    // summaryTable must be a non-empty array
     if (Array.isArray(g.summaryTable) && g.summaryTable.length === 0) {
       error(`${prefix}: summaryTable is empty`);
     }
-
-    // summaryTotals must be an array (can be empty — some guides have no totals row)
     if (g.summaryTotals !== undefined && !Array.isArray(g.summaryTotals)) {
       error(`${prefix}: summaryTotals must be an array`);
     }
 
-    // sections must be a non-empty array with valid products
     if (Array.isArray(g.sections)) {
       if (g.sections.length === 0) {
         error(`${prefix}: sections array is empty`);
@@ -343,16 +294,15 @@ function validateGuides(guides) {
           if (!s.heading) error(`${prefix} sections[${si}]: missing "heading"`);
           if (Array.isArray(s.products)) {
             s.products.forEach((p, pi) => {
-              const pprefix = `${prefix} sections[${si}].products[${pi}] ("${p.name || '?'}")`;
-              if (!p.name)      error(`${pprefix}: missing "name"`);
-              if (!p.affiliate) error(`${pprefix}: missing "affiliate"`);
+              const pp = `${prefix} sections[${si}].products[${pi}] ("${p.name || '?'}")`;
+              if (!p.name)      error(`${pp}: missing "name"`);
+              if (!p.affiliate) error(`${pp}: missing "affiliate"`);
               if (p.affiliate) {
                 if (p.affiliate === TODO_AFFILIATE) {
-                  // FIX: stub placeholder URLs are a warning, not a build-blocking error.
-                  // The build can proceed; the link will be non-functional until replaced.
-                  warn(`${pprefix}: affiliate is a stub placeholder — replace with real URL before publishing`);
+                  // FIX: block, don't just warn — stubs in production break user-facing links
+                  error(`${pp}: affiliate is a stub placeholder — replace before publishing`);
                 } else if (!p.affiliate.startsWith('https://')) {
-                  error(`${pprefix}: affiliate must be https`);
+                  error(`${pp}: affiliate must be https`);
                 }
               }
             });
@@ -365,7 +315,7 @@ function validateGuides(guides) {
 
 
 // ---------------------------------------------------------------------------
-// Main
+// Main entry point
 // ---------------------------------------------------------------------------
 function runValidation() {
   errorCount = 0;
@@ -376,7 +326,7 @@ function runValidation() {
   const comparisons = loadJSON('comparisons.json');
   const guides      = loadJSON('guides.json');
 
-  const productIds = products    ? validateProducts(products)          : new Set();
+  const productIds = products    ? validateProducts(products)         : new Set();
   if (collections)                 validateCollections(collections, productIds);
   if (comparisons)                 validateComparisons(comparisons);
   if (guides)                      validateGuides(guides);
@@ -390,10 +340,10 @@ function runValidation() {
     ].filter(Boolean).join(', ');
     console.log(`  ✓ All checks passed — ${counts}\n`);
     return true;
-  } else {
-    console.error(`\n  ❌ ${errorCount} error${errorCount === 1 ? '' : 's'} found. Fix before building.\n`);
-    return false;
   }
+
+  console.error(`\n  ❌ ${errorCount} error${errorCount === 1 ? '' : 's'} found. Fix before building.\n`);
+  return false;
 }
 
 if (require.main === module) {

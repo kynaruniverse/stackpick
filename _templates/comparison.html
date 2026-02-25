@@ -1,14 +1,13 @@
 <!DOCTYPE html>
 <html lang="en-GB" data-theme="dark">
 <head>
-  <title>{{heroTitle}} | StackPick UK</title>
-  <meta name="description" content="{{{metaDescription}}}">
-  <link rel="canonical" href="{{{canonicalURL}}}">
-  {{{schemaJSON}}}
+  {{> head}}
 </head>
 <body>
 
   <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  {{> header}}
 
   <section class="hero hero--inner">
     <div class="scan-beam"></div>
@@ -33,18 +32,20 @@
 
   <div class="page-wrapper container">
 
+    {{> sidebar}}
+
     <main class="main-content" id="main-content">
       <article class="buying-guide-section">
-        
+
         <div class="comparison-intro">
-          {{{introHTML}}}
+          {{introHTML}}
         </div>
 
         <div class="section-head">
           <span class="section-head__label">Data Scan</span>
           <h2 class="section-head__title">Specs at a Glance</h2>
         </div>
-        
+
         <div class="comparison-table-cage">
           <div class="comparison-table-wrapper">
             <table class="comparison-table">
@@ -56,14 +57,14 @@
                 </tr>
               </thead>
               <tbody>
-                {{{specTableHTML}}}
+                {{specTableHTML}}
               </tbody>
             </table>
           </div>
         </div>
 
         <div class="comparison-breakdown">
-          {{{sectionsHTML}}}
+          {{sectionsHTML}}
         </div>
 
         <div class="verdict-cage">
@@ -72,21 +73,21 @@
             <h2 class="section-head__title">The Verdict</h2>
           </div>
           <div class="verdict-content">
-            {{{verdictHTML}}}
+            {{verdictHTML}}
           </div>
         </div>
 
         <div class="buy-section">
-          {{{buyCardsHTML}}}
+          {{buyCardsHTML}}
         </div>
 
         <footer class="comparison-meta">
           <p>Last verified: {{dateModified}}</p>
-          <p>System Note: Prices are pulled from Amazon UK and may fluctuate based on sector demand.</p>
+          <p>Prices are pulled from Amazon UK and may fluctuate.</p>
         </footer>
 
         <div class="related-links-cage">
-          {{{relatedLinksHTML}}}
+          {{relatedLinksHTML}}
         </div>
 
       </article>
@@ -94,10 +95,14 @@
 
   </div>
 
+  {{> footer}}
+  {{> bottom-nav}}
+
+  <script src="/assets/js/shared.js" defer></script>
   <script src="/assets/js/app.js" defer></script>
   <script>
     if ('serviceWorker' in navigator) {
-      window.addEventListener('load', function () {
+      window.addEventListener('load', function() {
         navigator.serviceWorker.register('/sw.js');
       });
     }

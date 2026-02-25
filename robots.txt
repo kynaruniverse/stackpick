@@ -1,18 +1,28 @@
-# ==========================================
-# StackPick Robots.txt
-# ==========================================
+# StackPick — robots.txt
+# https://stackpick.co.uk/robots.txt
 
 User-agent: *
+
+# Core content — allow everything
 Allow: /
+Allow: /mice/
+Allow: /keyboards/
+Allow: /headsets/
+Allow: /monitors/
+Allow: /chairs/
+Allow: /guides/
+Allow: /comparisons/
+Allow: /search/
+Allow: /about/
 
-# Block technical/internal folders
-Disallow: /_generator/
-Disallow: /_templates/
-Disallow: /_data/
-Disallow: /node_modules/
+# Disallow auto-generated data files — these are raw JSON-as-JS
+# and should not be indexed as standalone content
+Disallow: /assets/js/data/
 
-# Block search result pages (to avoid duplicate content issues)
-Disallow: /search/
+# Disallow the offline fallback page — not real content
+Disallow: /offline.html
 
-# Host and Sitemap
-Sitemap: https://yourdomain.com/sitemap.xml
+# Disallow build artifacts
+Disallow: /sitemap.xml.tmp
+
+Sitemap: https://stackpick.co.uk/sitemap.xml

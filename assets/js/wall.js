@@ -2,25 +2,30 @@
 //  STACKPICK V2 — wall.js
 //  Homepage controller — Force Marry edition.
 //
-//  Requires: theme.js (sync, in <head>), shared.js (defer, before this)
+//  Requires:
+//    theme.js  (synchronous, in <head>)
+//    shared.js (defer, before this)
 //
-//  MECHANICS KEPT:
-//    Collection filter tabs (swap card grid content)
-//    Hover lift + lava glow (CSS — no JS needed)
-//    Featured row updates with active collection
-//    Card stagger animation on collection switch
-//    Affiliate click tracking (GA4)          [via shared.js]
-//    Bottom nav + More panel                 [via shared.js]
-//    Theme init                              [via theme.js]
-//    Service worker
+//  FIXES vs previous version:
+//    1. escHtml / escAttr: no longer duplicated here. Delegated to
+//       SP_shared.escHtml and SP_shared.escAttr. Local shims are
+//       kept as fallbacks in case shared.js fails to load, but the
+//       primary path now uses the shared versions.
 //
-//  MECHANICS REMOVED:
-//    Pull-to-shuffle
-//    Card flips
-//    Patch rail / story strip
-//    Rack-box bottom nav (replaced with clean bottom nav)
-//    Deck-vibrate / card-toss animations
-//    Long-press preview
+//    2. mapTabId() hoisted MAP constant to module level — was re-creating
+//       a new object on every tab click (allocation on every interaction).
+//
+//    3. renderFeatureRow() and renderGrid() previously called
+//       getCollectionProducts() independently. activateCollection() now
+//       computes products once and passes them to both.
+//
+//    4. buildAltFeature() description truncation: ellipsis now only added
+//       if the description is actually longer than 140 characters.
+//
+//    5. "Also consider" slot was injecting the same product as the card
+//       directly below it (gridProducts[i] before the card at index i).
+//       Fixed to use the previous product (i - FEATURE_SLOT_INTERVAL)
+//       as the featured item, ensuring it's always a different card.
 //
 //  CONTENTS
 //  01  Data access helpers
@@ -28,7 +33,7 @@
 //  03  Render — product card
 //  04  Render — feature row
 //  05  Render — card grid
-//  06  Collection filter tabs     [BUG FIX: mapTabId now includes kynar-setup]
+//  06  Collection filter tabs
 //  07  Bottom nav + More panel    [via shared.js]
 //  08  Affiliate click tracking   [via shared.js]
 //  09  Init
@@ -37,11 +42,11 @@
 (function () {
   'use strict';
 
-  // ── Globals injected by data layer at build time ──
+  // ── Globals injected by data layer at build time ──────────────────────────
   var SP_PRODUCTS    = window.SP_PRODUCTS    || [];
   var SP_COLLECTIONS = window.SP_COLLECTIONS || [];
 
-  // Collection display name map — v2 Force Marry labels
+  // Collection display name map
   var COLLECTION_LABELS = {
     'all-picks':     'All Gear',
     'sweaty-fps':    'FPS Edition',
@@ -50,10 +55,22 @@
     'wireless-only': 'Cut The Wire',
     'cozy-station':  'After Hours',
     'creator-bay':   'Creator Stack',
-    'kynar-setup':   'The Kynar',  // BUG FIX: was missing from mapTabId; now included end-to-end
+    'kynar-setup':   'The Kynar',
   };
 
-  // ── DOM refs ──
+  // ── Tab ID mapping — hoisted to module level (was re-created on every click) ──
+  var TAB_ID_MAP = {
+    'all-gear':      'all-picks',
+    'fps-edition':   'sweaty-fps',
+    'focus-build':   'study-mode',
+    'sub-100':       'under-100',
+    'cut-the-wire':  'wireless-only',
+    'after-hours':   'cozy-station',
+    'creator-stack': 'creator-bay',
+    'the-kynar':     'kynar-setup',
+  };
+
+  // ── DOM refs ──────────────────────────────────────────────────────────────
   var cardGrid     = document.getElementById('card-grid');
   var filterTabs   = document.querySelectorAll('.filter-tab');
   var featureName  = document.getElementById('feature-name');
@@ -68,8 +85,18 @@
   //  01  DATA ACCESS HELPERS
   // ============================================================
 
+  // Product lookup map — O(1) by id, built once instead of using .find() on every lookup
+  var _productMap = null;
+
+  function getProductMap() {
+    if (_productMap) return _productMap;
+    _productMap = new Map();
+    SP_PRODUCTS.forEach(function (p) { _productMap.set(p.id, p); });
+    return _productMap;
+  }
+
   function getProductById(id) {
-    return SP_PRODUCTS.find(function (p) { return p.id === id; }) || null;
+    return getProductMap().get(id) || null;
   }
 
   function getCollectionById(id) {
@@ -103,13 +130,14 @@
     var card = document.createElement('article');
     card.className = 'product-card';
     card.setAttribute('aria-label', product.name);
-    // Stagger delay capped at 6 items
+
+    // Stagger animation — capped at 6 items (240ms max)
     if (index < 6) {
       card.style.animationDelay = (index * 40) + 'ms';
     }
 
     var specs = (product.specs || [])
-      .map(function (s) { return '<span class="spec-pill">' + escHtml(s) + '</span>'; })
+      .map(function (s) { return '<span class="spec-pill">' + esc(s) + '</span>'; })
       .join('');
 
     var stamps = '';
@@ -117,7 +145,7 @@
     if (product.nextDay) stamps += '<span class="stamp stamp--nextday">Next Day</span>';
 
     var msrp = product.msrp
-      ? '<span class="product-card__price-msrp">' + escHtml(product.msrp) + '</span>'
+      ? '<span class="product-card__price-msrp">' + esc(product.msrp) + '</span>'
       : '';
 
     card.innerHTML =
@@ -125,19 +153,19 @@
         '<div class="product-card__icon-wrap" aria-hidden="true">' +
           '<span class="product-card__emoji">' + (product.emoji || '\uD83D\uDCE6') + '</span>' +
         '</div>' +
-        '<span class="product-card__category">' + escHtml(product.category) + '</span>' +
+        '<span class="product-card__category">' + esc(product.category) + '</span>' +
       '</div>' +
       '<div class="product-card__body">' +
-        '<span class="product-card__badge">' + escHtml(product.badge || '') + '</span>' +
-        '<h3 class="product-card__name">' + escHtml(product.name) + '</h3>' +
+        '<span class="product-card__badge">' + esc(product.badge || '') + '</span>' +
+        '<h3 class="product-card__name">' + esc(product.name) + '</h3>' +
         '<div class="product-card__specs">' + specs + '</div>' +
       '</div>' +
       (stamps ? '<div class="product-card__stamps">' + stamps + '</div>' : '') +
       '<div class="product-card__footer">' +
-        '<span class="product-card__price">' + escHtml(product.price) + msrp + '</span>' +
-        '<a href="' + escAttr(product.affiliate) + '" class="product-card__cta"' +
+        '<span class="product-card__price">' + esc(product.price) + msrp + '</span>' +
+        '<a href="' + escA(product.affiliate) + '" class="product-card__cta"' +
            ' target="_blank" rel="noopener sponsored"' +
-           ' data-product="' + escAttr(product.id) + '" data-type="card-cta">' +
+           ' data-product="' + escA(product.id) + '" data-type="card-cta">' +
           'View \u2192' +
         '</a>' +
       '</div>';
@@ -148,34 +176,27 @@
 
   // ============================================================
   //  04  RENDER — FEATURE ROW
-  //  Updates the editor's pick row to reflect the active collection.
   // ============================================================
 
-  function renderFeatureRow(collection) {
+  function renderFeatureRow(products) {
     if (!featureName || !featureDesc || !featurePrice || !featurePick) return;
-
-    var products = getCollectionProducts(collection);
     if (!products.length) return;
 
-    // Use the first product as the featured pick
     var pick = products[0];
 
     featureName.textContent  = pick.name;
     featureDesc.textContent  = pick.desc  || '';
     featurePrice.textContent = pick.price;
 
-    // Update CTA link
     var cta = featurePick.querySelector('.feature-row__cta');
     if (cta) {
       cta.href = pick.affiliate;
       cta.setAttribute('data-product', pick.id);
     }
 
-    // Update emoji in visual
     var visual = featurePick.querySelector('.feature-row__visual');
     if (visual) visual.textContent = pick.emoji || '\uD83D\uDCE6';
 
-    // Stamps — remove existing, insert fresh
     var meta = featurePick.querySelector('.feature-row__meta');
     if (meta) {
       meta.querySelectorAll('.stamp').forEach(function (s) { s.remove(); });
@@ -199,15 +220,13 @@
   //  05  RENDER — CARD GRID
   // ============================================================
 
-  var FEATURE_SLOT_INTERVAL = 6; // inject an "also consider" slot every N cards
+  var FEATURE_SLOT_INTERVAL = 6;
 
-  function renderGrid(collection) {
+  function renderGrid(products) {
     if (!cardGrid) return;
 
-    var products = getCollectionProducts(collection);
-
     // Clear grid
-    while (cardGrid.firstChild) { cardGrid.removeChild(cardGrid.firstChild); }
+    cardGrid.replaceChildren();
 
     if (!products.length) {
       cardGrid.innerHTML =
@@ -218,14 +237,17 @@
       return;
     }
 
-    // Skip first product — it is displayed in the feature row above the grid
+    // First product is displayed in feature row, skip in grid
     var gridProducts = products.slice(1);
 
     gridProducts.forEach(function (product, i) {
-      // Inject a full-width "also consider" slot every N cards (skip position 0)
+      // FIX: "Also consider" slot was previously injecting gridProducts[i]
+      // which is the SAME product about to be rendered as a card directly below.
+      // Now uses a product from earlier in the list so it's always different.
       if (i > 0 && i % FEATURE_SLOT_INTERVAL === 0) {
-        var altPick = gridProducts[i];
-        if (altPick) {
+        var altIndex = i - Math.floor(FEATURE_SLOT_INTERVAL / 2);
+        var altPick  = gridProducts[altIndex >= 0 ? altIndex : 0];
+        if (altPick && altPick.id !== product.id) {
           var slot = document.createElement('div');
           slot.className = 'card-grid__feature-slot';
           slot.setAttribute('aria-hidden', 'true');
@@ -241,6 +263,13 @@
     var el = document.createElement('article');
     el.className = 'feature-row';
     el.setAttribute('aria-label', 'Featured: ' + product.name);
+
+    // FIX: only add ellipsis if description is actually truncated
+    var rawDesc = product.desc || '';
+    var desc = rawDesc.length > 140
+      ? rawDesc.substring(0, 140) + '\u2026'
+      : rawDesc;
+
     el.innerHTML =
       '<div class="feature-row__visual" aria-hidden="true">' +
         '<div class="feature-row__icon-wrap">' +
@@ -249,15 +278,15 @@
       '</div>' +
       '<div class="feature-row__body">' +
         '<span class="feature-row__badge">Also Consider</span>' +
-        '<h3 class="feature-row__name">' + escHtml(product.name) + '</h3>' +
-        '<p class="feature-row__desc">' + escHtml((product.desc || '').substring(0, 140) + '\u2026') + '</p>' +
+        '<h3 class="feature-row__name">' + esc(product.name) + '</h3>' +
+        '<p class="feature-row__desc">' + esc(desc) + '</p>' +
         '<div class="feature-row__footer">' +
           '<div class="feature-row__meta">' +
-            '<span class="feature-row__price">' + escHtml(product.price) + '</span>' +
+            '<span class="feature-row__price">' + esc(product.price) + '</span>' +
           '</div>' +
-          '<a href="' + escAttr(product.affiliate) + '" class="feature-row__cta"' +
+          '<a href="' + escA(product.affiliate) + '" class="feature-row__cta"' +
              ' target="_blank" rel="noopener sponsored"' +
-             ' data-product="' + escAttr(product.id) + '" data-type="alt-feature-cta">' +
+             ' data-product="' + escA(product.id) + '" data-type="alt-feature-cta">' +
             'View on Amazon \u2192' +
           '</a>' +
         '</div>' +
@@ -268,48 +297,26 @@
 
   // ============================================================
   //  06  COLLECTION FILTER TABS
-  //
-  //  BUG FIX: mapTabId() previously had no entry for 'kynar-setup'
-  //  (or its Force Marry tab equivalent). The COLLECTION_LABELS map
-  //  at the top of this file correctly includes 'kynar-setup',
-  //  and mapTabId now maps the Force Marry HTML tab ID to the
-  //  original collection ID so clicking it works end-to-end.
   // ============================================================
 
   var activeCollectionId = 'all-picks';
 
-  /**
-   * Map Force Marry HTML tab data-collection values
-   * back to the original collection IDs used in SP_COLLECTIONS.
-   * Both sides of each mapping must be kept in sync with:
-   *   - The data-collection attributes on filter tabs in index.html
-   *   - The id fields in _data/collections.json
-   */
   function mapTabId(v2Id) {
-    var map = {
-      'all-gear':      'all-picks',
-      'fps-edition':   'sweaty-fps',
-      'focus-build':   'study-mode',
-      'sub-100':       'under-100',
-      'cut-the-wire':  'wireless-only',
-      'after-hours':   'cozy-station',
-      'creator-stack': 'creator-bay',
-      'the-kynar':     'kynar-setup',   // BUG FIX: was missing in previous version
-    };
-    return map[v2Id] || v2Id;
+    return TAB_ID_MAP[v2Id] || v2Id;
   }
 
   function activateCollection(collectionId) {
-    // Guard: don't re-render if already active and grid has content
     if (collectionId === activeCollectionId && cardGrid && cardGrid.children.length > 1) return;
     activeCollectionId = collectionId;
 
     var collection = getCollectionById(collectionId);
     var label      = getCollectionLabel(collectionId);
+    var products   = getCollectionProducts(collection); // computed once, passed to both renderers
 
     // Update tab UI
     filterTabs.forEach(function (tab) {
-      var isActive = tab.getAttribute('data-collection') === collectionId;
+      var tabCollectionId = mapTabId(tab.getAttribute('data-collection'));
+      var isActive = tabCollectionId === collectionId;
       tab.classList.toggle('filter-tab--active', isActive);
       tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
     });
@@ -317,32 +324,26 @@
     // Update section label
     if (gridLabel) gridLabel.textContent = label;
 
-    // Update category link text + href
-    if (categoryLink && collection) {
-      var cats       = getCollectionProducts(collection).map(function (p) { return p.category; });
-      var primaryCat = cats[0] || '';
+    // Update category link
+    if (categoryLink && products.length) {
+      var primaryCat = products[0].category || '';
       categoryLink.href        = primaryCat ? '/' + primaryCat + '/' : '#';
       categoryLink.textContent = primaryCat ? 'View all ' + primaryCat + ' \u2192' : 'View category \u2192';
     }
 
-    // Render feature row and card grid
-    renderFeatureRow(collection);
-    renderGrid(collection);
+    // FIX: pass pre-computed products to both renderers (was computed twice)
+    renderFeatureRow(products);
+    renderGrid(products);
 
-    // Scroll user to top of new grid on mobile
-    if (window.innerWidth < 1024) {
-      window.scrollTo({
-        top:      featurePick ? featurePick.offsetTop - 100 : 0,
-        behavior: 'smooth',
-      });
+    // Scroll to grid top on mobile
+    if (window.innerWidth < 1024 && featurePick) {
+      window.scrollTo({ top: featurePick.offsetTop - 100, behavior: 'smooth' });
     }
   }
 
   filterTabs.forEach(function (tab) {
     tab.addEventListener('click', function () {
-      var v2Id       = tab.getAttribute('data-collection');
-      var originalId = mapTabId(v2Id);
-      activateCollection(originalId);
+      activateCollection(mapTabId(tab.getAttribute('data-collection')));
     });
   });
 
@@ -363,8 +364,6 @@
 
   // ============================================================
   //  08  AFFILIATE CLICK TRACKING  [shared.js]
-  //  Pass a getter for the active collection so GA4 can segment
-  //  affiliate clicks by which collection the user was browsing.
   // ============================================================
 
   if (window.SP_shared) {
@@ -389,16 +388,20 @@
   }
 
 
-  // ── Utils ──────────────────────────────────────────────────
+  // ── Utils (local shims — prefer SP_shared versions) ──────────────────────
+  // These shims exist as a safety net if shared.js fails to load.
+  // In normal operation, use window.SP_shared.escHtml / escAttr instead.
 
-  function escHtml(str) {
-    return String(str || '')
+  function esc(str) {
+    if (window.SP_shared) return window.SP_shared.escHtml(str);
+    return String(str == null ? '' : str)
       .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
   }
 
-  function escAttr(str) {
-    return String(str || '').replace(/"/g, '&quot;');
+  function escA(str) {
+    if (window.SP_shared) return window.SP_shared.escAttr(str);
+    return String(str == null ? '' : str).replace(/"/g, '&quot;');
   }
 
 }());

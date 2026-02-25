@@ -1,118 +1,68 @@
 <!DOCTYPE html>
 <html lang="en-GB" data-theme="dark">
-
 <head>
-  <title>Best CATEGORY_NAME for UK Gamers | StackPick</title>
+  {{> head}}
 </head>
-
 <body>
-  
+
   <a href="#main-content" class="skip-link">Skip to main content</a>
-  
+
+  {{> header}}
+
   <section class="hero hero--inner">
     <div class="scan-beam"></div>
     <div class="hero__container">
       <p class="hero__eyebrow">Hardware Category</p>
-      <h1 class="hero__title">Best CATEGORY_NAME</h1>
-      <p class="hero__desc">CATEGORY_DESC_PLACEHOLDER</p>
+      <h1 class="hero__title">{{heroTitle}}</h1>
+      <p class="hero__desc">{{heroSubtitle}}</p>
     </div>
   </section>
-  
+
   <div class="breadcrumb-bar">
     <div class="container">
       <ol class="breadcrumb-list" aria-label="Breadcrumb">
         <li><a href="/">Home</a></li>
         <li aria-hidden="true" class="breadcrumb-sep">/</li>
-        <li aria-current="page">CATEGORY_NAME</li>
+        <li aria-current="page">{{breadcrumbLabel}}</li>
       </ol>
     </div>
   </div>
-  
+
   <div class="page-wrapper container">
-    
+
+    {{> sidebar}}
+
     <main class="main-content" id="main-content">
-      
-      <div class="filter-cage">
-        <div class="filter-strip" role="navigation" aria-label="Filter by budget">
-          <button class="filter-chip active" data-filter="all">All Budgets</button>
-          <button class="filter-chip" data-filter="under-50">Under £50</button>
-          <button class="filter-chip" data-filter="50-100">£50 – £100</button>
-          <button class="filter-chip" data-filter="100-200">£100 – £200</button>
-          <button class="filter-chip" data-filter="over-200">£200+</button>
-        </div>
+
+      <div class="card-grid card-grid--list" id="product-list" aria-label="{{breadcrumbLabel}} picks">
+        {{productCardsHTML}}
       </div>
-      
-      <div class="card-grid card-grid--list" id="product-list" aria-label="CATEGORY_NAME picks">
-        
-        <article class="product-card product-card--featured" data-budget="BUDGET_CLASS">
-          <div class="product-card__visual">
-            <div class="product-card__icon-wrap">
-              <span class="product-card__emoji">PRODUCT_EMOJI</span>
-            </div>
-            <span class="product-card__rank">#RANK_NUMBER</span>
-            <span class="stamp stamp--stock">TOP PICK</span>
-          </div>
-          
-          <div class="product-card__body">
-            <h2 class="product-card__name">PRODUCT_NAME</h2>
-            <p class="product-card__desc">PRODUCT_DESC</p>
-            
-            <div class="product-card__specs">
-              <span class="spec-pill">SPEC_1</span>
-              <span class="spec-pill">SPEC_2</span>
-            </div>
-            
-            <div class="pros-cons-cage">
-              <div class="pros-cons__col">
-                <span class="pros-cons__label">Pros</span>
-                <ul class="pros-cons__list">
-                  <li>PRO_1</li>
-                  <li>PRO_2</li>
-                </ul>
-              </div>
-              <div class="pros-cons__col">
-                <span class="pros-cons__label">Cons</span>
-                <ul class="pros-cons__list">
-                  <li>CON_1</li>
-                </ul>
-              </div>
-            </div>
-            
-            <div class="product-card__footer">
-              <div class="price-block">
-                <span class="product-card__price">PRICE</span>
-                <span class="product-card__price-msrp">MSRP</span>
-              </div>
-              <a href="AFFILIATE_URL" class="btn-primary" target="_blank" rel="noopener sponsored" data-product="PRODUCT_ID">
-                View →
-              </a>
-            </div>
-          </div>
-        </article>
-      </div>
-      
+
       <section class="buying-guide-section">
         <div class="section-head">
           <span class="section-head__label">Knowledge Base</span>
           <h2 class="section-head__title">What to Look For</h2>
         </div>
         <div class="buying-guide-content">
-          BUYING_GUIDE_CONTENT_PLACEHOLDER
+          {{buyingGuideHTML}}
         </div>
       </section>
-      
+
     </main>
   </div>
-  
+
+  {{> footer}}
+  {{> bottom-nav}}
+
+  <script src="/assets/js/shared.js" defer></script>
   <script src="/assets/js/app.js" defer></script>
   <script>
     if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
+      window.addEventListener('load', function() {
         navigator.serviceWorker.register('/sw.js');
       });
     }
   </script>
-  
-</body>
 
+</body>
 </html>

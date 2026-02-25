@@ -157,7 +157,7 @@
       <li><button class="bottom-nav__link" id="more-btn" aria-label="More" aria-expanded="false" aria-controls="more-panel"><span class="bottom-nav__icon">&#x229E;</span><span class="bottom-nav__label">More</span></button></li>
     </ul>
   </nav>
-  <script src="/assets/js/app.js" defer></script>
-  <script>if('serviceWorker'in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').then(r=>console.log('[SW]',r.scope)).catch(e=>console.warn('[SW]',e));});}</script>
+  <script src="/assets/js/shared.js" defer></script> <!-- ADD THIS -->
+  <script src="/assets/js/app.js" defer></script>  <script>if('serviceWorker'in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').then(r=>console.log('[SW]',r.scope)).catch(e=>console.warn('[SW]',e));});}</script>
 </body>
 </html>
