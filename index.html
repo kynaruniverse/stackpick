@@ -1,361 +1,303 @@
 <!DOCTYPE html>
-<html lang="en-GB" data-theme="dark" data-collection="all-picks" data-shuffle-step="0">
+<html lang="en-GB" data-theme="dark">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
-  <!--
-    Theme flash prevention — runs synchronously before any CSS loads.
-    Reads saved preference from localStorage and applies it immediately
-    so users never see a flash from dark to light on page load.
-    index.html handles this inline since it does not use the head.html
-    partial (which carries the nonce-stamped version for category pages).
-  -->
+  <!-- Theme flash prevention -->
   <script>
-    (function() {
+    (function(){
       try {
-        var t = localStorage.getItem('sp-theme');
-        if (t) document.documentElement.setAttribute('data-theme', t);
-        else if (window.matchMedia('(prefers-color-scheme: light)').matches)
-          document.documentElement.setAttribute('data-theme', 'light');
-      } catch(e) {}
+        var t=localStorage.getItem('sp-theme');
+        if(t) document.documentElement.setAttribute('data-theme',t);
+        else if(window.matchMedia('(prefers-color-scheme: light)').matches)
+          document.documentElement.setAttribute('data-theme','light');
+      } catch(e){}
     })();
   </script>
 
-  <meta name="google-site-verification" content="FeboAnqcLjlONS3xZMwC55zCneE0qAR33PYKEPIZeJg" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="theme-color" content="#0A0A0F" media="(prefers-color-scheme: dark)">
-  <meta name="theme-color" content="#F2F0EB" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0D0D0D" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#F5F5F5" media="(prefers-color-scheme: light)">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="StackPick">
   <meta name="mobile-web-app-capable" content="yes">
-  <meta name="description" content="Stack Pick — Gaming loadouts built like streetwear drops. Curated hardware kits for UK gamers. Real prices, no BS.">
+
+  <title>StackPick — Every Pick. Verified. No Filler.</title>
+  <meta name="description" content="Researched gaming gear for UK gamers. Honest picks across mice, keyboards, headsets, monitors and chairs. Real prices. No filler.">
+  <meta name="author" content="StackPick">
+  <link rel="canonical" href="https://stackpick.co.uk/">
+
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://stackpick.co.uk/">
-  <meta property="og:title" content="Stack Pick — Build Your Loadout | UK Gaming Hardware">
-  <meta property="og:description" content="Hardware, styled like drops. Curated kits, not spreadsheets. Built for UK gamers.">
+  <meta property="og:title" content="StackPick — Every Pick. Verified. No Filler.">
+  <meta property="og:description" content="Researched gaming gear for UK gamers. Honest picks across mice, keyboards, headsets, monitors and chairs.">
   <meta property="og:image" content="https://stackpick.co.uk/assets/images/og-image.jpg">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Stack Pick — Build Your Loadout | UK Gaming Hardware">
-  <meta name="twitter:description" content="Hardware, styled like drops. Curated kits, not spreadsheets. Built for UK gamers.">
+  <meta name="twitter:title" content="StackPick — Every Pick. Verified. No Filler.">
+  <meta name="twitter:description" content="Researched gaming gear for UK gamers. Honest picks. Real prices.">
   <meta name="twitter:image" content="https://stackpick.co.uk/assets/images/og-image.jpg">
-  <title>Stack Pick — Build Your Loadout | UK Gaming Hardware</title>
-  <meta name="author" content="Stack Pick">
-  <link rel="canonical" href="https://stackpick.co.uk/">
+
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
   <link rel="manifest" href="/manifest.json">
   <link rel="apple-touch-icon" href="/assets/icons/icon-192.png">
 
-  <!-- Fonts: Barlow Condensed (display) · Outfit (body) · JetBrains Mono (data) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
-  <!-- Styles -->
-  <link rel="preload" href="/assets/css/wall-tokens.css" as="style">
+  <link rel="preload" href="/assets/css/tokens.css" as="style">
   <link rel="preload" href="/assets/css/wall.css" as="style">
-  <link rel="stylesheet" href="/assets/css/wall-tokens.css">
+  <link rel="stylesheet" href="/assets/css/tokens.css">
   <link rel="stylesheet" href="/assets/css/wall.css">
 
-  <!-- GA4 — async so it never blocks rendering -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZTN7H3L6DV"></script>
+  <script src="/assets/js/analytics.js" defer></script>
+  <script src="/assets/js/theme.js" defer></script>
 
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "name": "Stack Pick",
-    "description": "Gaming loadouts built like streetwear drops. Curated hardware kits for UK gamers.",
+    "name": "StackPick",
     "url": "https://stackpick.co.uk",
+    "description": "Researched gaming gear recommendations for UK gamers.",
     "potentialAction": {
       "@type": "SearchAction",
-      "target": {
-        "@type": "EntryPoint",
-        "urlTemplate": "https://stackpick.co.uk/search/?q={search_term_string}"
-      },
+      "target": "https://stackpick.co.uk/search/?q={search_term_string}",
       "query-input": "required name=search_term_string"
     }
   }
   </script>
 </head>
+<body>
 
-<body class="wall-body">
+  <a href="#main-content" class="skip-link">Skip to main content</a>
 
-  <!-- SKIP LINK -->
-  <a href="#wall" class="skip-link">Skip to loadout wall</a>
+  <!-- ── TOP NAV ── -->
+  <nav class="nav" aria-label="Main navigation">
+    <div class="nav__inner">
+      <a href="/" class="nav__logo" aria-label="StackPick home">Stack<span>Pick</span></a>
 
-  <noscript>
-    <div style="font-family:sans-serif;padding:2rem;text-align:center;color:#F2F0EB;background:#0A0A0F;min-height:100vh;">
-      <p style="font-size:1.5rem;font-weight:700;margin-bottom:1rem;">⚡ StackPick</p>
-      <p style="margin-bottom:1.5rem;color:rgba(242,240,235,0.6);">JavaScript is required to run the loadout wall. Browse by category instead:</p>
-      <p><a href="/headsets/" style="color:#C8FF00;margin:0 0.75rem;">Headsets</a><a href="/keyboards/" style="color:#C8FF00;margin:0 0.75rem;">Keyboards</a><a href="/mice/" style="color:#C8FF00;margin:0 0.75rem;">Mice</a><a href="/monitors/" style="color:#C8FF00;margin:0 0.75rem;">Monitors</a><a href="/chairs/" style="color:#C8FF00;margin:0 0.75rem;">Chairs</a><a href="/search/" style="color:#C8FF00;margin:0 0.75rem;">Search</a></p>
-    </div>
-  </noscript>
+      <ul class="nav__links" role="list">
+        <li><a href="/headsets/"    class="nav__link">Headsets</a></li>
+        <li><a href="/keyboards/"   class="nav__link">Keyboards</a></li>
+        <li><a href="/mice/"        class="nav__link">Mice</a></li>
+        <li><a href="/monitors/"    class="nav__link">Monitors</a></li>
+        <li><a href="/chairs/"      class="nav__link">Chairs</a></li>
+        <li><a href="/guides/"      class="nav__link">Guides</a></li>
+        <li><a href="/about/"       class="nav__link">About</a></li>
+      </ul>
 
-
-  <!-- ═══════════════════════════════════════════════════════════
-       ZONE 1: PERSONA STRIP
-       Fixed top band — 96px mobile / 108px desktop
-       ::before = volt glowing top edge line
-       ::after  = SVG grain texture overlay
-       ═══════════════════════════════════════════════════════════ -->
-  <header class="persona-strip" id="persona-strip" role="banner">
-
-    <div class="persona-strip__left">
-      <span class="persona-strip__logo" aria-label="Stack Pick">SP</span>
-      <div class="locator-pill" id="locator-pill" aria-label="Region: United Kingdom" aria-hidden="true">
-        <span class="locator-pill__dot" aria-hidden="true"></span>
-        <span class="locator-pill__text">Tuned for: <strong>UK</strong></span>
+      <div class="nav__actions">
+        <a href="/search/" class="nav__theme-btn" aria-label="Search" style="text-decoration:none;">🔍</a>
+        <button class="nav__theme-btn" id="theme-toggle" aria-label="Switch to light mode">🌙</button>
       </div>
-      <p class="persona-strip__tagline" aria-hidden="true">Hardware, styled like drops.</p>
-    </div>
-
-    <div class="persona-strip__center">
-      <h1 class="persona-strip__headline" aria-label="Build Your Loadout">BUILD YOUR<br>LOADOUT</h1>
-      <p class="persona-strip__sub">Curated kits, not spreadsheets.</p>
-    </div>
-
-    <div class="persona-strip__right">
-      <button class="guest-chip" id="guest-chip"
-              aria-label="Open preferences" aria-expanded="false" aria-controls="prefs-sheet">
-        <span class="guest-chip__avatar" aria-hidden="true">SP</span>
-        <span class="guest-chip__label">Guest</span>
-      </button>
-      <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
-        <span class="theme-toggle__icon" aria-hidden="true">🌙</span>
-      </button>
-    </div>
-
-  </header>
-
-
-  <!-- ═══════════════════════════════════════════════════════════
-       PREFERENCES SIDE SHEET
-       ═══════════════════════════════════════════════════════════ -->
-  <aside class="prefs-sheet" id="prefs-sheet"
-         aria-hidden="true" aria-label="Preferences" aria-modal="true" role="dialog">
-    <div class="prefs-sheet__handle" aria-hidden="true"></div>
-    <h2 class="prefs-sheet__title">Your Preferences</h2>
-    <div class="prefs-sheet__body">
-      <div class="pref-row">
-        <span class="pref-row__label">Local Feed</span>
-        <span class="pref-row__value"><span class="locator-pill__dot" aria-hidden="true"></span> UK / LIVE</span>
-      </div>
-      <div class="pref-row">
-        <span class="pref-row__label">Currency</span>
-        <span class="pref-row__value">GBP (£)</span>
-      </div>
-      <div class="pref-row">
-        <span class="pref-row__label">Supply Line</span>
-        <span class="pref-row__value">Amazon UK Verified</span>
-      </div>
-      <div class="pref-row">
-        <span class="pref-row__label">Visual Mode</span>
-        <span class="pref-row__value" id="pref-theme-val">Onyx (Dark)</span>
-      </div>
-    </div>
-
-    <nav class="prefs-sheet__links" aria-label="Site navigation">
-      <p class="prefs-sheet__nav-group" role="presentation">Hardware Categories</p>
-      <a href="/headsets/" class="prefs-sheet__nav-link">Audio Gear</a>
-      <a href="/keyboards/" class="prefs-sheet__nav-link">Input Decks</a>
-      <a href="/mice/" class="prefs-sheet__nav-link">Pointing Devices</a>
-      <a href="/monitors/" class="prefs-sheet__nav-link">Visual Arrays</a>
-      <a href="/chairs/" class="prefs-sheet__nav-link">Seating</a>
-      <p class="prefs-sheet__nav-group" role="presentation">Resources</p>
-      <a href="/guides/" class="prefs-sheet__nav-link">Assembly Guides</a>
-      <a href="/comparisons/" class="prefs-sheet__nav-link">Spec Shootouts</a>
-      <a href="/search/" class="prefs-sheet__nav-link">Search</a>
-      <a href="/about/" class="prefs-sheet__nav-link">The Manifesto</a>
-    </nav>
-
-    <button class="prefs-sheet__close" id="prefs-close" aria-label="Close preferences">✕</button>
-  </aside>
-  <div class="prefs-sheet__overlay" id="prefs-overlay" aria-hidden="true" tabindex="-1"></div>
-
-
-  <!-- ═══════════════════════════════════════════════════════════
-       ZONE 2A: STORY STRIP — Mobile / tablet patch rail
-       ═══════════════════════════════════════════════════════════ -->
-  <nav class="story-strip" id="story-strip" aria-label="Browse collections">
-    <div class="story-strip__track" id="story-track" role="list" aria-label="Collection patches">
-      <!-- Patches rendered by wall.js from collections.js -->
-    </div>
-    <div class="patch-preview" id="patch-preview" aria-hidden="true" aria-live="polite">
-      <div class="patch-preview__header" id="patch-preview-header" aria-hidden="true"></div>
-      <div class="patch-preview__cards" id="patch-preview-cards">
-        <!-- 3 mini cards injected on 300ms long-press -->
-      </div>
-      <button class="patch-preview__cta" id="patch-preview-cta" aria-label="Load this collection">
-        Load Collection →
-      </button>
     </div>
   </nav>
 
+  <!-- ── HERO ── -->
+  <section class="hero" aria-labelledby="hero-headline">
+    <div class="hero__inner">
+      <p class="hero__eyebrow">UK Gaming Gear</p>
+      <h1 class="hero__headline" id="hero-headline">
+        Every Pick.<br><em>Verified.</em><br>No Filler.
+      </h1>
+      <p class="hero__tagline">
+        Precision-researched gear for UK gamers. Tested against the field,
+        priced against the market. The right kit — no noise.
+      </p>
+      <a href="#picks" class="hero__cta">
+        Browse Picks
+        <span class="hero__cta-arrow" aria-hidden="true">→</span>
+      </a>
 
-  <!-- ═══════════════════════════════════════════════════════════
-       ZONE 2B: PATCH RAIL — Desktop fixed left column
-       ═══════════════════════════════════════════════════════════ -->
-  <nav class="patch-rail" id="patch-rail" aria-label="Browse collections">
-    <a href="/" class="patch-rail__logo" aria-label="Stack Pick — Home">
-      <span class="patch-rail__logo-text">SP</span>
-    </a>
-    <div class="patch-rail__track" id="patch-rail-track" role="list" aria-label="Collection patches">
-      <!-- Patches rendered by wall.js -->
-    </div>
-    <div class="patch-rail__footer">
-      <button class="patch-rail__theme-btn" id="patch-rail-theme" aria-label="Toggle theme">
-        <span class="patch-rail__theme-icon" aria-hidden="true">🌙</span>
-      </button>
-    </div>
-  </nav>
-
-
-  <!-- ═══════════════════════════════════════════════════════════
-       ZONE 3: MAIN WALL
-       ═══════════════════════════════════════════════════════════ -->
-  <main class="wall" id="wall" aria-label="Product loadout wall">
-
-    <!-- Pull-to-shuffle gesture zone -->
-    <div class="shuffle-trigger" id="shuffle-trigger" aria-hidden="true" role="presentation">
-      <div class="shuffle-trigger__ring-wrap">
-        <svg class="shuffle-trigger__ring-svg" viewBox="0 0 40 40" aria-hidden="true">
-          <circle class="shuffle-trigger__track" cx="20" cy="20" r="18" fill="none" stroke-width="3"></circle>
-          <circle class="shuffle-trigger__arc" id="shuffle-trigger-arc" cx="20" cy="20" r="18" fill="none" stroke-width="3" stroke-dasharray="113.1" stroke-dashoffset="113.1"></circle>
-        </svg>
-        <div class="shuffle-trigger__inner">
-          <span class="shuffle-trigger__icon" id="shuffle-trigger-dice" aria-hidden="true">🎲</span>
+      <div class="hero__stats" aria-label="Site statistics">
+        <div>
+          <span class="hero__stat-value">25+</span>
+          <span class="hero__stat-label">Verified Picks</span>
+        </div>
+        <div>
+          <span class="hero__stat-value">5</span>
+          <span class="hero__stat-label">Categories</span>
+        </div>
+        <div>
+          <span class="hero__stat-value">Weekly</span>
+          <span class="hero__stat-label">Price Checks</span>
         </div>
       </div>
-      <span class="shuffle-trigger__label" id="shuffle-trigger-label">Pull to shuffle</span>
     </div>
+  </section>
 
-    <!-- Shuffle state banner -->
-    <div class="shuffle-banner" id="shuffle-banner" aria-live="polite" aria-atomic="true" role="status">
-      <div class="shuffle-banner__content">
-        <span class="shuffle-banner__dice" id="shuffle-banner-dice" aria-hidden="true">🎲</span>
-        <div class="shuffle-banner__meta">
-          <span class="shuffle-banner__text" id="shuffle-banner-text">Shuffled picks</span>
-          <div class="shuffle-banner__dots" id="shuffle-banner-dots" aria-hidden="true"></div>
+  <!-- ── FILTER TABS ── -->
+  <div class="filter-bar" role="navigation" aria-label="Collection filters">
+    <div class="filter-bar__inner" role="tablist" id="collection-tabs">
+      <button class="filter-tab filter-tab--active" role="tab" aria-selected="true"  data-collection="all-gear"      aria-controls="picks">All Gear <span class="filter-tab__count">25</span></button>
+      <button class="filter-tab"                   role="tab" aria-selected="false" data-collection="fps-edition">FPS Edition <span class="filter-tab__count">8</span></button>
+      <button class="filter-tab"                   role="tab" aria-selected="false" data-collection="focus-build">Focus Build <span class="filter-tab__count">6</span></button>
+      <button class="filter-tab"                   role="tab" aria-selected="false" data-collection="sub-100">Sub £100 <span class="filter-tab__count">7</span></button>
+      <button class="filter-tab"                   role="tab" aria-selected="false" data-collection="cut-the-wire">Cut The Wire <span class="filter-tab__count">6</span></button>
+      <button class="filter-tab"                   role="tab" aria-selected="false" data-collection="after-hours">After Hours <span class="filter-tab__count">5</span></button>
+      <button class="filter-tab"                   role="tab" aria-selected="false" data-collection="creator-stack">Creator Stack <span class="filter-tab__count">5</span></button>
+    </div>
+  </div>
+
+  <!-- ── MAIN CONTENT ── -->
+  <main class="wall-content" id="main-content">
+
+    <!-- Editor's Pick feature row -->
+    <section aria-label="Editor's Pick" id="picks">
+      <div class="section-head">
+        <div>
+          <span class="section-head__label">Editor's Pick</span>
+          <h2 class="section-head__title">The Current Standard</h2>
         </div>
       </div>
-      <button class="shuffle-banner__reset" id="shuffle-reset" aria-label="Reset to default collection">Reset</button>
-    </div>
 
-    <!-- Wall header -->
-    <div class="wall__header" id="wall-header">
-      <div class="wall__header-left">
-        <span class="wall__collection-emoji" id="wall-collection-emoji" aria-hidden="true">🏴</span>
-        <span class="wall__collection-label" id="wall-collection-label">ALL PICKS</span>
-        <span class="wall__count" id="wall-count" aria-live="polite"></span>
-      </div>
-      <div class="wall__header-right">
-        <button class="wall__sort-btn" id="wall-sort"
-                aria-label="Sort items" aria-expanded="false" aria-haspopup="listbox">
-          <span class="wall__sort-label">Sort</span>
-          <span class="wall__sort-icon" aria-hidden="true">↕</span>
-        </button>
-      </div>
-    </div>
+      <article class="feature-row" id="feature-pick">
+        <div class="feature-row__visual" aria-hidden="true">🖱️</div>
+        <div class="feature-row__body">
+          <span class="feature-row__badge">⚡ Top Pick</span>
+          <h3 class="feature-row__name" id="feature-name">Razer Viper V3 Pro</h3>
+          <p class="feature-row__desc" id="feature-desc">
+            The 2026 Pro Standard. Trusted by the Valorant elite — 54g, Focus Pro 35K sensor,
+            native 8K polling. Translates intent into impact with near-zero latency.
+          </p>
+          <div class="feature-row__footer">
+            <div class="feature-row__meta">
+              <span class="feature-row__price" id="feature-price">£119</span>
+              <span class="stamp stamp--stock">UK Stock</span>
+              <span class="stamp stamp--nextday">Next Day</span>
+            </div>
+            <a href="https://amzn.to/4c1StN0" class="feature-row__cta"
+               target="_blank" rel="noopener sponsored"
+               data-product="mice-razer-viper-v3-pro" data-type="feature-cta">
+              View on Amazon →
+            </a>
+          </div>
+        </div>
+      </article>
+    </section>
 
-    <!-- Sort dropdown — ul/li with role=option avoids the button+option double-role ARIA issue -->
-    <ul class="wall__sort-menu" id="wall-sort-menu" role="listbox"
-        aria-label="Sort options" aria-hidden="true">
-      <li class="wall__sort-option wall__sort-option--active"
-          role="option" aria-selected="true" data-sort="default" tabindex="0">Default</li>
-      <li class="wall__sort-option"
-          role="option" aria-selected="false" data-sort="price-asc" tabindex="-1">Price: Low → High</li>
-      <li class="wall__sort-option"
-          role="option" aria-selected="false" data-sort="price-desc" tabindex="-1">Price: High → Low</li>
-      <li class="wall__sort-option"
-          role="option" aria-selected="false" data-sort="popular" tabindex="-1">Most Popular</li>
-    </ul>
-
-    <!-- Card stack — JS renders box cards + loadout clusters here -->
-    <div class="card-stack" id="card-stack" role="list" aria-label="Product cards">
-
-      <!-- Loading shimmer state — replaced immediately on DOMContentLoaded -->
-      <div class="card-stack__loading" id="card-stack-loading" aria-busy="true" aria-label="Loading products">
-        <div class="loading-shimmer loading-shimmer--card" aria-hidden="true"></div>
-        <div class="loading-shimmer loading-shimmer--card" aria-hidden="true"></div>
-        <div class="loading-shimmer loading-shimmer--card" aria-hidden="true"></div>
+    <!-- Product grid -->
+    <section aria-label="All picks" style="margin-top: var(--spacing-xxl);">
+      <div class="section-head">
+        <div>
+          <span class="section-head__label" id="grid-collection-label">All Gear</span>
+          <h2 class="section-head__title">Verified Picks</h2>
+        </div>
+        <a href="#" class="section-head__link" id="category-link">View category →</a>
       </div>
 
-    </div>
+      <!-- Loading shimmer (hidden once JS populates) -->
+      <div class="card-grid" id="card-grid" aria-live="polite" aria-label="Product picks">
+        <div class="shimmer shimmer--card" aria-hidden="true"></div>
+        <div class="shimmer shimmer--card" aria-hidden="true"></div>
+        <div class="shimmer shimmer--card" aria-hidden="true"></div>
+      </div>
+    </section>
 
   </main>
 
-
-  <!-- ═══════════════════════════════════════════════════════════
-       ZONE 4: UTILITY RACK — Mobile bottom nav
-       Hidden ≥ 900px (desktop uses patch-rail)
-       ═══════════════════════════════════════════════════════════ -->
-  <nav class="utility-rack" id="utility-rack" aria-label="Main navigation">
-
-    <div class="rack-box rack-box--active" data-tab="browse"
-         role="button" tabindex="0" aria-pressed="true" aria-label="Browse products">
-      <div class="rack-box__lip" aria-hidden="true"></div>
-      <div class="rack-box__face">
-        <span class="rack-box__icon" aria-hidden="true">▤</span>
-        <span class="rack-box__label">The Wall</span>
+  <!-- ── FOOTER ── -->
+  <footer class="site-footer">
+    <div class="site-footer__inner">
+      <div>
+        <a href="/" class="footer-logo">Stack<span>Pick</span></a>
+        <p class="footer-tagline">Researched gaming gear for UK gamers.<br>Real prices. No filler.</p>
+      </div>
+      <div>
+        <h4 class="footer-heading">Categories</h4>
+        <ul class="footer-links">
+          <li><a href="/headsets/">Headsets</a></li>
+          <li><a href="/keyboards/">Keyboards</a></li>
+          <li><a href="/mice/">Mice</a></li>
+          <li><a href="/monitors/">Monitors</a></li>
+          <li><a href="/chairs/">Chairs</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="footer-heading">Resources</h4>
+        <ul class="footer-links">
+          <li><a href="/guides/">Setup Guides</a></li>
+          <li><a href="/comparisons/">Comparisons</a></li>
+          <li><a href="/search/">Search</a></li>
+          <li><a href="/about/">About</a></li>
+        </ul>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 StackPick. <span style="color:var(--color-accent)">Verified Research.</span></p>
+        <p style="margin-top:var(--spacing-xs)">As an Amazon Associate, StackPick earns from qualifying purchases at no extra cost to you. <a href="/about/">Transparency Report</a></p>
       </div>
     </div>
+  </footer>
 
-    <div class="rack-box" data-tab="loadouts"
-         role="button" tabindex="0" aria-pressed="false" aria-label="View loadout guides">
-      <div class="rack-box__lip" aria-hidden="true"></div>
-      <div class="rack-box__face">
-        <span class="rack-box__icon" aria-hidden="true">◎</span>
-        <span class="rack-box__label">Kits</span>
-      </div>
-    </div>
+  <!-- ── MORE PANEL (mobile) ── -->
+  <div class="more-panel-overlay" id="more-overlay" aria-hidden="true"></div>
 
-    <div class="rack-box" data-tab="drops"
-         role="button" tabindex="0" aria-pressed="false" aria-label="New drops and comparisons">
-      <div class="rack-box__lip" aria-hidden="true"></div>
-      <div class="rack-box__face">
-        <span class="rack-box__icon" aria-hidden="true">✦</span>
-        <span class="rack-box__label">Latest</span>
-      </div>
-    </div>
-
-    <div class="rack-box" data-tab="profile"
-         role="button" tabindex="0" aria-pressed="false" aria-label="Preferences and settings">
-      <div class="rack-box__lip" aria-hidden="true"></div>
-      <div class="rack-box__face">
-        <span class="rack-box__icon" aria-hidden="true">👤</span>
-        <span class="rack-box__label">Profile</span>
-      </div>
-    </div>
-
-  </nav>
-
-  <!-- Rack quick-sheet: hold-to-open contextual actions -->
-  <div class="rack-sheet" id="rack-sheet"
-       aria-hidden="true" aria-modal="true" role="dialog" aria-label="Quick actions">
-    <div class="rack-sheet__bar" aria-hidden="true"></div>
-    <div class="rack-sheet__content" id="rack-sheet-content">
-      <!-- JS injects context-relevant quick actions -->
+  <div class="bottom-nav-more-panel" id="more-panel"
+       role="dialog" aria-modal="true"
+       aria-labelledby="more-panel-title" aria-hidden="true">
+    <p class="more-panel-title" id="more-panel-title">More</p>
+    <div class="more-panel-grid">
+      <a href="/monitors/"    class="more-panel-link"><span class="nav-icon">🖥️</span>Monitors</a>
+      <a href="/chairs/"      class="more-panel-link"><span class="nav-icon">🪑</span>Chairs</a>
+      <a href="/guides/"      class="more-panel-link"><span class="nav-icon">📋</span>Guides</a>
+      <a href="/comparisons/" class="more-panel-link"><span class="nav-icon">⚖️</span>Compare</a>
+      <a href="/search/"      class="more-panel-link"><span class="nav-icon">🔍</span>Search</a>
+      <a href="/about/"       class="more-panel-link"><span class="nav-icon">ℹ️</span>About</a>
     </div>
   </div>
-  <div class="rack-sheet__overlay" id="rack-sheet-overlay" aria-hidden="true" tabindex="-1"></div>
 
+  <!-- ── BOTTOM NAV (mobile) ── -->
+  <nav class="bottom-nav" aria-label="Mobile navigation">
+    <ul class="bottom-nav__items" role="list">
+      <li>
+        <a href="/" class="bottom-nav__link active" data-nav-path="/" aria-current="page">
+          <span class="bottom-nav__icon" aria-hidden="true">🏠</span>
+          <span class="bottom-nav__label">Home</span>
+        </a>
+      </li>
+      <li>
+        <a href="/headsets/" class="bottom-nav__link" data-nav-path="/headsets/">
+          <span class="bottom-nav__icon" aria-hidden="true">🎧</span>
+          <span class="bottom-nav__label">Audio</span>
+        </a>
+      </li>
+      <li>
+        <a href="/keyboards/" class="bottom-nav__link" data-nav-path="/keyboards/">
+          <span class="bottom-nav__icon" aria-hidden="true">⌨️</span>
+          <span class="bottom-nav__label">Keys</span>
+        </a>
+      </li>
+      <li>
+        <a href="/mice/" class="bottom-nav__link" data-nav-path="/mice/">
+          <span class="bottom-nav__icon" aria-hidden="true">🖱️</span>
+          <span class="bottom-nav__label">Mice</span>
+        </a>
+      </li>
+      <li>
+        <button class="bottom-nav__link" id="more-btn"
+                aria-label="Open more categories" aria-expanded="false" aria-controls="more-panel">
+          <span class="bottom-nav__icon" aria-hidden="true">⊞</span>
+          <span class="bottom-nav__label">More</span>
+        </button>
+      </li>
+    </ul>
+  </nav>
 
-  <!-- ═══════════════════════════════════════════════════════════
-       SCRIPTS
-       Load order: analytics → theme → data → wall controller
-       analytics.js  — GA4, must be first
-       theme.js      — applies saved theme before wall renders
-       products.js   — SP_PRODUCTS global (generated at build time)
-       collections.js — SP_COLLECTIONS global (generated at build time)
-       wall.js       — homepage controller, reads SP_PRODUCTS + SP_COLLECTIONS
-       ═══════════════════════════════════════════════════════════ -->
-  <script src="/assets/js/analytics.js" defer></script>
-  <script src="/assets/js/theme.js" defer></script>
-  <script src="/assets/js/data/products.js" defer></script>
-  <script src="/assets/js/data/collections.js" defer></script>
+  <!-- ── SCRIPTS ── -->
   <script src="/assets/js/wall.js" defer></script>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('/sw.js')
+          .then(r => console.log('[SW] Registered:', r.scope))
+          .catch(e => console.warn('[SW] Failed:', e));
+      });
+    }
+  </script>
 
 </body>
 </html>

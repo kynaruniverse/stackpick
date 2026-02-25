@@ -1,70 +1,46 @@
-<!DOCTYPE html>
-<html lang="en-GB" data-theme="dark">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-
-  <!--
-    Theme flash prevention — runs synchronously before any CSS loads.
-    The nonce attribute is a build-time placeholder replaced by
-    _generator/build.js Step 2. Never edit the nonce value directly.
-  -->
-  <script nonce="__CSP_NONCE__">
-    (function() {
-      try {
-        var savedTheme = localStorage.getItem('sp-theme');
-        if (savedTheme) {
-          document.documentElement.setAttribute('data-theme', savedTheme);
-        } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
-          document.documentElement.setAttribute('data-theme', 'light');
-        }
-      } catch (e) {}
-    })();
-  </script>
-
-  <!-- FIX: dark before light — matches data-theme="dark" default; consistent with about/index.html -->
-  <meta name="theme-color" content="#0A0A0F" media="(prefers-color-scheme: dark)">
-  <meta name="theme-color" content="#F2F0EB" media="(prefers-color-scheme: light)">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <!-- FIX: 'default' not 'black-translucent' — inner pages have no fixed chrome to fill the status bar gap -->
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="StackPick">
-  <meta name="mobile-web-app-capable" content="yes">
-
-  <title>{{pageTitle}}</title>
-  <meta name="description" content="{{metaDescription}}">
-  <meta name="author" content="Stack Pick">
-  <link rel="canonical" href="{{canonical}}">
-
-  <meta property="og:type" content="{{ogType}}">
-  <meta property="og:url" content="{{canonical}}">
-  <meta property="og:title" content="{{ogTitle}}">
-  <meta property="og:description" content="{{ogDescription}}">
-  <meta property="og:image" content="https://stackpick.co.uk/assets/images/og-image.jpg">
-
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="{{ogTitle}}">
-  <meta name="twitter:description" content="{{ogDescription}}">
-  <meta name="twitter:image" content="https://stackpick.co.uk/assets/images/og-image.jpg">
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>{{emoji}}</text></svg>">
-  <link rel="manifest" href="/manifest.json">
-  <link rel="apple-touch-icon" href="/assets/icons/icon-192.png">
-
-  <!-- FIX: removed Barlow 600 (unused in CSS); removed Outfit 450 (not a valid weight);
-       added Outfit 300 (used in about/index.html, consistent across all pages) -->
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-
-  <!-- FIX: preload style.css — consistent with about/index.html, improves LCP on inner pages -->
-  <link rel="preload" href="/assets/css/style.css" as="style">
-  <link rel="stylesheet" href="/assets/css/wall-tokens.css">
-  <link rel="stylesheet" href="/assets/css/style.css">
-
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZTN7H3L6DV"></script>
-  <script src="/assets/js/analytics.js" defer></script>
-  <script src="/assets/js/theme.js" defer></script>
-  {{{schemaJSON}}}
-</head>
+<!-- StackPick v2 head.html partial -->
+<!-- Build step: replace TITLE, DESCRIPTION, CANONICAL_URL -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<script>
+(function(){
+  try {
+    var t=localStorage.getItem('sp-theme');
+    if(t) document.documentElement.setAttribute('data-theme',t);
+    else if(window.matchMedia('(prefers-color-scheme: light)').matches)
+      document.documentElement.setAttribute('data-theme','light');
+  } catch(e){}
+})();
+</script>
+<meta name="theme-color" content="#0D0D0D" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#F5F5F5" media="(prefers-color-scheme: light)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="StackPick">
+<meta name="mobile-web-app-capable" content="yes">
+<title>TITLE</title>
+<meta name="description" content="DESCRIPTION">
+<meta name="author" content="StackPick">
+<link rel="canonical" href="CANONICAL_URL">
+<meta property="og:type" content="website">
+<meta property="og:url" content="CANONICAL_URL">
+<meta property="og:title" content="TITLE">
+<meta property="og:description" content="DESCRIPTION">
+<meta property="og:image" content="https://stackpick.co.uk/assets/images/og-image.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="TITLE">
+<meta name="twitter:description" content="DESCRIPTION">
+<meta name="twitter:image" content="https://stackpick.co.uk/assets/images/og-image.jpg">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x26A1;</text></svg>">
+<link rel="manifest" href="/manifest.json">
+<link rel="apple-touch-icon" href="/assets/icons/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preload" href="/assets/css/tokens.css" as="style">
+<link rel="preload" href="/assets/css/style.css" as="style">
+<link rel="stylesheet" href="/assets/css/tokens.css">
+<link rel="stylesheet" href="/assets/css/style.css">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZTN7H3L6DV"></script>
+<script src="/assets/js/analytics.js" defer></script>
+<script src="/assets/js/theme.js" defer></script>

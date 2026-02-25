@@ -1,0 +1,393 @@
+/* ============================================================
+   STACKPICK V2 — FORCE MARRY DESIGN TOKENS
+   Base: Monochrome + Lava Energy
+
+   Philosophy: Rigid structure married to controlled energy.
+   Monochrome discipline. Lava-orange as the only colour.
+   Every token earns its place.
+
+   BREAKPOINTS (CSS vars can't be used in media queries —
+   documented here as the single source of truth):
+     Mobile:  < 640px
+     Tablet:  640px – 1024px
+     Desktop: > 1024px
+     Wide:    > 1280px
+
+   CONTENTS
+   01  Colour — base, surfaces, text, accent, status
+   02  Typography — fonts, scale, display, body, label, mono
+   03  Spacing — scale, section rhythm, component padding
+   04  Motion — transitions, hover, glow, ember, scan beam
+   05  Layout — container, grid, card dimensions
+   06  Navigation — heights, z-index scale
+   07  Borders & Radius
+   08  Keyframes
+   ============================================================ */
+
+
+/* ============================================================
+   01  COLOUR
+   ============================================================ */
+
+:root {
+
+  /* ── Raw palette ── */
+  --black:        #0D0D0D;   /* true site background — not pure black */
+  --grey-100:     #111111;   /* primary card surface */
+  --grey-200:     #1A1A1A;   /* deeper card layer / section bg */
+  --grey-300:     #222222;   /* subtle depth / nav */
+  --grey-400:     #2A2A2A;   /* borders — readable on grey-100 */
+  --grey-500:     #3A3A3A;   /* stronger borders / active states */
+  --grey-700:     #9A9A9A;   /* muted text — 6.2:1 contrast on base ✓ */
+  --grey-900:     #F5F5F5;   /* primary text — warm off-white, not pure */
+
+  --lava:         #FF4F1F;   /* primary accent — lava orange */
+  --lava-dim:     #CC3D17;   /* darker lava — borders, inactive, hover bg */
+  --lava-glow:    rgba(255, 79, 31, 0.15);  /* card hover glow */
+  --lava-subtle:  rgba(255, 79, 31, 0.08);  /* very subtle tint overlays */
+  --lava-on:      #FFFFFF;   /* text sitting ON a lava background */
+
+  /* ── Semantic surfaces ── */
+  --color-bg-base:       var(--black);
+  --color-bg-surface-1:  var(--grey-100);   /* cards */
+  --color-bg-surface-2:  var(--grey-200);   /* nested surfaces */
+  --color-bg-surface-3:  var(--grey-300);   /* nav, header */
+  --color-bg-overlay:    rgba(0, 0, 0, 0.72); /* modal/drawer backdrop */
+
+  /* ── Semantic text ── */
+  --color-text-primary:    var(--grey-900);  /* #F5F5F5 */
+  --color-text-muted:      var(--grey-700);  /* #9A9A9A */
+  --color-text-on-accent:  var(--lava-on);   /* white on lava buttons */
+
+  /* ── Semantic accent ── */
+  --color-accent:          var(--lava);
+  --color-accent-dim:      var(--lava-dim);
+  --color-accent-glow:     var(--lava-glow);
+  --color-accent-subtle:   var(--lava-subtle);
+
+  /* ── Borders ── */
+  /* FIX: was #1C1C1C — only 8 steps above surface-1, invisible as a card border.
+     Now #2A2A2A — clearly readable on all dark surfaces. */
+  --color-border-subtle:   var(--grey-400);  /* #2A2A2A */
+  --color-border-strong:   var(--grey-500);  /* #3A3A3A — hover, active */
+
+  /* ── Status colours ── */
+  /* Desaturated to sit comfortably in a monochrome system.
+     Not bright — they signal, they don't shout. */
+  --color-success:  #3D9E6A;   /* green — stock, availability */
+  --color-danger:   #D44B3A;   /* red — warnings, errors */
+  --color-warning:  #C97B2A;   /* amber — price changes, stock low */
+}
+
+
+/* ============================================================
+   02  TYPOGRAPHY
+
+   FIX: In the original file ALL type tokens were declared outside
+   any CSS selector — invalid CSS, silently ignored by all browsers.
+   All tokens now correctly live inside :root {}.
+   ============================================================ */
+
+:root {
+
+  /* ── Font families ── */
+  --font-display: 'Space Grotesk', 'Segoe UI', sans-serif;
+  --font-body:    'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono:    'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+  /* --font-mono: used for prices, specs, counts, data labels, badge numbers */
+
+  /* ── Display properties ── */
+  --display-weight:          700;
+  --display-line-height:     1.15;   /* tight for impact — angular headlines */
+  --display-letter-spacing:  -0.5px; /* slight condensed feel */
+
+  /* ── Body properties ── */
+  --body-weight:         400;
+  --body-line-height:    1.6;        /* generous — improves scan speed */
+  --body-letter-spacing: 0px;
+
+  /* ── Label properties (filter tabs, nav labels, badges, tags) ──
+     This is where Force Marry legibility lives.
+     Small, spaced, uppercase — structural not decorative. */
+  --label-size:           0.6875rem; /* 11px */
+  --label-weight:         600;
+  --label-letter-spacing: 0.08em;
+  --label-transform:      uppercase;
+
+  /* ── Heading scale — MOBILE FIRST ── */
+  --h1-size: 2rem;       /* 32px */
+  --h2-size: 1.75rem;    /* 28px */
+  --h3-size: 1.5rem;     /* 24px */
+  --h4-size: 1.25rem;    /* 20px */
+  --h5-size: 1.125rem;   /* 18px */
+  --h6-size: 1rem;       /* 16px */
+
+  /* ── Hero headline — distinct from h1 ──
+     h1 is content-level. The hero needs its own token.
+     Mobile: 2.5rem / Desktop (via media query): 4rem–5rem */
+  --display-size-hero:   2.5rem;     /* 40px mobile */
+  --display-size-hero-lg: 4.5rem;    /* 72px desktop — set in media query */
+
+  /* ── Body text scale ── */
+  --body-font-size-sm:   0.875rem;   /* 14px */
+  --body-font-size-base: 1rem;       /* 16px */
+  --body-font-size-lg:   1.125rem;   /* 18px */
+
+  /* ── Mono scale ── */
+  --mono-size-sm:   0.75rem;   /* 12px — spec pills, micro badges */
+  --mono-size-base: 0.875rem;  /* 14px — prices, data */
+  --mono-size-lg:   1rem;      /* 16px — hero price display */
+}
+
+/* ── Desktop heading scale ── */
+/* h1–h3 are too small at their mobile values on wide screens */
+@media (min-width: 1024px) {
+  :root {
+    --h1-size: 2.75rem;   /* 44px */
+    --h2-size: 2.25rem;   /* 36px */
+    --h3-size: 1.875rem;  /* 30px */
+    --display-size-hero: var(--display-size-hero-lg); /* 72px */
+  }
+}
+
+
+/* ============================================================
+   03  SPACING
+
+   4pt base grid. All values are multiples of 4.
+   12px (--spacing-sm) is a permitted half-step — used for
+   tight internal padding only.
+   ============================================================ */
+
+:root {
+
+  /* ── Core scale ── */
+  --spacing-xxs:  4px;
+  --spacing-xs:   8px;
+  --spacing-sm:   12px;
+  --spacing-md:   16px;
+  --spacing-lg:   24px;
+  --spacing-xl:   32px;
+  --spacing-xxl:  48px;
+  --spacing-xxxl: 64px;
+
+  /* ── Section vertical rhythm ──
+     The gap between major page sections (hero → feature row → grid etc).
+     Not covered by the core scale — needs its own token. */
+  --spacing-section-vertical:    80px;
+  --spacing-section-vertical-sm: 48px;  /* mobile */
+
+  /* ── Component padding ── */
+  /* FIX: was var(--spacing-md) = 16px — too tight for a 340px card.
+     Now 24px — comfortable breathing room without wasting space. */
+  --card-padding:    var(--spacing-lg);  /* 24px */
+  --section-padding: var(--spacing-xl);  /* 32px */
+}
+
+
+/* ============================================================
+   04  MOTION / INTERACTIONS
+
+   Force Marry interaction philosophy:
+   - Hover lifts: small, precise, quick
+   - Lava glow: only on interactive elements
+   - Ember field: full-page background energy, invisible until noticed
+   - Scan beam: hero section only
+   - No flips, no shuffles, no decorative mechanics
+   ============================================================ */
+
+:root {
+
+  /* ── Base transitions ──
+     All interactive elements (hover colour, border, opacity) share one speed.
+     FIX: without this, different elements animate at different speeds — inconsistent. */
+  --transition-base: 200ms cubic-bezier(0.25, 0, 0, 1);
+  /* Quick rise, clean stop — matches the angular, precise Force Marry character.
+     More decisive than generic "ease". */
+
+  --transition-slow: 380ms cubic-bezier(0.25, 0, 0, 1);
+  /* Overlays, drawers, panels — slower but same curve family */
+
+  --transition-spring: 320ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  /* Hover lifts, CTA scale — slight overshoot for tactile feel */
+
+  /* ── Hover lift ── */
+  --hover-lift-distance: 4px;
+  --hover-lift-duration: var(--transition-spring);
+  /* FIX: was "ease" — now uses the shared spring curve */
+
+  /* ── Lava glow (interactive elements only) ── */
+  --glow-blur:           8px;
+  --glow-opacity-button: 0.25;   /* CTA buttons — most prominent */
+  --glow-opacity-card:   0.12;   /* card hover — subtle */
+  --glow-spread:         0px;
+
+  /* ── CTA pulse ── */
+  --cta-pulse-duration: 1.2s;
+  /* FIX: was 1.05 — too pronounced for a controlled aesthetic */
+  --cta-pulse-scale:    1.02;
+
+  /* ── Ember field (body background — barely perceptible) ── */
+  /* Opacity deliberately differentiated from scan beam and card glow
+     so each layer reads as a distinct depth of energy */
+  --ember-dot-size:           1px;
+  --ember-opacity:            0.04;   /* lowest — background layer */
+  --ember-animation-duration: 60s;
+
+  /* ── Scan beam (hero section only) ── */
+  --scanbeam-width:    3px;
+  --scanbeam-opacity:  0.07;   /* mid — above embers, below card glow */
+  --scanbeam-blur:     6px;
+  --scanbeam-duration: 18s;
+}
+
+
+/* ============================================================
+   05  LAYOUT / GRID
+   ============================================================ */
+
+:root {
+
+  /* ── Container ── */
+  --container-max-width: 1280px;
+  --container-padding:   var(--spacing-lg);   /* 24px sides */
+
+  /* ── Grid gaps ── */
+  --grid-gap-sm: var(--spacing-md);   /* 16px — mobile */
+  --grid-gap-lg: var(--spacing-xl);   /* 32px — desktop */
+
+  /* ── Card dimensions ── */
+  --card-width:     100%;    /* responsive */
+  --card-min-width: 280px;   /* mobile / tablet floor */
+  --card-max-width: 340px;   /* desktop optimal */
+  --card-height:    auto;    /* adapts to content */
+
+  /* ── Feature row ── */
+  /* Full-width rows interspersed in the hybrid grid.
+     Height is content-driven on mobile, fixed on desktop. */
+  --feature-row-height-desktop: 320px;
+}
+
+/* ── Grid column counts per breakpoint ──
+   These values are updated at each breakpoint for the hybrid grid.
+   Cards: 1 col mobile → 2 col tablet → 3 col desktop
+   Feature rows: always 1 col (full width) */
+:root {
+  --grid-cols: 1;          /* mobile default */
+}
+
+@media (min-width: 640px) {
+  :root { --grid-cols: 2; }
+}
+
+@media (min-width: 1024px) {
+  :root { --grid-cols: 3; }
+}
+
+
+/* ============================================================
+   06  NAVIGATION + Z-INDEX
+   ============================================================ */
+
+:root {
+
+  /* ── Nav heights ── */
+  --nav-height-desktop:  60px;
+  --nav-height-mobile:   56px;
+  /* FIX: bottom nav height was implied but never tokenised.
+     Body needs padding-bottom = this value on mobile. */
+  --nav-bottom-height:   60px;
+
+  /* ── Z-index scale ──
+     FIX: without a defined z-index stack, stacking context bugs
+     are inevitable as the site grows. One scale, one file.
+     
+     Design intent:
+     Base content < cards < sticky elements < nav < overlays < modals < top
+  */
+  --z-base:    1;
+  --z-card:    10;      /* product cards, hover states */
+  --z-sticky:  50;      /* sticky section headers, filter bar */
+  --z-nav:     100;     /* top nav — always above content */
+  --z-overlay: 200;     /* modal/drawer backdrops */
+  --z-modal:   300;     /* drawers, sheets, more panel */
+  --z-top:     9999;    /* skip link, critical alerts */
+}
+
+
+/* ============================================================
+   07  BORDERS & RADIUS
+   ============================================================ */
+
+:root {
+
+  /* ── Radius ──
+     Force Marry direction: sharp and angular.
+     4px on cards and buttons. Tighter on inner elements.
+     Pill only for filter tabs and status chips — they need to
+     read as interactive/toggle rather than structural boxes. */
+  --radius-sm:     2px;    /* spec pills, micro tags, inner elements */
+  --radius:        4px;    /* cards, buttons — the primary radius */
+  --radius-lg:     6px;    /* panels, drawers */
+  --radius-pill:   9999px; /* filter tabs, badges, status chips */
+}
+
+
+/* ============================================================
+   08  KEYFRAMES
+
+   All animations used across the site live here.
+   Components reference these by name only.
+   ============================================================ */
+
+/* Card hover lift */
+@keyframes card-lift {
+  from { transform: translateY(0);                    box-shadow: none; }
+  to   { transform: translateY(calc(-1 * var(--hover-lift-distance)));
+         box-shadow: 0 8px 32px var(--color-accent-glow); }
+}
+
+/* CTA pulse — lava button on hover */
+@keyframes cta-pulse {
+  0%, 100% { transform: scale(1);                    box-shadow: 0 0 0 0 var(--color-accent-glow); }
+  50%       { transform: scale(var(--cta-pulse-scale)); box-shadow: 0 0 16px 4px var(--color-accent-glow); }
+}
+
+/* Scan beam — horizontal sweep across hero */
+@keyframes scan-beam {
+  0%   { transform: translateX(-100%); opacity: 0; }
+  5%   { opacity: var(--scanbeam-opacity); }
+  95%  { opacity: var(--scanbeam-opacity); }
+  100% { transform: translateX(100vw);  opacity: 0; }
+}
+
+/* Ember float — individual dot rising */
+@keyframes ember-rise {
+  0%   { transform: translateY(0)    scale(1);   opacity: var(--ember-opacity); }
+  50%  { transform: translateY(-40px) scale(1.5); opacity: calc(var(--ember-opacity) * 1.5); }
+  100% { transform: translateY(-80px) scale(0);   opacity: 0; }
+}
+
+/* Filter tab indicator slide */
+@keyframes tab-indicator {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+/* Fade up — cards entering on collection switch */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Shimmer — loading skeleton */
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+
+/* Page load stagger — staggered reveal for hero elements */
+@keyframes reveal {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}

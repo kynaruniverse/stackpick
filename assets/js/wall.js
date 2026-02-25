@@ -1,856 +1,442 @@
-/* ============================================================
-   STACK PICK — wall.js  v6 (Phase 6F)
-   Depends on: products.js, collections.js loaded before this.
-   Last updated: February 2026
-   ============================================================ */
+// ============================================================
+//  STACKPICK V2 — wall.js
+//  Homepage controller — Force Marry edition.
+//
+//  MECHANICS KEPT:
+//    ✅ Collection filter tabs (swap card grid content)
+//    ✅ Hover lift + lava glow (CSS — no JS needed)
+//    ✅ Featured row updates with active collection
+//    ✅ Card stagger animation on collection switch
+//    ✅ Affiliate click tracking (GA4)
+//    ✅ Bottom nav More panel
+//    ✅ Theme init
+//    ✅ Service worker
+//
+//  MECHANICS REMOVED:
+//    ❌ Pull-to-shuffle
+//    ❌ Card flips
+//    ❌ Patch rail / story strip
+//    ❌ Rack-box bottom nav (replaced with clean bottom nav)
+//    ❌ Deck-vibrate / card-toss animations
+//    ❌ Long-press preview
+//
+//  CONTENTS
+//  01  Data access helpers
+//  02  Theme
+//  03  Render — product card
+//  04  Render — feature row
+//  05  Render — card grid
+//  06  Collection filter tabs
+//  07  Bottom nav + More panel
+//  08  Affiliate click tracking
+//  09  Init
+// ============================================================
 
 (function () {
   'use strict';
 
-  var html = document.documentElement;
+  // ── Expect these globals from products.js / collections.js ──
+  // SP_PRODUCTS:    Array of product objects
+  // SP_COLLECTIONS: Array of collection objects
+  // Both injected by the data layer at build time.
 
-  var SEAM_MAP = {
-  crimson: '#FF2D55',
-  cobalt:  '#0057FF',
-  slate:   '#8E8EA0',
-  amber:   '#FF9500',
-  jade:    '#00C853',
-  purple:  '#7B2FBE'
+  var SP_PRODUCTS    = window.SP_PRODUCTS    || [];
+  var SP_COLLECTIONS = window.SP_COLLECTIONS || [];
+
+  // Collection name map — old IDs to new Force Marry labels
+  var COLLECTION_LABELS = {
+    'all-picks':     'All Gear',
+    'sweaty-fps':    'FPS Edition',
+    'study-mode':    'Focus Build',
+    'under-100':     'Sub £100',
+    'wireless-only': 'Cut The Wire',
+    'cozy-station':  'After Hours',
+    'creator-bay':   'Creator Stack',
+    'kynar-setup':   'The Kynar',
   };
 
-  var state = {
-    activeCollectionId: 'all-picks',
-    shuffleStep:        0,
-    isTransitioning:    false,
-    isShuffle:          false,
-    sortMode:           'default',
-    jiggleScrollY:      0,
-    pull: {
-      active:      false,
-      startY:      0,
-      currentDelta:0,
-      triggered:   false,
-    },
-  };
-
-  var CARD_STAGGER_MS   = 55;
-  var CARD_ENTER_LIMIT  = 10;
-  var CLUSTER_EVERY     = 5;
-  var TRANSITION_OUT_MS = 180;
-
-  var PULL_SHOW_AT    = 24;
-  var PULL_TRIGGER    = 80;
-  var PULL_MAX        = 120;
-  var PULL_RESIST     = 0.38;
-
-  var FLIP_COMPRESS_MS  = 180;
-  var FLIP_HOLD_MS      = 60;
-  var FLIP_EXPAND_MS    = 280;
-  var FLIP_STAGGER_MS   = 30;
-
-  var HAPTIC_PULL_TICK  = [6];
-  var HAPTIC_TRIGGERED  = [15, 30, 12];
-  var HAPTIC_SHUFFLE    = [20, 40, 15, 20, 10];
-  var HAPTIC_NO_VARIANT = [8, 8, 8];
-
-  // 6E: Shadow lags at this fraction of scroll — simulates fixed light source
-  var SHADOW_LAG_Y = 0.12;
+  // ── DOM refs ──
+  var cardGrid         = document.getElementById('card-grid');
+  var filterTabs       = document.querySelectorAll('.filter-tab');
+  var featureName      = document.getElementById('feature-name');
+  var featureDesc      = document.getElementById('feature-desc');
+  var featurePrice     = document.getElementById('feature-price');
+  var featurePick      = document.getElementById('feature-pick');
+  var gridLabel        = document.getElementById('grid-collection-label');
+  var categoryLink     = document.getElementById('category-link');
+  var moreBtn          = document.getElementById('more-btn');
+  var morePanel        = document.getElementById('more-panel');
+  var moreOverlay      = document.getElementById('more-overlay');
 
 
-  /* 1  PREFERENCES SHEET */
+  // ============================================================
+  //  01  DATA ACCESS HELPERS
+  // ============================================================
 
-  function initPrefsSheet() {
-    var sheet   = document.getElementById('prefs-sheet');
-    var overlay = document.getElementById('prefs-overlay');
-    var chip    = document.getElementById('guest-chip');
-    var close   = document.getElementById('prefs-close');
-    function openSheet() {
-      sheet.classList.add('prefs-sheet--open'); overlay.classList.add('open');
-      sheet.setAttribute('aria-hidden', 'false'); overlay.setAttribute('aria-hidden', 'false');
-      if (chip) chip.setAttribute('aria-expanded', 'true'); if (close) close.focus();
+  function getProductById(id) {
+    return SP_PRODUCTS.find(function(p) { return p.id === id; }) || null;
+  }
+
+  function getCollectionById(id) {
+    return SP_COLLECTIONS.find(function(c) { return c.id === id; }) || null;
+  }
+
+  function getCollectionProducts(collection) {
+    if (!collection) return [];
+    var ids = collection.baseProducts || [];
+    return ids
+      .map(getProductById)
+      .filter(Boolean);
+  }
+
+  function getCollectionLabel(collectionId) {
+    return COLLECTION_LABELS[collectionId] || collectionId;
+  }
+
+
+  // ============================================================
+  //  02  THEME
+  // ============================================================
+
+  if (typeof window.SP_initTheme === 'function') {
+    window.SP_initTheme();
+  }
+
+
+  // ============================================================
+  //  03  RENDER — PRODUCT CARD
+  // ============================================================
+
+  function renderCard(product, index) {
+    var card = document.createElement('article');
+    card.className = 'product-card';
+    card.setAttribute('aria-label', product.name);
+    // Stagger delay capped at 6 items
+    if (index < 6) {
+      card.style.animationDelay = (index * 40) + 'ms';
     }
-    function closeSheet() {
-      sheet.classList.remove('prefs-sheet--open'); overlay.classList.remove('open');
-      sheet.setAttribute('aria-hidden', 'true'); overlay.setAttribute('aria-hidden', 'true');
-      if (chip) chip.setAttribute('aria-expanded', 'false');
+
+    var specs = (product.specs || [])
+      .map(function(s) {
+        return '<span class="spec-pill">' + escHtml(s) + '</span>';
+      })
+      .join('');
+
+    var stamps = '';
+    if (product.inStock) stamps += '<span class="stamp stamp--stock">UK Stock</span>';
+    if (product.nextDay) stamps += '<span class="stamp stamp--nextday">Next Day</span>';
+
+    var msrp = product.msrp
+      ? '<span class="product-card__price-msrp">' + escHtml(product.msrp) + '</span>'
+      : '';
+
+    card.innerHTML =
+      '<div class="product-card__visual">' +
+        '<span aria-hidden="true">' + (product.emoji || '📦') + '</span>' +
+        '<span class="product-card__category">' + escHtml(product.category) + '</span>' +
+      '</div>' +
+      '<div class="product-card__body">' +
+        '<span class="product-card__badge">' + escHtml(product.badge || '') + '</span>' +
+        '<h3 class="product-card__name">' + escHtml(product.name) + '</h3>' +
+        '<div class="product-card__specs">' + specs + '</div>' +
+      '</div>' +
+      (stamps ? '<div class="product-card__stamps">' + stamps + '</div>' : '') +
+      '<div class="product-card__footer">' +
+        '<span class="product-card__price">' + escHtml(product.price) + msrp + '</span>' +
+        '<a href="' + escAttr(product.affiliate) + '" class="product-card__cta"' +
+           ' target="_blank" rel="noopener sponsored"' +
+           ' data-product="' + escAttr(product.id) + '" data-type="card-cta">' +
+          'View →' +
+        '</a>' +
+      '</div>';
+
+    return card;
+  }
+
+
+  // ============================================================
+  //  04  RENDER — FEATURE ROW
+  //  Updates the editor's pick row to reflect active collection.
+  // ============================================================
+
+  function renderFeatureRow(collection) {
+    if (!featureName || !featureDesc || !featurePrice || !featurePick) return;
+
+    var products = getCollectionProducts(collection);
+    if (!products.length) return;
+
+    // Use the first product as the featured pick
+    var pick = products[0];
+
+    featureName.textContent  = pick.name;
+    featureDesc.textContent  = pick.desc || '';
+    featurePrice.textContent = pick.price;
+
+    // Update CTA link
+    var cta = featurePick.querySelector('.feature-row__cta');
+    if (cta) {
+      cta.href = pick.affiliate;
+      cta.setAttribute('data-product', pick.id);
     }
-    if (chip)    chip.addEventListener('click', openSheet);
-    if (close)   close.addEventListener('click', closeSheet);
-    if (overlay) overlay.addEventListener('click', closeSheet);
-    document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape') { closeSheet(); closeRackSheet(); closeSortMenu(); }
-    });
-  }
 
+    // Update emoji in visual
+    var visual = featurePick.querySelector('.feature-row__visual');
+    if (visual) visual.textContent = pick.emoji || '📦';
 
-  /* 02 UTILITY RACK + RACK SHEET */
-
-  var _rackSheet = null, _rackOverlay = null;
-  function closeRackSheet() {
-    if (!_rackSheet) return;
-    _rackSheet.classList.remove('rack-sheet--open'); _rackOverlay.classList.remove('open');
-    _rackSheet.setAttribute('aria-hidden', 'true'); _rackOverlay.setAttribute('aria-hidden', 'true');
-  }
-  var RACK_CONTENT = {
-    browse:   [{ label: '\uD83C\uDFA7 Headsets', href: '/headsets/' }, { label: '\u2328\uFE0F Keyboards', href: '/keyboards/' }, { label: '\uD83D\uDDB1\uFE0F Mice', href: '/mice/' }, { label: '\uD83D\uDDA5\uFE0F Monitors', href: '/monitors/' }, { label: '\uD83E\uDE91 Chairs', href: '/chairs/' }],
-    loadouts: [{ label: '\uD83D\uDCCB Setup Guides', href: '/guides/' }, { label: '\u2696\uFE0F Comparisons', href: '/comparisons/' }, { label: '\uD83D\uDCB0 Budget Picks', href: '/guides/budget-picks-under-50/' }, { label: '\uD83C\uDFAE \u00A3500 Build', href: '/guides/gaming-setup-500/' }, { label: '\uD83D\uDD25 \u00A31000 Build', href: '/guides/gaming-setup-1000/' }, { label: '\uD83D\uDC8E \u00A32500 Build', href: '/guides/gaming-setup-2500/' }],
-    drops:    [{ label: '\uD83D\uDDB1\uFE0F Mouse Showdown', href: '/comparisons/razer-viper-v3-pro-vs-logitech-g502x-plus/' }, { label: '\u2328\uFE0F Keyboard Battle', href: '/comparisons/steelseries-apex-pro-tkl-gen3-vs-keychron-q1-max/' }, { label: '\uD83C\uDFA7 Headset Showdown', href: '/comparisons/sennheiser-hd560s-vs-steelseries-arctis-nova-pro/' }, { label: '\uD83D\uDDA5\uFE0F Monitor Battle', href: '/comparisons/asus-rog-xg27aqdmg-vs-samsung-odyssey-g80sd/' }, { label: '\uD83E\uDE91 Chair Face-Off', href: '/comparisons/andaseat-kaiser-4-vs-noblechairs-hero/' }],
-    profile:  [{ label: '\u2139\uFE0F About StackPick', href: '/about/' }, { label: '\uD83D\uDD0D Search', href: '/search/' }],
-  };
-  var RACK_TITLES = { browse: 'Quick Browse', loadouts: 'Setup Guides', drops: 'New Drops', profile: 'More' };
-  function buildRackHTML(tab) {
-    var items = RACK_CONTENT[tab] || [], title = RACK_TITLES[tab] || tab;
-    var h = '<p style="font-family:var(--font-display);font-size:1.1rem;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-tertiary);margin-bottom:var(--sp-3);">' + title + '</p>';
-    return h + items.map(function (it) { return '<a href="' + it.href + '" class="rack-sheet__link-item"><span>' + it.label + '</span><span class="rack-sheet__link-arrow">\u2192</span></a>'; }).join('');
-  }
-  function initRack() {
-    _rackSheet = document.getElementById('rack-sheet'); _rackOverlay = document.getElementById('rack-sheet-overlay');
-    var boxes = document.querySelectorAll('.rack-box'), holdTimer = null;
-    boxes.forEach(function (box) {
-      var tab = box.dataset.tab;
-      box.addEventListener('click', function () { clearTimeout(holdTimer); boxes.forEach(function (b) { b.classList.toggle('rack-box--active', b === box); b.setAttribute('aria-pressed', b === box ? 'true' : 'false'); }); });
-      box.addEventListener('pointerdown', function () {
-        box.setAttribute('data-holding', 'true');
-        holdTimer = setTimeout(function () {
-          box.removeAttribute('data-holding'); box.classList.add('rack-box--lifted');
-          var content = document.getElementById('rack-sheet-content'); if (content) content.innerHTML = buildRackHTML(tab);
-          if (_rackSheet) { _rackSheet.classList.add('rack-sheet--open'); _rackSheet.setAttribute('aria-hidden', 'false'); }
-          if (_rackOverlay) { _rackOverlay.classList.add('open'); _rackOverlay.setAttribute('aria-hidden', 'false'); }
-          setTimeout(function () { box.classList.remove('rack-box--lifted'); }, 400);
-        }, 400);
-      });
-      box.addEventListener('pointerup',    function () { clearTimeout(holdTimer); box.removeAttribute('data-holding'); });
-      box.addEventListener('pointerleave', function () { clearTimeout(holdTimer); box.removeAttribute('data-holding'); });
-      box.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); box.click(); } });
-    });
-    if (_rackOverlay) _rackOverlay.addEventListener('click', closeRackSheet);
-  }
-
-
-  /* 03  CARD BUILDER UTILITIES */
-
-  function escapeHTML(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-  function safeHref(url) {
-    if (!url) return '#';
-    var lower = String(url).trim().toLowerCase();
-    return (lower.startsWith('https://') || lower.startsWith('http://') || lower.startsWith('/'))
-      ? url : '#';
-  }
-  function buildSpecs(specs) { return (specs || []).map(function (s) { return '<span class="spec-pill">' + escapeHTML(s) + '</span>'; }).join(''); }
-  function buildStamps(product) {
-    var out = '<span class="stamp stamp--uk-stock">\uD83C\uDDEC\uD83C\uDDE7 UK Stock</span>';
-    if (product.nextDay) out += '<span class="stamp stamp--next-day">\u26A1 Next Day</span>';
-    return out;
-  }
-  function buildLoadoutDots(count) {
-    var MAX = 5, n = Math.min(Math.max(count || 0, 0), MAX), dots = '';
-    for (var i = 0; i < MAX; i++) dots += '<span class="loadout-dot' + (i < n ? ' loadout-dot--filled' : '') + '" aria-hidden="true"></span>';
-    return '<div class="box-card__loadout-dots" aria-label="Featured in ' + n + ' loadout' + (n !== 1 ? 's' : '') + '">' + dots + '</div>';
-  }
-  function buildDrawerStats(product) {
-    var rows = '';
-    (product.pros || []).forEach(function (pro, i) { rows += '<div class="drawer-stat"><span class="drawer-stat__key">' + (i === 0 ? 'Pros' : '') + '</span><span class="drawer-stat__val">\u2713\u00A0' + escapeHTML(pro) + '</span></div>'; });
-    (product.cons || []).forEach(function (con, i) { rows += '<div class="drawer-stat drawer-stat--con"><span class="drawer-stat__key">' + (i === 0 ? 'Watch' : '') + '</span><span class="drawer-stat__val">\u2715\u00A0' + escapeHTML(con) + '</span></div>'; });
-    return rows;
-  }
-  function buildAltPicks(product) {
-    if (!window.SP_PRODUCTS) return '';
-    var alts = window.SP_PRODUCTS.filter(function (p) { return p.category === product.category && p.id !== product.id; }).slice(0, 3);
-    if (!alts.length) return '<li style="color:var(--text-tertiary);font-size:var(--text-sm);padding:var(--sp-3);">More picks coming soon.</li>';
-    return alts.map(function (alt) {
-      var href = safeHref(alt.url || alt.affiliate);
-      return '<li class="alt-pick"><a class="alt-pick__link" href="' + href + '" target="_blank" rel="noopener sponsored">' +
-        '<span class="alt-pick__emoji" aria-hidden="true">' + escapeHTML(alt.emoji || '') + '</span>' +
-        '<span class="alt-pick__name">' + escapeHTML(alt.name || '') + '</span>' +
-        '<span class="alt-pick__price">' + escapeHTML(alt.price || '') + '</span>' +
-        '</a></li>';
-    }).join('');
-  }
-
-  function buildCard(product, index, animDelay) {
-    var seam = SEAM_MAP[product.seam] || '#8E8EA0';
-    var glow = seam + '26';
-    var offsetClass = index % 2 === 0 ? 'box-card--offset-right' : 'box-card--offset-left';
-    var article = document.createElement('article');
-    article.className = 'box-card ' + offsetClass + ' box-card--entering';
-    article.dataset.id = product.id; article.dataset.category = product.category;
-    article.style.cssText = '--cat-seam:' + seam + ';--cat-glow:' + glow + ';';
-    if (animDelay > 0) article.style.animationDelay = animDelay + 'ms';
-    article.setAttribute('role', 'listitem');
-    article.setAttribute('aria-label', escapeHTML(product.name) + ' \u2014 ' + escapeHTML(product.price));
-    article.setAttribute('tabindex', '0');
-    article.innerHTML = [
-      '<div class="box-card__shadow-layer" aria-hidden="true"></div>',
-      '<div class="box-card__body">',
-        '<div class="box-card__front">',
-          '<div class="box-card__seam" aria-hidden="true"></div>',
-          '<div class="box-card__lip" aria-hidden="true"></div>',
-          '<div class="box-card__img-zone">',
-            '<div class="box-card__img box-card__img--' + product.category + '" aria-hidden="true">',
-              '<span style="font-size:64px;filter:drop-shadow(0 0 16px ' + seam + '88);">' + product.emoji + '</span>',
-            '</div>',
-            '<span class="box-card__category-tag">' + escapeHTML(product.category) + '</span>',
-          '</div>',
-          '<div class="box-card__info">',
-            '<span class="box-card__badge">' + escapeHTML(product.badge) + '</span>',
-            '<h2 class="box-card__name">' + escapeHTML(product.name) + '</h2>',
-            '<div class="box-card__specs">' + buildSpecs(product.specs) + '</div>',
-          '</div>',
-          '<div class="box-card__footer">',
-            '<div class="box-card__badges-row">' + buildStamps(product) + '</div>',
-            buildLoadoutDots(product.loadoutCount),
-          '</div>',
-          '<div class="box-card__drawer" aria-hidden="true">',
-            '<div class="box-card__drawer-specs">' + buildDrawerStats(product) + '</div>',
-            '<div class="box-card__drawer-price">',
-              '<span class="box-card__price">' + escapeHTML(product.price) + '</span>',
-              '<a class="box-card__cta" href="' + safeHref(product.affiliate) + '" target="_blank" rel="noopener sponsored" aria-label="View ' + escapeHTML(product.name) + ' on Amazon UK">View on Amazon →</a>',
-            '</div>',
-          '</div>',
-        '</div>',
-        '<div class="box-card__back" aria-hidden="true">',
-          '<p class="box-card__back-label">Similar picks</p>',
-          '<ul class="box-card__alt-list">' + buildAltPicks(product) + '</ul>',
-        '</div>',
-      '</div>',
-      '<button class="box-card__flip-btn" aria-label="Flip for similar picks" tabindex="0">\u21BA</button>',
-    ].join('');
-
-    var front  = article.querySelector('.box-card__front');
-    var drawer = article.querySelector('.box-card__drawer');
-    var flip   = article.querySelector('.box-card__flip-btn');
-    var back   = article.querySelector('.box-card__back');
-
-    front.addEventListener('click', function (e) {
-      if (e.target.closest('a, button')) return;
-      var expanded = article.classList.toggle('box-card--expanded');
-      drawer.setAttribute('aria-hidden', expanded ? 'false' : 'true');
-      if (typeof gtag === 'function') gtag('event', 'card_expand', { product_id: product.id, product_name: product.name, category: product.category, expanded: expanded });
-    });
-
-    /* 6E: card_flip — added flip_direction named dimension */
-    flip.addEventListener('click', function (e) {
-      e.stopPropagation();
-      var flipped = article.classList.toggle('box-card--flipped');
-      back.setAttribute('aria-hidden', flipped ? 'false' : 'true');
-      flip.setAttribute('aria-label', flipped ? 'Flip back to product' : 'Flip for similar picks');
-      if (typeof gtag === 'function') gtag('event', 'card_flip', {
-        product_id:     product.id,
-        product_name:   product.name,
-        flip_direction: flipped ? 'reveal' : 'reset',
-      });
-    });
-
-    article.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); front.click(); } });
-    article.addEventListener('animationend', function () { article.classList.remove('box-card--entering'); }, { once: true });
-    return article;
-  }
-
-
-  /* 05  PATCH BUILDER */
-
-  var _longPressTimer = null, _longPressTarget = null;
-
-  function buildPatch(collection, isActive) {
-    var btn = document.createElement('button');
-    btn.className = 'patch' + (isActive ? ' patch--active' : '');
-    btn.dataset.collection = collection.id;
-    btn.style.setProperty('--patch-color', collection.color);
-    btn.setAttribute('role', 'listitem');
-    btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
-    btn.setAttribute('aria-label', collection.label + ' collection');
-    btn.setAttribute('type', 'button');
-    btn.innerHTML =
-      '<span class="patch__ring" aria-hidden="true"></span>'
-    + '<span class="patch__ring patch__ring--inner" aria-hidden="true"></span>'
-    + '<span class="patch__emoji" aria-hidden="true">' + collection.emoji + '</span>'
-    + '<span class="patch__label">' + escapeHTML(collection.label) + '</span>'
-    + '<span class="patch__active-dot" aria-hidden="true"></span>';
-    return btn;
-  }
-
-  function wirePatch(patchEl, col, preview, previewCards, previewCta) {
-    patchEl.addEventListener('click', function () {
-      clearTimeout(_longPressTimer);
-      if (preview) { preview.classList.remove('patch-preview--open'); preview.setAttribute('aria-hidden', 'true'); }
-      if (col.id === state.activeCollectionId) return;
-      switchCollection(col.id);
-      if (typeof gtag === 'function') gtag('event', 'patch_tap', { collection_id: col.id, collection_label: col.label });
-    });
-
-    patchEl.addEventListener('pointerdown', function () {
-      _longPressTarget = col.id;
-      _longPressTimer = setTimeout(function () {
-
-        /* 6E: GA4 patch_long_press fires at the 350ms mark */
-        if (typeof gtag === 'function') gtag('event', 'patch_long_press', {
-          collection_id:    col.id,
-          collection_label: col.label,
-        });
-
-        if (!preview || !previewCards) return;
-        var products = window.SP_getCollectionProducts ? SP_getCollectionProducts(col.id).slice(0, 3) : [];
-        var previewHeader = document.getElementById('patch-preview-header');
-        if (previewHeader) {
-          previewHeader.innerHTML = '<span class="patch-preview__collection-emoji">' + col.emoji + '</span> <span>' + escapeHTML(col.label) + '</span>';
-        }
-        previewCards.innerHTML = products.map(function (p) {
-          var seam = SEAM_MAP[p.seam] || '#8E8EA0';
-          return '<div class="patch-preview__mini-card" style="--mini-seam:' + seam + ';"><span class="patch-preview__mini-emoji">' + p.emoji + '</span><span class="patch-preview__mini-name">' + escapeHTML(p.shortName) + '</span><span class="patch-preview__mini-price">' + escapeHTML(p.price) + '</span></div>';
-        }).join('');
-        preview.classList.add('patch-preview--open');
-        preview.setAttribute('aria-hidden', 'false');
-      }, 350);
-    });
-
-    patchEl.addEventListener('pointerup',    function () { clearTimeout(_longPressTimer); });
-    patchEl.addEventListener('pointerleave', function () { clearTimeout(_longPressTimer); });
-    patchEl.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); patchEl.click(); } });
-
-    if (previewCta && !previewCta._wired) {
-      previewCta._wired = true;
-      previewCta.addEventListener('click', function () {
-        if (_longPressTarget) switchCollection(_longPressTarget);
-        if (preview) { preview.classList.remove('patch-preview--open'); preview.setAttribute('aria-hidden', 'true'); }
-      });
+    // Stamps
+    var meta = featurePick.querySelector('.feature-row__meta');
+    if (meta) {
+      var existingStamps = meta.querySelectorAll('.stamp');
+      existingStamps.forEach(function(s) { s.remove(); });
+      if (pick.inStock) {
+        var s1 = document.createElement('span');
+        s1.className = 'stamp stamp--stock';
+        s1.textContent = 'UK Stock';
+        meta.insertBefore(s1, cta);
+      }
+      if (pick.nextDay) {
+        var s2 = document.createElement('span');
+        s2.className = 'stamp stamp--nextday';
+        s2.textContent = 'Next Day';
+        meta.insertBefore(s2, cta);
+      }
     }
   }
 
-  function renderPatches() {
-    if (!window.SP_COLLECTIONS) return;
-    var storyTrack = document.getElementById('story-track');
-    var railTrack  = document.getElementById('patch-rail-track');
-    var preview    = document.getElementById('patch-preview');
-    var previewCards = document.getElementById('patch-preview-cards');
-    var previewCta   = document.getElementById('patch-preview-cta');
-    window.SP_COLLECTIONS.forEach(function (col) {
-      var isActive = col.id === state.activeCollectionId;
-      if (storyTrack) { var sp = buildPatch(col, isActive); wirePatch(sp, col, preview, previewCards, previewCta); storyTrack.appendChild(sp); }
-      if (railTrack)  { var rp = buildPatch(col, isActive); wirePatch(rp, col, preview, previewCards, previewCta); railTrack.appendChild(rp); }
-    });
-    if (preview && !preview._outsideWired) {
-      preview._outsideWired = true;
-      document.addEventListener('pointerdown', function (e) {
-        if (preview.classList.contains('patch-preview--open') && !preview.contains(e.target) && !e.target.closest('.patch')) {
-          preview.classList.remove('patch-preview--open');
-          preview.setAttribute('aria-hidden', 'true');
-        }
-      });
+
+  // ============================================================
+  //  05  RENDER — CARD GRID
+  // ============================================================
+
+  var FEATURE_SLOT_INTERVAL = 6; // inject a feature slot every N cards
+
+  function renderGrid(collection) {
+    if (!cardGrid) return;
+
+    var products = getCollectionProducts(collection);
+
+    // Clear grid
+    while (cardGrid.firstChild) {
+      cardGrid.removeChild(cardGrid.firstChild);
     }
-    setTimeout(function () {
-      var ap = storyTrack && storyTrack.querySelector('.patch--active');
-      if (ap) ap.scrollIntoView({ inline: 'center', behavior: 'smooth' });
-    }, 120);
-  }
 
-  function updatePatchActiveStates(collectionId) {
-    document.querySelectorAll('.patch').forEach(function (p) {
-      var a = p.dataset.collection === collectionId;
-      p.classList.toggle('patch--active', a);
-      p.setAttribute('aria-pressed', a ? 'true' : 'false');
-    });
-    html.setAttribute('data-collection', collectionId);
-    html.setAttribute('data-shuffle-step', '0');
-  }
-
-
-  /* 06  WALL RENDERER */
-
-  function sortProducts(products, mode) {
-    var arr = products.slice();
-    if (mode === 'price-asc')  return arr.sort(function (a, b) { return a.priceRaw - b.priceRaw; });
-    if (mode === 'price-desc') return arr.sort(function (a, b) { return b.priceRaw - a.priceRaw; });
-    if (mode === 'popular')    return arr.sort(function (a, b) { return (b.loadoutCount || 0) - (a.loadoutCount || 0); });
-    return arr;
-  }
-
-  // Card cache — invalidated on each renderCollection, used by initScroll
-  var _cardCache = null;
-  function getCachedCards() {
-    if (!_cardCache) _cardCache = Array.from(document.querySelectorAll('.box-card'));
-    return _cardCache;
-  }
-
-  function renderCollection(products) {
-    _cardCache = null;
-    var stack = document.getElementById('card-stack');
-    if (!stack) return;
-    var shimmer = document.getElementById('card-stack-loading');
-    if (shimmer) shimmer.remove();
-    stack.innerHTML = '';
-    if (!products || !products.length) {
-      stack.innerHTML = '<p style="color:var(--text-tertiary);padding:var(--sp-8) var(--sp-4);font-family:var(--font-mono);font-size:var(--text-sm);text-align:center;">No picks in this collection yet.</p>';
+    if (!products.length) {
+      var empty = document.createElement('p');
+      empty.className = 'card-grid__empty';
+      empty.textContent = 'No picks in this collection yet.';
+      cardGrid.appendChild(empty);
       return;
     }
-    var sorted = sortProducts(products, state.sortMode);
-    var frag   = document.createDocumentFragment();
-    sorted.forEach(function (product, i) {
-      var delay = i < CARD_ENTER_LIMIT ? i * CARD_STAGGER_MS : CARD_ENTER_LIMIT * CARD_STAGGER_MS;
-      frag.appendChild(buildCard(product, i, delay));
-      if ((i + 1) % CLUSTER_EVERY === 0 && i < sorted.length - 1) {
-        var cluster = buildLoadoutCluster(sorted.slice(Math.max(0, i - CLUSTER_EVERY + 1), i + 1));
-        cluster.style.animationDelay = (delay + CARD_STAGGER_MS) + 'ms';
-        frag.appendChild(cluster);
-      }
-    });
-    stack.appendChild(frag);
-    updateWallHeader(state.activeCollectionId, sorted.length);
-  }
 
+    // Skip first product — it's the feature row
+    var gridProducts = products.slice(1);
 
-  /* 07  COLLECTION SWITCHER */
-
-  function switchCollection(collectionId) {
-    if (state.isTransitioning) return;
-    if (!window.SP_getCollection) return;
-    var col = SP_getCollection(collectionId);
-    if (!col) return;
-    state.isTransitioning = true; state.shuffleStep = 0; state.sortMode = 'default'; state.activeCollectionId = collectionId;
-    hideShuffleBanner(); html.classList.add('wall-body--transitioning');
-    var stack = document.getElementById('card-stack');
-    if (stack) {
-      stack.style.transition = 'opacity ' + TRANSITION_OUT_MS + 'ms ease, transform ' + TRANSITION_OUT_MS + 'ms ease';
-      stack.style.opacity = '0'; stack.style.transform = 'translateY(8px) scaleY(0.98)';
-    }
-    setTimeout(function () {
-      if (stack) { stack.style.transition = ''; stack.style.opacity = ''; stack.style.transform = ''; }
-      var products = SP_getCollectionProducts(collectionId);
-      document.querySelectorAll('.wall__sort-option').forEach(function (o) {
-        o.classList.toggle('wall__sort-option--active', o.dataset.sort === 'default' || !o.dataset.sort);
-        o.setAttribute('aria-selected', (o.dataset.sort === 'default' || !o.dataset.sort) ? 'true' : 'false');
-      });
-      renderCollection(products); updatePatchActiveStates(collectionId);
-      updateWallHeader(collectionId, products.length); closeSortMenu();
-      var wall = document.getElementById('wall');
-      if (wall) wall.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      html.classList.remove('wall-body--transitioning'); state.isTransitioning = false;
-    }, TRANSITION_OUT_MS);
-  }
-
-  function updateWallHeader(collectionId, count) {
-    var col = window.SP_getCollection ? SP_getCollection(collectionId) : null;
-    var emojiEl = document.getElementById('wall-collection-emoji');
-    var labelEl = document.getElementById('wall-collection-label');
-    var countEl = document.getElementById('wall-count');
-    if (emojiEl && col) emojiEl.textContent = col.emoji;
-    if (labelEl && col) labelEl.textContent = col.label.toUpperCase();
-    if (countEl) countEl.textContent = count + (count === 1 ? ' item' : ' items');
-  }
-
-
-  /* 08  LOADOUT CLUSTER BUILDER */
-
-  function buildLoadoutCluster(products) {
-    if (!products || !products.length) return document.createElement('div');
-    var display = products.slice(0, 3);
-    var total   = products.reduce(function (s, p) { return s + (p.priceRaw || 0); }, 0);
-    var totalFmt = '\u00A3' + Math.round(total);
-    var col   = state.activeCollectionId && window.SP_getCollection ? SP_getCollection(state.activeCollectionId) : null;
-    var title = col ? col.label + ' \u2014 ' + display.map(function (p) { return p.category; }).join(' \u00B7 ') : 'Featured Picks';
-    var section = document.createElement('section');
-    section.className = 'loadout-cluster box-card--entering';
-    section.setAttribute('aria-label', title + ' loadout');
-    var miniBoxes = display.map(function (p, i) {
-      var seam = SEAM_MAP[p.seam] || '#8E8EA0';
-      return '<div class="loadout-cluster__mini-box loadout-cluster__mini-box--' + (i + 1) + '" style="border-right:2px solid ' + seam + ';"><span class="mini-box__silhouette">' + p.emoji + '</span></div>';
-    }).join('');
-    section.innerHTML = '<div class="loadout-cluster__stack">' + miniBoxes + '</div><div class="loadout-cluster__meta"><h3 class="loadout-cluster__title">' + escapeHTML(title) + '</h3><span class="loadout-cluster__items">' + products.length + ' items in range</span><span class="loadout-cluster__total">' + escapeHTML(totalFmt) + ' combined</span><a class="loadout-cluster__cta" href="/guides/">See Setup Guides \u2192</a></div>';
-    section.addEventListener('animationend', function () { section.classList.remove('box-card--entering'); }, { once: true });
-    return section;
-  }
-
-
-  /* 09  SORT MENU */
-
-  function closeSortMenu() {
-    var menu = document.getElementById('wall-sort-menu'), sortBtn = document.getElementById('wall-sort');
-    if (!menu) return;
-    menu.setAttribute('aria-hidden', 'true');
-    if (sortBtn) sortBtn.setAttribute('aria-expanded', 'false');
-  }
-
-  function initSortMenu() {
-    var sortBtn = document.getElementById('wall-sort'), menu = document.getElementById('wall-sort-menu');
-    if (!sortBtn || !menu) return;
-    sortBtn.addEventListener('click', function (e) {
-      e.stopPropagation();
-      var open = menu.getAttribute('aria-hidden') === 'false';
-      menu.setAttribute('aria-hidden', open ? 'true' : 'false');
-      sortBtn.setAttribute('aria-expanded', open ? 'false' : 'true');
-    });
-    menu.querySelectorAll('.wall__sort-option').forEach(function (opt) {
-      opt.addEventListener('click', function () {
-        state.sortMode = opt.dataset.sort || 'default';
-        menu.querySelectorAll('.wall__sort-option').forEach(function (o) { o.classList.toggle('wall__sort-option--active', o === opt); o.setAttribute('aria-selected', o === opt ? 'true' : 'false'); });
-        closeSortMenu();
-        var products = (state.shuffleStep > 0 && window.SP_getShuffleVariant)
-          ? SP_getShuffleVariant(state.activeCollectionId, state.shuffleStep - 1)
-          : (window.SP_getCollectionProducts ? SP_getCollectionProducts(state.activeCollectionId) : []);
-        renderCollection(products);
-      });
-    });
-    document.addEventListener('click', function (e) { if (menu && !menu.contains(e.target) && e.target !== sortBtn) closeSortMenu(); });
-  }
-
-
-  /* 10  SCROLL — parallax shadow + patch jiggle
-   *
-   * 6E PARALLAX FIX:
-   * The .box-card__shadow-layer sits inside the card and travels
-   * with it 1:1 during scroll. We push it DOWN by (scrollY × SHADOW_LAG)
-   * so its world-position only moves (1 - SHADOW_LAG) × scrollY.
-   * Net visual: shadow lags 12% behind the card — light source appears fixed.
-   * Previous code used 0.04 which moved shadow WITH the scroll direction,
-   * the opposite of a fixed light source illusion.
-   */
-
-  function initScroll() {
-    var ticking = false;
-    var JIGGLE_T = 300;
-    
-    // Horizontal lag factor — slightly less than vertical
-    var SHADOW_LAG_X = 0.08;
-  
-    window.addEventListener('scroll', function () {
-      if (ticking) return;
-      window.requestAnimationFrame(function () {
-        var scrollY = window.scrollY;
-        var viewportCenterX = window.innerWidth / 2;
-        var shadowOffsetY = scrollY * SHADOW_LAG_Y;
-        var vh = window.innerHeight;
-
-        // 2D parallax shadow — cached card refs, skips off-screen cards
-        getCachedCards().forEach(function (card) {
-          var shadowLayer = card._shadowLayer || (card._shadowLayer = card.querySelector('.box-card__shadow-layer'));
-          if (!shadowLayer) return;
-          var rect = card.getBoundingClientRect();
-          if (rect.bottom < -200 || rect.top > vh + 200) return;
-          var cardCenterX  = rect.left + (rect.width / 2);
-          var distanceFromCenter = cardCenterX - viewportCenterX;
-          var shadowOffsetX = distanceFromCenter * -SHADOW_LAG_X;
-          shadowLayer.style.transform = 'translate(' + shadowOffsetX + 'px, ' + shadowOffsetY + 'px)';
-        });
-
-        // Patch jiggle on scroll
-        if (scrollY > state.jiggleScrollY + JIGGLE_T) {
-          state.jiggleScrollY = scrollY;
-          document.querySelectorAll('.patch--active').forEach(function (p) {
-            p.classList.remove('patch--jiggle');
-            void p.offsetWidth;
-            p.classList.add('patch--jiggle');
-            setTimeout(function () { p.classList.remove('patch--jiggle'); }, 650);
-          });
+    gridProducts.forEach(function(product, i) {
+      // Inject a full-width feature slot every N cards (except first position)
+      if (i > 0 && i % FEATURE_SLOT_INTERVAL === 0) {
+        var slot = document.createElement('div');
+        slot.className = 'card-grid__feature-slot';
+        slot.setAttribute('aria-hidden', 'true');
+        // Secondary feature highlight — muted version
+        var altPick = gridProducts[i];
+        if (altPick) {
+          var altCard = buildAltFeature(altPick);
+          slot.appendChild(altCard);
+          cardGrid.appendChild(slot);
         }
-        ticking = false;
-      });
-      ticking = true;
-    }, { passive: true });
-  }
-
-
-
-  /* 11  PULL-TO-SHUFFLE */
-
-  function initPullToShuffle() {
-    var trigger = document.getElementById('shuffle-trigger');
-    var stack   = document.getElementById('card-stack');
-    if (!trigger || !stack) return;
-    var lastHapticDelta = 0;
-
-    document.addEventListener('touchstart', function (e) {
-      if (window.scrollY > 2) return;
-      if (e.target.closest('a, button, input, .prefs-sheet, .rack-sheet')) return;
-      state.pull.active = true; state.pull.startY = e.touches[0].clientY;
-      state.pull.currentDelta = 0; state.pull.triggered = false; lastHapticDelta = 0;
-      stack.style.perspective = '1200px'; stack.style.transformOrigin = '50% 0%'; stack.style.transition = 'none';
-    }, { passive: true });
-
-    document.addEventListener('touchmove', function (e) {
-      if (!state.pull.active) return;
-      var rawDelta = e.touches[0].clientY - state.pull.startY;
-      if (rawDelta <= 0) { _resetPullVisuals(stack, trigger); state.pull.active = false; return; }
-      e.preventDefault(); // stop page scroll during pull gesture
-      var resistDelta = rawDelta < PULL_MAX ? rawDelta * PULL_RESIST : (PULL_MAX * PULL_RESIST) + (rawDelta - PULL_MAX) * (PULL_RESIST * 0.15);
-      state.pull.currentDelta = rawDelta;
-      if (rawDelta > PULL_SHOW_AT) {
-        trigger.classList.add('shuffle-trigger--pulling');
-        var progress = Math.min(rawDelta / PULL_TRIGGER, 1);
-        stack.style.transform = 'translateY(' + resistDelta + 'px) rotateX(' + (progress * 4) + 'deg) scaleY(' + (1 - progress * 0.03) + ')';
-        _updateTriggerProgress(trigger, progress);
-        if (rawDelta - lastHapticDelta > 60 && !state.pull.triggered) { if (navigator.vibrate) navigator.vibrate(HAPTIC_PULL_TICK); lastHapticDelta = rawDelta; }
       }
-      if (rawDelta >= PULL_TRIGGER && !state.pull.triggered) {
-        state.pull.triggered = true;
-        trigger.classList.add('shuffle-trigger--armed');
-        if (navigator.vibrate) navigator.vibrate(HAPTIC_TRIGGERED);
-        document.querySelectorAll('.patch--active').forEach(function (p) { p.classList.add('patch--charged'); });
-      }
-    }, { passive: false });
 
-    document.addEventListener('touchend', function (e) {
-      if (!state.pull.active) return;
-      var finalDelta = state.pull.currentDelta; state.pull.active = false;
-      document.querySelectorAll('.patch--charged').forEach(function (p) { p.classList.remove('patch--charged'); });
-      if (finalDelta >= PULL_TRIGGER) { triggerShuffle(stack, trigger); } else { _snapBack(stack, trigger); }
-    }, { passive: true });
-
-    document.addEventListener('touchcancel', function () {
-      if (!state.pull.active) return; state.pull.active = false;
-      document.querySelectorAll('.patch--charged').forEach(function (p) { p.classList.remove('patch--charged'); });
-      _snapBack(stack, trigger);
-    }, { passive: true });
-  }
-
-  function _updateTriggerProgress(trigger, progress) {
-    /* SVG arc: r=18, circumference = 2π×18 ≈ 113.1 (matches HTML stroke-dasharray) */
-    var arc = trigger.querySelector('.shuffle-trigger__arc');
-    if (!arc) return;
-    arc.style.strokeDashoffset = (113.1 * (1 - progress)).toFixed(2);
-    /* Sync label text in DOM — accessible, translatable, JS-controlled */
-    var label = trigger.querySelector('.shuffle-trigger__label');
-    if (!label) return;
-    if (progress >= 1) {
-        label.textContent = 'Release to deal!';
-    } else if (progress > 0) {
-        label.textContent = 'Keep pulling\u2026';
-    } else {
-        label.textContent = 'Pull to shuffle';
-    }
-  }
-
-  function _resetPullVisuals(stack, trigger) {
-    stack.style.transition = ''; stack.style.transform = ''; stack.style.perspective = ''; stack.style.transformOrigin = '';
-    trigger.classList.remove('shuffle-trigger--pulling', 'shuffle-trigger--armed');
-    var arc = trigger.querySelector('.shuffle-trigger__arc');
-    if (arc) arc.style.strokeDashoffset = '113.1';
-  }
-
-  function _snapBack(stack, trigger) {
-    stack.style.transition = 'transform 420ms cubic-bezier(0.34, 1.56, 0.64, 1), opacity 200ms ease';
-    stack.style.transform = ''; stack.style.opacity = '';
-    setTimeout(function () { stack.style.transition = ''; stack.style.perspective = ''; stack.style.transformOrigin = ''; }, 460);
-    trigger.classList.remove('shuffle-trigger--pulling', 'shuffle-trigger--armed');
-    var arc = trigger.querySelector('.shuffle-trigger__arc');
-    if (arc) {
-      arc.style.transition = 'stroke-dashoffset 300ms ease';
-      arc.style.strokeDashoffset = '113.1';
-      setTimeout(function () { arc.style.transition = ''; }, 320);
-    }
-  }
-
-  function triggerShuffle(stack, trigger) {
-    if (state.isShuffle) return;
-    var col = window.SP_getCollection ? SP_getCollection(state.activeCollectionId) : null;
-    if (!col || !col.shuffleVariants || !col.shuffleVariants.length) {
-      if (navigator.vibrate) navigator.vibrate(HAPTIC_NO_VARIANT);
-      document.querySelectorAll('.patch--active').forEach(function (p) {
-        p.classList.remove('patch--jiggle'); void p.offsetWidth; p.classList.add('patch--jiggle');
-        setTimeout(function () { p.classList.remove('patch--jiggle'); }, 650);
-      });
-      if (!stack) stack = document.getElementById('card-stack');
-      if (!trigger) trigger = document.getElementById('shuffle-trigger');
-      _snapBack(stack, trigger); return;
-    }
-    if (!stack) stack = document.getElementById('card-stack');
-    if (!trigger) trigger = document.getElementById('shuffle-trigger');
-    state.isShuffle = true; state.isTransitioning = true;
-    var totalV = col.shuffleVariants.length;
-    state.shuffleStep = (state.shuffleStep % totalV) + 1;
-    html.setAttribute('data-shuffle-step', state.shuffleStep);
-    var variant  = col.shuffleVariants[state.shuffleStep - 1];
-    var products = window.SP_getShuffleVariant ? SP_getShuffleVariant(state.activeCollectionId, state.shuffleStep - 1) : [];
-
-    /* 6E: GA4 shuffle_trigger event */
-    if (typeof gtag === 'function') gtag('event', 'shuffle_trigger', {
-      trigger_method:   'pull',
-      collection_id:    state.activeCollectionId,
-      collection_label: col.label,
-      shuffle_step:     state.shuffleStep,
-      wall_item_count:  products.length,
-    });
-
-    if (navigator.vibrate) navigator.vibrate(HAPTIC_SHUFFLE);
-    var cards = stack.querySelectorAll('.box-card, .loadout-cluster');
-    var cardArr = Array.prototype.slice.call(cards);
-    stack.style.perspective = '1400px'; stack.style.transformOrigin = '50% 0%'; stack.style.transition = 'none'; stack.style.transform = '';
-    cardArr.forEach(function (card, i) {
-      var d = Math.min(i, 8) * FLIP_STAGGER_MS;
-      card.style.transformOrigin = '50% 0%';
-      card.style.transition = 'transform ' + FLIP_COMPRESS_MS + 'ms cubic-bezier(0.55,0,0.45,1) ' + d + 'ms,opacity ' + FLIP_COMPRESS_MS + 'ms ease ' + d + 'ms';
-      card.style.transform = 'rotateX(90deg) scaleY(0.6)'; card.style.opacity = '0';
-    });
-    var phaseOneDuration = FLIP_COMPRESS_MS + Math.min(cardArr.length - 1, 8) * FLIP_STAGGER_MS + FLIP_HOLD_MS;
-
-    setTimeout(function () {
-      /* 6E: overshoot on patches at the "deal" moment (more theatrical than jiggle) */
-      document.querySelectorAll('.patch--active').forEach(function (p) {
-        p.classList.remove('patch--jiggle', 'patch--overshoot');
-        void p.offsetWidth;
-        p.classList.add('patch--overshoot');
-        setTimeout(function () { p.classList.remove('patch--overshoot'); }, 700);
-      });
-
-      renderCollection(products);
-      var newCards = stack.querySelectorAll('.box-card, .loadout-cluster');
-      var newArr = Array.prototype.slice.call(newCards);
-      newArr.forEach(function (card) {
-        card.style.transition = 'none'; card.style.transformOrigin = '50% 0%';
-        card.style.transform = 'rotateX(-70deg) scaleY(0.7) translateY(-16px)'; card.style.opacity = '0';
-      });
-      void stack.offsetWidth;
-      newArr.forEach(function (card, i) {
-        var d = Math.min(i, 10) * FLIP_STAGGER_MS;
-        card.style.transition = 'transform ' + FLIP_EXPAND_MS + 'ms cubic-bezier(0.16,1,0.3,1) ' + d + 'ms,opacity 200ms ease ' + d + 'ms';
-        card.style.transform = ''; card.style.opacity = '';
-      });
-      var totalExpandMs = FLIP_EXPAND_MS + Math.min(newArr.length - 1, 10) * FLIP_STAGGER_MS + 80;
-      setTimeout(function () {
-        newArr.forEach(function (card) { card.style.transition = ''; card.style.transform = ''; card.style.opacity = ''; card.style.transformOrigin = ''; });
-        stack.style.perspective = ''; stack.style.transformOrigin = '';
-        state.isShuffle = false; state.isTransitioning = false;
-      }, totalExpandMs);
-      showShuffleBanner(col.label + ' \u2014 ' + (variant.label || 'v' + state.shuffleStep), state.shuffleStep, col.shuffleVariants.length);
-    }, phaseOneDuration);
-
-    trigger.classList.remove('shuffle-trigger--pulling', 'shuffle-trigger--armed');
-    var arc = trigger.querySelector('.shuffle-trigger__arc');
-    if (arc) arc.style.strokeDashoffset = '113.1';
-  }
-
-
-  /* 12  SHUFFLE BANNER */
-
-  var _shuffleTimer = null, _bannerVisible = false;
-
-  function showShuffleBanner(text, step, totalSteps) {
-    var banner = document.getElementById('shuffle-banner'), label = document.getElementById('shuffle-banner-text');
-    var diceEl = document.getElementById('shuffle-banner-dice'), dotsEl = document.getElementById('shuffle-banner-dots');
-    if (!banner) return;
-    clearTimeout(_shuffleTimer);
-    if (label) label.textContent = text;
-    if (diceEl) { diceEl.classList.remove('shuffle-banner__dice--spin'); void diceEl.offsetWidth; diceEl.classList.add('shuffle-banner__dice--spin'); }
-    if (dotsEl && step != null && totalSteps != null) {
-      var dotHTML = '';
-      for (var d = 1; d <= totalSteps; d++) {
-        var isCurrent = (d === step);
-        dotHTML += '<span class="shuffle-banner__dot' + (isCurrent ? ' shuffle-banner__dot--active' : '') + '" aria-hidden="true"></span>';
-      }
-      dotsEl.innerHTML = dotHTML;
-      dotsEl.setAttribute('aria-label', 'Variant ' + step + ' of ' + totalSteps);
-    }
-    if (!_bannerVisible) {
-      banner.style.transition = 'none'; banner.style.opacity = '0'; banner.style.transform = 'translateY(16px) scale(0.96)';
-      void banner.offsetWidth;
-      banner.classList.add('shuffle-banner--visible'); banner.style.transition = ''; banner.style.opacity = ''; banner.style.transform = '';
-      _bannerVisible = true;
-    } else {
-      banner.classList.add('shuffle-banner--pulse');
-      setTimeout(function () { banner.classList.remove('shuffle-banner--pulse'); }, 300);
-    }
-    _shuffleTimer = setTimeout(hideShuffleBanner, 3000);
-  }
-
-  function hideShuffleBanner() {
-    var banner = document.getElementById('shuffle-banner');
-    if (!banner) return;
-    clearTimeout(_shuffleTimer);
-    banner.classList.remove('shuffle-banner--visible');
-    setTimeout(function () { _bannerVisible = false; }, 400);
-  }
-
-  function initShuffleBanner() {
-    var btn = document.getElementById('shuffle-reset');
-    if (!btn) return;
-    btn.addEventListener('click', function () {
-      state.shuffleStep = 0; html.setAttribute('data-shuffle-step', '0');
-      hideShuffleBanner(); renderCollection(SP_getCollectionProducts(state.activeCollectionId));
-    });
-    var banner = document.getElementById('shuffle-banner');
-    if (banner) { banner.addEventListener('click', function (e) { if (!e.target.closest('button')) hideShuffleBanner(); }); }
-  }
-
-
-  /* 13  SERVICE WORKER */
-
-  function initServiceWorker() {
-    if (!('serviceWorker' in navigator)) return;
-    window.addEventListener('load', function () {
-      navigator.serviceWorker.register('/sw.js', { scope: '/' })
-        .then(function (reg) {
-          reg.update();
-          reg.addEventListener('updatefound', function () {
-            var nw = reg.installing; if (!nw) return;
-            nw.addEventListener('statechange', function () {
-              if (nw.state === 'installed' && navigator.serviceWorker.controller) nw.postMessage({ type: 'SKIP_WAITING' });
-            });
-          });
-        }).catch(function (err) { console.warn('[SP] SW failed:', err); });
-      var refreshing = false;
-      navigator.serviceWorker.addEventListener('controllerchange', function () { if (!refreshing) { refreshing = true; window.location.reload(); } });
+      cardGrid.appendChild(renderCard(product, i));
     });
   }
 
-  /* 14  DATA ACCESS HELPERS
-   *
-   * These functions bridge SP_PRODUCTS / SP_COLLECTIONS (raw arrays
-   * loaded by data/products.js and data/collections.js) and the wall
-   * renderer.  They are exposed on window so optional callers (patch
-   * preview, sort menu, shuffle reset) can guard with window.SP_get*.
-   */
+  function buildAltFeature(product) {
+    // Inline mini feature — sits in the full-width grid slot
+    var el = document.createElement('article');
+    el.className = 'feature-row';
+    el.setAttribute('aria-label', 'Featured: ' + product.name);
+    el.innerHTML =
+      '<div class="feature-row__visual" aria-hidden="true">' + (product.emoji || '📦') + '</div>' +
+      '<div class="feature-row__body">' +
+        '<span class="feature-row__badge">Also Consider</span>' +
+        '<h3 class="feature-row__name">' + escHtml(product.name) + '</h3>' +
+        '<p class="feature-row__desc">' + escHtml((product.desc || '').substring(0, 140) + '…') + '</p>' +
+        '<div class="feature-row__footer">' +
+          '<div class="feature-row__meta">' +
+            '<span class="feature-row__price">' + escHtml(product.price) + '</span>' +
+          '</div>' +
+          '<a href="' + escAttr(product.affiliate) + '" class="feature-row__cta"' +
+             ' target="_blank" rel="noopener sponsored"' +
+             ' data-product="' + escAttr(product.id) + '" data-type="alt-feature-cta">' +
+            'View on Amazon →' +
+          '</a>' +
+        '</div>' +
+      '</div>';
+    return el;
+  }
 
-  function SP_getCollection(id) {
-    if (!window.SP_COLLECTIONS) return null;
-    for (var i = 0; i < SP_COLLECTIONS.length; i++) {
-      if (SP_COLLECTIONS[i].id === id) return SP_COLLECTIONS[i];
+
+  // ============================================================
+  //  06  COLLECTION FILTER TABS
+  // ============================================================
+
+  var activeCollectionId = 'all-picks';
+
+  function activateCollection(collectionId) {
+    if (collectionId === activeCollectionId && cardGrid.children.length > 1) return;
+    activeCollectionId = collectionId;
+
+    var collection = getCollectionById(collectionId);
+    var label = getCollectionLabel(collectionId);
+
+    // Update tab UI
+    filterTabs.forEach(function(tab) {
+      var isActive = tab.getAttribute('data-collection') === collectionId;
+      tab.classList.toggle('filter-tab--active', isActive);
+      tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
+    });
+
+    // Update section label
+    if (gridLabel) gridLabel.textContent = label;
+
+    // Update category link
+    if (categoryLink && collection) {
+      var cats = getCollectionProducts(collection).map(function(p) { return p.category; });
+      var primaryCat = cats[0] || '';
+      categoryLink.href = primaryCat ? '/' + primaryCat + '/' : '#';
+      categoryLink.textContent = primaryCat
+        ? 'View all ' + primaryCat + ' →'
+        : 'View category →';
     }
-    return null;
+
+    // Update feature row + grid
+    renderFeatureRow(collection);
+    renderGrid(collection);
   }
 
-  function SP_getCollectionProducts(id) {
-    var col = SP_getCollection(id);
-    if (!col || !window.SP_PRODUCTS) return [];
-    var productMap = {};
-    SP_PRODUCTS.forEach(function (p) { productMap[p.id] = p; });
-    return (col.baseProducts || [])
-      .map(function (pid) { return productMap[pid]; })
-      .filter(Boolean);
+  filterTabs.forEach(function(tab) {
+    tab.addEventListener('click', function() {
+      // Map v2 tab IDs back to original collection IDs
+      var v2Id = tab.getAttribute('data-collection');
+      var originalId = mapTabId(v2Id);
+      activateCollection(originalId);
+    });
+  });
+
+  // Map Force Marry tab IDs → original collection IDs in data
+  function mapTabId(v2Id) {
+    var map = {
+      'all-gear':     'all-picks',
+      'fps-edition':  'sweaty-fps',
+      'focus-build':  'study-mode',
+      'sub-100':      'under-100',
+      'cut-the-wire': 'wireless-only',
+      'after-hours':  'cozy-station',
+      'creator-stack':'creator-bay',
+    };
+    return map[v2Id] || v2Id;
   }
 
-  function SP_getShuffleVariant(id, variantIndex) {
-    var col = SP_getCollection(id);
-    if (!col || !col.shuffleVariants || !window.SP_PRODUCTS) return [];
-    var variant = col.shuffleVariants[variantIndex];
-    if (!variant) return SP_getCollectionProducts(id);
-    var productMap = {};
-    SP_PRODUCTS.forEach(function (p) { productMap[p.id] = p; });
-    return (variant.products || [])
-      .map(function (pid) { return productMap[pid]; })
-      .filter(Boolean);
+
+  // ============================================================
+  //  07  BOTTOM NAV + MORE PANEL
+  // ============================================================
+
+  function isMoreOpen() {
+    return morePanel && morePanel.getAttribute('aria-hidden') === 'false';
   }
 
-  // Expose on window so guards like `window.SP_getCollection` resolve
-  window.SP_getCollection         = SP_getCollection;
-  window.SP_getCollectionProducts = SP_getCollectionProducts;
-  window.SP_getShuffleVariant     = SP_getShuffleVariant;
+  function openMore() {
+    if (!morePanel || !moreOverlay || !moreBtn) return;
+    morePanel.setAttribute('aria-hidden', 'false');
+    moreOverlay.setAttribute('aria-hidden', 'false');
+    moreOverlay.classList.add('open');
+    moreBtn.setAttribute('aria-expanded', 'true');
+    var first = morePanel.querySelector('a');
+    if (first) first.focus();
+  }
+
+  function closeMore() {
+    if (!morePanel || !moreOverlay || !moreBtn) return;
+    morePanel.setAttribute('aria-hidden', 'true');
+    moreOverlay.setAttribute('aria-hidden', 'true');
+    moreOverlay.classList.remove('open');
+    moreBtn.setAttribute('aria-expanded', 'false');
+    moreBtn.focus();
+  }
+
+  if (moreBtn)     moreBtn.addEventListener('click', function() { isMoreOpen() ? closeMore() : openMore(); });
+  if (moreOverlay) moreOverlay.addEventListener('click', closeMore);
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && isMoreOpen()) closeMore();
+  });
+
+  // Active bottom nav state
+  var normPath = window.location.pathname.replace(/\/$/, '') || '/';
+  document.querySelectorAll('.bottom-nav__link[data-nav-path]').forEach(function(link) {
+    var lp = (link.getAttribute('data-nav-path') || '').replace(/\/$/, '') || '/';
+    if (lp === normPath) {
+      link.classList.add('active');
+      link.setAttribute('aria-current', 'page');
+    }
+  });
 
 
-  /* 15  INIT */
+  // ============================================================
+  //  08  AFFILIATE CLICK TRACKING
+  // ============================================================
+
+  document.addEventListener('click', function(e) {
+    var el = e.target;
+    while (el && el.tagName !== 'A') { el = el.parentElement; }
+    if (!el || !el.href) return;
+
+    var isAffiliate = el.href.includes('amzn.to') || el.href.includes('amazon.co.uk');
+    var productId   = el.getAttribute('data-product') || '';
+    var type        = el.getAttribute('data-type')    || 'link';
+
+    if (isAffiliate && typeof gtag === 'function') {
+      gtag('event', 'affiliate_click', {
+        link_url:    el.href,
+        product_id:  productId,
+        click_type:  type,
+        page_path:   window.location.pathname,
+      });
+    }
+  });
+
+
+  // ============================================================
+  //  09  INIT
+  // ============================================================
 
   function init() {
-    if (!window.SP_PRODUCTS || !window.SP_COLLECTIONS) {
-      console.error('[SP] Data files not loaded.');
-      var stack = document.getElementById('card-stack');
-      if (stack) stack.innerHTML = '<p style="color:var(--text-tertiary);padding:var(--sp-8);font-family:var(--font-mono);font-size:var(--text-sm);">Could not load product data.</p>';
-      return;
-    }
-    if (typeof window.SP_initTheme === 'function') window.SP_initTheme();
-    initPrefsSheet(); initRack(); renderPatches();
-    var products = SP_getCollectionProducts(state.activeCollectionId);
-    renderCollection(products); updateWallHeader(state.activeCollectionId, products.length);
-    initSortMenu(); initScroll(); initPullToShuffle(); initShuffleBanner(); initServiceWorker();
-    console.log('%c\u26A1 StackPick%c v6F \u2014 ' + SP_PRODUCTS.length + ' products, ' + SP_COLLECTIONS.length + ' collections loaded', 'color:#C8FF00;font-weight:800;font-family:monospace;font-size:13px;', 'color:#8E8EA0;font-family:monospace;font-size:13px;');
+    // Render default collection on load
+    activateCollection('all-picks');
   }
 
-  if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', init); } else { init(); }
+  // Run after DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
 
-})();
+
+  // ── Utils ──
+
+  function escHtml(str) {
+    return String(str || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  function escAttr(str) {
+    return String(str || '').replace(/"/g, '&quot;');
+  }
+
+}());

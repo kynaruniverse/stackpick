@@ -1,31 +1,200 @@
-    <section class="hero" data-category="{{activePage}}" data-category-initial="{{breadcrumbLabel}}">
-      <div class="hero-container">
-        <div class="hero-eyebrow">{{breadcrumbLabel}}</div>
-        <h1>{{heroTitle}}</h1>
-        <p>{{heroSubtitle}}</p>
-      </div>
-    </section>
+<!DOCTYPE html>
+<html lang="en-GB" data-theme="dark">
+<head>
+  <!-- inject head.html partial — replace TITLE, DESCRIPTION, CANONICAL_URL -->
+  <title>CATEGORY_NAME Gaming CATEGORY_TYPE | StackPick UK</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <script>(function(){try{var t=localStorage.getItem('sp-theme');if(t)document.documentElement.setAttribute('data-theme',t);else if(window.matchMedia('(prefers-color-scheme: light)').matches)document.documentElement.setAttribute('data-theme','light');}catch(e){}})();</script>
+  <meta name="theme-color" content="#0D0D0D" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#F5F5F5" media="(prefers-color-scheme: light)">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="StackPick">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x26A1;</text></svg>">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="preload" href="/assets/css/tokens.css" as="style">
+  <link rel="preload" href="/assets/css/style.css" as="style">
+  <link rel="stylesheet" href="/assets/css/tokens.css">
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZTN7H3L6DV"></script>
+  <script src="/assets/js/analytics.js" defer></script>
+  <script src="/assets/js/theme.js" defer></script>
+</head>
+<body>
 
-    <div class="breadcrumb-bar">
-      <div class="container" style="padding-top:0.75rem;padding-bottom:0.75rem;">
-        <ol class="breadcrumb-list" aria-label="Breadcrumb">
-          <li><a href="/">Home</a></li>
-          <li aria-hidden="true" class="breadcrumb-sep">›</li>
-          <li aria-current="page">{{breadcrumbLabel}}</li>
-        </ol>
-      </div>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- inject header.html partial -->
+  <header>
+    <div class="header-container">
+      <a href="/" class="logo">Stack<span>Pick</span></a>
+      <nav aria-label="Main navigation">
+        <a href="/headsets/">Headsets</a>
+        <a href="/keyboards/">Keyboards</a>
+        <a href="/mice/">Mice</a>
+        <a href="/monitors/">Monitors</a>
+        <a href="/chairs/">Chairs</a>
+        <a href="/guides/">Guides</a>
+        <a href="/about/">About</a>
+        <button class="theme-toggle" id="theme-toggle" aria-label="Switch to light mode">&#x1F319;</button>
+      </nav>
     </div>
+  </header>
+
+  <div class="hero">
+    <div class="hero-container">
+      <p class="hero-eyebrow">CATEGORY_NAME</p>
+      <h1>Best CATEGORY_NAME for UK Gamers</h1>
+      <p>CATEGORY_DESC_PLACEHOLDER</p>
+    </div>
+  </div>
+
+  <div class="breadcrumb-bar">
+    <div class="container">
+      <ol class="breadcrumb-list" aria-label="Breadcrumb">
+        <li><a href="/">Home</a></li>
+        <li aria-hidden="true" class="breadcrumb-sep">›</li>
+        <li aria-current="page">CATEGORY_NAME</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="page-wrapper">
+
+    <!-- inject sidebar.html partial -->
+    <aside class="desktop-sidebar" aria-label="Site navigation">
+      <div class="sidebar-section">
+        <p class="sidebar-heading">Peripherals</p>
+        <a href="/headsets/"  class="sidebar-link">&#x1F3A7; Headsets</a>
+        <a href="/keyboards/" class="sidebar-link">&#x2328;&#xFE0F; Keyboards</a>
+        <a href="/mice/"      class="sidebar-link">&#x1F5B1;&#xFE0F; Mice</a>
+        <a href="/monitors/"  class="sidebar-link">&#x1F5A5;&#xFE0F; Monitors</a>
+        <a href="/chairs/"    class="sidebar-link">&#x1FA91; Chairs</a>
+      </div>
+      <div class="sidebar-divider"></div>
+      <div class="sidebar-section">
+        <a href="/guides/"      class="sidebar-link">&#x1F4CB; Guides</a>
+        <a href="/comparisons/" class="sidebar-link">&#x2696;&#xFE0F; Comparisons</a>
+        <a href="/search/"      class="sidebar-link">&#x1F50D; Search</a>
+      </div>
+    </aside>
 
     <main class="container" id="main-content">
-      <section class="section">
-        <div class="product-grid">
-          {{{productCardsHTML}}}
+
+      <!-- Budget filter chips -->
+      <div class="filter-strip" role="navigation" aria-label="Filter by budget">
+        <button class="filter-chip active" data-filter="all">All Budgets</button>
+        <button class="filter-chip" data-filter="under-50">Under &#xA3;50</button>
+        <button class="filter-chip" data-filter="50-100">&#xA3;50 – &#xA3;100</button>
+        <button class="filter-chip" data-filter="100-200">&#xA3;100 – &#xA3;200</button>
+        <button class="filter-chip" data-filter="over-200">Over &#xA3;200</button>
+      </div>
+
+      <!-- Product list — populated by build step from products.json -->
+      <div class="product-list" id="product-list" aria-label="CATEGORY_NAME picks">
+
+        <!-- Example product entry — repeated by build step -->
+        <article class="product-entry">
+          <div class="product-entry__rank">
+            <span class="rank-number">01</span>
+            <span class="rank-badge">Top Pick</span>
+          </div>
+          <div class="product-entry__body">
+            <h2 class="product-entry__name">PRODUCT_NAME</h2>
+            <p class="product-entry__desc">PRODUCT_DESC</p>
+            <div class="product-entry__specs">
+              <span class="spec-pill">SPEC_1</span>
+              <span class="spec-pill">SPEC_2</span>
+              <span class="spec-pill">SPEC_3</span>
+            </div>
+            <div class="pros-cons">
+              <div class="pros-cons__col">
+                <p class="pros-cons__label pros-cons__label--pros">Pros</p>
+                <ul class="pros-cons__list">
+                  <li class="pros-cons__item">PRO_1</li>
+                  <li class="pros-cons__item">PRO_2</li>
+                </ul>
+              </div>
+              <div class="pros-cons__col">
+                <p class="pros-cons__label pros-cons__label--cons">Cons</p>
+                <ul class="pros-cons__list">
+                  <li class="pros-cons__item">CON_1</li>
+                  <li class="pros-cons__item">CON_2</li>
+                </ul>
+              </div>
+            </div>
+            <div class="product-entry__footer">
+              <div class="price-block">
+                <span class="price-current">PRICE</span>
+                <span class="price-msrp">MSRP</span>
+              </div>
+              <div style="display:flex;gap:var(--spacing-xs);align-items:center;flex-wrap:wrap;">
+                <span class="stamp stamp--stock">UK Stock</span>
+                <a href="AFFILIATE_URL" class="btn-primary"
+                   target="_blank" rel="noopener sponsored"
+                   data-product="PRODUCT_ID" data-type="category-cta">
+                  View on Amazon &#x2192;
+                </a>
+              </div>
+            </div>
+          </div>
+        </article>
+
+      </div><!-- end .product-list -->
+
+      <!-- Buying guide section -->
+      <section class="section" aria-labelledby="guide-heading">
+        <div class="buying-guide">
+          <h2 id="guide-heading">What to Look For</h2>
+          <p>BUYING_GUIDE_CONTENT_PLACEHOLDER</p>
         </div>
       </section>
 
-      <section class="section" id="guide">
-        <div class="buying-guide">
-          {{{buyingGuideHTML}}}
-        </div>
-      </section>
     </main>
+  </div>
+
+  <!-- inject footer.html partial -->
+  <footer class="site-footer">
+    <div class="site-footer__inner">
+      <div>
+        <a href="/" class="footer-logo">Stack<span>Pick</span></a>
+        <p class="footer-tagline">Researched gaming gear for UK gamers.</p>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 StackPick.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- inject bottom-nav.html partial -->
+  <div class="more-panel-overlay" id="more-overlay" aria-hidden="true"></div>
+  <div class="bottom-nav-more-panel" id="more-panel" role="dialog" aria-modal="true" aria-labelledby="more-panel-title" aria-hidden="true">
+    <p class="more-panel-title" id="more-panel-title">More</p>
+    <div class="more-panel-grid">
+      <a href="/monitors/"    class="more-panel-link">&#x1F5A5;&#xFE0F; Monitors</a>
+      <a href="/chairs/"      class="more-panel-link">&#x1FA91; Chairs</a>
+      <a href="/guides/"      class="more-panel-link">&#x1F4CB; Guides</a>
+      <a href="/comparisons/" class="more-panel-link">&#x2696;&#xFE0F; Compare</a>
+      <a href="/search/"      class="more-panel-link">&#x1F50D; Search</a>
+      <a href="/about/"       class="more-panel-link">&#x2139;&#xFE0F; About</a>
+    </div>
+  </div>
+  <nav class="bottom-nav" aria-label="Mobile navigation">
+    <ul class="bottom-nav__items">
+      <li><a href="/" class="bottom-nav__link" data-nav-path="/"><span class="bottom-nav__icon">&#x1F3E0;</span><span class="bottom-nav__label">Home</span></a></li>
+      <li><a href="/headsets/" class="bottom-nav__link" data-nav-path="/headsets/"><span class="bottom-nav__icon">&#x1F3A7;</span><span class="bottom-nav__label">Audio</span></a></li>
+      <li><a href="/keyboards/" class="bottom-nav__link" data-nav-path="/keyboards/"><span class="bottom-nav__icon">&#x2328;&#xFE0F;</span><span class="bottom-nav__label">Keys</span></a></li>
+      <li><a href="/mice/" class="bottom-nav__link" data-nav-path="/mice/"><span class="bottom-nav__icon">&#x1F5B1;&#xFE0F;</span><span class="bottom-nav__label">Mice</span></a></li>
+      <li><button class="bottom-nav__link" id="more-btn" aria-label="More" aria-expanded="false" aria-controls="more-panel"><span class="bottom-nav__icon">&#x229E;</span><span class="bottom-nav__label">More</span></button></li>
+    </ul>
+  </nav>
+
+  <script src="/assets/js/app.js" defer></script>
+  <script>if('serviceWorker'in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').then(r=>console.log('[SW]',r.scope)).catch(e=>console.warn('[SW]',e));});}</script>
+
+</body>
+</html>

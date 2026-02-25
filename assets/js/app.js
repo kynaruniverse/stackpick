@@ -1,401 +1,245 @@
 // ============================================================
-//  STACK PICK — app.js  v7
-//  Phase 6F — Category pages, guides, comparisons, search, about.
-//  NOT loaded on index.html (wall.js handles the homepage).
-//
-//  DEPENDS ON:
-//    analytics.js  — must load before this (GA4 gtag global)
-//    theme.js      — must load before this (SP_initTheme global)
-//    style.css     — design tokens for category pages
+//  STACKPICK V2 — app.js
+//  Shared controller for all inner pages.
+//  Homepage uses wall.js instead.
 //
 //  CONTENTS
-//  01  Theme init — delegates entirely to theme.js via SP_initTheme()
-//  02  Prefs sheet — open/close/overlay/keyboard
-//  03  Nav active states — bottom-nav + prefs-sheet links
-//  04  Smooth scroll — anchor links
-//  05  Affiliate & outbound click tracking (GA4)
-//  06  PWA install prompt — volt-themed banner
-//  07  Bottom nav — active state + More panel
+//  01  Theme
+//  02  Bottom nav active state
+//  03  More panel
+//  04  Affiliate click tracking
+//  05  Search (search page only)
+//  06  Init
 // ============================================================
 
-(function () {
+(function() {
     'use strict';
-
-
+    
+    
     // ============================================================
     //  01  THEME
-    //
-    //  All theme logic lives in theme.js.
-    //  SP_initTheme() reads the saved/system preference, applies it,
-    //  wires all toggle buttons, and listens for OS preference changes.
     // ============================================================
-
+    
     if (typeof window.SP_initTheme === 'function') {
         window.SP_initTheme();
+    } else {
+        // Fallback if theme.js hasn't loaded yet
+        (function() {
+            try {
+                var saved = localStorage.getItem('sp-theme');
+                if (saved) document.documentElement.setAttribute('data-theme', saved);
+                else if (window.matchMedia('(prefers-color-scheme: light)').matches)
+                    document.documentElement.setAttribute('data-theme', 'light');
+            } catch (e) {}
+        })();
     }
-
-
-    // ============================================================
-    //  02  PREFS SHEET
-    //
-    //  Wires: #guest-chip (open) · #prefs-close (close) ·
-    //         #prefs-overlay (backdrop click)
-    //  Keyboard: Escape closes · moves focus to first focusable on open ·
-    //            returns focus to trigger on close.
-    // ============================================================
-
-    var guestChip    = document.getElementById('guest-chip');
-    var prefsSheet   = document.getElementById('prefs-sheet');
-    var prefsClose   = document.getElementById('prefs-close');
-    var prefsOverlay = document.getElementById('prefs-overlay');
-
-    // ── 02a  State helpers ────────────────────────────────────
-
-    function isPrefsOpen() {
-        return prefsSheet && prefsSheet.classList.contains('prefs-sheet--open');
-    }
-
-    function openPrefs() {
-        if (!prefsSheet || !prefsOverlay || !guestChip) return;
-        prefsSheet.classList.add('prefs-sheet--open');
-        prefsOverlay.classList.add('open');
-        guestChip.setAttribute('aria-expanded', 'true');
-        prefsSheet.setAttribute('aria-hidden', 'false');
-        prefsOverlay.setAttribute('aria-hidden', 'false');
-        var firstFocusable = prefsSheet.querySelector('button, a, [tabindex="0"]');
-        if (firstFocusable) firstFocusable.focus();
-    }
-
-    function closePrefs() {
-        if (!prefsSheet || !prefsOverlay || !guestChip) return;
-        prefsSheet.classList.remove('prefs-sheet--open');
-        prefsOverlay.classList.remove('open');
-        guestChip.setAttribute('aria-expanded', 'false');
-        prefsSheet.setAttribute('aria-hidden', 'true');
-        prefsOverlay.setAttribute('aria-hidden', 'true');
-        guestChip.focus();
-    }
-
-    // ── 02b  Wire events ──────────────────────────────────────
-
-    if (guestChip) {
-        guestChip.addEventListener('click', function (e) {
-            e.stopPropagation();
-            isPrefsOpen() ? closePrefs() : openPrefs();
-        });
-    }
-
-    if (prefsClose)   prefsClose.addEventListener('click', closePrefs);
-    if (prefsOverlay) prefsOverlay.addEventListener('click', closePrefs);
-
-    document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape') {
-            if (isPrefsOpen()) closePrefs();
-            if (isMoreOpen())  closeMore();
+    
+    // Theme toggle buttons (header + sidebar)
+    var themeToggleIds = ['theme-toggle', 'theme-toggle-sidebar'];
+    themeToggleIds.forEach(function(id) {
+        var btn = document.getElementById(id);
+        if (!btn) return;
+        
+        function syncBtn() {
+            var isDark = document.documentElement.getAttribute('data-theme') !== 'light';
+            btn.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
+            btn.textContent = isDark ? '🌙' : '☀️';
         }
-    });
-
-    // Close when a nav link inside the sheet is activated
-    if (prefsSheet) {
-        prefsSheet.querySelectorAll('a').forEach(function (link) {
-            link.addEventListener('click', closePrefs);
-        });
-    }
-
-
-    // ============================================================
-    //  03  NAV ACTIVE STATES
-    //
-    //  Sets active highlight on .prefs-sheet__nav-link elements.
-    //  Bottom-nav active state is handled in section 07.
-    //  wall.js owns rack-box state on the homepage.
-    // ============================================================
-
-    function normalisePath(p) {
-        return p.length > 1 ? p.replace(/\/$/, '') : p;
-    }
-
-    var normCurrentPath = normalisePath(window.location.pathname);
-
-    // ── 03a  Prefs sheet nav links ────────────────────────────
-
-    document.querySelectorAll('.prefs-sheet__nav-link[href]').forEach(function (link) {
-        if (normalisePath(link.getAttribute('href')) === normCurrentPath) {
-            link.style.color      = 'var(--volt, #C8FF00)';
-            link.style.fontWeight = '600';
-        }
-    });
-
-    // ── 03b  Sidebar nav links ────────────────────────────────
-
-    document.querySelectorAll('.sidebar-link[href]').forEach(function (link) {
-        if (normalisePath(link.getAttribute('href')) === normCurrentPath) {
-            link.classList.add('sidebar-link--active');
-        }
-    });
-
-
-    // ============================================================
-    //  04  SMOOTH SCROLL
-    //
-    //  Intercepts same-page anchor links, scrolls smoothly,
-    //  pushes state, and moves focus to the target for
-    //  keyboard/screen-reader accessibility.
-    // ============================================================
-
-    document.querySelectorAll('a[href^="#"]').forEach(function (anchor) {
-        anchor.addEventListener('click', function (e) {
-            var href = this.getAttribute('href');
-            if (!href || href === '#') return;
-
-            var target = document.querySelector(href);
-            if (!target) return;
-
-            e.preventDefault();
-
-            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-            if (history.pushState) {
-                history.pushState(null, null, href);
-            }
-
-            if (!target.hasAttribute('tabindex')) {
-                target.setAttribute('tabindex', '-1');
-            }
-            target.focus({ preventScroll: true });
+        
+        syncBtn();
+        
+        btn.addEventListener('click', function() {
+            var current = document.documentElement.getAttribute('data-theme');
+            var next = current === 'light' ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', next);
+            try { localStorage.setItem('sp-theme', next); } catch (e) {}
+            syncBtn();
         });
     });
-
-
+    
+    
     // ============================================================
-    //  05  AFFILIATE & OUTBOUND CLICK TRACKING
-    //
-    //  GA4 event schema:
-    //    affiliate_click — amzn.to / amazon.co.uk links
-    //    outbound_click  — all other external links
-    //
-    //  analytics.js fires select_item (GA4 ecommerce standard) on
-    //  the same affiliate clicks. Both fire intentionally — one for
-    //  ecommerce reporting, one for simple goal tracking.
+    //  02  BOTTOM NAV ACTIVE STATE
     // ============================================================
-
-    document.addEventListener('click', function (e) {
-        var el = e.target;
-        while (el && el.tagName !== 'A') { el = el.parentElement; }
-        if (!el || !el.href) return;
-
-        var href = el.href;
-        var text = (el.textContent || '').trim().slice(0, 100);
-        var page = window.location.pathname;
-
-        if (href.includes('amzn.to') || href.includes('amazon.co.uk')) {
-            if (typeof gtag === 'function') {
-                gtag('event', 'affiliate_click', {
-                    link_url:  href,
-                    link_text: text,
-                    page_path: page,
-                });
-            }
-            return;
-        }
-
-        if (el.hostname && el.hostname !== window.location.hostname) {
-            if (typeof gtag === 'function') {
-                gtag('event', 'outbound_click', {
-                    link_url:    href,
-                    link_domain: el.hostname,
-                });
-            }
-        }
-    });
-
-
-    // ============================================================
-    //  06  PWA INSTALL PROMPT
-    //
-    //  Shown after 30s on Android/Chrome (deferred prompt) and
-    //  iOS Safari (manual share-sheet guide).
-    //  Dismissed state stored in sessionStorage — clears on tab close.
-    //
-    //  Styles for the banner live in style.css — no inline injection.
-    // ============================================================
-
-    (function () {
-        var BANNER_KEY     = 'sp-pwa-dismissed';
-        var deferredPrompt = null;
-
-        if (window.matchMedia('(display-mode: standalone)').matches) return;
-        try { if (sessionStorage.getItem(BANNER_KEY)) return; } catch (e) {}
-
-        function createBanner() {
-            var banner = document.createElement('div');
-            banner.id = 'pwa-install-banner';
-            banner.setAttribute('role', 'complementary');
-            banner.setAttribute('aria-label', 'Install StackPick app');
-            banner.innerHTML =
-                '<div class="pwa-banner-inner">' +
-                '  <div class="pwa-banner-text">' +
-                '    <span class="pwa-banner-icon" aria-hidden="true">⚡</span>' +
-                '    <span id="pwa-banner-msg">Install <strong>StackPick</strong> — instant access, works offline.</span>' +
-                '  </div>' +
-                '  <div class="pwa-banner-actions">' +
-                '    <button id="pwa-install-btn" class="pwa-btn-install">Install</button>' +
-                '    <button id="pwa-dismiss-btn" class="pwa-btn-dismiss" aria-label="Dismiss install prompt">✕</button>' +
-                '  </div>' +
-                '</div>';
-
-            banner.querySelector('#pwa-dismiss-btn').addEventListener('click', function () {
-                _hideBanner(banner);
-                try { sessionStorage.setItem(BANNER_KEY, '1'); } catch (e) {}
-            });
-
-            banner.querySelector('#pwa-install-btn').addEventListener('click', function () {
-                if (deferredPrompt) {
-                    deferredPrompt.prompt();
-                    deferredPrompt.userChoice.then(function (result) {
-                        if (typeof gtag === 'function') {
-                            gtag('event', 'pwa_install_prompt', { outcome: result.outcome });
-                        }
-                        deferredPrompt = null;
-                        _hideBanner(banner);
-                    });
-                } else {
-                    var msg = document.getElementById('pwa-banner-msg');
-                    if (msg) {
-                        msg.innerHTML =
-                            'Tap <strong>Share</strong> in Safari → <strong>Add to Home Screen</strong>.';
-                    }
-                    banner.querySelector('#pwa-install-btn').style.display = 'none';
-                }
-            });
-
-            return banner;
-        }
-
-        function showBanner() {
-            try { if (sessionStorage.getItem(BANNER_KEY)) return; } catch (e) {}
-            var banner = createBanner();
-            document.body.appendChild(banner);
-
-            banner.style.opacity    = '0';
-            banner.style.transform  = 'translateY(16px)';
-            banner.style.transition =
-                'opacity 300ms var(--ease-spring, cubic-bezier(0.16,1,0.3,1)), ' +
-                'transform 300ms var(--ease-spring, cubic-bezier(0.16,1,0.3,1))';
-
-            requestAnimationFrame(function () {
-                requestAnimationFrame(function () {
-                    banner.style.opacity   = '1';
-                    banner.style.transform = 'translateY(0)';
-                });
-            });
-        }
-
-        function _hideBanner(banner) {
-            banner.style.opacity   = '0';
-            banner.style.transform = 'translateY(8px)';
-            setTimeout(function () { banner.remove(); }, 320);
-        }
-
-        window.addEventListener('beforeinstallprompt', function (e) {
-            e.preventDefault();
-            deferredPrompt = e;
-            setTimeout(showBanner, 30000);
-        });
-
-        var isIOS    = /iphone|ipad|ipod/i.test(navigator.userAgent);
-        var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-        if (isIOS && isSafari) {
-            setTimeout(showBanner, 30000);
-        }
-
-    }());
-
-
-    // ============================================================
-    //  07  BOTTOM NAV — active state + More panel
-    //
-    //  Active state: matches current path against data-nav-path
-    //  attributes using normalisePath so trailing slashes don't
-    //  cause mismatches.
-    //
-    //  More panel: #more-btn toggles #more-panel and #more-overlay.
-    //  Clicking the overlay or pressing Escape closes it.
-    //  Escape is handled centrally in the keydown listener in 02b.
-    // ============================================================
-
-    // ── 07a  Active link highlight ────────────────────────────
-
-    document.querySelectorAll('.bottom-nav-link[data-nav-path]').forEach(function (link) {
-        var linkPath = normalisePath(link.getAttribute('data-nav-path') || '');
-        if (linkPath === normCurrentPath) {
+    
+    var normPath = window.location.pathname.replace(/\/$/, '') || '/';
+    document.querySelectorAll('.bottom-nav__link[data-nav-path]').forEach(function(link) {
+        var lp = (link.getAttribute('data-nav-path') || '').replace(/\/$/, '') || '/';
+        if (lp === normPath) {
             link.classList.add('active');
             link.setAttribute('aria-current', 'page');
         }
     });
-
-    // ── 07b  More panel ───────────────────────────────────────
-
-    var moreBtn     = document.getElementById('more-btn');
-    var morePanel   = document.getElementById('more-panel');
+    
+    
+    // ============================================================
+    //  03  MORE PANEL
+    // ============================================================
+    
+    var moreBtn = document.getElementById('more-btn');
+    var morePanel = document.getElementById('more-panel');
     var moreOverlay = document.getElementById('more-overlay');
-
+    
     function isMoreOpen() {
-        return morePanel && morePanel.classList.contains('more-panel--open');
+        return morePanel && morePanel.getAttribute('aria-hidden') === 'false';
     }
-
+    
     function openMore() {
         if (!morePanel || !moreOverlay || !moreBtn) return;
-        morePanel.classList.add('more-panel--open');
         morePanel.setAttribute('aria-hidden', 'false');
-        // FIX: toggle .open class on overlay so style.css class-based selector fires,
-        // in addition to the aria-hidden attribute (belt-and-braces).
-        moreOverlay.classList.add('open');
         moreOverlay.setAttribute('aria-hidden', 'false');
+        moreOverlay.classList.add('open');
         moreBtn.setAttribute('aria-expanded', 'true');
-        var first = morePanel.querySelector('a');
+        var first = morePanel.querySelector('a, button');
         if (first) first.focus();
     }
-
+    
     function closeMore() {
         if (!morePanel || !moreOverlay || !moreBtn) return;
-        morePanel.classList.remove('more-panel--open');
         morePanel.setAttribute('aria-hidden', 'true');
-        // FIX: remove .open class in sync with aria-hidden
-        moreOverlay.classList.remove('open');
         moreOverlay.setAttribute('aria-hidden', 'true');
+        moreOverlay.classList.remove('open');
         moreBtn.setAttribute('aria-expanded', 'false');
         moreBtn.focus();
     }
-
-    if (moreBtn) {
-        moreBtn.addEventListener('click', function () {
-            isMoreOpen() ? closeMore() : openMore();
-        });
-    }
-
-    if (moreOverlay) {
-        moreOverlay.addEventListener('click', closeMore);
-    }
-
-    // ── 07c  Price badge injection ────────────────────────────
-    //
-    //  Appends a "Month Year" freshness badge to any .price-current
-    //  element that doesn't already contain one.
-    //  Wrapped in try/catch so a failure here doesn't affect anything above.
-
-    try {
-        var priceBadgeDate = new Date().toLocaleDateString('en-GB', { month: 'short', year: 'numeric' });
-        document.querySelectorAll('.price-current').forEach(function (el) {
-            if (!el.querySelector('.price-badge')) {
-                var badge = document.createElement('span');
-                badge.className   = 'price-badge';
-                badge.textContent = priceBadgeDate;
-                el.appendChild(badge);
+    
+    if (moreBtn) moreBtn.addEventListener('click', function() { isMoreOpen() ? closeMore() : openMore(); });
+    if (moreOverlay) moreOverlay.addEventListener('click', closeMore);
+    
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && isMoreOpen()) closeMore();
+    });
+    
+    
+    // ============================================================
+    //  04  AFFILIATE CLICK TRACKING
+    // ============================================================
+    
+    document.addEventListener('click', function(e) {
+        var el = e.target;
+        while (el && el.tagName !== 'A') { el = el.parentElement; }
+        if (!el || !el.href) return;
+        
+        var isAffiliate = el.href.includes('amzn.to') || el.href.includes('amazon.co.uk');
+        var productId = el.getAttribute('data-product') || '';
+        var type = el.getAttribute('data-type') || 'link';
+        
+        if (isAffiliate && typeof gtag === 'function') {
+            gtag('event', 'affiliate_click', {
+                link_url: el.href,
+                product_id: productId,
+                click_type: type,
+                page_path: window.location.pathname,
+            });
+        }
+    });
+    
+    
+    // ============================================================
+    //  05  SEARCH (search page only)
+    // ============================================================
+    
+    var searchInput = document.getElementById('search-input');
+    var searchBtn = document.getElementById('search-btn');
+    var searchResults = document.getElementById('search-results');
+    var resultsCount = document.getElementById('results-count');
+    
+    if (searchInput && searchBtn && searchResults) {
+        var SP_PRODUCTS = window.SP_PRODUCTS || [];
+        
+        function doSearch(query) {
+            query = (query || '').trim().toLowerCase();
+            
+            if (!query) {
+                searchResults.innerHTML = '';
+                if (resultsCount) resultsCount.textContent = '';
+                return;
             }
-        });
-    } catch (e) {
-        // non-fatal
+            
+            var results = SP_PRODUCTS.filter(function(p) {
+                return (
+                    p.name.toLowerCase().includes(query) ||
+                    p.brand.toLowerCase().includes(query) ||
+                    p.category.toLowerCase().includes(query) ||
+                    (p.desc || '').toLowerCase().includes(query) ||
+                    (p.tags || []).some(function(t) { return t.toLowerCase().includes(query); })
+                );
+            });
+            
+            if (resultsCount) {
+                resultsCount.textContent = results.length + ' result' + (results.length !== 1 ? 's' : '') + ' for "' + escHtml(query) + '"';
+            }
+            
+            if (!results.length) {
+                searchResults.innerHTML = '<p style="color:var(--color-text-muted);font-size:var(--body-font-size-sm);">No picks found for that search. Try a broader term.</p>';
+                return;
+            }
+            
+            searchResults.innerHTML = results.map(function(p) {
+                var nameHl = highlight(escHtml(p.name), query);
+                var descHl = highlight(escHtml((p.desc || '').substring(0, 120) + '…'), query);
+                return (
+                    '<article class="product-entry">' +
+                    '<div class="product-entry__rank">' +
+                    '<span class="rank-badge">' + escHtml(p.category) + '</span>' +
+                    '</div>' +
+                    '<div class="product-entry__body">' +
+                    '<h3 class="product-entry__name">' + nameHl + '</h3>' +
+                    '<p class="product-entry__desc">' + descHl + '</p>' +
+                    '<div class="product-entry__footer">' +
+                    '<div class="price-block"><span class="price-current">' + escHtml(p.price) + '</span></div>' +
+                    '<a href="' + escAttr(p.affiliate) + '" class="btn-primary"' +
+                    ' target="_blank" rel="noopener sponsored"' +
+                    ' data-product="' + escAttr(p.id) + '" data-type="search-cta">' +
+                    'View on Amazon →' +
+                    '</a>' +
+                    '</div>' +
+                    '</div>' +
+                    '</article>'
+                );
+            }).join('');
+        }
+        
+        function highlight(text, query) {
+            if (!query) return text;
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return text.replace(re, '<mark class="search-highlight">$1</mark>');
+        }
+        
+        searchBtn.addEventListener('click', function() { doSearch(searchInput.value); });
+        searchInput.addEventListener('keydown', function(e) { if (e.key === 'Enter') doSearch(searchInput.value); });
+        
+        // Pre-fill from URL param
+        var params = new URLSearchParams(window.location.search);
+        var q = params.get('q');
+        if (q) { searchInput.value = q;
+            doSearch(q); }
     }
-
+    
+    
+    // ============================================================
+    //  06  INIT
+    // ============================================================
+    
+    function init() {
+        // Nothing further needed — all init happens on listener attachment above
+    }
+    
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+    
+    
+    // ── Utils ──
+    
+    function escHtml(str) {
+        return String(str || '')
+            .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
+    
+    function escAttr(str) { return String(str || '').replace(/"/g, '&quot;'); }
+    
 }());

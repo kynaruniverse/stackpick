@@ -1,201 +1,163 @@
 <!DOCTYPE html>
 <html lang="en-GB" data-theme="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#0A0A0F" media="(prefers-color-scheme: dark)">
-    <meta name="theme-color" content="#F2F0EB" media="(prefers-color-scheme: light)">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="StackPick">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="description" content="About Stack Pick — honest gaming gear recommendations for UK gamers. How we research, our affiliate disclosure, and our promise to you.">
-    <meta name="author" content="Stack Pick">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://stackpick.co.uk/about/">
-    <meta property="og:title" content="About Stack Pick | UK Gaming Gear Recommendations">
-    <meta property="og:description" content="Honest gaming gear recommendations for UK gamers. How we research, our affiliate disclosure, and our promise.">
-    <meta property="og:image" content="https://stackpick.co.uk/assets/images/og-image.jpg">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="About Stack Pick | UK Gaming Gear Recommendations">
-    <meta name="twitter:description" content="Honest gaming gear recommendations for UK gamers. How we research, our affiliate disclosure, and our promise.">
-    <meta name="twitter:image" content="https://stackpick.co.uk/assets/images/og-image.jpg">
-    <title>About Stack Pick | UK Gaming Gear Recommendations</title>
-    <link rel="canonical" href="https://stackpick.co.uk/about/">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎮</text></svg>">
-    <link rel="manifest" href="/manifest.json">
-    <link rel="apple-touch-icon" href="/assets/icons/icon-192.png">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" href="/assets/css/style.css" as="style">
-    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/assets/css/style.css">
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZTN7H3L6DV"></script>
-    <script src="/assets/js/analytics.js" defer></script>
-
-    <!-- Apply saved theme before paint to prevent flash -->
-    <script>
-    (function () {
-        try {
-            var saved = localStorage.getItem('sp-theme');
-            if (saved) {
-                document.documentElement.setAttribute('data-theme', saved);
-            } else if (window.matchMedia('(prefers-color-scheme: light)').matches) {
-                document.documentElement.setAttribute('data-theme', 'light');
-            }
-        } catch (e) { /* localStorage blocked — default dark theme stays */ }
-    }());
-    </script>
+  <title>About StackPick | UK Gaming Gear Recommendations</title>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <script>(function(){try{var t=localStorage.getItem('sp-theme');if(t)document.documentElement.setAttribute('data-theme',t);else if(window.matchMedia('(prefers-color-scheme: light)').matches)document.documentElement.setAttribute('data-theme','light');}catch(e){}})();</script>
+  <meta name="theme-color" content="#0D0D0D" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#F5F5F5" media="(prefers-color-scheme: light)">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="description" content="About StackPick — honest gaming gear recommendations for UK gamers. How we research, affiliate disclosure, and our promise.">
+  <link rel="canonical" href="https://stackpick.co.uk/about/">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x26A1;</text></svg>">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="preload" href="/assets/css/tokens.css" as="style">
+  <link rel="preload" href="/assets/css/style.css" as="style">
+  <link rel="stylesheet" href="/assets/css/tokens.css">
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZTN7H3L6DV"></script>
+  <script src="/assets/js/analytics.js" defer></script>
+  <script src="/assets/js/theme.js" defer></script>
 </head>
 <body>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+  <header><div class="header-container">
+    <a href="/" class="logo">Stack<span>Pick</span></a>
+    <nav aria-label="Main navigation">
+      <a href="/headsets/">Headsets</a><a href="/keyboards/">Keyboards</a><a href="/mice/">Mice</a>
+      <a href="/monitors/">Monitors</a><a href="/chairs/">Chairs</a>
+      <a href="/guides/">Guides</a>
+      <a href="/about/" aria-current="page">About</a>
+      <button class="theme-toggle" id="theme-toggle" aria-label="Switch to light mode">&#x1F319;</button>
+    </nav>
+  </div></header>
 
-    <a href="#main-content" class="skip-link">Skip to main content</a>
+  <div class="hero"><div class="hero-container">
+    <p class="hero-eyebrow">About</p>
+    <h1>Honest Gear. No Noise.</h1>
+    <p>UK gaming recommendations built on research, not relationships.</p>
+  </div></div>
 
-    <!-- HEADER -->
-    <header>
-        <div class="header-container">
-            <a href="/" class="logo">Stack<span>Pick</span></a>
-            <nav aria-label="Main navigation">
-                <a href="/headsets/">Headsets</a>
-                <a href="/keyboards/">Keyboards</a>
-                <a href="/mice/">Mice</a>
-                <a href="/monitors/">Monitors</a>
-                <a href="/chairs/">Chairs</a>
-                <a href="/about/" aria-current="page">About</a>
-                <button class="theme-toggle" id="theme-toggle" aria-label="Switch to dark mode">🌙</button>
-            </nav>
-        </div>
-    </header>
+  <div class="breadcrumb-bar"><div class="container">
+    <ol class="breadcrumb-list" aria-label="Breadcrumb">
+      <li><a href="/">Home</a></li>
+      <li aria-hidden="true" class="breadcrumb-sep">&#x203A;</li>
+      <li aria-current="page">About</li>
+    </ol>
+  </div></div>
 
-    <!-- DESKTOP SIDEBAR -->
+  <div class="page-wrapper">
     <aside class="desktop-sidebar" aria-label="Site navigation">
-        <div class="sidebar-section">
-            <p class="sidebar-heading">Stacks</p>
-            <a href="/#stacks" class="sidebar-link"><span class="nav-icon">⚡</span> All Stacks</a>
-        </div>
-        <div class="sidebar-section">
-            <p class="sidebar-heading">Peripherals</p>
-            <a href="/headsets/" class="sidebar-link"><span class="nav-icon">🎧</span> Headsets</a>
-            <a href="/keyboards/" class="sidebar-link"><span class="nav-icon">⌨️</span> Keyboards</a>
-            <a href="/mice/" class="sidebar-link"><span class="nav-icon">🖱️</span> Mice</a>
-            <a href="/monitors/" class="sidebar-link"><span class="nav-icon">🖥️</span> Monitors</a>
-            <a href="/chairs/" class="sidebar-link"><span class="nav-icon">🪑</span> Chairs</a>
-        </div>
-        <div class="sidebar-section">
-            <p class="sidebar-heading">Coming Soon</p>
-            <a href="/pcs/" class="sidebar-link"><span class="nav-icon">💻</span> PCs <span class="sidebar-badge">Soon</span></a>
-            <a href="/desks/" class="sidebar-link"><span class="nav-icon">🪵</span> Desks <span class="sidebar-badge">Soon</span></a>
-            <a href="/speakers/" class="sidebar-link"><span class="nav-icon">🔊</span> Speakers <span class="sidebar-badge">Soon</span></a>
-            <a href="/extras/" class="sidebar-link"><span class="nav-icon">✨</span> Extras <span class="sidebar-badge">Soon</span></a>
-        </div>
-        <div class="sidebar-divider"></div>
-        <div class="sidebar-section">
-            <a href="/guides/" class="sidebar-link"><span class="nav-icon">📋</span> Setup Guides</a>
-            <a href="/comparisons/" class="sidebar-link"><span class="nav-icon">⚖️</span> Comparisons</a>
-            <a href="/search/" class="sidebar-link"><span class="nav-icon">🔍</span> Search</a>
-        </div>
+      <div class="sidebar-section">
+        <p class="sidebar-heading">Peripherals</p>
+        <a href="/headsets/"  class="sidebar-link">&#x1F3A7; Headsets</a>
+        <a href="/keyboards/" class="sidebar-link">&#x2328;&#xFE0F; Keyboards</a>
+        <a href="/mice/"      class="sidebar-link">&#x1F5B1;&#xFE0F; Mice</a>
+        <a href="/monitors/"  class="sidebar-link">&#x1F5A5;&#xFE0F; Monitors</a>
+        <a href="/chairs/"    class="sidebar-link">&#x1FA91; Chairs</a>
+      </div>
+      <div class="sidebar-section">
+        <p class="sidebar-heading">Coming Soon</p>
+        <span class="sidebar-link sidebar-link--disabled" aria-hidden="true">&#x1F4BB; PCs <span class="sidebar-badge">Soon</span></span>
+        <span class="sidebar-link sidebar-link--disabled" aria-hidden="true">&#x1FAB5; Desks <span class="sidebar-badge">Soon</span></span>
+        <span class="sidebar-link sidebar-link--disabled" aria-hidden="true">&#x1F50A; Speakers <span class="sidebar-badge">Soon</span></span>
+        <span class="sidebar-link sidebar-link--disabled" aria-hidden="true">&#x2728; Extras <span class="sidebar-badge">Soon</span></span>
+      </div>
+      <div class="sidebar-divider"></div>
+      <div class="sidebar-section">
+        <a href="/guides/"      class="sidebar-link">&#x1F4CB; Guides</a>
+        <a href="/comparisons/" class="sidebar-link">&#x2696;&#xFE0F; Comparisons</a>
+        <a href="/search/"      class="sidebar-link">&#x1F50D; Search</a>
+        <a href="/about/"       class="sidebar-link sidebar-link--active">&#x2139;&#xFE0F; About</a>
+      </div>
+      <button class="sidebar-theme-btn" id="theme-toggle-sidebar" aria-label="Switch to light mode">
+        <span id="sidebar-theme-icon">&#x1F319;</span>
+        <span id="sidebar-theme-label">Dark mode</span>
+      </button>
     </aside>
 
-    <div class="page-wrapper">
+    <main class="container" id="main-content">
+      <section class="section">
+        <div class="buying-guide">
 
-        <section class="hero">
-            <div class="hero-container">
-                <div class="hero-eyebrow">About</div>
-                <h1>Honest Gear. No Noise.</h1>
-                <p>UK gaming recommendations built on research, not relationships.</p>
-            </div>
-        </section>
+          <h2>What StackPick Is</h2>
+          <p>StackPick is a UK gaming gear recommendation site. The job is simple: cut through the noise and tell you what to actually buy — with real reasoning, real prices on Amazon UK, and no filler.</p>
+          <p>Every category page, buying guide, and comparison exists to answer one question: <em>given your budget and use case, what is the right piece of kit?</em> Not the most-reviewed. Not the most-marketed. The right one.</p>
 
-        <div class="breadcrumb-bar">
-            <div class="container" style="padding-top:0.75rem;padding-bottom:0.75rem;">
-                <ol class="breadcrumb-list" aria-label="Breadcrumb">
-                    <li><a href="/">Home</a></li>
-                    <li aria-hidden="true" class="breadcrumb-sep">›</li>
-                    <li aria-current="page">About</li>
-                </ol>
-            </div>
+          <h2>How We Research</h2>
+          <p>Every recommendation starts with the data — sensor specs, switch actuation profiles, panel response times, weight-to-feature ratios. Then it gets filtered through what actually matters in real use: how a mouse feels after three hours of Valorant, whether a chair's lumbar support holds up over a full work day, whether a monitor's HDR implementation is genuine or marketing.</p>
+          <p>We cross-reference UK community consensus from Reddit, Discord, and long-term owner reviews. We track price history. We do not recommend products that are only good value when they happen to be on sale — the price you see is the price we based the call on, checked and updated weekly.</p>
+          <p>When a newer product makes a current recommendation obsolete, we update the page. When a price shift changes the value calculus, we note it. The date on every page is the date it was last verified — not the date it was first published.</p>
+
+          <h2>Affiliate Disclosure</h2>
+          <p>StackPick participates in the Amazon Associates programme. Every product link on this site is an Amazon UK affiliate link — if you buy through one, we receive a small commission at no extra cost to you.</p>
+          <p>This is how the site is funded. It does not influence which products are recommended. The affiliate relationship is with Amazon, not with the brands — we have no sponsored content deals, no paid placements, and no agreements with manufacturers. A product earns a recommendation by being the best option at its price. That is the only criterion.</p>
+
+          <div class="callout">
+            <p class="callout__title">Our Promise</p>
+            <p>No fake reviews. No inflated specs used to justify bad picks. No recommending the expensive option when the cheaper one is genuinely better for the use case. The goal is to give you the same advice a knowledgeable friend would — the one who has actually used the gear and has no reason to steer you wrong.</p>
+          </div>
+
+          <h2>UK Market Only</h2>
+          <p>StackPick covers the UK market specifically. Prices are in GBP, links go to Amazon UK, and availability is checked against UK stock. If you are outside the UK, the recommendations are still valid — but the prices and links will not be.</p>
+
         </div>
+      </section>
+    </main>
+  </div>
 
-        <main class="container" id="main-content">
+  <footer class="site-footer"><div class="site-footer__inner">
+    <div>
+      <a href="/" class="footer-logo">Stack<span>Pick</span></a>
+      <p class="footer-tagline">Researched gaming gear for UK gamers.<br>Real prices. No filler.</p>
+    </div>
+    <div>
+      <h4 class="footer-heading">Categories</h4>
+      <ul class="footer-links">
+        <li><a href="/headsets/">Headsets</a></li><li><a href="/keyboards/">Keyboards</a></li>
+        <li><a href="/mice/">Mice</a></li><li><a href="/monitors/">Monitors</a></li>
+        <li><a href="/chairs/">Chairs</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4 class="footer-heading">Resources</h4>
+      <ul class="footer-links">
+        <li><a href="/guides/">Setup Guides</a></li><li><a href="/comparisons/">Comparisons</a></li>
+        <li><a href="/search/">Search</a></li><li><a href="/about/">About</a></li>
+      </ul>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 StackPick. <span style="color:var(--color-accent)">Verified Research.</span></p>
+      <p style="margin-top:var(--spacing-xs)">As an Amazon Associate, StackPick earns from qualifying purchases at no extra cost to you. <a href="/about/">Transparency Report</a></p>
+    </div>
+  </div></footer>
 
-            <section class="section">
-                <div class="buying-guide">
-
-                    <h2>What Stack Pick Is</h2>
-                    <p>Stack Pick is a UK gaming gear recommendation site. The job is simple: cut through the noise and tell you what to actually buy — with real reasoning, real prices on Amazon UK, and no filler.</p>
-                    <p>Every category page, buying guide, and comparison exists to answer one question: <em>given your budget and use case, what is the right piece of kit?</em> Not the most-reviewed. Not the most-marketed. The right one.</p>
-
-                    <h2>How We Research</h2>
-                    <p>Every recommendation starts with the data — sensor specs, switch actuation profiles, panel response times, weight-to-feature ratios. Then it gets filtered through what actually matters in real use: how a mouse feels after three hours of Valorant, whether a chair's lumbar support holds up over a full work day, whether a monitor's HDR implementation is genuine or marketing.</p>
-                    <p>We cross-reference UK community consensus from Reddit, Discord, and long-term owner reviews. We track price history. We do not recommend products that are only good value when they happen to be on sale — the price you see is the price we based the call on, checked and updated weekly.</p>
-                    <p>When a newer product makes a current recommendation obsolete, we update the page. When a price shift changes the value calculus, we note it. The date on every page is the date it was last verified — not the date it was first published.</p>
-
-                    <h2>Affiliate Disclosure</h2>
-                    <p>Stack Pick participates in the Amazon Associates programme. Every product link on this site is an Amazon UK affiliate link — if you buy through one, we receive a small commission at no extra cost to you.</p>
-                    <p>This is how the site is funded. It does not influence which products are recommended. The affiliate relationship is with Amazon, not with the brands — we have no sponsored content deals, no paid placements, and no agreements with manufacturers. A product earns a recommendation by being the best option at its price. That is the only criterion.</p>
-                    <p>If a product we recommend goes out of stock, increases significantly in price, or gets superseded by something better, we update accordingly — regardless of affiliate status.</p>
-
-                    <h2>Our Promise</h2>
-                    <p>No fake reviews. No inflated specs used to justify bad picks. No recommending the expensive option when the cheaper one is genuinely better for the use case.</p>
-                    <p>If a £48 mouse outperforms a £150 mouse for the way most people actually play, the £48 mouse gets the recommendation. If a budget keyboard is only good because its RRP is temporarily discounted, we say so. The goal is to give you the same advice a knowledgeable friend would — the one who has actually used the gear and has no reason to steer you wrong.</p>
-                    <p>Stack Pick covers the UK market specifically. Prices are in GBP, links go to Amazon UK, and availability is checked against UK stock. If you are outside the UK, the recommendations are still valid — but the prices and links will not be.</p>
-
-                </div>
-            </section>
-
-        </main>
-
-    </div><!-- end .page-wrapper -->
-
-    <!-- BOTTOM NAV -->
-    <nav class="bottom-nav" aria-label="Mobile navigation">
-        <ul class="bottom-nav-items">
-            <li class="bottom-nav-item">
-                <a href="/" class="bottom-nav-link" aria-label="Home">
-                    <span class="nav-icon">🏠</span>
-                    <span class="nav-label">Home</span>
-                </a>
-            </li>
-            <li class="bottom-nav-item">
-                <a href="/headsets/" class="bottom-nav-link" aria-label="Headsets">
-                    <span class="nav-icon">🎧</span>
-                    <span class="nav-label">Headsets</span>
-                </a>
-            </li>
-            <li class="bottom-nav-item">
-                <a href="/keyboards/" class="bottom-nav-link" aria-label="Keyboards">
-                    <span class="nav-icon">⌨️</span>
-                    <span class="nav-label">Keyboards</span>
-                </a>
-            </li>
-            <li class="bottom-nav-item">
-                <a href="/mice/" class="bottom-nav-link" aria-label="Mice">
-                    <span class="nav-icon">🖱️</span>
-                    <span class="nav-label">Mice</span>
-                </a>
-            </li>
-            <li class="bottom-nav-item">
-                <button class="bottom-nav-link" id="more-btn" aria-label="More" aria-expanded="false">
-                    <span class="nav-icon">⊞</span>
-                    <span class="nav-label">More</span>
-                </button>
-            </li>
-        </ul>
-    </nav>
-
-    <script src="/assets/js/app.js" defer></script>
-
-    <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', function () {
-                navigator.serviceWorker.register('/sw.js').then(function (reg) {
-                    console.log('[SW] Registered — scope:', reg.scope);
-                }).catch(function (err) {
-                    console.warn('[SW] Registration failed:', err);
-                });
-            });
-        }
-    </script>
-
+  <div class="more-panel-overlay" id="more-overlay" aria-hidden="true"></div>
+  <div class="bottom-nav-more-panel" id="more-panel" role="dialog" aria-modal="true" aria-labelledby="more-panel-title" aria-hidden="true">
+    <p class="more-panel-title" id="more-panel-title">More</p>
+    <div class="more-panel-grid">
+      <a href="/monitors/" class="more-panel-link">&#x1F5A5;&#xFE0F; Monitors</a>
+      <a href="/chairs/" class="more-panel-link">&#x1FA91; Chairs</a>
+      <a href="/guides/" class="more-panel-link">&#x1F4CB; Guides</a>
+      <a href="/comparisons/" class="more-panel-link">&#x2696;&#xFE0F; Compare</a>
+      <a href="/search/" class="more-panel-link">&#x1F50D; Search</a>
+      <a href="/about/" class="more-panel-link">&#x2139;&#xFE0F; About</a>
+    </div>
+  </div>
+  <nav class="bottom-nav" aria-label="Mobile navigation">
+    <ul class="bottom-nav__items">
+      <li><a href="/" class="bottom-nav__link" data-nav-path="/"><span class="bottom-nav__icon">&#x1F3E0;</span><span class="bottom-nav__label">Home</span></a></li>
+      <li><a href="/headsets/" class="bottom-nav__link" data-nav-path="/headsets/"><span class="bottom-nav__icon">&#x1F3A7;</span><span class="bottom-nav__label">Audio</span></a></li>
+      <li><a href="/keyboards/" class="bottom-nav__link" data-nav-path="/keyboards/"><span class="bottom-nav__icon">&#x2328;&#xFE0F;</span><span class="bottom-nav__label">Keys</span></a></li>
+      <li><a href="/mice/" class="bottom-nav__link" data-nav-path="/mice/"><span class="bottom-nav__icon">&#x1F5B1;&#xFE0F;</span><span class="bottom-nav__label">Mice</span></a></li>
+      <li><button class="bottom-nav__link" id="more-btn" aria-label="More" aria-expanded="false" aria-controls="more-panel"><span class="bottom-nav__icon">&#x229E;</span><span class="bottom-nav__label">More</span></button></li>
+    </ul>
+  </nav>
+  <script src="/assets/js/app.js" defer></script>
+  <script>if('serviceWorker'in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').then(r=>console.log('[SW]',r.scope)).catch(e=>console.warn('[SW]',e));});}</script>
 </body>
 </html>

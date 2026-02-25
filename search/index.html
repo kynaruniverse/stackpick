@@ -1,642 +1,119 @@
 <!DOCTYPE html>
 <html lang="en-GB" data-theme="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#0A0A0F" media="(prefers-color-scheme: dark)">
-    <meta name="theme-color" content="#F2F0EB" media="(prefers-color-scheme: light)">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="StackPick">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="author" content="Stack Pick">
-    <meta name="description" content="Search Stack Pick — find the best gaming headsets, keyboards, mice, monitors, and chairs for UK gamers. Instant search across all products and guides.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://stackpick.co.uk/search/">
-    <meta property="og:title" content="Search | Stack Pick">
-    <meta property="og:description" content="Instant search across all Stack Pick gaming gear reviews and setup guides.">
-    <meta property="og:image" content="https://stackpick.co.uk/assets/images/og-image.jpg">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Search | Stack Pick">
-    <meta name="twitter:description" content="Instant search across all Stack Pick gaming gear reviews and setup guides.">
-    <meta name="twitter:image" content="https://stackpick.co.uk/assets/images/og-image.jpg">
-    <link rel="canonical" href="https://stackpick.co.uk/search/">
-    <title>Search | Stack Pick</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-    <link rel="preload" href="/assets/css/style.css" as="style">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
-    <link rel="manifest" href="/manifest.json">
-    <link rel="apple-touch-icon" href="/assets/icons/icon-192.png">
-    <link rel="stylesheet" href="/assets/css/style.css">
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZTN7H3L6DV"></script>
-    <script src="/assets/js/analytics.js" defer></script>
-
-    <!-- Apply saved theme before paint to prevent flash -->
-    <script>
-    (function () {
-        try {
-            var saved = localStorage.getItem('sp-theme');
-            if (saved) {
-                document.documentElement.setAttribute('data-theme', saved);
-            } else if (window.matchMedia('(prefers-color-scheme: light)').matches) {
-                document.documentElement.setAttribute('data-theme', 'light');
-            }
-        } catch (e) { /* localStorage blocked — default dark theme stays */ }
-    }());
-    </script>
-
-    <style>
-        .search-hero {
-            padding: 2.5rem 0 1.5rem;
-        }
-        .search-input-wrap {
-            position: relative;
-            max-width: 640px;
-            margin: 1.5rem auto 0;
-        }
-        .search-input {
-            width: 100%;
-            padding: 1rem 1rem 1rem 3rem;
-            font-size: 1.1rem;
-            font-family: var(--font-body);
-            border: 2px solid var(--border-default);
-            border-radius: var(--radius-lg);
-            background: var(--surface-card);
-            color: var(--text-primary);
-            transition: border-color 0.15s, box-shadow 0.15s;
-            outline: none;
-        }
-        .search-input:focus {
-            border-color: var(--volt);
-            box-shadow: 0 0 0 3px rgba(200, 255, 0, 0.15);
-        }
-        .search-icon {
-            position: absolute;
-            left: 1rem;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 1.1rem;
-            pointer-events: none;
-        }
-        .search-clear {
-            position: absolute;
-            right: 1rem;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            font-size: 1.2rem;
-            cursor: pointer;
-            color: var(--text-secondary);
-            display: none;
-            padding: 0.25rem;
-            font-family: inherit;
-        }
-        .search-filters {
-            display: flex;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-            margin: 1rem auto 0;
-            max-width: 640px;
-        }
-        .filter-btn {
-            padding: 0.35rem 0.85rem;
-            border-radius: var(--radius-pill, 999px);
-            border: 1px solid var(--border-default);
-            background: var(--surface-card);
-            color: var(--text-secondary);
-            font-size: 0.8rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.15s;
-            font-family: var(--font-body);
-        }
-        .filter-btn:hover,
-        .filter-btn.active {
-            border-color: var(--volt);
-            color: var(--volt);
-            background: rgba(200, 255, 0, 0.08);
-        }
-        .search-meta {
-            color: var(--text-secondary);
-            font-size: 0.875rem;
-            margin: 1.25rem 0 0.5rem;
-        }
-        .search-results {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 0.75rem;
-            margin-top: 0.75rem;
-        }
-        .result-card {
-            background: var(--surface-card);
-            border: 1px solid var(--border-default);
-            border-radius: var(--radius-lg);
-            padding: 1rem 1.25rem;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            transition: border-color 0.15s, box-shadow 0.15s;
-            cursor: pointer;
-            text-decoration: none;
-            color: inherit;
-        }
-        .result-card:hover {
-            border-color: var(--volt);
-            box-shadow: var(--shadow-card);
-        }
-        .result-icon {
-            font-size: 2rem;
-            flex-shrink: 0;
-            width: 48px;
-            text-align: center;
-        }
-        .result-body {
-            flex: 1;
-            min-width: 0;
-        }
-        .result-type {
-            font-size: 0.7rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-            color: var(--text-secondary);
-            margin-bottom: 0.2rem;
-        }
-        .result-title {
-            font-size: 0.975rem;
-            font-weight: 600;
-            color: var(--text-primary);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .result-desc {
-            font-size: 0.82rem;
-            color: var(--text-secondary);
-            margin-top: 0.2rem;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .result-price {
-            font-size: 0.9rem;
-            font-weight: 700;
-            color: var(--volt);
-            flex-shrink: 0;
-        }
-        .result-price-wrap {
-            text-align: right;
-            flex-shrink: 0;
-        }
-        .result-arrow {
-            color: var(--text-secondary);
-            flex-shrink: 0;
-            font-size: 1.1rem;
-        }
-        mark {
-            background: rgba(200, 255, 0, 0.2);
-            color: var(--text-primary);
-            border-radius: 2px;
-            padding: 0 1px;
-        }
-        .search-empty {
-            text-align: center;
-            padding: 3rem 1rem;
-            color: var(--text-secondary);
-        }
-        .search-empty-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-        }
-        .search-suggestions {
-            display: flex;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin-top: 1rem;
-        }
-        .suggestion-pill {
-            padding: 0.35rem 0.85rem;
-            border-radius: var(--radius-pill, 999px);
-            border: 1px solid var(--border-default);
-            background: var(--surface-card);
-            color: var(--volt);
-            font-size: 0.82rem;
-            cursor: pointer;
-            font-family: var(--font-body);
-            transition: background 0.15s;
-        }
-        .suggestion-pill:hover {
-            background: rgba(200, 255, 0, 0.08);
-        }
-        .search-index-error {
-            text-align: center;
-            padding: 3rem 1rem;
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
-
-        @media (min-width: 640px) {
-            .search-results { grid-template-columns: 1fr 1fr; }
-        }
-    </style>
+  <title>Search | StackPick UK</title>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <script>(function(){try{var t=localStorage.getItem('sp-theme');if(t)document.documentElement.setAttribute('data-theme',t);else if(window.matchMedia('(prefers-color-scheme: light)').matches)document.documentElement.setAttribute('data-theme','light');}catch(e){}})();</script>
+  <meta name="theme-color" content="#0D0D0D" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#F5F5F5" media="(prefers-color-scheme: light)">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="description" content="Search StackPick — find the right gear fast.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x26A1;</text></svg>">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="preload" href="/assets/css/tokens.css" as="style">
+  <link rel="preload" href="/assets/css/style.css" as="style">
+  <link rel="stylesheet" href="/assets/css/tokens.css">
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZTN7H3L6DV"></script>
+  <script src="/assets/js/analytics.js" defer></script>
+  <script src="/assets/js/theme.js" defer></script>
 </head>
 <body>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+  <header><div class="header-container">
+    <a href="/" class="logo">Stack<span>Pick</span></a>
+    <nav aria-label="Main navigation">
+      <a href="/headsets/">Headsets</a><a href="/keyboards/">Keyboards</a><a href="/mice/">Mice</a>
+      <a href="/monitors/">Monitors</a><a href="/chairs/">Chairs</a>
+      <a href="/guides/">Guides</a><a href="/about/">About</a>
+      <button class="theme-toggle" id="theme-toggle" aria-label="Switch to light mode">&#x1F319;</button>
+    </nav>
+  </div></header>
 
-    <a href="#main-content" class="skip-link">Skip to main content</a>
+  <div class="hero"><div class="hero-container">
+    <p class="hero-eyebrow">Search</p>
+    <h1>Find the Right Gear</h1>
+    <p>Search across all verified picks — by name, brand, category, or spec.</p>
+  </div></div>
 
-    <header>
-        <div class="header-container">
-            <a href="/" class="logo">Stack<span>Pick</span></a>
-            <nav aria-label="Main navigation">
-                <a href="/headsets/">Headsets</a>
-                <a href="/keyboards/">Keyboards</a>
-                <a href="/mice/">Mice</a>
-                <a href="/monitors/">Monitors</a>
-                <a href="/chairs/">Chairs</a>
-                <a href="/about/">About</a>
-                <a href="/search/" aria-label="Search" aria-current="page">🔍</a>
-                <button class="theme-toggle" id="theme-toggle" aria-label="Switch to dark mode">🌙</button>
-            </nav>
-        </div>
-    </header>
+  <div class="breadcrumb-bar"><div class="container">
+    <ol class="breadcrumb-list" aria-label="Breadcrumb">
+      <li><a href="/">Home</a></li>
+      <li aria-hidden="true" class="breadcrumb-sep">&#x203A;</li>
+      <li aria-current="page">Search</li>
+    </ol>
+  </div></div>
 
+  <div class="page-wrapper">
     <aside class="desktop-sidebar" aria-label="Site navigation">
-        <div class="sidebar-section">
-            <p class="sidebar-heading">Stacks</p>
-            <a href="/#stacks" class="sidebar-link"><span class="nav-icon">⚡</span> All Stacks</a>
-        </div>
-        <div class="sidebar-section">
-            <p class="sidebar-heading">Peripherals</p>
-            <a href="/headsets/" class="sidebar-link"><span class="nav-icon">🎧</span> Headsets</a>
-            <a href="/keyboards/" class="sidebar-link"><span class="nav-icon">⌨️</span> Keyboards</a>
-            <a href="/mice/" class="sidebar-link"><span class="nav-icon">🖱️</span> Mice</a>
-            <a href="/monitors/" class="sidebar-link"><span class="nav-icon">🖥️</span> Monitors</a>
-            <a href="/chairs/" class="sidebar-link"><span class="nav-icon">🪑</span> Chairs</a>
-        </div>
-        <div class="sidebar-section">
-            <p class="sidebar-heading">Coming Soon</p>
-            <a href="/pcs/" class="sidebar-link"><span class="nav-icon">💻</span> PCs <span class="sidebar-badge">Soon</span></a>
-            <a href="/desks/" class="sidebar-link"><span class="nav-icon">🪵</span> Desks <span class="sidebar-badge">Soon</span></a>
-            <a href="/speakers/" class="sidebar-link"><span class="nav-icon">🔊</span> Speakers <span class="sidebar-badge">Soon</span></a>
-            <a href="/extras/" class="sidebar-link"><span class="nav-icon">✨</span> Extras <span class="sidebar-badge">Soon</span></a>
-        </div>
-        <div class="sidebar-divider"></div>
-        <div class="sidebar-section">
-            <a href="/search/" class="sidebar-link"><span class="nav-icon">🔍</span> Search</a>
-            <a href="/guides/" class="sidebar-link"><span class="nav-icon">📋</span> Setup Guides</a>
-            <a href="/comparisons/" class="sidebar-link"><span class="nav-icon">⚖️</span> Comparisons</a>
-            <a href="/about/" class="sidebar-link"><span class="nav-icon">ℹ️</span> About</a>
-        </div>
-        <button class="sidebar-theme-btn" id="theme-toggle-sidebar" aria-label="Toggle theme">
-            <span id="sidebar-theme-icon">🌙</span>
-            <span id="sidebar-theme-label">Dark mode</span>
-        </button>
+      <div class="sidebar-section">
+        <p class="sidebar-heading">Peripherals</p>
+        <a href="/headsets/"  class="sidebar-link">&#x1F3A7; Headsets</a>
+        <a href="/keyboards/" class="sidebar-link">&#x2328;&#xFE0F; Keyboards</a>
+        <a href="/mice/"      class="sidebar-link">&#x1F5B1;&#xFE0F; Mice</a>
+        <a href="/monitors/"  class="sidebar-link">&#x1F5A5;&#xFE0F; Monitors</a>
+        <a href="/chairs/"    class="sidebar-link">&#x1FA91; Chairs</a>
+      </div>
+      <div class="sidebar-divider"></div>
+      <div class="sidebar-section">
+        <a href="/guides/"      class="sidebar-link">&#x1F4CB; Guides</a>
+        <a href="/comparisons/" class="sidebar-link">&#x2696;&#xFE0F; Comparisons</a>
+        <a href="/search/"      class="sidebar-link sidebar-link--active">&#x1F50D; Search</a>
+      </div>
     </aside>
 
-    <div class="page-wrapper">
+    <main class="container" id="main-content">
+      <section class="section">
 
-        <section class="hero">
-            <div class="hero-container search-hero">
-                <h1>Search Stack Pick</h1>
-                <div class="search-input-wrap">
-                    <span class="search-icon" aria-hidden="true">🔍</span>
-                    <input
-                        type="search"
-                        id="search-input"
-                        class="search-input"
-                        placeholder="Headset, keyboard, setup guide…"
-                        aria-label="Search products and guides"
-                        autocomplete="off"
-                        autofocus
-                    >
-                    <button class="search-clear" id="search-clear" aria-label="Clear search">✕</button>
-                </div>
-                <div class="search-filters" role="group" aria-label="Filter by category">
-                    <button class="filter-btn active" data-filter="all">All</button>
-                    <button class="filter-btn" data-filter="headset">🎧 Headsets</button>
-                    <button class="filter-btn" data-filter="keyboard">⌨️ Keyboards</button>
-                    <button class="filter-btn" data-filter="mouse">🖱️ Mice</button>
-                    <button class="filter-btn" data-filter="monitor">🖥️ Monitors</button>
-                    <button class="filter-btn" data-filter="chair">🪑 Chairs</button>
-                    <button class="filter-btn" data-filter="guide">📋 Guides</button>
-                    <button class="filter-btn" data-filter="comparison">⚖️ Comparisons</button>
-                </div>
-            </div>
-        </section>
-
-        <main class="container" id="main-content">
-            <p class="search-meta" id="search-meta" aria-live="polite" aria-atomic="true"></p>
-            <div class="search-results" id="search-results" role="list"></div>
-        </main>
-
-        <footer>
-            <div class="footer-container">
-                <div class="footer-grid">
-                    <div class="footer-col">
-                        <a href="/" class="logo footer-logo">Stack<span>Pick</span></a>
-                        <p class="footer-tagline">Researched gaming gear for UK gamers. Real prices. No BS.</p>
-                    </div>
-                    <div class="footer-col">
-                        <h4 class="footer-heading">Categories</h4>
-                        <ul class="footer-links">
-                            <li><a href="/headsets/">Headsets</a></li>
-                            <li><a href="/keyboards/">Keyboards</a></li>
-                            <li><a href="/mice/">Mice</a></li>
-                            <li><a href="/monitors/">Monitors</a></li>
-                            <li><a href="/chairs/">Chairs</a></li>
-                        </ul>
-                    </div>
-                    <div class="footer-col">
-                        <h4 class="footer-heading">Resources</h4>
-                        <ul class="footer-links">
-                            <li><a href="/guides/">Setup Guides</a></li>
-                            <li><a href="/comparisons/">Comparisons</a></li>
-                            <li><a href="/about/">About</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="footer-bottom">
-                    <p>&copy; 2026 Stack Pick. Built for UK gamers.</p>
-                    <p style="font-size:0.8rem;margin-top:0.5rem;">As an Amazon Associate, we earn from qualifying purchases. <a href="/about/">Learn more</a></p>
-                </div>
-            </div>
-        </footer>
-    </div>
-
-    <div class="more-panel-overlay" id="more-overlay"></div>
-    <div class="bottom-nav-more-panel" id="more-panel">
-        <p class="more-panel-title">All categories</p>
-        <div class="more-panel-grid">
-            <a href="/monitors/" class="more-panel-link"><span class="nav-icon">🖥️</span>Monitors</a>
-            <a href="/chairs/" class="more-panel-link"><span class="nav-icon">🪑</span>Chairs</a>
-            <a href="/guides/" class="more-panel-link"><span class="nav-icon">📋</span>Guides</a>
-            <a href="/comparisons/" class="more-panel-link"><span class="nav-icon">⚖️</span>Compare</a>
-            <a href="/about/" class="more-panel-link"><span class="nav-icon">ℹ️</span>About</a>
-            <a href="/search/" class="more-panel-link"><span class="nav-icon">🔍</span>Search</a>
-            <a href="/pcs/" class="more-panel-link"><span class="nav-icon">💻</span>PCs</a>
-            <a href="/desks/" class="more-panel-link"><span class="nav-icon">🪵</span>Desks</a>
-            <a href="/extras/" class="more-panel-link"><span class="nav-icon">✨</span>Extras</a>
+        <div class="search-bar" role="search">
+          <label for="search-input" class="sr-only">Search picks</label>
+          <input type="search" id="search-input" class="search-input"
+                 placeholder="e.g. Razer, wireless mouse, under &#xA3;100..."
+                 autocomplete="off" autocorrect="off" spellcheck="false">
+          <button type="button" id="search-btn" class="search-btn" aria-label="Search">Search</button>
         </div>
+
+        <p class="search-results-count" id="results-count" aria-live="polite" aria-atomic="true"></p>
+
+        <div id="search-results" aria-label="Search results" aria-live="polite"></div>
+
+      </section>
+    </main>
+  </div>
+
+  <footer class="site-footer"><div class="site-footer__inner">
+    <div><a href="/" class="footer-logo">Stack<span>Pick</span></a><p class="footer-tagline">Researched gaming gear for UK gamers.</p></div>
+    <div class="footer-bottom"><p>&copy; 2026 StackPick.</p></div>
+  </div></footer>
+
+  <div class="more-panel-overlay" id="more-overlay" aria-hidden="true"></div>
+  <div class="bottom-nav-more-panel" id="more-panel" role="dialog" aria-modal="true" aria-labelledby="more-panel-title" aria-hidden="true">
+    <p class="more-panel-title" id="more-panel-title">More</p>
+    <div class="more-panel-grid">
+      <a href="/monitors/" class="more-panel-link">&#x1F5A5;&#xFE0F; Monitors</a>
+      <a href="/chairs/" class="more-panel-link">&#x1FA91; Chairs</a>
+      <a href="/guides/" class="more-panel-link">&#x1F4CB; Guides</a>
+      <a href="/comparisons/" class="more-panel-link">&#x2696;&#xFE0F; Compare</a>
+      <a href="/search/" class="more-panel-link">&#x1F50D; Search</a>
+      <a href="/about/" class="more-panel-link">&#x2139;&#xFE0F; About</a>
     </div>
-    <nav class="bottom-nav" aria-label="Mobile navigation">
-        <ul class="bottom-nav-items">
-            <li class="bottom-nav-item"><a href="/" class="bottom-nav-link" aria-label="Home"><span class="nav-icon">🏠</span><span class="nav-label">Home</span></a></li>
-            <li class="bottom-nav-item"><a href="/headsets/" class="bottom-nav-link" aria-label="Headsets"><span class="nav-icon">🎧</span><span class="nav-label">Headsets</span></a></li>
-            <li class="bottom-nav-item"><a href="/keyboards/" class="bottom-nav-link" aria-label="Keyboards"><span class="nav-icon">⌨️</span><span class="nav-label">Keyboards</span></a></li>
-            <li class="bottom-nav-item"><a href="/mice/" class="bottom-nav-link" aria-label="Mice"><span class="nav-icon">🖱️</span><span class="nav-label">Mice</span></a></li>
-            <li class="bottom-nav-item"><button class="bottom-nav-link" id="more-btn" aria-label="More" aria-expanded="false"><span class="nav-icon">⊞</span><span class="nav-label">More</span></button></li>
-        </ul>
-    </nav>
-
-    <!-- Search index generated by _generator/export-js-data.js — do not edit -->
-    <script src="/assets/js/data/search-index.js" defer></script>
-    <script src="/assets/js/app.js" defer></script>
-
-    <script>
-    // ============================================================
-    //  STACK PICK SEARCH
-    //  Reads window.SP_SEARCH_INDEX — generated by export-js-data.js
-    //  from _data/products.json, _data/comparisons.json, _data/guides.json
-    //  Never edit the index here — edit the _data/ source files and rebuild.
-    // ============================================================
-    (function () {
-        'use strict';
-
-        // ── Wait for deferred scripts then initialise ─────────────
-        // search-index.js is defer'd, so we wait for DOMContentLoaded
-        // before accessing window.SP_SEARCH_INDEX.
-        document.addEventListener('DOMContentLoaded', function () {
-
-            var INDEX = window.SP_SEARCH_INDEX;
-
-            if (!Array.isArray(INDEX) || INDEX.length === 0) {
-                document.getElementById('search-results').innerHTML =
-                    '<div class="search-index-error">' +
-                    '  <p>⚠ Search index not loaded. Run <code>npm run build</code> and try again.</p>' +
-                    '</div>';
-                console.error('[Search] window.SP_SEARCH_INDEX is missing or empty. Did you run npm run build?');
-                return;
-            }
-
-            console.log('[Search] Index loaded —', INDEX.length, 'entries');
-
-            // ── FUZZY SCORE ──────────────────────────────────────────
-            function score(item, query) {
-                var q     = query.toLowerCase();
-                var title = item.title.toLowerCase();
-                var tags  = (item.tags  || '').toLowerCase();
-                var desc  = (item.desc  || '').toLowerCase();
-
-                if (title === q)            return 100;
-                if (title.startsWith(q))    return 90;
-                if (title.includes(q))      return 80;
-
-                var words = q.split(/\s+/).filter(Boolean);
-
-                if (words.every(function (w) { return title.includes(w); })) return 70;
-                if (words.every(function (w) { return tags.includes(w);  })) return 60;
-                if (words.some(function  (w) { return title.includes(w); })) return 50;
-                if (words.some(function  (w) { return tags.includes(w);  })) return 40;
-                if (words.some(function  (w) { return desc.includes(w);  })) return 20;
-
-                return 0;
-            }
-
-            function highlight(text, query) {
-                if (!query || !text) return text || '';
-                var words   = query.split(/\s+/).filter(Boolean);
-                var escaped = words.map(function (w) { return w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); });
-                var pattern = new RegExp('(' + escaped.join('|') + ')', 'gi');
-                return text.replace(pattern, '<mark>$1</mark>');
-            }
-
-            function escHtml(s) {
-                return String(s)
-                    .replace(/&/g, '&amp;')
-                    .replace(/</g, '&lt;')
-                    .replace(/>/g, '&gt;')
-                    .replace(/"/g, '&quot;');
-            }
-
-            // ── RENDER ───────────────────────────────────────────────
-            var TYPE_LABELS = {
-                headset:    'Headset',
-                keyboard:   'Keyboard',
-                mouse:      'Mouse',
-                monitor:    'Monitor',
-                chair:      'Chair',
-                desk:       'Desk',
-                speaker:    'Speaker',
-                pc:         'PC',
-                extra:      'Extra',
-                guide:      'Setup Guide',
-                comparison: 'Comparison',
-            };
-
-            var DEFAULT_SUGGESTIONS = [
-                'Best headset under £100', 'Wireless mouse', 'OLED monitor',
-                '£500 setup', 'Budget keyboard', 'Ergonomic chair',
-            ];
-
-            var NORESULT_SUGGESTIONS = [
-                'Headset', 'Keyboard', 'Mouse', 'OLED monitor',
-                'Budget setup', 'Ergonomic chair',
-            ];
-
-            function makeSuggestions(list) {
-                return '<div class="search-suggestions" role="list">' +
-                    list.map(function (s) {
-                        return '<button class="suggestion-pill" role="listitem">' + escHtml(s) + '</button>';
-                    }).join('') +
-                    '</div>';
-            }
-
-            function bindSuggestions(container) {
-                container.querySelectorAll('.suggestion-pill').forEach(function (btn) {
-                    btn.addEventListener('click', function () {
-                        document.getElementById('search-input').value = btn.textContent;
-                        runSearch(btn.textContent);
-                    });
-                });
-            }
-
-            function renderResults(results, query) {
-                var container = document.getElementById('search-results');
-                var meta      = document.getElementById('search-meta');
-
-                if (results.length === 0) {
-                    meta.textContent = '';
-                    container.innerHTML =
-                        '<div class="search-empty" role="status">' +
-                        '  <div class="search-empty-icon">🔍</div>' +
-                        '  <p>No results for <strong>"' + escHtml(query) + '"</strong></p>' +
-                        '  <p style="font-size:0.875rem;">Try a product name, brand, or category</p>' +
-                        makeSuggestions(NORESULT_SUGGESTIONS) +
-                        '</div>';
-                    bindSuggestions(container);
-                    return;
-                }
-
-                meta.textContent = results.length + ' result' + (results.length === 1 ? '' : 's');
-
-                container.innerHTML = results.map(function (item) {
-                    var typeLabel = TYPE_LABELS[item.type] || item.type;
-                    return '<a href="' + escHtml(item.url) + '" class="result-card" role="listitem">' +
-                        '<div class="result-icon" aria-hidden="true">' + item.icon + '</div>' +
-                        '<div class="result-body">' +
-                        '  <div class="result-type">' + escHtml(typeLabel) + '</div>' +
-                        '  <div class="result-title">' + highlight(escHtml(item.title), query) + '</div>' +
-                        '  <div class="result-desc">'  + highlight(escHtml(item.desc),  query) + '</div>' +
-                        '</div>' +
-                        (item.price
-                            ? '<div class="result-price-wrap"><span class="result-price">' + escHtml(item.price) + '</span></div>'
-                            : '') +
-                        '<div class="result-arrow" aria-hidden="true">›</div>' +
-                        '</a>';
-                }).join('');
-            }
-
-            function renderDefault() {
-                document.getElementById('search-meta').textContent = '';
-                var container = document.getElementById('search-results');
-                container.innerHTML =
-                    '<div class="search-empty" role="status">' +
-                    '  <div class="search-empty-icon">🎮</div>' +
-                    '  <p style="color:var(--text-primary);font-weight:600;">What are you looking for?</p>' +
-                    '  <p style="font-size:0.875rem;">Search by product, brand, budget, or feature</p>' +
-                    makeSuggestions(DEFAULT_SUGGESTIONS) +
-                    '</div>';
-                bindSuggestions(container);
-            }
-
-            // ── SEARCH RUNNER ─────────────────────────────────────────
-            var activeFilter = 'all';
-
-            function runSearch(query) {
-                query = (query || '').trim();
-                var clearBtn = document.getElementById('search-clear');
-                if (clearBtn) clearBtn.style.display = query ? 'block' : 'none';
-
-                if (!query) { renderDefault(); return; }
-
-                var pool = activeFilter === 'all'
-                    ? INDEX
-                    : INDEX.filter(function (i) { return i.type === activeFilter; });
-
-                var scored = pool
-                    .map(function (item) { return { item: item, s: score(item, query) }; })
-                    .filter(function (x) { return x.s > 0; })
-                    .sort(function (a, b) { return b.s - a.s; })
-                    .map(function (x) { return x.item; });
-
-                if (typeof gtag === 'function') {
-                    gtag('event', 'search', { search_term: query });
-                }
-
-                renderResults(scored, query);
-            }
-
-            // ── EVENT BINDINGS ────────────────────────────────────────
-            var input      = document.getElementById('search-input');
-            var clearBtn   = document.getElementById('search-clear');
-            var filterBtns = document.querySelectorAll('.filter-btn');
-
-            var debounceTimer;
-            input.addEventListener('input', function () {
-                clearTimeout(debounceTimer);
-                debounceTimer = setTimeout(function () { runSearch(input.value); }, 120);
-            });
-
-            input.addEventListener('keydown', function (e) {
-                if (e.key === 'Escape') { input.value = ''; runSearch(''); input.blur(); }
-            });
-
-            clearBtn.addEventListener('click', function () {
-                input.value = '';
-                runSearch('');
-                input.focus();
-            });
-
-            filterBtns.forEach(function (btn) {
-                btn.addEventListener('click', function () {
-                    filterBtns.forEach(function (b) { b.classList.remove('active'); });
-                    btn.classList.add('active');
-                    activeFilter = btn.dataset.filter;
-                    runSearch(input.value);
-                });
-            });
-
-            // ── URL QUERY PARAM SUPPORT ───────────────────────────────
-            var params = new URLSearchParams(window.location.search);
-            var qParam = params.get('q');
-            if (qParam) {
-                input.value = qParam;
-                runSearch(qParam);
-            } else {
-                renderDefault();
-            }
-
-        }); // end DOMContentLoaded
-
-    }());
-    </script>
-
-    <!-- Service worker registration -->
-    <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', function () {
-                navigator.serviceWorker.register('/sw.js').then(function (reg) {
-                    console.log('[SW] Registered — scope:', reg.scope);
-                }).catch(function (err) {
-                    console.warn('[SW] Registration failed:', err);
-                });
-            });
-        }
-    </script>
-
+  </div>
+  <nav class="bottom-nav" aria-label="Mobile navigation">
+    <ul class="bottom-nav__items">
+      <li><a href="/" class="bottom-nav__link" data-nav-path="/"><span class="bottom-nav__icon">&#x1F3E0;</span><span class="bottom-nav__label">Home</span></a></li>
+      <li><a href="/headsets/" class="bottom-nav__link" data-nav-path="/headsets/"><span class="bottom-nav__icon">&#x1F3A7;</span><span class="bottom-nav__label">Audio</span></a></li>
+      <li><a href="/keyboards/" class="bottom-nav__link" data-nav-path="/keyboards/"><span class="bottom-nav__icon">&#x2328;&#xFE0F;</span><span class="bottom-nav__label">Keys</span></a></li>
+      <li><a href="/mice/" class="bottom-nav__link" data-nav-path="/mice/"><span class="bottom-nav__icon">&#x1F5B1;&#xFE0F;</span><span class="bottom-nav__label">Mice</span></a></li>
+      <li><button class="bottom-nav__link" id="more-btn" aria-label="More" aria-expanded="false" aria-controls="more-panel"><span class="bottom-nav__icon">&#x229E;</span><span class="bottom-nav__label">More</span></button></li>
+    </ul>
+  </nav>
+  <!-- search uses real product data from window.SP_PRODUCTS — loaded by data.js -->
+  <script src="/assets/js/data.js" defer></script>
+  <script src="/assets/js/app.js" defer></script>
+  <script>if('serviceWorker'in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').then(r=>console.log('[SW]',r.scope)).catch(e=>console.warn('[SW]',e));});}</script>
 </body>
 </html>
