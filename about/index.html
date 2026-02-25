@@ -28,27 +28,25 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preload" href="/assets/css/style.css" as="style">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/style.css">
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZTN7H3L6DV"></script>
-        <script src="/assets/js/analytics.js" defer></script>
+    <script src="/assets/js/analytics.js" defer></script>
 
-        <!-- Apply saved theme before paint to prevent flash -->
-        <script>
-        (function () {
-            try {
-                var saved = localStorage.getItem('sp-theme');
-                if (saved) {
-                    document.documentElement.setAttribute('data-theme', saved);
-                } else if (window.matchMedia('(prefers-color-scheme: light)').matches) {
-                    document.documentElement.setAttribute('data-theme', 'light');
-                }
-            } catch (e) { /* localStorage blocked — default dark theme stays */ }
-        }());
-        </script>
-    </head>
+    <!-- Apply saved theme before paint to prevent flash -->
+    <script>
+    (function () {
+        try {
+            var saved = localStorage.getItem('sp-theme');
+            if (saved) {
+                document.documentElement.setAttribute('data-theme', saved);
+            } else if (window.matchMedia('(prefers-color-scheme: light)').matches) {
+                document.documentElement.setAttribute('data-theme', 'light');
+            }
+        } catch (e) { /* localStorage blocked — default dark theme stays */ }
+    }());
+    </script>
+</head>
 <body>
 
     <a href="#main-content" class="skip-link">Skip to main content</a>
@@ -97,6 +95,57 @@
             <a href="/search/" class="sidebar-link"><span class="nav-icon">🔍</span> Search</a>
         </div>
     </aside>
+
+    <div class="page-wrapper">
+
+        <section class="hero">
+            <div class="hero-container">
+                <div class="hero-eyebrow">About</div>
+                <h1>Honest Gear. No Noise.</h1>
+                <p>UK gaming recommendations built on research, not relationships.</p>
+            </div>
+        </section>
+
+        <div class="breadcrumb-bar">
+            <div class="container" style="padding-top:0.75rem;padding-bottom:0.75rem;">
+                <ol class="breadcrumb-list" aria-label="Breadcrumb">
+                    <li><a href="/">Home</a></li>
+                    <li aria-hidden="true" class="breadcrumb-sep">›</li>
+                    <li aria-current="page">About</li>
+                </ol>
+            </div>
+        </div>
+
+        <main class="container" id="main-content">
+
+            <section class="section">
+                <div class="buying-guide">
+
+                    <h2>What Stack Pick Is</h2>
+                    <p>Stack Pick is a UK gaming gear recommendation site. The job is simple: cut through the noise and tell you what to actually buy — with real reasoning, real prices on Amazon UK, and no filler.</p>
+                    <p>Every category page, buying guide, and comparison exists to answer one question: <em>given your budget and use case, what is the right piece of kit?</em> Not the most-reviewed. Not the most-marketed. The right one.</p>
+
+                    <h2>How We Research</h2>
+                    <p>Every recommendation starts with the data — sensor specs, switch actuation profiles, panel response times, weight-to-feature ratios. Then it gets filtered through what actually matters in real use: how a mouse feels after three hours of Valorant, whether a chair's lumbar support holds up over a full work day, whether a monitor's HDR implementation is genuine or marketing.</p>
+                    <p>We cross-reference UK community consensus from Reddit, Discord, and long-term owner reviews. We track price history. We do not recommend products that are only good value when they happen to be on sale — the price you see is the price we based the call on, checked and updated weekly.</p>
+                    <p>When a newer product makes a current recommendation obsolete, we update the page. When a price shift changes the value calculus, we note it. The date on every page is the date it was last verified — not the date it was first published.</p>
+
+                    <h2>Affiliate Disclosure</h2>
+                    <p>Stack Pick participates in the Amazon Associates programme. Every product link on this site is an Amazon UK affiliate link — if you buy through one, we receive a small commission at no extra cost to you.</p>
+                    <p>This is how the site is funded. It does not influence which products are recommended. The affiliate relationship is with Amazon, not with the brands — we have no sponsored content deals, no paid placements, and no agreements with manufacturers. A product earns a recommendation by being the best option at its price. That is the only criterion.</p>
+                    <p>If a product we recommend goes out of stock, increases significantly in price, or gets superseded by something better, we update accordingly — regardless of affiliate status.</p>
+
+                    <h2>Our Promise</h2>
+                    <p>No fake reviews. No inflated specs used to justify bad picks. No recommending the expensive option when the cheaper one is genuinely better for the use case.</p>
+                    <p>If a £48 mouse outperforms a £150 mouse for the way most people actually play, the £48 mouse gets the recommendation. If a budget keyboard is only good because its RRP is temporarily discounted, we say so. The goal is to give you the same advice a knowledgeable friend would — the one who has actually used the gear and has no reason to steer you wrong.</p>
+                    <p>Stack Pick covers the UK market specifically. Prices are in GBP, links go to Amazon UK, and availability is checked against UK stock. If you are outside the UK, the recommendations are still valid — but the prices and links will not be.</p>
+
+                </div>
+            </section>
+
+        </main>
+
+    </div><!-- end .page-wrapper -->
 
     <!-- BOTTOM NAV -->
     <nav class="bottom-nav" aria-label="Mobile navigation">

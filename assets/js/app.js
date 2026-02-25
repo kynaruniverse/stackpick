@@ -348,6 +348,9 @@
         if (!morePanel || !moreOverlay || !moreBtn) return;
         morePanel.classList.add('more-panel--open');
         morePanel.setAttribute('aria-hidden', 'false');
+        // FIX: toggle .open class on overlay so style.css class-based selector fires,
+        // in addition to the aria-hidden attribute (belt-and-braces).
+        moreOverlay.classList.add('open');
         moreOverlay.setAttribute('aria-hidden', 'false');
         moreBtn.setAttribute('aria-expanded', 'true');
         var first = morePanel.querySelector('a');
@@ -358,6 +361,8 @@
         if (!morePanel || !moreOverlay || !moreBtn) return;
         morePanel.classList.remove('more-panel--open');
         morePanel.setAttribute('aria-hidden', 'true');
+        // FIX: remove .open class in sync with aria-hidden
+        moreOverlay.classList.remove('open');
         moreOverlay.setAttribute('aria-hidden', 'true');
         moreBtn.setAttribute('aria-expanded', 'false');
         moreBtn.focus();

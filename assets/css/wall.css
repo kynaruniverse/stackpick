@@ -226,7 +226,14 @@ img {
   background-clip: text;
 }
 
-/* Reduced motion: strip the gradient clip */
+/* FIX: Reduced motion — strip the gradient clip (was a stub comment with no rule) */
+@media (prefers-reduced-motion: reduce) {
+  .persona-strip__headline {
+    -webkit-text-fill-color: var(--chalk);
+    -webkit-background-clip: unset;
+    background-clip: unset;
+  }
+}
 
 .persona-strip__sub {
   font-family: var(--font-body);
@@ -1142,7 +1149,7 @@ img {
   border-radius: var(--card-radius);
   perspective: 1400px;
   /* 6G: Allow the shadow to move outside the card's footprint */
-  overflow: visible; 
+  overflow: visible;
 }
 
 /* Parallax shadow layer — 6G Light Source Update */
@@ -1150,25 +1157,24 @@ img {
   position: absolute;
   /* 6G: Wider width and negative left to allow horizontal movement without clipping */
   top: 0;
-  left: -15%; 
-  width: 130%; 
+  left: -15%;
+  width: 130%;
   height: 100%;
-  
+
   /* We switch from box-shadow to a blur-filter for a more realistic "glow" */
   background: var(--cat-glow);
   filter: blur(40px);
   border-radius: var(--radius-lg);
-  
+
   opacity: 0.6;
   z-index: -1;
   pointer-events: none;
-  
+
   /* 6G: Critical for smooth performance and horizontal shifting */
   will-change: transform;
   transition: transform 0.1s ease-out;
-  
-  /* Keep your seam border if you like that aesthetic detail */
-  border-right: var(--seam-width) solid var(--cat-seam, transparent);
+  /* FIX: removed dead border-right — the shadow layer is at z-index:-1 behind the card
+     body and has filter:blur(40px). Any border is completely invisible. */
 }
 
 
@@ -1839,7 +1845,9 @@ img {
   animation: card-deal-in 0.5s var(--ease-spring) forwards !important;
 }
 
-/* Mid-flip — disable taps */
+/* Mid-flip — disable taps during shuffle compress phase
+   wall.js triggerShuffle() sets rotateX(90deg) in inline style;
+   this selector fires during that window to block accidental interactions. */
 .box-card[style*="rotateX"] {
   pointer-events: none;
 }
@@ -2749,7 +2757,11 @@ img {
   .shuffle-banner,
   .shuffle-trigger,
   .box-card__flip-btn,
-  .wall__sort-btn {
+  .wall__sort-btn,
+  .prefs-sheet,
+  .prefs-sheet__overlay,
+  .patch-preview,
+  .rack-sheet__overlay {
     display: none !important;
   }
 

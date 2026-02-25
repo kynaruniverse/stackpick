@@ -22,10 +22,12 @@
     })();
   </script>
 
-  <meta name="theme-color" content="#F2F0EB" media="(prefers-color-scheme: light)">
+  <!-- FIX: dark before light — matches data-theme="dark" default; consistent with about/index.html -->
   <meta name="theme-color" content="#0A0A0F" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#F2F0EB" media="(prefers-color-scheme: light)">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <!-- FIX: 'default' not 'black-translucent' — inner pages have no fixed chrome to fill the status bar gap -->
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="StackPick">
   <meta name="mobile-web-app-capable" content="yes">
 
@@ -52,8 +54,12 @@
   <link rel="manifest" href="/manifest.json">
   <link rel="apple-touch-icon" href="/assets/icons/icon-192.png">
 
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Outfit:wght@400;450;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- FIX: removed Barlow 600 (unused in CSS); removed Outfit 450 (not a valid weight);
+       added Outfit 300 (used in about/index.html, consistent across all pages) -->
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
+  <!-- FIX: preload style.css — consistent with about/index.html, improves LCP on inner pages -->
+  <link rel="preload" href="/assets/css/style.css" as="style">
   <link rel="stylesheet" href="/assets/css/wall-tokens.css">
   <link rel="stylesheet" href="/assets/css/style.css">
 

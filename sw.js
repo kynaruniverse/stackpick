@@ -37,7 +37,7 @@ const SHELL_ASSETS = [
 
   // ── Category page shell (used on all non-wall pages) ──
   '/assets/css/style.css',
-  '/assets/js/theme.js',
+  '/assets/js/theme.js',   // FIX: was missing — required by head.html, app.js, wall.js
   '/assets/js/app.js',
 ];
 
@@ -114,9 +114,11 @@ self.addEventListener('install', event => {
       } else {
         console.log(`[SW] Install complete — ${SHELL_ASSETS.length} assets cached (${VERSION})`);
       }
-
-      await self.skipWaiting();
     })
+    // FIX: skipWaiting() moved outside cache.open() so it fires unconditionally.
+    // Previously it was inside the .then() block — if caches.open() rejected
+    // (e.g. storage quota exceeded), the SW would be stuck in 'waiting' state.
+    .then(() => self.skipWaiting())
   );
 });
 
