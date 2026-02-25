@@ -1,30 +1,40 @@
-<!-- StackPick v2 sidebar.html partial -->
-<!-- Build step: add sidebar-link--active to current page link -->
 <aside class="desktop-sidebar" aria-label="Site navigation">
+  
   <div class="sidebar-section">
     <p class="sidebar-heading">Peripherals</p>
-    <a href="/headsets/"  class="sidebar-link"><span aria-hidden="true">&#x1F3A7;</span> Headsets</a>
-    <a href="/keyboards/" class="sidebar-link"><span aria-hidden="true">&#x2328;&#xFE0F;</span> Keyboards</a>
-    <a href="/mice/"      class="sidebar-link"><span aria-hidden="true">&#x1F5B1;&#xFE0F;</span> Mice</a>
-    <a href="/monitors/"  class="sidebar-link"><span aria-hidden="true">&#x1F5A5;&#xFE0F;</span> Monitors</a>
-    <a href="/chairs/"    class="sidebar-link"><span aria-hidden="true">&#x1FA91;</span> Chairs</a>
+    <a href="/headsets/"  class="sidebar-link">Headsets</a>
+    <a href="/keyboards/" class="sidebar-link">Keyboards</a>
+    <a href="/mice/"      class="sidebar-link">Mice</a>
+    <a href="/monitors/"  class="sidebar-link">Monitors</a>
+    <a href="/chairs/"    class="sidebar-link">Chairs</a>
   </div>
+
   <div class="sidebar-section">
     <p class="sidebar-heading">Coming Soon</p>
-    <span class="sidebar-link sidebar-link--disabled" aria-hidden="true">&#x1F4BB; PCs <span class="sidebar-badge">Soon</span></span>
-    <span class="sidebar-link sidebar-link--disabled" aria-hidden="true">&#x1FAB5; Desks <span class="sidebar-badge">Soon</span></span>
-    <span class="sidebar-link sidebar-link--disabled" aria-hidden="true">&#x1F50A; Speakers <span class="sidebar-badge">Soon</span></span>
-    <span class="sidebar-link sidebar-link--disabled" aria-hidden="true">&#x2728; Extras <span class="sidebar-badge">Soon</span></span>
+    <div class="sidebar-link sidebar-link--disabled">
+      <span>PCs</span>
+      <span class="stamp stamp--nextday">Soon</span>
+    </div>
+    <div class="sidebar-link sidebar-link--disabled">
+      <span>Desks</span>
+      <span class="stamp stamp--nextday">Soon</span>
+    </div>
   </div>
+
   <div class="sidebar-divider"></div>
+
   <div class="sidebar-section">
-    <a href="/guides/"      class="sidebar-link">&#x1F4CB; Setup Guides</a>
-    <a href="/comparisons/" class="sidebar-link">&#x2696;&#xFE0F; Comparisons</a>
-    <a href="/search/"      class="sidebar-link">&#x1F50D; Search</a>
-    <a href="/about/"       class="sidebar-link">&#x2139;&#xFE0F; About</a>
+    <a href="/guides/"      class="sidebar-link">Setup Guides</a>
+    <a href="/comparisons/" class="sidebar-link">Comparisons</a>
+    <a href="/search/"      class="sidebar-link">Search Database</a>
+    <a href="/about/"       class="sidebar-link">About</a>
   </div>
-  <button class="sidebar-theme-btn" id="theme-toggle-sidebar" aria-label="Switch to light mode">
-    <span id="sidebar-theme-icon" aria-hidden="true">&#x1F319;</span>
-    <span id="sidebar-theme-label">Dark mode</span>
+
+  <button class="theme-toggle sidebar-theme-btn" id="theme-toggle-sidebar" aria-label="Toggle Theme">
+    <span class="sidebar-theme-icon-wrap">
+      <span id="sidebar-theme-icon">🌙</span>
+    </span>
+    <span id="sidebar-theme-label">Dark Mode</span>
   </button>
+
 </aside>

@@ -3,12 +3,14 @@
 //  Shared controller for all inner pages.
 //  Homepage uses wall.js instead.
 //
+//  Requires: theme.js (sync, in <head>), shared.js (defer, before this)
+//
 //  CONTENTS
 //  01  Theme
-//  02  Bottom nav active state
-//  03  More panel
-//  04  Affiliate click tracking
-//  05  Search (search page only)
+//  02  Bottom nav active state        [via shared.js]
+//  03  More panel                     [via shared.js]
+//  04  Affiliate click tracking       [via shared.js]
+//  05  Search (search page only)      [BUG FIX: now uses SP_SEARCH_INDEX]
 //  06  Init
 // ============================================================
 
@@ -18,125 +20,60 @@
     
     // ============================================================
     //  01  THEME
+    //  theme.js exposes window.SP_initTheme — call it to wire
+    //  all theme toggle buttons on this page.
     // ============================================================
     
     if (typeof window.SP_initTheme === 'function') {
         window.SP_initTheme();
-    } else {
-        // Fallback if theme.js hasn't loaded yet
-        (function() {
-            try {
-                var saved = localStorage.getItem('sp-theme');
-                if (saved) document.documentElement.setAttribute('data-theme', saved);
-                else if (window.matchMedia('(prefers-color-scheme: light)').matches)
-                    document.documentElement.setAttribute('data-theme', 'light');
-            } catch (e) {}
-        })();
     }
     
-    // Theme toggle buttons (header + sidebar)
-    var themeToggleIds = ['theme-toggle', 'theme-toggle-sidebar'];
-    themeToggleIds.forEach(function(id) {
-        var btn = document.getElementById(id);
-        if (!btn) return;
-        
-        function syncBtn() {
-            var isDark = document.documentElement.getAttribute('data-theme') !== 'light';
-            btn.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
-            btn.textContent = isDark ? '🌙' : '☀️';
-        }
-        
-        syncBtn();
-        
-        btn.addEventListener('click', function() {
-            var current = document.documentElement.getAttribute('data-theme');
-            var next = current === 'light' ? 'dark' : 'light';
-            document.documentElement.setAttribute('data-theme', next);
-            try { localStorage.setItem('sp-theme', next); } catch (e) {}
-            syncBtn();
-        });
-    });
-    
     
     // ============================================================
-    //  02  BOTTOM NAV ACTIVE STATE
+    //  02  BOTTOM NAV ACTIVE STATE  [shared.js]
     // ============================================================
     
-    var normPath = window.location.pathname.replace(/\/$/, '') || '/';
-    document.querySelectorAll('.bottom-nav__link[data-nav-path]').forEach(function(link) {
-        var lp = (link.getAttribute('data-nav-path') || '').replace(/\/$/, '') || '/';
-        if (lp === normPath) {
-            link.classList.add('active');
-            link.setAttribute('aria-current', 'page');
-        }
-    });
-    
-    
-    // ============================================================
-    //  03  MORE PANEL
-    // ============================================================
-    
-    var moreBtn = document.getElementById('more-btn');
-    var morePanel = document.getElementById('more-panel');
-    var moreOverlay = document.getElementById('more-overlay');
-    
-    function isMoreOpen() {
-        return morePanel && morePanel.getAttribute('aria-hidden') === 'false';
+    if (window.SP_shared) {
+        window.SP_shared.initBottomNav();
     }
     
-    function openMore() {
-        if (!morePanel || !moreOverlay || !moreBtn) return;
-        morePanel.setAttribute('aria-hidden', 'false');
-        moreOverlay.setAttribute('aria-hidden', 'false');
-        moreOverlay.classList.add('open');
-        moreBtn.setAttribute('aria-expanded', 'true');
-        var first = morePanel.querySelector('a, button');
-        if (first) first.focus();
+    
+    // ============================================================
+    //  03  MORE PANEL  [shared.js]
+    // ============================================================
+    
+    if (window.SP_shared) {
+        window.SP_shared.initMorePanel(
+            document.getElementById('more-btn'),
+            document.getElementById('more-panel'),
+            document.getElementById('more-overlay')
+        );
     }
     
-    function closeMore() {
-        if (!morePanel || !moreOverlay || !moreBtn) return;
-        morePanel.setAttribute('aria-hidden', 'true');
-        moreOverlay.setAttribute('aria-hidden', 'true');
-        moreOverlay.classList.remove('open');
-        moreBtn.setAttribute('aria-expanded', 'false');
-        moreBtn.focus();
+    
+    // ============================================================
+    //  04  AFFILIATE CLICK TRACKING  [shared.js]
+    //  Inner pages don't have an active collection so no extra params.
+    // ============================================================
+    
+    if (window.SP_shared) {
+        window.SP_shared.initAffiliateTracking();
     }
     
-    if (moreBtn) moreBtn.addEventListener('click', function() { isMoreOpen() ? closeMore() : openMore(); });
-    if (moreOverlay) moreOverlay.addEventListener('click', closeMore);
-    
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && isMoreOpen()) closeMore();
-    });
-    
     
     // ============================================================
-    //  04  AFFILIATE CLICK TRACKING
-    // ============================================================
-    
-    document.addEventListener('click', function(e) {
-        var el = e.target;
-        while (el && el.tagName !== 'A') { el = el.parentElement; }
-        if (!el || !el.href) return;
-        
-        var isAffiliate = el.href.includes('amzn.to') || el.href.includes('amazon.co.uk');
-        var productId = el.getAttribute('data-product') || '';
-        var type = el.getAttribute('data-type') || 'link';
-        
-        if (isAffiliate && typeof gtag === 'function') {
-            gtag('event', 'affiliate_click', {
-                link_url: el.href,
-                product_id: productId,
-                click_type: type,
-                page_path: window.location.pathname,
-            });
-        }
-    });
-    
-    
-    // ============================================================
-    //  05  SEARCH (search page only)
+    //  05  SEARCH  (search/index.html only)
+    //
+    //  BUG FIX: The previous version read window.SP_PRODUCTS and
+    //  filtered by raw product fields (.brand, .category, etc.).
+    //  The search page actually loads search-index.js which exports
+    //  window.SP_SEARCH_INDEX — a flat array of {type, icon, title,
+    //  desc, price, url, tags} entries for ALL content types
+    //  (products, comparisons, guides).
+    //
+    //  This version filters SP_SEARCH_INDEX by the pre-built .tags
+    //  string, which already contains all searchable text and is
+    //  the format the search-index.js export was designed for.
     // ============================================================
     
     var searchInput = document.getElementById('search-input');
@@ -145,7 +82,10 @@
     var resultsCount = document.getElementById('results-count');
     
     if (searchInput && searchBtn && searchResults) {
-        var SP_PRODUCTS = window.SP_PRODUCTS || [];
+        
+        // SP_SEARCH_INDEX is loaded by search/index.html via search-index.js.
+        // Each entry: { type, icon, title, desc, price, url, tags }
+        var INDEX = window.SP_SEARCH_INDEX || [];
         
         function doSearch(query) {
             query = (query || '').trim().toLowerCase();
@@ -156,44 +96,53 @@
                 return;
             }
             
-            var results = SP_PRODUCTS.filter(function(p) {
+            // Filter against the pre-built tags string (contains name, brand,
+            // category, specs, pros, cons, metaDescription, etc.)
+            var results = INDEX.filter(function(entry) {
                 return (
-                    p.name.toLowerCase().includes(query) ||
-                    p.brand.toLowerCase().includes(query) ||
-                    p.category.toLowerCase().includes(query) ||
-                    (p.desc || '').toLowerCase().includes(query) ||
-                    (p.tags || []).some(function(t) { return t.toLowerCase().includes(query); })
+                    (entry.tags || '').includes(query) ||
+                    (entry.title || '').toLowerCase().includes(query) ||
+                    (entry.desc || '').toLowerCase().includes(query)
                 );
             });
             
             if (resultsCount) {
-                resultsCount.textContent = results.length + ' result' + (results.length !== 1 ? 's' : '') + ' for "' + escHtml(query) + '"';
+                resultsCount.textContent =
+                    results.length + ' result' + (results.length !== 1 ? 's' : '') +
+                    ' for "' + escHtml(query) + '"';
             }
             
             if (!results.length) {
-                searchResults.innerHTML = '<p style="color:var(--color-text-muted);font-size:var(--body-font-size-sm);">No picks found for that search. Try a broader term.</p>';
+                searchResults.innerHTML =
+                    '<div class="card-grid__empty">' +
+                    '<div class="empty-state-glow"></div>' +
+                    '<p>SCAN FAILURE: No matches found in this sector.</p>' +
+                    '</div>';
                 return;
             }
             
-            searchResults.innerHTML = results.map(function(p) {
-                var nameHl = highlight(escHtml(p.name), query);
-                var descHl = highlight(escHtml((p.desc || '').substring(0, 120) + '…'), query);
+            searchResults.innerHTML = results.map(function(entry) {
+                var titleHl = highlight(escHtml(entry.title), query);
+                var descHl = highlight(escHtml((entry.desc || '').substring(0, 120) + '\u2026'), query);
+                var priceEl = entry.price ?
+                    '<span class="product-card__price">' + escHtml(entry.price) + '</span>' :
+                    '';
+                
                 return (
-                    '<article class="product-entry">' +
-                    '<div class="product-entry__rank">' +
-                    '<span class="rank-badge">' + escHtml(p.category) + '</span>' +
+                    '<article class="product-card product-card--search">' +
+                    '<div class="product-card__visual">' +
+                    '<div class="product-card__icon-wrap"><span class="product-card__emoji">' + (entry.icon || '\uD83D\uDCE6') + '</span></div>' +
+                    '<span class="stamp stamp--stock">' + escHtml(entry.type) + '</span>' +
                     '</div>' +
-                    '<div class="product-entry__body">' +
-                    '<h3 class="product-entry__name">' + nameHl + '</h3>' +
-                    '<p class="product-entry__desc">' + descHl + '</p>' +
-                    '<div class="product-entry__footer">' +
-                    '<div class="price-block"><span class="price-current">' + escHtml(p.price) + '</span></div>' +
-                    '<a href="' + escAttr(p.affiliate) + '" class="btn-primary"' +
-                    ' target="_blank" rel="noopener sponsored"' +
-                    ' data-product="' + escAttr(p.id) + '" data-type="search-cta">' +
-                    'View on Amazon →' +
+                    '<div class="product-card__body">' +
+                    '<h3 class="product-card__name">' + titleHl + '</h3>' +
+                    '<p class="product-card__desc" style="font-size:13px;color:var(--color-text-muted);margin-top:8px;">' + descHl + '</p>' +
+                    '</div>' +
+                    '<div class="product-card__footer">' +
+                    priceEl +
+                    '<a href="' + escAttr(entry.url) + '" class="btn-primary">' +
+                    'View \u2192' +
                     '</a>' +
-                    '</div>' +
                     '</div>' +
                     '</article>'
                 );
@@ -207,11 +156,12 @@
         }
         
         searchBtn.addEventListener('click', function() { doSearch(searchInput.value); });
-        searchInput.addEventListener('keydown', function(e) { if (e.key === 'Enter') doSearch(searchInput.value); });
+        searchInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') doSearch(searchInput.value);
+        });
         
-        // Pre-fill from URL param
-        var params = new URLSearchParams(window.location.search);
-        var q = params.get('q');
+        // Pre-fill from URL ?q= param
+        var q = new URLSearchParams(window.location.search).get('q');
         if (q) { searchInput.value = q;
             doSearch(q); }
     }
@@ -222,7 +172,8 @@
     // ============================================================
     
     function init() {
-        // Nothing further needed — all init happens on listener attachment above
+        // All init happens on listener attachment above.
+        // Hook point retained for future per-page setup.
     }
     
     if (document.readyState === 'loading') {
@@ -232,7 +183,7 @@
     }
     
     
-    // ── Utils ──
+    // ── Utils ──────────────────────────────────────────────────
     
     function escHtml(str) {
         return String(str || '')

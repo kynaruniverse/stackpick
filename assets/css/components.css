@@ -1,0 +1,152 @@
+/* ============================================================
+   STACKPICK V2 — components.css
+   Shared UI elements for Wall and Inner pages.
+   ============================================================ */
+
+/* ── STAMPS ── */
+.stamp { 
+  font-family: var(--font-mono); 
+  font-size: 9px; 
+  font-weight: 600; 
+  letter-spacing: 0.1em; 
+  text-transform: uppercase; 
+  padding: 2px 7px; 
+  border-radius: var(--radius-sm); 
+  border: 1px solid; 
+}
+.stamp--stock { color: var(--color-success); border-color: color-mix(in srgb, var(--color-success), transparent 70%); background: color-mix(in srgb, var(--color-success), transparent 93%); }
+.stamp--nextday { color: var(--color-accent); border-color: var(--color-accent-dim); background: var(--color-accent-subtle); }
+
+/* ── PILLS & TAGS ── */
+.spec-pill {
+  font-family: var(--font-mono); font-size: 10px; font-weight: 500;
+  color: var(--color-text-muted); background: var(--color-bg-surface-2);
+  border: 1px solid var(--color-border-subtle); padding: 2px 8px; border-radius: var(--radius-sm); letter-spacing: 0.02em;
+}
+
+/* ── BUTTONS ── */
+.btn-primary { 
+  display: inline-flex; align-items: center; gap: var(--spacing-xs); 
+  padding: var(--spacing-sm) var(--spacing-lg); background: var(--color-accent); 
+  color: var(--color-text-on-accent); font-family: var(--font-display); 
+  animation: none;
+  font-size: var(--label-size); font-weight: 700; letter-spacing: 0.08em; 
+  text-transform: uppercase; border-radius: var(--radius-button); 
+  transition: background var(--transition-base), box-shadow var(--transition-base), transform var(--transition-spring); 
+}
+.btn-primary--pulse { animation: cta-pulse var(--cta-pulse-duration) infinite ease-in-out; }
+.btn-primary:hover { 
+  background: var(--color-accent-dim); 
+  box-shadow: 0 4px 20px var(--color-accent-glow); 
+  transform: translateY(calc(-1 * var(--hover-lift-distance))); 
+}
+
+.btn-secondary { 
+  display: inline-flex; align-items: center; gap: var(--spacing-xs); 
+  padding: var(--spacing-sm) var(--spacing-lg); 
+  color: var(--color-accent); 
+  border: 1px solid var(--color-accent-dim); 
+  border-radius: var(--radius-button); 
+  background: transparent; 
+  font-family: var(--font-display);
+  font-size: var(--label-size); font-weight: var(--label-weight); 
+  letter-spacing: var(--label-letter-spacing); text-transform: var(--label-transform); 
+  transition: all var(--transition-base), transform var(--transition-spring); 
+}
+.btn-secondary:hover { 
+  background: var(--color-accent); 
+  color: var(--color-text-on-accent); 
+  border-color: var(--color-accent); outline: none;
+  transform: translateY(calc(-1 * var(--hover-lift-distance)));
+}
+
+/* ── BUTTON LOADING & ACTIVE STATES ── */
+
+/* The "Click" feel - subtle press down */
+.btn-primary:active, 
+.btn-secondary:active {
+  transform: translateY(0);
+  filter: brightness(0.9);
+  transition: transform 0.1s;
+}
+
+/* The Loading State */
+.btn-loading {
+  position: relative;
+  color: transparent !important; /* Hides text while loading */
+  pointer-events: none; /* Prevents double clicks */
+}
+
+.btn-loading::after {
+  content: "";
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  top: 50%;
+  left: 50%;
+  margin: -8px 0 0 -8px;
+  border: 2px solid transparent;
+  border-top-color: var(--color-text-on-accent);
+  border-radius: 50%;
+  animation: button-spin 0.6s linear infinite;
+}
+
+@keyframes button-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* ── SECTION HEADINGS (Synced) ── */
+.section-head { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--spacing-md); margin-bottom: var(--spacing-xl); }
+.section-head__label { font-family: var(--font-mono); font-size: var(--mono-size-sm); font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-accent); display: block; margin-bottom: var(--spacing-xxs); }
+.section-head__title { font-family: var(--font-display); font-size: var(--h2-size); font-weight: var(--display-weight); color: var(--color-text-primary); }
+
+/* ── SECTION HEAD EXTENSION ── */
+.section-head__link {
+  font-family: var(--font-mono);
+  font-size: var(--mono-size-sm);
+  color: var(--color-text-muted);
+  text-decoration: none;
+  transition: color var(--transition-base);
+}
+
+.section-head__link:hover {
+  color: var(--color-accent);
+}
+
+@media (max-width: 640px) {
+  .section-head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-xs);
+  }
+}
+
+/* ── SEARCH RESULT REFINEMENT ── */
+.product-card--search {
+  display: grid;
+  grid-template-columns: 80px 1fr auto;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md);
+  margin-bottom: var(--spacing-sm);
+}
+
+.product-card--search .product-card__visual {
+  height: 60px;
+  width: 60px;
+  margin: 0;
+}
+
+.product-card--search .product-card__body {
+  padding: 0;
+}
+
+@media (max-width: 640px) {
+  .product-card--search {
+    grid-template-columns: 1fr;
+    text-align: center;
+    justify-items: center;
+  }
+}
+

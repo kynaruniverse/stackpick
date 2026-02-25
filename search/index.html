@@ -2,118 +2,130 @@
 <html lang="en-GB" data-theme="dark">
 <head>
   <title>Search | StackPick UK</title>
-  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <script>(function(){try{var t=localStorage.getItem('sp-theme');if(t)document.documentElement.setAttribute('data-theme',t);else if(window.matchMedia('(prefers-color-scheme: light)').matches)document.documentElement.setAttribute('data-theme','light');}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  
+  <script>
+    (function(){try{var t=localStorage.getItem('sp-theme');if(t)document.documentElement.setAttribute('data-theme',t);else if(window.matchMedia('(prefers-color-scheme: light)').matches)document.documentElement.setAttribute('data-theme','light');}catch(e){}})();
+  </script>
+
   <meta name="theme-color" content="#0D0D0D" media="(prefers-color-scheme: dark)">
   <meta name="theme-color" content="#F5F5F5" media="(prefers-color-scheme: light)">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="description" content="Search StackPick — find the right gear fast.">
+  
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x26A1;</text></svg>">
   <link rel="manifest" href="/manifest.json">
+  
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="preload" href="/assets/css/tokens.css" as="style">
-  <link rel="preload" href="/assets/css/style.css" as="style">
+  
   <link rel="stylesheet" href="/assets/css/tokens.css">
-  <link rel="stylesheet" href="/assets/css/style.css">
+  <link rel="stylesheet" href="/assets/css/components.css">
+  <link rel="stylesheet" href="/assets/css/wall.css">
+
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZTN7H3L6DV"></script>
   <script src="/assets/js/analytics.js" defer></script>
-  <script src="/assets/js/theme.js" defer></script>
+  <script src="/assets/js/theme.js"></script>
 </head>
 <body>
   <a href="#main-content" class="skip-link">Skip to main content</a>
-  <header><div class="header-container">
-    <a href="/" class="logo">Stack<span>Pick</span></a>
-    <nav aria-label="Main navigation">
-      <a href="/headsets/">Headsets</a><a href="/keyboards/">Keyboards</a><a href="/mice/">Mice</a>
-      <a href="/monitors/">Monitors</a><a href="/chairs/">Chairs</a>
-      <a href="/guides/">Guides</a><a href="/about/">About</a>
-      <button class="theme-toggle" id="theme-toggle" aria-label="Switch to light mode">&#x1F319;</button>
-    </nav>
-  </div></header>
 
-  <div class="hero"><div class="hero-container">
-    <p class="hero-eyebrow">Search</p>
-    <h1>Find the Right Gear</h1>
-    <p>Search across all verified picks — by name, brand, category, or spec.</p>
-  </div></div>
+  <header class="nav">
+    <div class="nav__container">
+      <a href="/" class="logo">Stack<span>Pick</span></a>
+      <nav class="nav__links" aria-label="Main navigation">
+        <a href="/headsets/">Headsets</a>
+        <a href="/keyboards/">Keyboards</a>
+        <a href="/mice/">Mice</a>
+        <button class="nav__theme-btn theme-toggle" aria-label="Toggle Theme">🌙</button>
+      </nav>
+    </div>
+  </header>
 
-  <div class="breadcrumb-bar"><div class="container">
-    <ol class="breadcrumb-list" aria-label="Breadcrumb">
-      <li><a href="/">Home</a></li>
-      <li aria-hidden="true" class="breadcrumb-sep">&#x203A;</li>
-      <li aria-current="page">Search</li>
-    </ol>
-  </div></div>
+  <section class="hero hero--inner">
+    <div class="scan-beam"></div>
+    <div class="hero__container">
+      <p class="hero__eyebrow">Search Engine</p>
+      <h1 class="hero__title">Find the Right Gear</h1>
+      <p class="hero__desc">Search verified picks by name, brand, or spec.</p>
+    </div>
+  </section>
 
-  <div class="page-wrapper">
-    <aside class="desktop-sidebar" aria-label="Site navigation">
-      <div class="sidebar-section">
-        <p class="sidebar-heading">Peripherals</p>
-        <a href="/headsets/"  class="sidebar-link">&#x1F3A7; Headsets</a>
-        <a href="/keyboards/" class="sidebar-link">&#x2328;&#xFE0F; Keyboards</a>
-        <a href="/mice/"      class="sidebar-link">&#x1F5B1;&#xFE0F; Mice</a>
-        <a href="/monitors/"  class="sidebar-link">&#x1F5A5;&#xFE0F; Monitors</a>
-        <a href="/chairs/"    class="sidebar-link">&#x1FA91; Chairs</a>
-      </div>
-      <div class="sidebar-divider"></div>
-      <div class="sidebar-section">
-        <a href="/guides/"      class="sidebar-link">&#x1F4CB; Guides</a>
-        <a href="/comparisons/" class="sidebar-link">&#x2696;&#xFE0F; Comparisons</a>
-        <a href="/search/"      class="sidebar-link sidebar-link--active">&#x1F50D; Search</a>
-      </div>
-    </aside>
+  <div class="breadcrumb-bar">
+    <div class="container">
+      <ol class="breadcrumb-list" aria-label="Breadcrumb">
+        <li><a href="/">Home</a></li>
+        <li aria-hidden="true" class="breadcrumb-sep">/</li>
+        <li aria-current="page">Search</li>
+      </ol>
+    </div>
+  </div>
 
-    <main class="container" id="main-content">
-      <section class="section">
-
+  <div class="page-wrapper container">
+    <main class="main-content" id="main-content">
+      
+      <div class="search-cage">
         <div class="search-bar" role="search">
-          <label for="search-input" class="sr-only">Search picks</label>
           <input type="search" id="search-input" class="search-input"
-                 placeholder="e.g. Razer, wireless mouse, under &#xA3;100..."
-                 autocomplete="off" autocorrect="off" spellcheck="false">
-          <button type="button" id="search-btn" class="search-btn" aria-label="Search">Search</button>
+                 placeholder="Search Razer, wireless, sub £100..."
+                 autocomplete="off">
+          <button type="button" id="search-btn" class="btn-primary">Search</button>
         </div>
+      </div>
 
-        <p class="search-results-count" id="results-count" aria-live="polite" aria-atomic="true"></p>
+      <div class="section-head">
+        <span class="section-head__label">Database Results</span>
+        <p class="section-head__title" id="results-count"></p>
+      </div>
 
-        <div id="search-results" aria-label="Search results" aria-live="polite"></div>
+      <div id="search-results" class="card-grid card-grid--list"></div>
 
-      </section>
     </main>
   </div>
 
-  <footer class="site-footer"><div class="site-footer__inner">
-    <div><a href="/" class="footer-logo">Stack<span>Pick</span></a><p class="footer-tagline">Researched gaming gear for UK gamers.</p></div>
-    <div class="footer-bottom"><p>&copy; 2026 StackPick.</p></div>
-  </div></footer>
+  <footer class="site-footer">
+    <div class="site-footer__inner">
+      <a href="/" class="footer-logo">Stack<span>Pick</span></a>
+      <p class="footer-tagline">Researched gaming gear for UK gamers.</p>
+      <div class="footer-bottom">
+        <p>&copy; 2026 StackPick.</p>
+      </div>
+    </div>
+  </footer>
 
   <div class="more-panel-overlay" id="more-overlay" aria-hidden="true"></div>
-  <div class="bottom-nav-more-panel" id="more-panel" role="dialog" aria-modal="true" aria-labelledby="more-panel-title" aria-hidden="true">
-    <p class="more-panel-title" id="more-panel-title">More</p>
-    <div class="more-panel-grid">
-      <a href="/monitors/" class="more-panel-link">&#x1F5A5;&#xFE0F; Monitors</a>
-      <a href="/chairs/" class="more-panel-link">&#x1FA91; Chairs</a>
-      <a href="/guides/" class="more-panel-link">&#x1F4CB; Guides</a>
-      <a href="/comparisons/" class="more-panel-link">&#x2696;&#xFE0F; Compare</a>
-      <a href="/search/" class="more-panel-link">&#x1F50D; Search</a>
-      <a href="/about/" class="more-panel-link">&#x2139;&#xFE0F; About</a>
+  
+  <div class="bottom-nav-more-panel" id="more-panel" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="more-panel__content">
+      <div class="more-panel__grid">
+        <a href="/monitors/" class="more-panel-link">Monitors</a>
+        <a href="/chairs/" class="more-panel-link">Chairs</a>
+        <a href="/guides/" class="more-panel-link">Guides</a>
+        <button class="more-panel-link" id="more-panel-theme">
+          Theme: <span id="sidebar-theme-icon">🌙</span>
+        </button>
+      </div>
     </div>
   </div>
+
   <nav class="bottom-nav" aria-label="Mobile navigation">
     <ul class="bottom-nav__items">
-      <li><a href="/" class="bottom-nav__link" data-nav-path="/"><span class="bottom-nav__icon">&#x1F3E0;</span><span class="bottom-nav__label">Home</span></a></li>
-      <li><a href="/headsets/" class="bottom-nav__link" data-nav-path="/headsets/"><span class="bottom-nav__icon">&#x1F3A7;</span><span class="bottom-nav__label">Audio</span></a></li>
-      <li><a href="/keyboards/" class="bottom-nav__link" data-nav-path="/keyboards/"><span class="bottom-nav__icon">&#x2328;&#xFE0F;</span><span class="bottom-nav__label">Keys</span></a></li>
-      <li><a href="/mice/" class="bottom-nav__link" data-nav-path="/mice/"><span class="bottom-nav__icon">&#x1F5B1;&#xFE0F;</span><span class="bottom-nav__label">Mice</span></a></li>
-      <li><button class="bottom-nav__link" id="more-btn" aria-label="More" aria-expanded="false" aria-controls="more-panel"><span class="bottom-nav__icon">&#x229E;</span><span class="bottom-nav__label">More</span></button></li>
+      <li><a href="/" class="bottom-nav__link" data-nav-path="/"><span class="bottom-nav__label">Home</span></a></li>
+      <li><a href="/mice/" class="bottom-nav__link" data-nav-path="/mice/"><span class="bottom-nav__label">Mice</span></a></li>
+      <li><a href="/keyboards/" class="bottom-nav__link" data-nav-path="/keyboards/"><span class="bottom-nav__label">Keys</span></a></li>
+      <li><button class="bottom-nav__link" id="more-btn" aria-expanded="false"><span class="bottom-nav__label">More</span></button></li>
     </ul>
   </nav>
-  <!-- search uses real product data from window.SP_PRODUCTS — loaded by data.js -->
-  <script src="/assets/js/data.js" defer></script>
-  <script src="/assets/js/app.js" defer></script>
-  <script>if('serviceWorker'in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').then(r=>console.log('[SW]',r.scope)).catch(e=>console.warn('[SW]',e));});}</script>
+
+  <script src="/assets/js/data.js"></script>
+  <script src="/assets/js/app.js"></script>
+  <script>
+    if('serviceWorker' in navigator){
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js');
+      });
+    }
+  </script>
 </body>
 </html>

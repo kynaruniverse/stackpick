@@ -1,19 +1,22 @@
-<!-- StackPick v2 bottom-nav.html partial -->
-<!-- Build step: add active + aria-current to matching link -->
-
 <div class="more-panel-overlay" id="more-overlay" aria-hidden="true"></div>
 
 <div class="bottom-nav-more-panel" id="more-panel"
      role="dialog" aria-modal="true"
      aria-labelledby="more-panel-title" aria-hidden="true">
-  <p class="more-panel-title" id="more-panel-title">More</p>
-  <div class="more-panel-grid">
-    <a href="/monitors/"    class="more-panel-link"><span class="nav-icon">&#x1F5A5;&#xFE0F;</span>Monitors</a>
-    <a href="/chairs/"      class="more-panel-link"><span class="nav-icon">&#x1FA91;</span>Chairs</a>
-    <a href="/guides/"      class="more-panel-link"><span class="nav-icon">&#x1F4CB;</span>Guides</a>
-    <a href="/comparisons/" class="more-panel-link"><span class="nav-icon">&#x2696;&#xFE0F;</span>Compare</a>
-    <a href="/search/"      class="more-panel-link"><span class="nav-icon">&#x1F50D;</span>Search</a>
-    <a href="/about/"       class="more-panel-link"><span class="nav-icon">&#x2139;&#xFE0F;</span>About</a>
+  <div class="more-panel__content">
+    <p class="more-panel-title" id="more-panel-title">System Menu</p>
+    <div class="more-panel-grid">
+      <a href="/monitors/"    class="more-panel-link">Monitors</a>
+      <a href="/chairs/"      class="more-panel-link">Chairs</a>
+      <a href="/guides/"      class="more-panel-link">Guides</a>
+      <a href="/comparisons/" class="more-panel-link">Compare</a>
+      <a href="/search/"      class="more-panel-link">Search</a>
+      <a href="/about/"       class="more-panel-link">About</a>
+      
+      <button class="more-panel-link more-panel-link--theme" id="more-panel-theme">
+        Theme: <span id="sidebar-theme-icon">🌙</span>
+      </button>
+    </div>
   </div>
 </div>
 
@@ -21,32 +24,27 @@
   <ul class="bottom-nav__items" role="list">
     <li>
       <a href="/" class="bottom-nav__link" data-nav-path="/">
-        <span class="bottom-nav__icon" aria-hidden="true">&#x1F3E0;</span>
         <span class="bottom-nav__label">Home</span>
       </a>
     </li>
     <li>
-      <a href="/headsets/" class="bottom-nav__link" data-nav-path="/headsets/">
-        <span class="bottom-nav__icon" aria-hidden="true">&#x1F3A7;</span>
-        <span class="bottom-nav__label">Audio</span>
+      <a href="/mice/" class="bottom-nav__link" data-nav-path="/mice/">
+        <span class="bottom-nav__label">Mice</span>
       </a>
     </li>
     <li>
       <a href="/keyboards/" class="bottom-nav__link" data-nav-path="/keyboards/">
-        <span class="bottom-nav__icon" aria-hidden="true">&#x2328;&#xFE0F;</span>
         <span class="bottom-nav__label">Keys</span>
       </a>
     </li>
     <li>
-      <a href="/mice/" class="bottom-nav__link" data-nav-path="/mice/">
-        <span class="bottom-nav__icon" aria-hidden="true">&#x1F5B1;&#xFE0F;</span>
-        <span class="bottom-nav__label">Mice</span>
+      <a href="/headsets/" class="bottom-nav__link" data-nav-path="/headsets/">
+        <span class="bottom-nav__label">Audio</span>
       </a>
     </li>
     <li>
       <button class="bottom-nav__link" id="more-btn"
               aria-label="Open more categories" aria-expanded="false" aria-controls="more-panel">
-        <span class="bottom-nav__icon" aria-hidden="true">&#x229E;</span>
         <span class="bottom-nav__label">More</span>
       </button>
     </li>
