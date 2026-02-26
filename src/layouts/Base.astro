@@ -1,0 +1,264 @@
+---
+// src/layouts/Base.astro
+// Master layout — every page on StackPick uses this.
+
+export interface Props {
+  title: string;
+  description: string;
+  canonical?: string;
+  ogType?: string;
+}
+
+const {
+  title,
+  description,
+  canonical = new URL(Astro.url.pathname, Astro.site).href,
+  ogType = 'website',
+} = Astro.props;
+
+const ogTitle = title.includes('StackPick') ? title : `${title} | StackPick`;
+---
+<!DOCTYPE html>
+<html lang="en-GB" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+  <!-- Theme flash prevention — must run inline before anything renders -->
+  <script is:inline>
+    (function(){
+      try {
+        var t = localStorage.getItem('sp-theme');
+        if (t) document.documentElement.setAttribute('data-theme', t);
+        else if (window.matchMedia('(prefers-color-scheme: light)').matches)
+          document.documentElement.setAttribute('data-theme', 'light');
+      } catch(e){}
+    })();
+  </script>
+
+  <title>{title}</title>
+  <meta name="description" content={description}>
+  <meta name="author" content="StackPick">
+  <link rel="canonical" href={canonical}>
+
+  <meta property="og:type" content={ogType}>
+  <meta property="og:url" content={canonical}>
+  <meta property="og:title" content={ogTitle}>
+  <meta property="og:description" content={description}>
+  <meta property="og:image" content="https://stackpick.co.uk/assets/images/og-image.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content={ogTitle}>
+  <meta name="twitter:description" content={description}>
+
+  <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="StackPick">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x26A1;</text></svg>">
+  <link rel="manifest" href="/manifest.json">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/assets/css/tokens.css">
+  <link rel="stylesheet" href="/assets/css/components.css">
+  <link rel="stylesheet" href="/assets/css/style.css">
+
+  <!-- analytics.js must load before content so gtag() is available -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZTN7H3L6DV"></script>
+  <script src="/assets/js/analytics.js" defer></script>
+
+  <!-- theme.js is synchronous — wires toggle buttons immediately on DOMContentLoaded -->
+  <script src="/assets/js/theme.js" is:inline></script>
+
+  <!-- Page-level head additions (schema JSON-LD etc) -->
+  <slot name="head" />
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <slot name="before-header" />
+
+  <header class="nav">
+    <div class="nav__inner">
+      <a href="/" class="logo" aria-label="StackPick home">Stack<span>Pick</span></a>
+      <nav aria-label="Main navigation">
+        <a href="/mice/">Mice</a>
+        <a href="/keyboards/">Keyboards</a>
+        <a href="/headsets/">Headsets</a>
+        <a href="/monitors/">Monitors</a>
+        <a href="/chairs/">Chairs</a>
+        <a href="/guides/">Guides</a>
+        <a href="/about/">About</a>
+        <button class="theme-toggle nav__theme-btn" aria-label="Toggle theme">🌙</button>
+      </nav>
+    </div>
+  </header>
+
+  <slot name="hero" />
+
+  <div class="page-wrapper container">
+    <aside class="desktop-sidebar" aria-label="Site navigation">
+      <div class="sidebar-section">
+        <p class="sidebar-heading">Peripherals</p>
+        <a href="/mice/"      class="sidebar-link">Mice</a>
+        <a href="/keyboards/" class="sidebar-link">Keyboards</a>
+        <a href="/headsets/"  class="sidebar-link">Headsets</a>
+        <a href="/monitors/"  class="sidebar-link">Monitors</a>
+        <a href="/chairs/"    class="sidebar-link">Chairs</a>
+      </div>
+      <div class="sidebar-section">
+        <p class="sidebar-heading">Coming Soon</p>
+        <div class="sidebar-link sidebar-link--disabled">
+          <span>PCs</span><span class="stamp stamp--nextday">Soon</span>
+        </div>
+        <div class="sidebar-link sidebar-link--disabled">
+          <span>Desks</span><span class="stamp stamp--nextday">Soon</span>
+        </div>
+      </div>
+      <div class="sidebar-divider"></div>
+      <div class="sidebar-section">
+        <a href="/guides/"      class="sidebar-link">Setup Guides</a>
+        <a href="/comparisons/" class="sidebar-link">Comparisons</a>
+        <a href="/search/"      class="sidebar-link">Search Database</a>
+        <a href="/about/"       class="sidebar-link">About</a>
+      </div>
+      <button class="theme-toggle sidebar-theme-btn" id="theme-toggle-sidebar" aria-label="Toggle theme">
+        <span id="sidebar-theme-icon">🌙</span>
+        <span id="sidebar-theme-label">Dark Mode</span>
+      </button>
+    </aside>
+
+    <main class="main-content" id="main-content">
+      <slot />
+    </main>
+  </div>
+
+  <footer class="site-footer">
+    <div class="site-footer__inner container">
+      <div class="footer__brand">
+        <a href="/" class="footer-logo">Stack<span>Pick</span></a>
+        <p class="footer-tagline">Researched gaming gear for UK gamers.<br>System verified. No filler.</p>
+      </div>
+      <div class="footer__nav">
+        <div class="footer__group">
+          <h4 class="footer-heading">Hardware</h4>
+          <ul class="footer-links">
+            <li><a href="/mice/">Mice</a></li>
+            <li><a href="/keyboards/">Keyboards</a></li>
+            <li><a href="/headsets/">Headsets</a></li>
+            <li><a href="/monitors/">Monitors</a></li>
+          </ul>
+        </div>
+        <div class="footer__group">
+          <h4 class="footer-heading">System</h4>
+          <ul class="footer-links">
+            <li><a href="/guides/">Guides</a></li>
+            <li><a href="/search/">Search Database</a></li>
+            <li><a href="/about/">About</a></li>
+            <li><a href="/comparisons/">Comparisons</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div class="footer-bottom__legal">
+          <p>&copy; 2026 StackPick.</p>
+          <p class="footer-disclaimer">As an Amazon Associate, StackPick earns from qualifying purchases. <a href="/about/#disclosure">Disclosure</a></p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Mobile bottom nav -->
+  <div class="more-panel-overlay" id="more-overlay" aria-hidden="true"></div>
+  <div class="bottom-nav-more-panel" id="more-panel"
+       role="dialog" aria-modal="true"
+       aria-labelledby="more-panel-title" aria-hidden="true">
+    <div class="more-panel__content">
+      <p class="more-panel-title" id="more-panel-title">System Menu</p>
+      <div class="more-panel-grid">
+        <a href="/monitors/"    class="more-panel-link">Monitors</a>
+        <a href="/chairs/"      class="more-panel-link">Chairs</a>
+        <a href="/guides/"      class="more-panel-link">Guides</a>
+        <a href="/comparisons/" class="more-panel-link">Compare</a>
+        <a href="/search/"      class="more-panel-link">Search</a>
+        <a href="/about/"       class="more-panel-link">About</a>
+        <button class="more-panel-link more-panel-link--theme" id="more-panel-theme">
+          Theme: <span id="more-panel-theme-icon">🌙</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <nav class="bottom-nav" aria-label="Mobile navigation">
+    <ul class="bottom-nav__items" role="list">
+      <li>
+        <a href="/" class="bottom-nav__link" data-nav-path="/">
+          <span class="bottom-nav__label">Home</span>
+        </a>
+      </li>
+      <li>
+        <a href="/mice/" class="bottom-nav__link" data-nav-path="/mice/">
+          <span class="bottom-nav__label">Mice</span>
+        </a>
+      </li>
+      <li>
+        <a href="/keyboards/" class="bottom-nav__link" data-nav-path="/keyboards/">
+          <span class="bottom-nav__label">Keys</span>
+        </a>
+      </li>
+      <li>
+        <a href="/headsets/" class="bottom-nav__link" data-nav-path="/headsets/">
+          <span class="bottom-nav__label">Audio</span>
+        </a>
+      </li>
+      <li>
+        <button class="bottom-nav__link" id="more-btn"
+                aria-label="Open more categories" aria-expanded="false" aria-controls="more-panel">
+          <span class="bottom-nav__label">More</span>
+        </button>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- Bottom nav active state + More panel logic -->
+  <script is:inline>
+    (function () {
+      // Active nav link
+      var path = window.location.pathname;
+      document.querySelectorAll('.bottom-nav__link[data-nav-path]').forEach(function (el) {
+        if (el.getAttribute('data-nav-path') === path) el.classList.add('active');
+      });
+
+      // More panel
+      var moreBtn     = document.getElementById('more-btn');
+      var morePanel   = document.getElementById('more-panel');
+      var moreOverlay = document.getElementById('more-overlay');
+
+      function openPanel() {
+        morePanel.setAttribute('aria-hidden', 'false');
+        moreOverlay.classList.add('open');
+        moreBtn.setAttribute('aria-expanded', 'true');
+      }
+      function closePanel() {
+        morePanel.setAttribute('aria-hidden', 'true');
+        moreOverlay.classList.remove('open');
+        moreBtn.setAttribute('aria-expanded', 'false');
+      }
+
+      if (moreBtn)     moreBtn.addEventListener('click', openPanel);
+      if (moreOverlay) moreOverlay.addEventListener('click', closePanel);
+    })();
+  </script>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('/sw.js');
+      });
+    }
+  </script>
+</body>
+</html>
