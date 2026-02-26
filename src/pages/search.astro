@@ -1,0 +1,153 @@
+---
+// src/pages/search.astro
+// Search is client-side — products data is embedded at build time as JSON
+// so there are zero external requests and it works offline.
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+
+const allProducts     = await getCollection('products');
+const allComparisons  = await getCollection('comparisons');
+const allGuides       = await getCollection('guides');
+
+// Build search index at build time — passed to the client as a JSON island
+const searchIndex = [
+  ...allProducts.map(p => ({
+    type:  'product',
+    title: p.data.name,
+    desc:  p.body.slice(0, 120),
+    url:   `/${p.data.category}/`,
+    category: p.data.category,
+    price: p.data.price,
+    tags:  p.data.tags,
+  })),
+  ...allComparisons.map(c => ({
+    type:  'comparison',
+    title: c.data.title,
+    desc:  c.data.heroSubtitle,
+    url:   `/comparisons/${c.data.slug}/`,
+    category: 'comparison',
+    price: null,
+    tags:  [],
+  })),
+  ...allGuides.map(g => ({
+    type:  'guide',
+    title: g.data.title,
+    desc:  g.data.heroSubtitle,
+    url:   `/guides/${g.data.slug}/`,
+    category: 'guide',
+    price: null,
+    tags:  [],
+  })),
+];
+
+const searchIndexJSON = JSON.stringify(searchIndex);
+---
+
+<Base
+  title="Search Gaming Gear | StackPick"
+  description="Search StackPick's database of reviewed gaming gear. Find the best mice, keyboards, headsets, monitors and chairs for UK gamers."
+  canonical="https://stackpick.co.uk/search/"
+>
+  <section slot="hero" class="hero hero--inner">
+    <div class="hero-container container">
+      <p class="hero-eyebrow">Search Database</p>
+      <h1>Search StackPick</h1>
+      <p>Every product, comparison, and guide — searchable instantly.</p>
+    </div>
+  </section>
+
+  <nav class="breadcrumb-bar" aria-label="Breadcrumb">
+    <div class="container">
+      <ol class="breadcrumb-list">
+        <li><a href="/">Home</a></li>
+        <li class="breadcrumb-sep" aria-hidden="true">/</li>
+        <li aria-current="page">Search</li>
+      </ol>
+    </div>
+  </nav>
+
+  <section class="section">
+    <div class="search-bar">
+      <input
+        type="search"
+        id="search-input"
+        class="search-input"
+        placeholder="Search mice, keyboards, headsets…"
+        autocomplete="off"
+        autocorrect="off"
+        spellcheck="false"
+        aria-label="Search gaming gear"
+      />
+      <button class="search-btn" id="search-btn" type="button">Search</button>
+    </div>
+
+    <p class="search-results-count" id="results-count" aria-live="polite"></p>
+
+    <div id="search-results" class="product-list" aria-label="Search results"></div>
+  </section>
+
+  <!-- Embed search index as a JSON data island — no fetch needed -->
+  <script type="application/json" id="search-index-data" set:html={searchIndexJSON}></script>
+
+  <script>
+    const raw   = document.getElementById('search-index-data')!.textContent!;
+    const INDEX = JSON.parse(raw) as Array<{
+      type: string; title: string; desc: string;
+      url: string; category: string; price: string | null; tags: string[];
+    }>;
+
+    const input   = document.getElementById('search-input')   as HTMLInputElement;
+    const count   = document.getElementById('results-count')  as HTMLElement;
+    const results = document.getElementById('search-results') as HTMLElement;
+
+    function renderCard(item: typeof INDEX[0]): string {
+      const typeLabel = item.type === 'product' ? item.category : item.type;
+      return `
+        <article class="product-entry">
+          <div class="product-entry__rank">
+            <span class="rank-badge">${typeLabel.toUpperCase()}</span>
+            ${item.price ? `<span class="price-current">${item.price}</span>` : ''}
+          </div>
+          <div class="product-entry__body">
+            <div class="product-entry__top">
+              <div class="product-entry__info">
+                <h2 class="product-entry__name">
+                  <a href="${item.url}" style="color:inherit">${item.title}</a>
+                </h2>
+                <p class="product-entry__desc">${item.desc}</p>
+              </div>
+            </div>
+            <div class="product-entry__footer">
+              <a href="${item.url}" class="btn-secondary">View →</a>
+            </div>
+          </div>
+        </article>`;
+    }
+
+    function search(query: string) {
+      const q = query.trim().toLowerCase();
+      if (!q) {
+        results.innerHTML = '';
+        count.textContent = '';
+        return;
+      }
+      const hits = INDEX.filter(item =>
+        item.title.toLowerCase().includes(q) ||
+        item.desc.toLowerCase().includes(q)  ||
+        item.category.toLowerCase().includes(q) ||
+        item.tags.some(t => t.toLowerCase().includes(q))
+      );
+      count.textContent = `${hits.length} result${hits.length !== 1 ? 's' : ''} for "${query}"`;
+      results.innerHTML = hits.length
+        ? hits.map(renderCard).join('')
+        : '<p style="color:var(--color-text-muted)">No results found.</p>';
+    }
+
+    input.addEventListener('input',  () => search(input.value));
+    input.addEventListener('keydown', e => { if (e.key === 'Enter') search(input.value); });
+    document.getElementById('search-btn')!.addEventListener('click', () => search(input.value));
+
+    // Auto-focus on load
+    input.focus();
+  </script>
+</Base>

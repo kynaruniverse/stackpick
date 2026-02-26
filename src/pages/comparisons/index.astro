@@ -1,0 +1,47 @@
+---
+// src/pages/comparisons/index.astro
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+
+const comparisons = await getCollection('comparisons');
+comparisons.sort((a, b) => a.data.title.localeCompare(b.data.title));
+---
+
+<Base
+  title="Gaming Gear Comparisons UK | StackPick"
+  description="Head-to-head comparisons of the top gaming gear. Which mouse, keyboard, headset or monitor wins for UK gamers?"
+  canonical="https://stackpick.co.uk/comparisons/"
+>
+  <section slot="hero" class="hero hero--inner">
+    <div class="hero-container container">
+      <p class="hero-eyebrow">Comparisons</p>
+      <h1>Head-to-Head Comparisons</h1>
+      <p>Side-by-side breakdowns to help you decide between the top picks.</p>
+    </div>
+  </section>
+
+  <nav class="breadcrumb-bar" aria-label="Breadcrumb">
+    <div class="container">
+      <ol class="breadcrumb-list">
+        <li><a href="/">Home</a></li>
+        <li class="breadcrumb-sep" aria-hidden="true">/</li>
+        <li aria-current="page">Comparisons</li>
+      </ol>
+    </div>
+  </nav>
+
+  <section class="section">
+    <div class="also-grid">
+      {comparisons.map(comp => (
+        <a href={`/comparisons/${comp.data.slug}/`} class="also-card">
+          <span class="also-card__icon">{comp.data.emoji}</span>
+          <div>
+            <h2 class="also-card__title">{comp.data.title}</h2>
+            <p class="also-card__desc">{comp.data.heroSubtitle}</p>
+          </div>
+          <span class="also-card__arrow" aria-hidden="true">→</span>
+        </a>
+      ))}
+    </div>
+  </section>
+</Base>

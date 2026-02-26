@@ -1,0 +1,116 @@
+---
+// src/components/ProductCard.astro
+// Renders a single product card on category pages.
+
+const BADGE_COLORS: Record<string, string> = {
+  'mice-razer-viper-v3-pro':     '#22c55e',
+  'mice-endgame-gear-op1w':      '#3b82f6',
+  'mice-atk-vxe-mad-r-plus':     '#ef4444',
+  'keyboards-aula-f99-wireless': '#8b5cf6',
+  'keyboards-keychron-c3-pro':   '#10b981',
+  'monitors-asus-rog-xg27aqdmg': '#ef4444',
+};
+
+export interface Props {
+  id:           string;
+  rank:         number;
+  name:         string;
+  badge:        string;
+  emoji:        string;
+  price:        string;
+  msrp:         string | null;
+  savings:      string | null;
+  affiliate:    string;
+  desc:         string;
+  specs:        string[];
+  pros:         string[];
+  cons:         string[];
+  inStock:      boolean;
+  nextDay:      boolean;
+}
+
+const {
+  id, rank, name, badge, emoji,
+  price, msrp, savings, affiliate,
+  desc, specs, pros, cons,
+  inStock, nextDay,
+} = Astro.props;
+
+const badgeColor = BADGE_COLORS[id];
+const isFirst    = rank === 1;
+
+// Budget class for filter chips
+function budgetClass(priceStr: string): string {
+  const n = parseFloat(priceStr.replace(/[^0-9.]/g, ''));
+  if (n < 50)  return 'under-50';
+  if (n < 100) return '50-100';
+  if (n < 200) return '100-200';
+  return 'over-200';
+}
+const budget = budgetClass(price);
+---
+
+<article
+  class:list={['product-entry', isFirst && 'product-entry--featured']}
+  data-budget={budget}
+  data-id={id}
+>
+  <div class="product-entry__rank">
+    <span class="rank-number">#{rank}</span>
+    {badgeColor
+      ? <span class="rank-badge" style={`background:${badgeColor}; border-color:${badgeColor}; color:#fff;`}>{badge}</span>
+      : <span class="rank-badge">{badge}</span>
+    }
+    {inStock && <span class="stamp stamp--stock">In Stock</span>}
+    {nextDay && <span class="stamp stamp--nextday">Next Day</span>}
+  </div>
+
+  <div class="product-entry__body">
+    <div class="product-entry__top">
+      <div class="product-entry__emoji" aria-hidden="true">{emoji}</div>
+      <div class="product-entry__info">
+        <h2 class="product-entry__name">{name}</h2>
+        <p class="product-entry__desc">{desc}</p>
+      </div>
+    </div>
+
+    {specs.length > 0 && (
+      <div class="product-entry__specs">
+        {specs.map(s => <span class="spec-pill">{s}</span>)}
+      </div>
+    )}
+
+    <div class="pros-cons">
+      <div class="pros-cons__col">
+        <p class="pros-cons__label pros-cons__label--pros">Pros</p>
+        <ul class="pros-cons__list">
+          {pros.map(p => <li class="pros-cons__item">{p}</li>)}
+        </ul>
+      </div>
+      <div class="pros-cons__col">
+        <p class="pros-cons__label pros-cons__label--cons">Cons</p>
+        <ul class="pros-cons__list">
+          {cons.map(c => <li class="pros-cons__item">{c}</li>)}
+        </ul>
+      </div>
+    </div>
+
+    <div class="product-entry__footer">
+      <div class="price-block">
+        <span class="price-current">{price}</span>
+        {msrp && <span class="price-msrp">{msrp}</span>}
+        {savings && <span class="price-badge">Save {savings}</span>}
+      </div>
+      <a
+        href={affiliate}
+        class="btn-primary"
+        target="_blank"
+        rel="noopener sponsored"
+        data-product={id}
+        data-type="card-cta"
+      >
+        View on Amazon →
+      </a>
+    </div>
+  </div>
+</article>

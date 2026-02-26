@@ -1,0 +1,57 @@
+---
+// src/pages/guides/index.astro
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+
+const guides = await getCollection('guides');
+
+// Display order — cheapest first
+const ORDER = [
+  'budget-picks-under-50',
+  'gaming-setup-500',
+  'gaming-setup-1000',
+  'gaming-setup-1500',
+  'gaming-setup-2500',
+];
+guides.sort((a, b) => ORDER.indexOf(a.data.slug) - ORDER.indexOf(b.data.slug));
+---
+
+<Base
+  title="Gaming Setup Guides UK | StackPick"
+  description="Complete UK gaming setup guides by budget. From under £50 to a £2500 dream build — every pick verified on Amazon UK."
+  canonical="https://stackpick.co.uk/guides/"
+>
+  <section slot="hero" class="hero hero--inner">
+    <div class="hero-container container">
+      <p class="hero-eyebrow">Setup Guides</p>
+      <h1>Gaming Setup Guides</h1>
+      <p>Every budget. Every pick verified on Amazon UK.</p>
+    </div>
+  </section>
+
+  <nav class="breadcrumb-bar" aria-label="Breadcrumb">
+    <div class="container">
+      <ol class="breadcrumb-list">
+        <li><a href="/">Home</a></li>
+        <li class="breadcrumb-sep" aria-hidden="true">/</li>
+        <li aria-current="page">Guides</li>
+      </ol>
+    </div>
+  </nav>
+
+  <section class="section">
+    <div class="guide-grid">
+      {guides.map(guide => (
+        <a href={`/guides/${guide.data.slug}/`} class="guide-card">
+          <div class="guide-card__icon">{guide.data.emoji}</div>
+          <div class="guide-card__body">
+            <span class="guide-card__budget">{guide.data.budgetLabel}</span>
+            <h2 class="guide-card__title">{guide.data.title}</h2>
+            <p class="guide-card__desc">{guide.data.heroSubtitle}</p>
+          </div>
+          <span class="guide-card__arrow" aria-hidden="true">→</span>
+        </a>
+      ))}
+    </div>
+  </section>
+</Base>
