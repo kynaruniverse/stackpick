@@ -97,19 +97,9 @@ body::before {
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  background-image:
-    radial-gradient(circle, rgba(255,79,31,0.06) 1px, transparent 1px),
-    radial-gradient(circle, rgba(255,79,31,0.03) 1px, transparent 1px);
-  background-size: 80px 80px, 120px 120px;
-  background-position: 0 0, 40px 40px;
-  animation: ember-drift var(--ember-animation-duration) linear infinite;
-  opacity: var(--ember-opacity);
+  background-color: var(--color-bg-base); /* Pure white background */
 }
 
-@keyframes ember-drift {
-  from { background-position: 0 0, 40px 40px; }
-  to   { background-position: 0 -800px, 40px -760px; }
-}
 
 /* All page content sits above ember field */
 .nav, .hero, .filter-bar, .wall-content, footer, .bottom-nav,
@@ -130,14 +120,13 @@ body::before {
   right: 0;
   z-index: var(--z-nav);
   height: var(--nav-height-mobile);
-  background: color-mix(in srgb, var(--color-bg-base), transparent 8%);
-  backdrop-filter: blur(16px) saturate(160%);
-  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  background: var(--color-bg-base);
   border-bottom: 1px solid var(--color-border-subtle);
   display: flex;
   align-items: center;
   padding: 0 var(--spacing-lg);
 }
+
 
 .nav__inner {
   width: 100%;
@@ -229,24 +218,7 @@ body::before {
 }
 
 /* Scan beam — horizontal light sweep */
-.hero::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: var(--scanbeam-width);
-  background: linear-gradient(
-    180deg,
-    transparent 0%,
-    rgba(255,79,31, var(--scanbeam-opacity)) 20%,
-    rgba(255,79,31, calc(var(--scanbeam-opacity) * 1.5)) 50%,
-    rgba(255,79,31, var(--scanbeam-opacity)) 80%,
-    transparent 100%
-  );
-  filter: blur(var(--scanbeam-blur));
-  animation: scan-beam var(--scanbeam-duration) linear infinite;
-  pointer-events: none;
-}
+
 
 .hero__inner {
   max-width: var(--container-max-width);
@@ -281,14 +253,15 @@ body::before {
 /* Main headline */
 .hero__headline {
   font-family: var(--font-display);
-  font-size: var(--display-size-hero);
-  font-weight: var(--display-weight);
-  line-height: var(--display-line-height);
-  letter-spacing: var(--display-letter-spacing);
+  font-size: 4rem; /* Massive, clean headline */
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.05em;
   color: var(--color-text-primary);
   margin-bottom: var(--spacing-lg);
-  animation: reveal 0.6s var(--transition-spring) 0.1s both;
+  animation: reveal 0.8s ease-out both;
 }
+
 
 /* Lava accent word */
 .hero__headline em {
@@ -379,11 +352,10 @@ body::before {
   position: sticky;
   top: var(--nav-height-mobile);
   z-index: var(--z-sticky);
-  background: rgba(13,13,13,0.95);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: var(--color-bg-base);
   border-bottom: 1px solid var(--color-border-subtle);
 }
+
 
 .filter-bar__inner {
   max-width: var(--container-max-width);
@@ -610,25 +582,20 @@ box-shadow: 0 12px 40px var(--color-accent-glow);  transform: translateY(calc(-1
    ============================================================ */
 
 .product-card {
-  background: var(--color-bg-surface-1);
+  background: var(--color-bg-base);
   border: 1px solid var(--color-border-subtle);
-  border-radius: var(--radius-card);
+  border-radius: 0; /* Sharp edges */
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  transition:
-    border-color var(--transition-base),
-    box-shadow var(--transition-base),
-    transform var(--transition-spring);
-  animation: fade-up 0.4s var(--transition-spring) both;
+  transition: border-color 0.3s ease, transform 0.3s ease;
 }
 
 .product-card:hover {
-  border-color: var(--color-border-strong);
-  box-shadow: var(--glow-shadow);
-  transform: translateY(calc(-1 * var(--hover-lift-distance)));
-  will-change: transform;
+  border-color: var(--color-accent); /* Orange border on hover */
+  transform: translateY(-4px);
 }
+
 
 
 /* Stagger entering cards */

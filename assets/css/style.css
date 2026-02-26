@@ -98,7 +98,12 @@ img:not([src]), img[src=""] { background: var(--color-bg-surface-2); min-height:
 
 /* 04 PAGE HEADER & HERO */
 
-.hero { background: var(--color-bg-surface-1); border-bottom: 1px solid var(--color-border-subtle); padding: var(--spacing-xxl) var(--spacing-lg) var(--spacing-xl); }
+.hero { 
+  background: var(--color-bg-base); 
+  border-bottom: 1px solid var(--color-border-subtle); 
+  padding: var(--spacing-xxl) 0; 
+}
+
 .hero-container { max-width: var(--container-max-width); margin: 0 auto; }
 .hero-eyebrow { display: inline-flex; align-items: center; gap: var(--spacing-xs); font-family: var(--font-mono); font-size: var(--mono-size-sm); font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-accent); margin-bottom: var(--spacing-sm); }
 .hero-eyebrow::before { content: ''; display: block; width: 16px; height: 1px; background: var(--color-accent); }
@@ -117,13 +122,20 @@ img:not([src]), img[src=""] { background: var(--color-bg-surface-2); min-height:
 /* 06 PRODUCT ENTRIES */
 
 .product-list { display: flex; flex-direction: column; gap: var(--spacing-md); }
-.product-entry { display: flex; flex-direction: column; will-change: transform, box-shadow; background: var(--color-bg-surface-1); border: 1px solid var(--color-border-subtle); border-radius: var(--radius-card); overflow: hidden; transition: border-color var(--transition-base), box-shadow var(--transition-base), transform var(--transition-spring); }
-.product-entry:hover { 
-  border-color: var(--color-border-strong); 
-  box-shadow: 0 8px 32px var(--color-accent-glow);
-  transform: translateY(calc(-1 * var(--hover-lift-distance))); 
-  will-change: transform;
+.product-entry { 
+  display: flex; 
+  flex-direction: column; 
+  background: var(--color-bg-base); 
+  border: 1px solid var(--color-border-subtle); 
+  border-radius: 0; 
+  transition: border-color 0.3s ease;
 }
+
+.product-entry:hover { 
+  border-color: var(--color-accent); 
+  transform: translateY(-4px); 
+}
+
 .product-entry__image {
   width: 100%;
   aspect-ratio: 16/9;
@@ -193,7 +205,15 @@ img:not([src]), img[src=""] { background: var(--color-bg-surface-2); min-height:
 .comparison-table-wrapper { overflow-x: auto; border: 1px solid var(--color-border-subtle); border-radius: var(--radius-card); margin: var(--spacing-xl) 0; }
 .comparison-table { width: 100%; border-collapse: collapse; font-size: var(--body-font-size-sm); }
 .comparison-table th, .comparison-table td { padding: var(--spacing-sm) var(--spacing-md); text-align: left; border-bottom: 1px solid var(--color-border-subtle); white-space: nowrap; }
-.comparison-table th { font-family: var(--font-mono); font-size: var(--mono-size-sm); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-text-muted); background: var(--color-bg-surface-2); }
+.comparison-table th { 
+  font-family: var(--font-display); 
+  font-size: var(--label-size); 
+  font-weight: 700; 
+  color: var(--color-text-primary); 
+  border-bottom: 2px solid var(--color-text-primary);
+  background: none;
+}
+
 .comparison-table td { color: var(--color-text-muted); }
 .comparison-table td:first-child { color: var(--color-text-primary); font-weight: 500; }
 .comparison-table tr:last-child td { border-bottom: none; }

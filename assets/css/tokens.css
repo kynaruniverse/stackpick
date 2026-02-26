@@ -6,43 +6,37 @@
 :root {
 
   /* ── 01 COLOUR: RAW PALETTE ── */
-  --black:        #0D0D0D;   /* site background */
-  --grey-100:     #111111;   /* primary card surface */
-  --grey-200:     #1A1A1A;   /* deeper layer / section bg */
-  --grey-300:     #222222;   /* subtle depth / nav */
-  --grey-400:     #2A2A2A;   /* borders — standard */
-  --grey-500:     #3A3A3A;   /* stronger borders / active */
-  --grey-700:     #9A9A9A;   /* muted text */
-  --grey-900:     #F5F5F5;   /* primary text */
+  --white:        #FFFFFF;   /* site background */
+  --grey-50:      #F9F9F9;   /* subtle section backgrounds */
+  --grey-100:     #EEEEEE;   /* ultra light borders */
+  --grey-200:     #E2E2E2;   /* standard borders */
+  --grey-700:     #666666;   /* muted/body text */
+  --grey-900:     #111111;   /* primary headings */
 
-  --lava:         #FF4F1F;   /* primary accent */
-  --lava-dim:     #CC3D17;   /* darker lava */
-  --lava-glow:    rgba(255, 79, 31, 0.15);
-  --lava-subtle:  rgba(255, 79, 31, 0.08);
-  --lava-on:      #FFFFFF;
+  --lava:         #FF4F1F;   /* your orange accent */
+  --lava-dim:     #E63E10;
+  --lava-glow:    rgba(255, 79, 31, 0.1);
+  --lava-subtle:  rgba(255, 79, 31, 0.05);
 
   /* ── 02 COLOUR: SEMANTIC MAPPING ── */
-  --color-bg-base:       var(--black);
-  --color-bg-surface-1:  var(--grey-100);
-  --color-bg-surface-2:  var(--grey-200);
-  --color-bg-surface-3:  var(--grey-300);
-  --color-bg-overlay:    rgba(0, 0, 0, 0.85);
+  --color-bg-base:       var(--white);
+  --color-bg-surface-1:  var(--white);
+  --color-bg-surface-2:  var(--grey-50);
+  --color-bg-surface-3:  var(--grey-100);
+  --color-bg-overlay:    rgba(255, 255, 255, 0.95);
 
   --color-text-primary:    var(--grey-900);
   --color-text-muted:      var(--grey-700);
-  --color-text-on-accent:  var(--lava-on);
+  --color-text-on-accent:  #FFFFFF;
 
   --color-accent:          var(--lava);
   --color-accent-dim:      var(--lava-dim);
   --color-accent-glow:     var(--lava-glow);
   --color-accent-subtle:   var(--lava-subtle);
 
-  --color-border-subtle:   var(--grey-400);
-  --color-border-strong:   var(--grey-500);
+  --color-border-subtle:   var(--grey-100);
+  --color-border-strong:   var(--grey-900);
 
-  --color-success:  #3D9E6A;
-  --color-danger:   #D44B3A;
-  --color-warning:  #C97B2A;
 
   /* ── 03 TYPOGRAPHY: FAMILIES & WEIGHTS ── */
   --font-display: 'Space Grotesk', 'Segoe UI', sans-serif;
@@ -98,9 +92,9 @@
   --spacing-xs:   8px;
   --spacing-sm:   12px;
   --spacing-md:   16px;
-  --spacing-lg:   24px;
-  --spacing-xl:   32px;
-  --spacing-xxl:  48px;
+  --spacing-lg:   32px;
+  --spacing-xl:   48px;
+  --spacing-xxl:  64px;
   --spacing-xxxl: 64px;
 
   --spacing-section-vertical:    80px;
@@ -136,7 +130,7 @@
 
 /* ── 07 LAYOUT & GRID ── */
 :root {
-  --container-max-width: 1280px;
+  --container-max-width: 1100px;
   --grid-gap-sm: var(--spacing-md);
   --grid-gap-lg: var(--spacing-xl);
 
@@ -167,9 +161,9 @@
 
 /* ── 09 BORDERS & RADIUS ── */
 :root {
-  --radius-sm:     2px;
-  --radius:        4px;
-  --radius-lg:     8px;
+  --radius-sm:     0px;
+  --radius:        0px;
+  --radius-lg:     0px;
   --radius-pill:   9999px;
 
   /* Semantic Bridges */
