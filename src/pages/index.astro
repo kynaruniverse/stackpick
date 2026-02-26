@@ -1,0 +1,203 @@
+---
+// src/pages/index.astro
+// Homepage — product wall with collection tabs.
+// All data is server-rendered at build time. No wall.js needed.
+
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import ProductCard from '../components/ProductCard.astro';
+
+// Fetch all data at build time
+const allProducts    = await getCollection('products');
+const allCollections = await getCollection('collections');
+
+// Build a product lookup map for O(1) access
+const productMap = new Map(allProducts.map(p => [p.data.id, p]));
+
+// Sort collections so "all-picks" is always first
+const COLLECTION_ORDER = [
+  'all-picks', 'sweaty-fps', 'kynar-setup',
+  'wireless-only', 'study-mode', 'under-100',
+  'cozy-station', 'creator-bay',
+];
+allCollections.sort((a, b) =>
+  COLLECTION_ORDER.indexOf(a.data.id) - COLLECTION_ORDER.indexOf(b.data.id)
+);
+
+// Pre-build product lists per collection for server rendering
+const collectionProducts = allCollections.map(col => ({
+  id:       col.data.id,
+  label:    col.data.label,
+  emoji:    col.data.emoji,
+  color:    col.data.color,
+  products: col.data.baseProducts
+    .map(id => productMap.get(id))
+    .filter(Boolean),
+}));
+
+const featuredCollection = collectionProducts[0];
+---
+
+<Base
+  title="StackPick — Best Gaming Gear for UK Gamers"
+  description="Researched gaming gear picks for UK gamers. Best mice, keyboards, headsets, monitors and chairs — tested, ranked, no filler."
+  canonical="https://stackpick.co.uk/"
+>
+
+  <!-- Homepage hero -->
+  <section slot="hero" class="hero hero--home">
+    <div class="hero-container container">
+      <p class="hero-eyebrow">UK Gaming Gear</p>
+      <h1>The Best Gaming Gear<br>for UK Gamers</h1>
+      <p>Researched picks across every category. System verified. No filler.</p>
+      <div class="hero-actions">
+        <a href="/mice/" class="btn-primary">Browse Mice →</a>
+        <a href="/guides/" class="btn-secondary">Setup Guides</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Collection tabs -->
+  <div class="collection-tabs-bar" id="collection-tabs" role="tablist" aria-label="Browse by collection">
+    {collectionProducts.map((col, i) => (
+      <button
+        role="tab"
+        class:list={['collection-tab', i === 0 && 'active']}
+        data-collection={col.id}
+        aria-selected={i === 0 ? 'true' : 'false'}
+        style={`--tab-color: ${col.color}`}
+      >
+        <span class="collection-tab__emoji">{col.emoji}</span>
+        <span class="collection-tab__label">{col.label}</span>
+      </button>
+    ))}
+  </div>
+
+  <!-- Product panels — one per collection, only first is visible -->
+  {collectionProducts.map((col, i) => (
+    <section
+      role="tabpanel"
+      id={`panel-${col.id}`}
+      class:list={['collection-panel', i !== 0 && 'hidden']}
+      aria-labelledby={`tab-${col.id}`}
+      aria-hidden={i !== 0 ? 'true' : 'false'}
+    >
+      <div class="product-list">
+        {col.products.map((product, rank) => product && (
+          <ProductCard
+            id={product.data.id}
+            rank={rank + 1}
+            name={product.data.name}
+            badge={product.data.badge}
+            emoji={product.data.emoji}
+            price={product.data.price}
+            msrp={product.data.msrp}
+            savings={product.data.savings}
+            affiliate={product.data.affiliate}
+            desc={product.body}
+            specs={product.data.specs}
+            pros={product.data.pros}
+            cons={product.data.cons}
+            inStock={product.data.inStock}
+            nextDay={product.data.nextDay}
+          />
+        ))}
+      </div>
+    </section>
+  ))}
+
+  <!-- Browse categories strip -->
+  <section class="section">
+    <div class="section-head">
+      <h2>Browse by Category</h2>
+    </div>
+    <div class="also-grid">
+      <a href="/mice/"      class="also-card"><span class="also-card__icon">🖱️</span><div><h3 class="also-card__title">Gaming Mice</h3><p class="also-card__desc">From 40g ultralight to all-round legends</p></div><span class="also-card__arrow">→</span></a>
+      <a href="/keyboards/" class="also-card"><span class="also-card__icon">⌨️</span><div><h3 class="also-card__title">Keyboards</h3><p class="also-card__desc">Hall Effect, wireless, budget mechanical</p></div><span class="also-card__arrow">→</span></a>
+      <a href="/headsets/"  class="also-card"><span class="also-card__icon">🎧</span><div><h3 class="also-card__title">Headsets</h3><p class="also-card__desc">Open-back audiophile to wireless premium</p></div><span class="also-card__arrow">→</span></a>
+      <a href="/monitors/"  class="also-card"><span class="also-card__icon">🖥️</span><div><h3 class="also-card__title">Monitors</h3><p class="also-card__desc">OLED, Mini-LED, and budget IPS</p></div><span class="also-card__arrow">→</span></a>
+      <a href="/chairs/"    class="also-card"><span class="also-card__icon">🪑</span><div><h3 class="also-card__title">Chairs</h3><p class="also-card__desc">Five chairs for five real problems</p></div><span class="also-card__arrow">→</span></a>
+      <a href="/guides/"    class="also-card"><span class="also-card__icon">📋</span><div><h3 class="also-card__title">Setup Guides</h3><p class="also-card__desc">Complete builds from £50 to £2500</p></div><span class="also-card__arrow">→</span></a>
+    </div>
+  </section>
+
+  <!-- Tab switching script — zero dependencies, ~20 lines -->
+  <script>
+    const tabs   = document.querySelectorAll<HTMLElement>('.collection-tab');
+    const panels = document.querySelectorAll<HTMLElement>('.collection-panel');
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const id = tab.dataset.collection!;
+
+        // Update tabs
+        tabs.forEach(t => {
+          t.classList.remove('active');
+          t.setAttribute('aria-selected', 'false');
+        });
+        tab.classList.add('active');
+        tab.setAttribute('aria-selected', 'true');
+
+        // Update panels
+        panels.forEach(panel => {
+          const isTarget = panel.id === `panel-${id}`;
+          panel.classList.toggle('hidden', !isTarget);
+          panel.setAttribute('aria-hidden', isTarget ? 'false' : 'true');
+        });
+      });
+    });
+  </script>
+
+  <!-- Collection tab + hidden panel styles (scoped to homepage) -->
+  <style>
+    .collection-tabs-bar {
+      display: flex;
+      gap: var(--spacing-xs);
+      overflow-x: auto;
+      padding: var(--spacing-lg) 0 var(--spacing-md);
+      border-bottom: 1px solid var(--color-border-subtle);
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    .collection-tabs-bar::-webkit-scrollbar { display: none; }
+
+    .collection-tab {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-xs);
+      flex-shrink: 0;
+      padding: var(--spacing-xs) var(--spacing-md);
+      font-size: var(--label-size);
+      font-weight: var(--label-weight);
+      letter-spacing: var(--label-letter-spacing);
+      text-transform: var(--label-transform);
+      color: var(--color-text-muted);
+      border: 1px solid var(--color-border-subtle);
+      border-radius: var(--radius-pill);
+      background: var(--color-bg-surface-1);
+      cursor: pointer;
+      transition: color var(--transition-base), border-color var(--transition-base), background var(--transition-base);
+    }
+    .collection-tab:hover {
+      color: var(--color-text-primary);
+      border-color: var(--color-border-strong);
+    }
+    .collection-tab.active {
+      color: var(--color-accent);
+      border-color: var(--color-accent-dim);
+      background: var(--color-accent-subtle);
+    }
+    .collection-tab__emoji { font-size: 1em; }
+
+    .collection-panel { padding: var(--spacing-lg) 0; }
+    .collection-panel.hidden { display: none; }
+
+    .hero--home { padding: var(--spacing-xxxl) var(--spacing-lg) var(--spacing-xxl); }
+    .hero-actions {
+      display: flex;
+      gap: var(--spacing-md);
+      flex-wrap: wrap;
+      margin-top: var(--spacing-lg);
+    }
+  </style>
+</Base>

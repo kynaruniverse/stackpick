@@ -1,0 +1,230 @@
+---
+// src/pages/guides/[slug].astro
+// Generates one page per guide, e.g. /guides/gaming-setup-500/
+
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+
+export async function getStaticPaths() {
+  const guides = await getCollection('guides');
+  return guides.map(guide => ({
+    params: { slug: guide.data.slug },
+    props:  { guide },
+  }));
+}
+
+const { guide } = Astro.props;
+const { data }   = guide;
+
+// Render the intro + buying guide prose from the markdown body
+const { Content } = await guide.render();
+
+type SummaryRow   = { emoji: string; category: string; pick: string; price: string };
+type SummaryTotal = { label: string; value: string };
+type GuideProduct = {
+  name: string; badge: string; badgeColor: string;
+  price: string; affiliate: string; desc: string;
+  pros: string[]; cons: string[];
+  msrp: string | null; savings: string | null;
+};
+type GuideSection = { heading: string; intro: string; products: GuideProduct[] };
+type RelatedGuide = { href: string; emoji: string; title: string; desc: string };
+
+const summaryTable  = data.summaryTable  as SummaryRow[];
+const summaryTotals = data.summaryTotals as SummaryTotal[];
+const sections      = data.sections      as GuideSection[];
+const relatedGuides = data.relatedGuides as RelatedGuide[];
+---
+
+<Base
+  title={data.metaTitle}
+  description={data.metaDescription}
+  canonical={`https://stackpick.co.uk/guides/${data.slug}/`}
+  ogType="article"
+>
+
+  <section slot="hero" class="hero hero--inner">
+    <div class="hero-container container">
+      <p class="hero-eyebrow">Setup Guide · {data.budgetLabel}</p>
+      <h1>{data.heroTitle}</h1>
+      <p>{data.heroSubtitle}</p>
+    </div>
+  </section>
+
+  <nav class="breadcrumb-bar" aria-label="Breadcrumb">
+    <div class="container">
+      <ol class="breadcrumb-list">
+        <li><a href="/">Home</a></li>
+        <li class="breadcrumb-sep" aria-hidden="true">/</li>
+        <li><a href="/guides/">Guides</a></li>
+        <li class="breadcrumb-sep" aria-hidden="true">/</li>
+        <li aria-current="page">{data.breadcrumbLabel}</li>
+      </ol>
+    </div>
+  </nav>
+
+  <article class="buying-guide">
+
+    <!-- Intro text from markdown body -->
+    <div class="guide-intro">
+      <Content />
+    </div>
+
+    <!-- Summary table -->
+    {summaryTable.length > 0 && (
+      <div class="comparison-table-wrapper">
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th scope="col">Category</th>
+              <th scope="col">Our Pick</th>
+              <th scope="col">Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            {summaryTable.map(row => (
+              <tr>
+                <td>{row.emoji} {row.category}</td>
+                <td>{row.pick}</td>
+                <td>{row.price}</td>
+              </tr>
+            ))}
+            {summaryTotals.map(total => (
+              <tr class="summary-total-row">
+                <td colspan="2"><strong>{total.label}</strong></td>
+                <td><strong>{total.value}</strong></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    )}
+
+    <!-- Guide sections with products -->
+    {sections.map(section => (
+      <section class="guide-section">
+        <h2>{section.heading}</h2>
+        {section.intro && <p class="guide-section__intro">{section.intro}</p>}
+
+        <div class="product-list">
+          {section.products.map((product, i) => (
+            <article class="product-entry">
+              <div class="product-entry__rank">
+                <span
+                  class="rank-badge"
+                  style={product.badgeColor
+                    ? `background:${product.badgeColor}; border-color:${product.badgeColor}; color:#fff`
+                    : undefined}
+                >
+                  {product.badge}
+                </span>
+              </div>
+              <div class="product-entry__body">
+                <div class="product-entry__top">
+                  <div class="product-entry__info">
+                    <h3 class="product-entry__name">{product.name}</h3>
+                    <p class="product-entry__desc">{product.desc}</p>
+                  </div>
+                </div>
+
+                {(product.pros?.length > 0 || product.cons?.length > 0) && (
+                  <div class="pros-cons">
+                    {product.pros?.length > 0 && (
+                      <div class="pros-cons__col">
+                        <p class="pros-cons__label pros-cons__label--pros">Pros</p>
+                        <ul class="pros-cons__list">
+                          {product.pros.map(p => <li class="pros-cons__item">{p}</li>)}
+                        </ul>
+                      </div>
+                    )}
+                    {product.cons?.length > 0 && (
+                      <div class="pros-cons__col">
+                        <p class="pros-cons__label pros-cons__label--cons">Cons</p>
+                        <ul class="pros-cons__list">
+                          {product.cons.map(c => <li class="pros-cons__item">{c}</li>)}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                <div class="product-entry__footer">
+                  <div class="price-block">
+                    <span class="price-current">{product.price}</span>
+                    {product.msrp && <span class="price-msrp">{product.msrp}</span>}
+                    {product.savings && <span class="price-badge">Save {product.savings}</span>}
+                  </div>
+                  {product.affiliate && product.affiliate !== 'TODO:REPLACE_WITH_REAL_AFFILIATE_URL'
+                    ? (
+                      <a
+                        href={product.affiliate}
+                        class="btn-primary"
+                        target="_blank"
+                        rel="noopener sponsored"
+                        data-type="guide-cta"
+                      >
+                        View on Amazon →
+                      </a>
+                    ) : (
+                      <span class="btn-secondary" style="opacity:0.4; pointer-events:none">
+                        Coming Soon
+                      </span>
+                    )
+                  }
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+    ))}
+
+    <p class="last-updated">Last verified: {data.dateModified}</p>
+
+    <!-- Related guides -->
+    {relatedGuides.length > 0 && (
+      <section class="section">
+        <div class="section-head">
+          <h2>Other Setup Guides</h2>
+        </div>
+        <div class="guide-grid">
+          {relatedGuides.map(related => (
+            <a href={related.href} class="guide-card">
+              <div class="guide-card__icon">{related.emoji}</div>
+              <div class="guide-card__body">
+                <h3 class="guide-card__title">{related.title}</h3>
+                <p class="guide-card__desc">{related.desc}</p>
+              </div>
+              <span class="guide-card__arrow" aria-hidden="true">→</span>
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
+
+  </article>
+
+  <style>
+    .guide-intro {
+      margin-bottom: var(--spacing-xl);
+    }
+    .guide-section {
+      margin: var(--spacing-xxl) 0;
+      padding-top: var(--spacing-xl);
+      border-top: 1px solid var(--color-border-subtle);
+    }
+    .guide-section:first-of-type {
+      border-top: none;
+      padding-top: 0;
+    }
+    .guide-section__intro {
+      color: var(--color-text-muted);
+      margin-bottom: var(--spacing-lg);
+    }
+    .summary-total-row td {
+      background: var(--color-bg-surface-2);
+      color: var(--color-text-primary) !important;
+      border-top: 1px solid var(--color-border-strong);
+    }
+  </style>
+</Base>
