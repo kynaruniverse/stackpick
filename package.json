@@ -1,16 +1,16 @@
 {
   "name": "stackpick",
-  "version": "1.0.0",
-  "description": "StackPick static site generator",
-  "private": true,
+  "version": "2.0.0",
+  "type": "module",
   "scripts": {
-    "build":          "node _generator/build.js",
-    "build:validate": "node _generator/lib/validate.js",
-    "check":          "node _generator/lib/validate.js",
-    "start":          "npm run build"
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "astro": "^4.16.0"
   },
   "engines": {
-    "node": ">=18.0.0"
-  },
-  "license": "UNLICENSED"
+    "node": ">=20.0.0"
+  }
 }
