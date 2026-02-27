@@ -38,11 +38,11 @@ const metaTitle = title.includes('StackPick') ? title : `${title} | StackPick`;
 const path = Astro.url.pathname;
 
 // Sidebar — category pages
-const isMice      = path === '/mice/' || path.startsWith('/mice/');
-const isKeyboards = path === '/keyboards/' || path.startsWith('/keyboards/');
-const isHeadsets  = path === '/headsets/' || path.startsWith('/headsets/');
-const isMonitors  = path === '/monitors/' || path.startsWith('/monitors/');
-const isChairs    = path === '/chairs/' || path.startsWith('/chairs/');
+const isMice      = path.startsWith('/mice/');
+const isKeyboards = path.startsWith('/keyboards/');
+const isHeadsets  = path.startsWith('/headsets/');
+const isMonitors  = path.startsWith('/monitors/');
+const isChairs    = path.startsWith('/chairs/');
 
 // Desktop nav — section pages
 const isGuides      = path.startsWith('/guides');
@@ -98,14 +98,16 @@ function sidebarLinkClass(active: boolean): string {
   <meta property="og:url"          content={canonical}>
   <meta property="og:site_name"    content="StackPick">
   <meta property="og:locale"       content="en_GB">
-<!-- ── Twitter / X Card ── -->
-  <meta name="twitter:card"        content="summary_large_image">
-  <meta name="twitter:title"       content={metaTitle}>
-  <meta name="twitter:description" content={description}>
-  <meta property="og:image"        content="https://stackpick.co.uk/assets/images/og-default.png">
+  <meta property="og:image"        content={ogImage}>
   <meta property="og:image:width"  content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt"    content="StackPick — Best Gaming Gear for UK Gamers">
+
+  <!-- ── Twitter / X Card ── -->
+  <meta name="twitter:card"        content="summary_large_image">
+  <meta name="twitter:title"       content={metaTitle}>
+  <meta name="twitter:description" content={description}>
+  <meta name="twitter:image"       content={ogImage}>
 
   <!-- ── PWA & mobile ── -->
   <meta name="theme-color"         content="#1B3022" media="(prefers-color-scheme: light)">

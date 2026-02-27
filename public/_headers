@@ -1,11 +1,11 @@
 # ============================================================
-# StackPick — Netlify / Cloudflare Pages headers
+# StackPick — Netlify / Cloudflare Pages / GitHub Pages headers
 # Controls security, caching, and content policy site-wide.
 #
-# NOTE: __CSP_NONCE__ is a build-time placeholder.
-# _generator/build.js (Step 2) replaces it with a fresh
-# random nonce on every build, then restores it (Step 9).
-# Never commit this file with a real nonce value in place.
+# NOTE: script-src includes 'unsafe-inline' to support Astro's
+# is:inline scripts (e.g. the FOUT-prevention theme script in
+# Base.astro). These are build-time static scripts, not
+# user-supplied content.
 # ============================================================
 
 
@@ -15,7 +15,7 @@ X-Frame-Options: DENY
 X-Content-Type-Options: nosniff
 Referrer-Policy: strict-origin-when-cross-origin
 Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()
-Content-Security-Policy: default-src 'self'; script-src 'self' https://www.googletagmanager.com https://www.google-analytics.com 'nonce-__CSP_NONCE__'; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://www.google-analytics.com https://www.googletagmanager.com; worker-src 'self'; frame-ancestors 'none'
+Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://www.google-analytics.com https://www.googletagmanager.com; worker-src 'self'; frame-ancestors 'none'
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 
 

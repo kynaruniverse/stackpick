@@ -112,26 +112,39 @@ const searchIndexJSON = JSON.stringify(searchIndex);
         .replace(/'/g, '&#39;');
     }
 
+    function safeUrl(url: string): string {
+      try {
+        const parsed = new URL(url, window.location.origin);
+        if (parsed.protocol !== 'https:' && parsed.protocol !== 'http:' && parsed.protocol !== '/') {
+          return '#';
+        }
+        return esc(url);
+      } catch {
+        return '#';
+      }
+    }
+
     function renderCard(item: typeof INDEX[0]): string {
       const typeLabel = item.type === 'product' ? item.category : item.type;
+      const safeHref  = safeUrl(item.url);
       return `
         <article class="product-entry">
           <div class="product-entry__rank">
-            <span class="rank-badge">${typeLabel.toUpperCase()}</span>
-            ${item.price ? `<span class="price-current">${item.price}</span>` : ''}
+            <span class="rank-badge">${esc(typeLabel.toUpperCase())}</span>
+            ${item.price ? `<span class="price-current">${esc(item.price)}</span>` : ''}
           </div>
           <div class="product-entry__body">
             <div class="product-entry__top">
               <div class="product-entry__info">
                 <h2 class="product-entry__name">
-                  <a href="${esc(item.url)}" class="search-result-link">${esc(item.title)}</a>
+                  <a href="${safeHref}" class="search-result-link">${esc(item.title)}</a>
                 </h2>
                 <p class="product-entry__desc">${esc(item.desc)}</p>
               </div>
             </div>
             <div class="product-entry__footer">
               <div></div>
-              <a href="${item.url}" class="btn-secondary">
+              <a href="${safeHref}" class="btn-secondary">
                 View ${ChevronSVG}
               </a>
             </div>

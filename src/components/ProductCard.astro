@@ -69,6 +69,7 @@ export interface Props {
   seam:         string;   // Category color key: crimson | cobalt | jade | slate | amber
   emoji:        string;   // Category emoji (visual identity, not decorative)
   price:        string;   // Current price string (e.g. "£119")
+  priceRaw:     number;   // Numeric price for budget filter classification
   msrp:         string | null;  // Original price — null if no discount
   savings:      string | null;  // Saving percentage — null if no discount
   affiliate:    string;   // Amazon UK affiliate URL
@@ -90,6 +91,7 @@ const {
   seam,
   emoji,
   price,
+  priceRaw,
   msrp,
   savings,
   affiliate,

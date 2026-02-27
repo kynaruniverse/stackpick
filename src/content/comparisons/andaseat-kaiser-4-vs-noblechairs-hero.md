@@ -4,7 +4,7 @@ title: "AndaSeat Kaiser 4 vs noblechairs HERO"
 heroTitle: "AndaSeat Kaiser 4 vs noblechairs HERO"
 heroSubtitle: "Plush Comfort vs Firm Posture Support"
 breadcrumbLabel: "AndaSeat Kaiser 4 vs noblechairs HERO"
-metaTitle: "AndaSeat Kaiser 4 vs noblechairs HERO Comparison | StackPick
+metaTitle: "AndaSeat Kaiser 4 vs noblechairs HERO Comparison | StackPick"
 metaDescription: "Comparing the best heavy-duty gaming chairs for UK gamers. Soft fabric vs firm support."
 datePublished: "2026-02-22"
 dateModified: "2026-02-22"

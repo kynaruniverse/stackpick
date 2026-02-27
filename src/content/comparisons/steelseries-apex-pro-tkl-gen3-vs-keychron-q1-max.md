@@ -4,7 +4,7 @@ title: "SteelSeries Apex Pro TKL Gen 3 vs Keychron Q1 Max"
 heroTitle: "SteelSeries Apex Pro TKL Gen 3 vs Keychron Q1 Max"
 heroSubtitle: "Hall Effect Speed vs Premium Typing Bliss"
 breadcrumbLabel: "Apex Pro TKL Gen 3 vs Keychron Q1 Max"
-metaTitle: "SteelSeries Apex Pro TKL vs Keychron Q1 Max | StackPick
+metaTitle: "SteelSeries Apex Pro TKL vs Keychron Q1 Max | StackPick"
 metaDescription: "Rapid Trigger vs Custom Build. We compare the Hall Effect speed of SteelSeries with the premium typing feel of Keychron."
 datePublished: "2026-02-22"
 dateModified: "2026-02-22"

@@ -102,6 +102,10 @@
 
 
    
+// ============================================================
+    //  05  OUTBOUND CLICK TRACKING (AFFILIATE + GENERAL)
+    // ============================================================
+
     document.addEventListener('click', function (e) {
         var el = e.target;
         while (el && el.tagName !== 'A') { el = el.parentNode; }

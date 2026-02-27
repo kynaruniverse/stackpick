@@ -4,7 +4,7 @@ title: "Sennheiser HD560s vs SteelSeries Arctis Nova Pro Wireless"
 heroTitle: "Sennheiser HD560s vs SteelSeries Arctis Nova Pro Wireless"
 heroSubtitle: "Audiophile Soundstage vs Feature-Packed Wireless"
 breadcrumbLabel: "HD560s vs Arctis Nova Pro Wireless"
-metaTitle: "Sennheiser HD560s vs SteelSeries Arctis Nova Pro | StackPick
+metaTitle: "Sennheiser HD560s vs SteelSeries Arctis Nova Pro | StackPick"
 metaDescription: "Audiophile open-back vs feature-packed wireless gaming. We help you choose the best audio setup for your UK gaming station."
 datePublished: "2026-02-22"
 dateModified: "2026-02-22"

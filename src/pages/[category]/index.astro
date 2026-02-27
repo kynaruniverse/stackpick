@@ -15,6 +15,12 @@ const BUILD_SHORT = new Date().toLocaleDateString('en-GB', { month: 'short', yea
 
 type CategoryKey = 'mice' | 'keyboards' | 'headsets' | 'monitors' | 'chairs';
 
+// ⚠️ SECURITY NOTE: buyingGuide strings use set:html — they are rendered
+// as raw HTML without escaping. All content here is static and author-controlled.
+// Never interpolate user-supplied values, URL parameters, or CMS content into
+// these strings without sanitisation. Astro's {} expression escaping does NOT
+// apply inside set:html contexts.
+
 const CATEGORY_META: Record<CategoryKey, {
   emoji: string;
   pageTitle: string;
@@ -174,6 +180,7 @@ allProducts.sort((a, b) => (a.data.rank ?? 99) - (b.data.rank ?? 99));
         seam={product.data.seam}
         emoji={product.data.emoji}
         price={product.data.price}
+        priceRaw={product.data.priceRaw}
         msrp={product.data.msrp}
         savings={product.data.savings}
         affiliate={product.data.affiliate}

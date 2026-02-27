@@ -4,12 +4,11 @@
 //  network-first for HTML pages.
 //
 //  ⚠️  PLACEHOLDER NOTICE:
-//  CACHE_NAME must contain '__SP_VERSION__' before each build.
-//  build.js Step 8 replaces '__SP_VERSION__' with a real timestamp.
-//  build.js Step 9 restores '__SP_VERSION__' after the build.
-//  If you see a hardcoded value in CACHE_NAME in git history,
-//  Step 9 failed — restore this line manually before committing.
-//
+//  CACHE_NAME must contain '__BUILD_TIMESTAMP__' before each build.
+//  The GitHub Actions workflow (build-and-deploy.yml) replaces
+//  '__BUILD_TIMESTAMP__' in dist/sw.js with a Unix timestamp via sed.
+//  If you see a hardcoded number in CACHE_NAME in git history, the
+//  CI step failed — restore '__BUILD_TIMESTAMP__' manually before committing.
 //  SHELL_ASSETS: If you add a new static file to the site, add
 //  its path here so it is precached during install.
 //

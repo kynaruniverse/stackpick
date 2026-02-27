@@ -95,6 +95,7 @@ const collectionProducts = allCollections.map(col => ({
             seam={product.data.seam}
             emoji={product.data.emoji}
             price={product.data.price}
+            priceRaw={product.data.priceRaw}
             msrp={product.data.msrp}
             savings={product.data.savings}
             affiliate={product.data.affiliate}
@@ -199,14 +200,15 @@ const collectionProducts = allCollections.map(col => ({
         panels.forEach(panel => {
           const isTarget = panel.id === `panel-${id}`;
           panel.classList.toggle('hidden', !isTarget);
-        // display:none already removes from a11y tree; aria-hidden is redundant
-        // but keep for belt-and-suspenders with older AT
-        panel.setAttribute('aria-hidden', isTarget ? 'false' : 'true');
-        if (!isTarget) {
-          panel.setAttribute('inert', '');
-        } else {
-        panel.removeAttribute('inert');
-        }        });
+          // display:none already removes from a11y tree; aria-hidden is redundant
+          // but keep for belt-and-suspenders with older AT
+          panel.setAttribute('aria-hidden', isTarget ? 'false' : 'true');
+          if (!isTarget) {
+            panel.setAttribute('inert', '');
+          } else {
+            panel.removeAttribute('inert');
+          }
+        });
       });
     });
   </script>

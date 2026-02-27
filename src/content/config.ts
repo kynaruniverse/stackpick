@@ -38,7 +38,7 @@ const products = defineCollection({
 // Homepage product wall tabs. Each collection references product IDs.
 
 
-const collections = defineCollection({
+const homepageCollections = defineCollection({
   type: 'content',
   schema: z.object({
     id:              z.string(),
@@ -127,7 +127,7 @@ const guides = defineCollection({
 
 export const collections = {
   products,
-  collections,
+  collections: homepageCollections,
   comparisons,
   guides,
 };

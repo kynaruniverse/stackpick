@@ -4,7 +4,7 @@ title: "Razer Viper V3 Pro vs Logitech G502 X Plus"
 heroTitle: "Razer Viper V3 Pro vs Logitech G502 X Plus"
 heroSubtitle: "Ultralight Speed vs Feature-Packed Versatility"
 breadcrumbLabel: "Viper V3 Pro vs G502 X Plus"
-metaTitle: "Razer Viper V3 Pro vs Logitech G502 X Plus Comparison | StackPick
+metaTitle: "Razer Viper V3 Pro vs Logitech G502 X Plus Comparison | StackPick"
 metaDescription: "Ultralight FPS speed vs productivity power. We compare the 54g Viper V3 Pro against the feature-rich G502 X Plus for UK gamers."
 datePublished: "2026-02-22"
 dateModified: "2026-02-22"

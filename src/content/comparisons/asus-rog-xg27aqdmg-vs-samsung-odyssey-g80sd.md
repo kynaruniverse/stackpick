@@ -4,7 +4,7 @@ title: "ASUS ROG XG27AQDMG vs Samsung Odyssey G80SD"
 heroTitle: "ASUS ROG XG27AQDMG vs Samsung Odyssey G80SD"
 heroSubtitle: "Glossy 1440p WOLED vs Matte 4K QD-OLED"
 breadcrumbLabel: "ASUS XG27AQDMG vs Samsung G80SD"
-metaTitle: "ASUS XG27AQDMG vs Samsung G80SD Comparison | StackPick
+metaTitle: "ASUS XG27AQDMG vs Samsung G80SD Comparison | StackPick"
 metaDescription: "Glossy 1440p vs Matte 4K. We compare the best ASUS and Samsung OLED monitors for UK gamers."
 datePublished: "2026-02-22"
 dateModified: "2026-02-22"
