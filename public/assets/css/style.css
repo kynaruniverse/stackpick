@@ -49,6 +49,7 @@
 
 html {
   color-scheme: light dark;
+  overflow-x: hidden;
 }
 
 /* Only animate theme-sensitive properties, not layout */
@@ -190,9 +191,9 @@ body::before {
 .main-content > .breadcrumb-bar,
 .main-content > .filter-cage,
 .main-content > .collection-tabs-bar {
-  /* These stripe full-width of main-content */
-  margin-left: calc(var(--page-pad-mobile) * -1);
-  margin-right: calc(var(--page-pad-mobile) * -1);
+  /* Full-bleed within main-content on mobile */
+  width: 100%;
+  box-sizing: border-box;
 }
 
 @media (min-width: 1024px) {
@@ -494,6 +495,10 @@ p {
    Only affects display-level headings — body type stays
    consistent for readability.
    ────────────────────────────────────────────────────────── */
+
+/* Mobile — clamp headings so nothing overflows */
+h1 { font-size: clamp(1.5rem, 6vw, var(--text-4xl)); }
+h2 { font-size: clamp(1.25rem, 5vw, var(--text-3xl)); }
 
 /* Tablet — md breakpoint */
 @media (min-width: 768px) {

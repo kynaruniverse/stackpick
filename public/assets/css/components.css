@@ -893,7 +893,7 @@ img {
    ────────────────────────────────────────────────────────── */
 
 .hero {
-  padding: var(--space-20) var(--page-pad-mobile) var(--space-16);
+  padding: var(--space-12) var(--page-pad-mobile) var(--space-10);
 }
 
 .hero-container {
@@ -940,22 +940,23 @@ img {
 
 /* Homepage — large editorial hero */
 .hero--home {
-  padding: var(--space-24) var(--page-pad-mobile) var(--space-20);
+  padding: var(--space-14) var(--page-pad-mobile) var(--space-10);
   border-bottom: 1px solid var(--color-border);
 }
 
 .hero--home h1 {
-  font-size: var(--text-5xl);
+  font-size: clamp(1.75rem, 9vw, var(--text-5xl));
 }
 
 /* Inner pages — compact functional hero */
 .hero--inner {
-  padding: var(--space-16) var(--page-pad-mobile) var(--space-12);
+  padding: var(--space-10) var(--page-pad-mobile) var(--space-8);
   border-bottom: 1px solid var(--color-border);
 }
 
 .hero--inner h1 {
-  font-size: var(--text-4xl);
+  font-size: clamp(1.5rem, 7vw, var(--text-4xl));
+  word-break: break-word;
 }
 
 @media (min-width: 768px) {
@@ -1039,7 +1040,8 @@ img {
   z-index: var(--z-sticky);
   background: var(--color-bg);
   border-bottom: 1px solid var(--color-border);
-  padding: var(--space-3) var(--page-pad-mobile);
+  padding: var(--space-3) 0 var(--space-3) var(--page-pad-mobile);
+  overflow: hidden; /* Prevent chips bleeding page width on mobile */
 }
 
 .filter-strip {
@@ -1052,6 +1054,7 @@ img {
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
   -ms-overflow-style: none;
+  padding-right: var(--page-pad-mobile); /* breathing room at scroll end */
 }
 
 .filter-strip::-webkit-scrollbar {
@@ -1203,19 +1206,22 @@ img {
 
 .product-entry__name {
   font-family: var(--font-display);
-  font-size: var(--text-2xl);
+  font-size: clamp(1.1rem, 4.5vw, var(--text-2xl));
   font-weight: var(--weight-bold);
   letter-spacing: var(--tracking-snug);
   line-height: var(--leading-snug);
   color: var(--color-text-primary);
   margin-bottom: var(--space-1-5);
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .product-entry__desc {
-  font-size: var(--text-base);
+  font-size: var(--text-sm);
   font-weight: var(--weight-regular);
   color: var(--color-text-secondary);
   line-height: var(--leading-relaxed);
+  overflow-wrap: break-word;
 }
 
 /* Spec pills row */
@@ -1229,13 +1235,20 @@ img {
 /* Pros / Cons two-column layout */
 .pros-cons {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: var(--space-4);
   margin-bottom: var(--space-6);
-  padding: var(--space-5);
+  padding: var(--space-4);
   background: var(--color-bg-subtle);
   border-radius: var(--radius-md);
   border: 1px solid var(--color-border);
+}
+
+@media (min-width: 540px) {
+  .pros-cons {
+    grid-template-columns: 1fr 1fr;
+    padding: var(--space-5);
+  }
 }
 
 .pros-cons__col {
@@ -1297,10 +1310,23 @@ img {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-4);
+  gap: var(--space-3);
   flex-wrap: wrap;
-  padding-top: var(--space-5);
+  padding-top: var(--space-4);
   border-top: 1px solid var(--color-border);
+}
+
+@media (max-width: 479px) {
+  .product-entry__footer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .product-entry__footer .btn-primary,
+  .product-entry__footer .btn-secondary {
+    width: 100%;
+    justify-content: center;
+  }
 }
 
 /* Body wrapper */
@@ -1521,4 +1547,553 @@ img {
   font-size: 2rem;
   flex-shrink: 0;
   width: 52px;
-  height
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-bg-subtle);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+}
+
+.guide-card__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.guide-card__budget {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color: var(--color-action);
+  display: block;
+  margin-bottom: var(--space-1);
+}
+
+.guide-card__title {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-primary);
+  line-height: var(--leading-snug);
+  margin-bottom: var(--space-0-5);
+}
+
+.guide-card__desc {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  line-height: var(--leading-snug);
+}
+
+.guide-card__arrow {
+  flex-shrink: 0;
+  font-size: var(--text-lg);
+  color: var(--color-text-muted);
+  transition: transform var(--transition-smooth), color var(--transition-base);
+}
+
+.guide-card:hover .guide-card__arrow {
+  transform: translateX(3px);
+  color: var(--color-action);
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   19 — SEARCH
+   ────────────────────────────────────────────────────────── */
+
+.search-bar {
+  display: flex;
+  gap: var(--space-3);
+  margin-bottom: var(--space-6);
+}
+
+.search-input {
+  flex: 1;
+  height: var(--input-height);
+  padding: var(--input-padding);
+  font-family: var(--input-font-family);
+  font-size: var(--input-font-size);
+  font-weight: var(--weight-regular);
+  color: var(--color-text-primary);
+  background: var(--input-bg);
+  border: 1.5px solid var(--input-border);
+  border-radius: var(--input-radius);
+  outline: none;
+  transition:
+    border-color var(--transition-base),
+    box-shadow var(--transition-base);
+  -webkit-appearance: none;
+}
+
+.search-input::placeholder {
+  color: var(--color-text-muted);
+}
+
+.search-input:focus {
+  border-color: var(--input-border-focus);
+  box-shadow: var(--input-shadow-focus);
+}
+
+.search-btn {
+  height: var(--input-height);
+  padding: 0 var(--space-6);
+  font-family: var(--btn-font-family);
+  font-size: var(--btn-font-size);
+  font-weight: var(--btn-font-weight);
+  color: var(--btn-primary-text);
+  background: var(--btn-primary-bg);
+  border: 2px solid var(--btn-primary-bg);
+  border-radius: var(--btn-radius);
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    background var(--transition-hover),
+    border-color var(--transition-hover);
+}
+
+.search-btn:hover {
+  background: var(--btn-primary-bg-hover);
+  border-color: var(--btn-primary-bg-hover);
+}
+
+.search-results-count {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  letter-spacing: var(--tracking-wide);
+  margin-bottom: var(--space-5);
+  display: block;
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   20 — COMPARISON COMPONENTS
+   Two-column product buy boxes and spec table.
+   ────────────────────────────────────────────────────────── */
+
+.comparison-products {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-4);
+  margin: var(--space-8) 0;
+}
+
+@media (min-width: 640px) {
+  .comparison-products {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.comparison-product-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--card-padding);
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--card-radius);
+  box-shadow: var(--card-shadow);
+}
+
+.comparison-intro {
+  margin-bottom: var(--space-8);
+}
+
+.comparison-section {
+  margin: var(--space-10) 0;
+  padding-top: var(--space-8);
+  border-top: 1px solid var(--color-border);
+}
+
+.comparison-section h2 {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-tight);
+  margin-bottom: var(--space-4);
+}
+
+.comparison-section p {
+  font-size: var(--text-md);
+  line-height: var(--leading-relaxed);
+  color: var(--color-text-secondary);
+}
+
+.comparison-buy-cols {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-6);
+  margin-top: var(--space-5);
+}
+
+@media (min-width: 640px) {
+  .comparison-buy-cols {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.comparison-buy-col h3 {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color: var(--color-brand);
+  margin-bottom: var(--space-3);
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   21 — GUIDE COMPONENTS
+   Setup guide sections, intro, related cards.
+   ────────────────────────────────────────────────────────── */
+
+.guide-intro {
+  margin-bottom: var(--space-10);
+}
+
+.guide-section {
+  margin: var(--space-12) 0;
+  padding-top: var(--space-10);
+  border-top: 1px solid var(--color-border);
+}
+
+.guide-section:first-of-type {
+  border-top: none;
+  padding-top: 0;
+}
+
+.guide-section h2 {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-tight);
+  margin-bottom: var(--space-2);
+}
+
+.guide-section__intro {
+  font-size: var(--text-md);
+  color: var(--color-text-secondary);
+  line-height: var(--leading-relaxed);
+  margin-bottom: var(--space-6);
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   22 — BUYING GUIDE PROSE
+   Long-form editorial text. Maximum readability.
+   ────────────────────────────────────────────────────────── */
+
+.buying-guide {
+  max-width: 720px;
+}
+
+.buying-guide h2 {
+  font-family: var(--font-display);
+  font-size: var(--text-3xl);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-tight);
+  line-height: var(--leading-tight);
+  color: var(--color-text-primary);
+  margin-top: var(--space-12);
+  margin-bottom: var(--space-4);
+}
+
+.buying-guide h2:first-child {
+  margin-top: 0;
+}
+
+.buying-guide h3 {
+  font-family: var(--font-body);
+  font-size: var(--text-xl);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-primary);
+  margin-top: var(--space-8);
+  margin-bottom: var(--space-3);
+  letter-spacing: var(--tracking-normal);
+}
+
+.buying-guide p {
+  font-size: var(--text-md);
+  line-height: var(--leading-loose);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-5);
+}
+
+.buying-guide p:last-child {
+  margin-bottom: 0;
+}
+
+.buying-guide strong {
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-primary);
+}
+
+.buying-guide em {
+  font-style: italic;
+  color: var(--color-text-muted);
+}
+
+.buying-guide a {
+  color: var(--color-brand);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color var(--transition-base);
+}
+
+.buying-guide a:hover {
+  color: var(--color-brand-hover);
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   23 — CALLOUT
+   Highlighted info box. Used in about + comparisons.
+   ────────────────────────────────────────────────────────── */
+
+.callout {
+  padding: var(--callout-padding);
+  background: var(--callout-bg);
+  border: 1px solid var(--callout-border);
+  border-left: var(--callout-border-width) solid var(--callout-border-left);
+  border-radius: var(--callout-radius);
+  margin: var(--space-8) 0;
+}
+
+.callout__title {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color: var(--color-brand);
+  margin-bottom: var(--space-3);
+  display: block;
+}
+
+.callout p {
+  font-size: var(--text-base);
+  line-height: var(--leading-relaxed);
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   24 — TABLES
+   Comparison spec tables. Sharp corners. Forest header.
+   ────────────────────────────────────────────────────────── */
+
+.comparison-table-wrapper {
+  overflow-x: auto;
+  margin: var(--space-8) 0;
+  border: 1px solid var(--color-table-border);
+  border-radius: var(--radius-md);
+  /* Override — table itself is sharp but container has radius */
+}
+
+.comparison-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--table-font-size);
+}
+
+.comparison-table thead tr {
+  background: var(--color-table-header-bg);
+}
+
+.comparison-table th {
+  padding: var(--table-cell-padding);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--color-table-header-text);
+  text-align: left;
+  white-space: nowrap;
+  height: var(--table-header-height);
+}
+
+.comparison-table td {
+  padding: var(--table-cell-padding);
+  color: var(--color-text-secondary);
+  border-bottom: 1px solid var(--color-table-border);
+  height: var(--table-row-height);
+  vertical-align: middle;
+  line-height: var(--leading-snug);
+}
+
+.comparison-table tbody tr:nth-child(even) td {
+  background: var(--color-table-row-alt);
+}
+
+.comparison-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Winner cell highlight */
+.comparison-table td.winner {
+  background: var(--color-table-winner);
+  color: var(--color-table-winner-text);
+  font-weight: var(--weight-semibold);
+}
+
+/* Summary total row */
+.summary-total-row td {
+  background: var(--color-bg-subtle);
+  color: var(--color-text-primary);
+  font-weight: var(--weight-semibold);
+  border-top: 1px solid var(--color-border-strong);
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   25 — FOOTER
+   ────────────────────────────────────────────────────────── */
+
+.site-footer {
+  margin-top: var(--space-20);
+  padding: var(--space-12) var(--page-pad-mobile);
+  border-top: 1px solid var(--color-border);
+  background: var(--color-bg);
+}
+
+.site-footer__inner {
+  max-width: var(--container-xl);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.site-footer__brand {
+  font-family: var(--logo-font-family);
+  font-size: var(--logo-size-md);
+  font-weight: var(--logo-font-weight);
+  letter-spacing: var(--logo-letter-spacing);
+  text-transform: uppercase;
+  color: var(--color-text-primary);
+}
+
+.site-footer__brand span {
+  color: var(--color-action);
+}
+
+.site-footer__copy {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  letter-spacing: var(--tracking-wide);
+  line-height: var(--leading-relaxed);
+}
+
+.site-footer__copy a {
+  color: var(--color-text-secondary);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color var(--transition-base);
+}
+
+.site-footer__copy a:hover {
+  color: var(--color-text-primary);
+}
+
+@media (min-width: 1024px) {
+  .site-footer {
+    padding-left: var(--page-pad-desktop);
+    padding-right: var(--page-pad-desktop);
+  }
+
+  .site-footer__inner {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   26 — LAYOUT CONTAINERS & UTILITY CLASSES
+   ────────────────────────────────────────────────────────── */
+
+/* Main page wrapper */
+.streetwear-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+
+/* Constrained centered container */
+.container {
+  width: 100%;
+  max-width: var(--container-xl);
+  margin: 0 auto;
+  padding: 0 var(--page-pad-mobile);
+}
+
+@media (min-width: 1024px) {
+  .container {
+    padding: 0 var(--page-pad-desktop);
+  }
+}
+
+/* Site body split — sidebar + main on desktop */
+.site-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: var(--container-xl);
+  margin: 0 auto;
+  padding: 0 var(--page-pad-mobile);
+}
+
+@media (min-width: 1024px) {
+  .site-container {
+    flex-direction: row;
+    gap: var(--space-12);
+    padding: 0 var(--page-pad-desktop);
+  }
+}
+
+/* Main content area */
+.main-content {
+  flex: 1;
+  min-width: 0; /* Prevent flex child overflow */
+}
+
+/* Section spacing */
+.section {
+  padding: var(--space-12) 0;
+}
+
+.content-pad {
+  padding: var(--space-8) 0;
+}
+
+/* Product list container */
+.product-list {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Hidden utility */
+.hidden {
+  display: none !important;
+}
+
+/* Visually hidden — accessible but not visible */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+  }
