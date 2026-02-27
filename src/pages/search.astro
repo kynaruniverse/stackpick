@@ -15,7 +15,7 @@ const searchIndex = [
     type:     'product',
     title:    p.data.name,
     desc:     p.body.slice(0, 120),
-    url:      `/${p.data.category}/`,
+    url: `/${p.data.category}/#${p.data.id}`,
     category: p.data.category,
     price:    p.data.price,
     tags:     p.data.tags,
@@ -102,6 +102,15 @@ const searchIndexJSON = JSON.stringify(searchIndex);
 
     // Inline SVG chevron — consistent with the design system, no → character
     const ChevronSVG = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>`;
+    
+    function esc(str: string): string {
+      return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
 
     function renderCard(item: typeof INDEX[0]): string {
       const typeLabel = item.type === 'product' ? item.category : item.type;
@@ -115,9 +124,9 @@ const searchIndexJSON = JSON.stringify(searchIndex);
             <div class="product-entry__top">
               <div class="product-entry__info">
                 <h2 class="product-entry__name">
-                  <a href="${item.url}" class="search-result-link">${item.title}</a>
+                  <a href="${esc(item.url)}" class="search-result-link">${esc(item.title)}</a>
                 </h2>
-                <p class="product-entry__desc">${item.desc}</p>
+                <p class="product-entry__desc">${esc(item.desc)}</p>
               </div>
             </div>
             <div class="product-entry__footer">

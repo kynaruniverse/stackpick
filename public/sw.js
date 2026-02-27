@@ -27,7 +27,7 @@
 //    /assets/css/components.css   — new component library
 // ============================================================
 
-var CACHE_NAME = '__SP_VERSION__';
+var CACHE_NAME = 'sp-v__BUILD_TIMESTAMP__';
 
 // Shell assets — precached on install.
 // These are the files the site cannot function without offline.

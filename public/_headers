@@ -1,5 +1,5 @@
 # ============================================================
-# STACK PICK — Netlify / Cloudflare Pages headers
+# StackPick — Netlify / Cloudflare Pages headers
 # Controls security, caching, and content policy site-wide.
 #
 # NOTE: __CSP_NONCE__ is a build-time placeholder.

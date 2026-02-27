@@ -199,8 +199,14 @@ const collectionProducts = allCollections.map(col => ({
         panels.forEach(panel => {
           const isTarget = panel.id === `panel-${id}`;
           panel.classList.toggle('hidden', !isTarget);
-          panel.setAttribute('aria-hidden', isTarget ? 'false' : 'true');
-        });
+        // display:none already removes from a11y tree; aria-hidden is redundant
+        // but keep for belt-and-suspenders with older AT
+        panel.setAttribute('aria-hidden', isTarget ? 'false' : 'true');
+        if (!isTarget) {
+          panel.setAttribute('inert', '');
+        } else {
+        panel.removeAttribute('inert');
+        }        });
       });
     });
   </script>

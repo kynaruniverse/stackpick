@@ -1,4 +1,4 @@
-# Stack Pick
+# StackPick
 
 UK gaming gear recommendations. Curated picks for headsets, keyboards, mice, monitors, and chairs — verified UK pricing, no sponsored content.
 
@@ -8,7 +8,7 @@ UK gaming gear recommendations. Curated picks for headsets, keyboards, mice, mon
 
 ## What This Is
 
-Stack Pick helps UK gamers find the right gear without wading through US-centric reviews or bloated 50-item lists. Every pick is researched against what the UK gaming community actually buys, with pricing verified on Amazon UK.
+StackPick helps UK gamers find the right gear without wading through US-centric reviews or bloated 50-item lists. Every pick is researched against what the UK gaming community actually buys, with pricing verified on Amazon UK.
 
 ---
 

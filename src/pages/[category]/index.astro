@@ -123,7 +123,7 @@ const { category } = Astro.params as { category: CategoryKey };
 const meta = CATEGORY_META[category];
 
 const allProducts = await getCollection('products', p => p.data.category === category);
-allProducts.sort((a, b) => b.data.priceRaw - a.data.priceRaw);
+allProducts.sort((a, b) => (a.data.rank ?? 99) - (b.data.rank ?? 99));
 ---
 
 <Base
@@ -204,11 +204,9 @@ allProducts.sort((a, b) => b.data.priceRaw - a.data.priceRaw);
         document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
         chip.classList.add('active');
         document.querySelectorAll<HTMLElement>('.product-entry').forEach(card => {
-          if (filter === 'all' || card.dataset.budget === filter) {
-            card.style.display = '';
-          } else {
-            card.classList.toggle('hidden', filter !== 'all' && card.dataset.budget !== filter);
-          }
+          const visible = filter === 'all' || card.dataset.budget === filter;
+          card.classList.toggle('hidden', !visible);
+          card.style.display = ''; // clear any residual inline style from old code
         });
       });
     });

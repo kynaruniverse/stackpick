@@ -37,7 +37,7 @@
 // Category → seam assignment (from content data):
 //   mice       → crimson   (ember — action energy, fast, aggressive)
 //   keyboards  → cobalt    (forest — precise, considered, crafted)
-//   monitors   → slate     (neutral — technical, objective)
+//   monitors   → amber     (warm brown — screen warmth, display character)
 //   headsets   → slate     (neutral — audio, immersive, quiet)
 //   chairs     → jade      (mid-green — ergonomic, health, comfort)
 
@@ -52,8 +52,7 @@ const SEAM_TOKEN: Record<string, string> = {
 // ── Budget class for filter chip JS ──────────────────────────────────────
 // The filter-chip buttons on category pages filter .product-entry elements
 // by data-budget. This function produces the value for that attribute.
-function budgetClass(priceStr: string): string {
-  const n = parseFloat(priceStr.replace(/[^0-9.]/g, ''));
+function budgetClass(n: number): string {
   if (n <  50)  return 'under-50';
   if (n < 100)  return '50-100';
   if (n < 200)  return '100-200';
@@ -106,8 +105,7 @@ const {
 // Resolve seam to a CSS token reference — fall back to neutral if unknown
 const seamColor  = SEAM_TOKEN[seam] ?? SEAM_TOKEN.slate;
 const isFirst    = rank === 1;
-const budget     = budgetClass(price);
-
+const budget = budgetClass(priceRaw);
 // loadoutCount label — only rendered if > 0
 const loadoutLabel = loadoutCount === 1
   ? 'In 1 setup guide'

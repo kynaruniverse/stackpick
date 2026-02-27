@@ -26,6 +26,7 @@ const products = defineCollection({
     inStock:      z.boolean(),
     nextDay:      z.boolean(),
     loadoutCount: z.number().int().min(0),
+    rank: z.number().int().min(1).optional(),
     specs:        z.array(z.string()).min(1).max(6),
     pros:         z.array(z.string()).min(1).max(6),
     cons:         z.array(z.string()).min(1).max(4),
@@ -36,10 +37,6 @@ const products = defineCollection({
 // ── COLLECTIONS ───────────────────────────────────────────────────────────────
 // Homepage product wall tabs. Each collection references product IDs.
 
-const shuffleVariantSchema = z.object({
-  label:    z.string(),
-  products: z.array(z.string()),
-});
 
 const collections = defineCollection({
   type: 'content',
@@ -49,7 +46,6 @@ const collections = defineCollection({
     emoji:           z.string(),
     color:           z.string(),
     baseProducts:    z.array(z.string()),
-    shuffleVariants: z.array(shuffleVariantSchema),
   }),
 });
 
@@ -57,15 +53,15 @@ const collections = defineCollection({
 // Head-to-head comparison pages. Body = introduction + verdict prose.
 
 const comparisonProductSchema = z.object({
-  id:        z.string(),
-  name:      z.string(),
-  badge:     z.string(),
-  badgeColor: z.string(),
-  price:     z.string(),
-  affiliate: z.string().url(),
-  desc:      z.string(),
-  linkLabel: z.string(),
-  linkHref:  z.string(),
+  id:           z.string(),
+  name:         z.string(),
+  badge:        z.string(),
+  badgeColor:   z.string(),
+  price:        z.string(),
+  affiliate:    z.string().url(),
+  desc:         z.string(),
+  linkLabel:    z.string(), // "Browse all [category]" — secondary nav link label
+  linkHref:     z.string(), // Category page path e.g. "/mice/" — for secondary nav link
 });
 
 const specRowSchema = z.object({
@@ -129,7 +125,7 @@ const guides = defineCollection({
   }),
 });
 
-export const contentCollections = {
+export const collections = {
   products,
   collections,
   comparisons,

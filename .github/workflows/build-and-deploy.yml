@@ -33,6 +33,11 @@ jobs:
 
       - name: Build site
         run: npm run build
+        
+      - name: Inject SW cache version
+        run: |
+          TS=$(date +%s)
+          sed -i "s/__BUILD_TIMESTAMP__/${TS}/g" dist/sw.js
 
       - name: Setup GitHub Pages
         uses: actions/configure-pages@v4

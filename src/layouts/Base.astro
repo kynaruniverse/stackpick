@@ -18,7 +18,9 @@ export interface Props {
   description:  string;
   canonical?:   string;
   ogType?:      string;
+  ogImage?:     string;
 }
+const { ogImage = 'https://stackpick.co.uk/assets/images/og-default.png' } = Astro.props;
 
 const {
   title,
@@ -96,6 +98,14 @@ function sidebarLinkClass(active: boolean): string {
   <meta property="og:url"          content={canonical}>
   <meta property="og:site_name"    content="StackPick">
   <meta property="og:locale"       content="en_GB">
+<!-- ── Twitter / X Card ── -->
+  <meta name="twitter:card"        content="summary_large_image">
+  <meta name="twitter:title"       content={metaTitle}>
+  <meta name="twitter:description" content={description}>
+  <meta property="og:image"        content="https://stackpick.co.uk/assets/images/og-default.png">
+  <meta property="og:image:width"  content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt"    content="StackPick — Best Gaming Gear for UK Gamers">
 
   <!-- ── PWA & mobile ── -->
   <meta name="theme-color"         content="#1B3022" media="(prefers-color-scheme: light)">
@@ -127,6 +137,13 @@ function sidebarLinkClass(active: boolean): string {
   <link rel="stylesheet" href="/assets/css/tokens.css">
   <link rel="stylesheet" href="/assets/css/components.css">
   <link rel="stylesheet" href="/assets/css/style.css">
+  
+  <!-- ── Google Analytics 4 ── -->
+  <!-- gtag.js bootstrap — must load before analytics.js -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZTN7H3L6DV"></script>
+  <!-- Site analytics: affiliate clicks, scroll depth, LCP, error tracking -->
+  <script src="/assets/js/analytics.js" defer></script>
+
 
   <!-- ── Per-page head injection ── -->
   <slot name="head" />
@@ -552,7 +569,10 @@ function sidebarLinkClass(active: boolean): string {
       document.querySelectorAll<HTMLElement>('.theme-toggle').forEach(btn => {
         const iconEl = btn.querySelector<HTMLElement>('#theme-icon-desktop, #theme-icon-sidebar');
         if (iconEl) iconEl.textContent = icon;
-        else btn.querySelector<HTMLElement>('.icon')!.textContent = icon;
+        else {
+          const iconFallback = btn.querySelector<HTMLElement>('.icon');
+          if (iconFallback) iconFallback.textContent = icon;
+        }
         btn.setAttribute('aria-label', `Switch theme (currently ${theme})`);
       });
 
