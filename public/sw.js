@@ -1,7 +1,7 @@
 // ============================================================
-//  STACKPICK V2 — sw.js
-//  Service Worker — Force Marry edition.
-//  Cache-first for shell assets, network-first for pages/data.
+//  STACKPICK — sw.js
+//  Service Worker — cache-first for shell assets,
+//  network-first for HTML pages.
 //
 //  ⚠️  PLACEHOLDER NOTICE:
 //  CACHE_NAME must contain '__SP_VERSION__' before each build.
@@ -11,29 +11,34 @@
 //  Step 9 failed — restore this line manually before committing.
 //
 //  SHELL_ASSETS: If you add a new static file to the site, add
-//  its path here so it's precached during install.
+//  its path here so it is precached during install.
+//
+//  REMOVED in v4.0 (redesign):
+//    /assets/css/wall.css         — deleted
+//    /assets/js/theme.js          — deleted (logic now in Base.astro)
+//    /assets/js/app.js            — deleted (Astro replaced)
+//    /assets/js/wall.js           — deleted (Astro replaced)
+//    /assets/js/shared.js         — deleted (Astro replaced)
+//    /assets/js/data/products.js  — deleted (data embedded at build time)
+//    /assets/js/data/collections.js — deleted (data embedded at build time)
+//    /assets/js/data/search-index.js — deleted (data embedded at build time)
+//
+//  ADDED in v4.0:
+//    /assets/css/components.css   — new component library
 // ============================================================
 
 var CACHE_NAME = '__SP_VERSION__';
 
 // Shell assets — precached on install.
+// These are the files the site cannot function without offline.
 var SHELL_ASSETS = [
   '/',
-  '/index.html',
-  '/manifest.json',
   '/offline.html',
+  '/manifest.json',
   '/assets/css/tokens.css',
   '/assets/css/components.css',
-  '/assets/css/wall.css',
   '/assets/css/style.css',
-  '/assets/js/theme.js',
-  '/assets/js/shared.js',
-  '/assets/js/app.js',
-  '/assets/js/wall.js',
   '/assets/js/analytics.js',
-  '/assets/js/data/products.js',
-  '/assets/js/data/collections.js',
-  '/assets/js/data/search-index.js',
   '/assets/icons/icon-192.png',
   '/assets/icons/icon-512.png',
 ];
@@ -93,7 +98,6 @@ self.addEventListener('fetch', function (event) {
       caches.match(event.request).then(function (cached) {
         if (cached) return cached;
         return fetch(event.request).then(function (response) {
-          // Only cache successful responses
           if (!response || response.status !== 200 || response.type !== 'basic') {
             return response;
           }
@@ -108,14 +112,12 @@ self.addEventListener('fetch', function (event) {
   }
 
   // ── Network-first: HTML pages ───────────────────────────────────────────
-  // Note: _headers sets Cache-Control: no-store on HTML responses.
+  // _headers sets Cache-Control: no-store on HTML responses.
   // We attempt to store in SW cache but only if the response is cacheable.
-  // Browsers may decline to cache no-store responses — this is correct behaviour.
 
   event.respondWith(
     fetch(event.request)
       .then(function (response) {
-        // Only attempt to cache OK responses — skip error/redirect/opaque
         if (response && response.status === 200 && response.type === 'basic') {
           caches.open(CACHE_NAME).then(function (cache) {
             cache.put(event.request, response.clone());

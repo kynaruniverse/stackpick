@@ -43,13 +43,15 @@ guides.sort((a, b) => ORDER.indexOf(a.data.slug) - ORDER.indexOf(b.data.slug));
     <div class="guide-grid">
       {guides.map(guide => (
         <a href={`/guides/${guide.data.slug}/`} class="guide-card">
-          <div class="guide-card__icon">{guide.data.emoji}</div>
+          <div class="guide-card__icon" aria-hidden="true">{guide.data.emoji}</div>
           <div class="guide-card__body">
             <span class="guide-card__budget">{guide.data.budgetLabel}</span>
             <h2 class="guide-card__title">{guide.data.title}</h2>
             <p class="guide-card__desc">{guide.data.heroSubtitle}</p>
           </div>
-          <span class="guide-card__arrow" aria-hidden="true">→</span>
+          <span class="guide-card__arrow" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </span>
         </a>
       ))}
     </div>

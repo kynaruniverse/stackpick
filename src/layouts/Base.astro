@@ -1,278 +1,616 @@
 ---
 // src/layouts/Base.astro
-// Master layout — every page on StackPick uses this.
+// The single layout shell wrapping every page on the site.
+//
+// Slots:
+//   name="head"   → extra <head> tags (page-specific meta, schema, etc.)
+//   name="hero"   → full-bleed hero section, renders above content-pad
+//   (default)     → main page content, renders inside content-pad
+//
+// Props:
+//   title         → <title> tag and og:title
+//   description   → meta description and og:description
+//   canonical     → canonical URL (auto-computed from Astro.url if omitted)
+//   ogType        → og:type (defaults to "website", use "article" for guides/comparisons)
 
 export interface Props {
-title: string;
-description: string;
-canonical?: string;
-ogType?: string;
+  title:        string;
+  description:  string;
+  canonical?:   string;
+  ogType?:      string;
 }
 
 const {
-title,
-description,
-canonical = new URL(Astro.url.pathname, Astro.site).href,
-ogType = 'website',
+  title,
+  description,
+  canonical = new URL(Astro.url.pathname, Astro.site).href,
+  ogType    = 'website',
 } = Astro.props;
 
-const ogTitle = title.includes('StackPick') ? title : `${title} | StackPick`;
----
-<!DOCTYPE html>
-<html lang="en-GB" data-theme="dark">
+// Ensure every page title includes the brand name, but never doubles it
+const metaTitle = title.includes('StackPick') ? title : `${title} | StackPick`;
 
+// Build-time active state detection
+// Astro.url.pathname is available at build time for every static route.
+// We use it to set aria-current and active classes without any JavaScript.
+const path = Astro.url.pathname;
+
+// Sidebar — category pages
+const isMice      = path === '/mice/' || path.startsWith('/mice/');
+const isKeyboards = path === '/keyboards/' || path.startsWith('/keyboards/');
+const isHeadsets  = path === '/headsets/' || path.startsWith('/headsets/');
+const isMonitors  = path === '/monitors/' || path.startsWith('/monitors/');
+const isChairs    = path === '/chairs/' || path.startsWith('/chairs/');
+
+// Desktop nav — section pages
+const isGuides      = path.startsWith('/guides');
+const isComparisons = path.startsWith('/comparisons');
+const isSearch      = path.startsWith('/search');
+
+// Mobile dock
+const isHome = path === '/';
+
+// Active sidebar link helper
+function sidebarLinkClass(active: boolean): string {
+  return active ? 'sidebar-link active' : 'sidebar-link';
+}
+---
+
+<!DOCTYPE html>
+<html lang="en-GB" data-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  
-  <!-- Theme flash prevention — must run inline before anything renders -->
+
+  <!--
+    FLASH-OF-WRONG-THEME PREVENTION
+    Runs synchronously before any rendering.
+    Must be is:inline so it is not deferred.
+    Reads localStorage first, falls back to OS preference.
+    Defaults to "light" if neither is set.
+    Theme values: "light" | "dark" | "earth"
+  -->
   <script is:inline>
-    (function() {
-      try {
-        var t = localStorage.getItem('sp-theme');
-        if (t) document.documentElement.setAttribute('data-theme', t);
-        else if (window.matchMedia('(prefers-color-scheme: light)').matches)
-          document.documentElement.setAttribute('data-theme', 'light');
-      } catch (e) {}
+    (function () {
+      var saved  = null;
+      try { saved = localStorage.getItem('sp-theme'); } catch (e) {}
+      var system = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)
+                   ? 'dark' : 'light';
+      var valid  = ['light', 'dark', 'earth'];
+      var theme  = (saved && valid.indexOf(saved) !== -1) ? saved : system;
+      document.documentElement.setAttribute('data-theme', theme);
     })();
   </script>
-  
-  <title>{title}</title>
-  <meta name="description" content={description}>
-  <meta name="author" content="StackPick">
-  <link rel="canonical" href={canonical}>
-  
-  <meta property="og:type" content={ogType}>
-  <meta property="og:url" content={canonical}>
-  <meta property="og:title" content={ogTitle}>
-  <meta property="og:description" content={description}>
-  <meta property="og:image" content="https://stackpick.co.uk/assets/images/og-image.jpg">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content={ogTitle}>
-  <meta name="twitter:description" content={description}>
-  
-  <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)">
-  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-title" content="StackPick">
-  
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x26A1;</text></svg>">
-  <link rel="manifest" href="/manifest.json">
-  
+
+  <!-- ── Primary meta ── -->
+  <title>{metaTitle}</title>
+  <meta name="description"         content={description}>
+  <meta name="robots"              content="index, follow">
+  <meta name="author"              content="StackPick">
+  <link rel="canonical"            href={canonical}>
+
+  <!-- ── Open Graph ── -->
+  <meta property="og:type"         content={ogType}>
+  <meta property="og:title"        content={metaTitle}>
+  <meta property="og:description"  content={description}>
+  <meta property="og:url"          content={canonical}>
+  <meta property="og:site_name"    content="StackPick">
+  <meta property="og:locale"       content="en_GB">
+
+  <!-- ── PWA & mobile ── -->
+  <meta name="theme-color"         content="#1B3022" media="(prefers-color-scheme: light)">
+  <meta name="theme-color"         content="#0F0F0F" media="(prefers-color-scheme: dark)">
+  <meta name="mobile-web-app-capable"              content="yes">
+  <meta name="apple-mobile-web-app-capable"        content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title"          content="StackPick">
+  <link rel="manifest"             href="/manifest.json">
+
+  <!-- ── Favicon — inline SVG, no external request ── -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%231B3022'/><text y='72' x='50' text-anchor='middle' font-size='60' font-family='system-ui' font-weight='900' fill='%23D95433'>S</text></svg>">
+
+  <!-- ── Font loading ──
+    Syne:           Display headings — geometric, memorable, brand character
+    Inter:          Body — maximum legibility at all sizes
+    JetBrains Mono: Spec labels, prices, metadata — technical precision
+    display=swap ensures text is visible during font load.
+    preconnect eliminates DNS + TLS negotiation cost.
+  -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-  
+  <link
+    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  >
+
+  <!-- ── Stylesheets — strict load order ── -->
   <link rel="stylesheet" href="/assets/css/tokens.css">
   <link rel="stylesheet" href="/assets/css/components.css">
   <link rel="stylesheet" href="/assets/css/style.css">
-  
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZTN7H3L6DV"></script>
-  <script src="/assets/js/analytics.js" defer></script>
-  
-  <!-- theme.js: defines SP_initTheme — called on DOMContentLoaded below -->
-  <script src="/assets/js/theme.js" is:inline></script>
-  
-  <!-- FIX: Actually call initTheme once DOM is ready.
-       theme.js only DEFINES the functions — nothing wired them up before. -->
-  <script is:inline>
-    document.addEventListener('DOMContentLoaded', function() {
-      if (typeof window.SP_initTheme === 'function') window.SP_initTheme();
-    });
-  </script>
-  
+
+  <!-- ── Per-page head injection ── -->
   <slot name="head" />
 </head>
 
-<body>
+<body class="streetwear-layout">
+
+  <!-- ── Skip link — keyboard accessibility ── -->
   <a href="#main-content" class="skip-link">Skip to main content</a>
-  
-  <slot name="before-header" />
-  
-  <!-- NAV: logo + desktop links only. Theme toggle REMOVED from here —
-       it lives in the sidebar (desktop) and More panel (mobile).
-       Having it in both nav and sidebar caused a visible duplicate on desktop. -->
-  <header class="nav">
-    <div class="nav__inner">
-      <a href="/" class="logo" aria-label="StackPick home">Stack<span>Pick</span></a>
-      <nav aria-label="Main navigation">
+
+  <!-- ════════════════════════════════════════════════════════
+       DESKTOP HEADER
+       Fixed top bar. Hidden on mobile (≥1024px breakpoint).
+       Contains: logo wordmark | primary nav | theme toggle
+       ════════════════════════════════════════════════════════ -->
+  <header class="desktop-header" role="banner">
+    <div class="header-grid">
+
+      <!-- Logo wordmark -->
+      <a href="/" class="logo" aria-label="StackPick — back to homepage">
+        STACK<span>·</span>PICK
+      </a>
+
+      <!-- Primary navigation -->
+      <nav class="desktop-nav" aria-label="Main navigation">
+        <a
+          href="/guides/"
+          aria-current={isGuides ? 'page' : undefined}
+        >Guides</a>
+        <a
+          href="/comparisons/"
+          aria-current={isComparisons ? 'page' : undefined}
+        >Compare</a>
+        <a
+          href="/search/"
+          aria-current={isSearch ? 'page' : undefined}
+        >Search</a>
+        <a href="/about/">About</a>
+      </nav>
+
+      <!-- Theme toggle -->
+      <div class="header-actions">
+        <button
+          class="theme-toggle"
+          id="theme-toggle-desktop"
+          aria-label="Switch theme"
+          title="Switch theme"
+        >
+          <span class="icon" aria-hidden="true" id="theme-icon-desktop">
+            <!-- Icon updated by theme.js after load -->
+            ◑
+          </span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ════════════════════════════════════════════════════════
+       PAGE SHELL
+       On mobile: single stacked column.
+       On desktop: sidebar rail left + main content right.
+       Max-width and padding handled by .site-container
+       in components.css and style.css.
+       ════════════════════════════════════════════════════════ -->
+  <div class="site-container">
+
+    <!-- ── Sidebar — desktop only (hidden via CSS on mobile) ── -->
+    <aside class="sidebar" aria-label="Category navigation">
+      <div class="sidebar-inner">
+
+        <!-- Sidebar logo — shown only on desktop -->
+        <a href="/" class="logo" aria-label="StackPick homepage">
+          STACK<span>·</span>PICK
+        </a>
+
+        <!-- Hardware categories -->
+        <div class="sidebar-group">
+          <p class="label">Hardware</p>
+          <nav aria-label="Browse by hardware category">
+            <a
+              href="/mice/"
+              class={sidebarLinkClass(isMice)}
+              aria-current={isMice ? 'page' : undefined}
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="2" width="14" height="20" rx="7"/><path d="M12 2v8"/></svg>
+              Mice
+            </a>
+            <a
+              href="/keyboards/"
+              class={sidebarLinkClass(isKeyboards)}
+              aria-current={isKeyboards ? 'page' : undefined}
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M6 11h.01M9 11h.01M12 11h.01M15 11h.01M18 11h.01M6 15h12"/></svg>
+              Keyboards
+            </a>
+            <a
+              href="/headsets/"
+              class={sidebarLinkClass(isHeadsets)}
+              aria-current={isHeadsets ? 'page' : undefined}
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 14h2a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-7a9 9 0 0 1 18 0v7a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h2"/></svg>
+              Headsets
+            </a>
+            <a
+              href="/monitors/"
+              class={sidebarLinkClass(isMonitors)}
+              aria-current={isMonitors ? 'page' : undefined}
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+              Monitors
+            </a>
+            <a
+              href="/chairs/"
+              class={sidebarLinkClass(isChairs)}
+              aria-current={isChairs ? 'page' : undefined}
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2v6M18 2v6M6 8h12M8 22v-4M16 22v-4M6 14h12a2 2 0 0 0 2-2V8H4v4a2 2 0 0 0 2 2z"/></svg>
+              Chairs
+            </a>
+          </nav>
+        </div>
+
+        <!-- Editorial sections -->
+        <div class="sidebar-group">
+          <p class="label">Editorial</p>
+          <nav aria-label="Browse editorial content">
+            <a
+              href="/guides/"
+              class={sidebarLinkClass(isGuides)}
+              aria-current={isGuides ? 'page' : undefined}
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+              Setup Guides
+            </a>
+            <a
+              href="/comparisons/"
+              class={sidebarLinkClass(isComparisons)}
+              aria-current={isComparisons ? 'page' : undefined}
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+              Comparisons
+            </a>
+          </nav>
+        </div>
+
+        <!-- Sidebar theme toggle -->
+        <div class="sidebar-group">
+          <button
+            class="theme-toggle"
+            id="theme-toggle-sidebar"
+            aria-label="Switch theme"
+            style="width: 100%; justify-content: flex-start; gap: var(--space-2); padding: var(--space-2) var(--space-3);"
+          >
+            <span class="icon" aria-hidden="true" id="theme-icon-sidebar">◑</span>
+            <span id="sidebar-theme-label" style="font-size: var(--text-sm); font-weight: var(--weight-medium); color: var(--color-text-secondary);">Theme</span>
+          </button>
+        </div>
+
+      </div>
+    </aside>
+
+    <!-- ── Main content area ── -->
+    <main class="main-content" id="main-content" tabindex="-1">
+
+      <!-- Hero slot — full bleed, no padding wrapper -->
+      <slot name="hero" />
+
+      <!-- Default slot — wrapped in padding container -->
+      <div class="content-pad">
+        <slot />
+      </div>
+
+    </main>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════
+       FOOTER
+       ════════════════════════════════════════════════════════ -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="site-footer__inner">
+
+      <div>
+        <a href="/" class="site-footer__brand" aria-label="StackPick homepage">
+          STACK<span>·</span>PICK
+        </a>
+      </div>
+
+      <p class="site-footer__copy">
+        Researched gaming gear for UK gamers. Amazon UK affiliate links —
+        <a href="/about/#disclosure">disclosure</a>.
+        &copy; {new Date().getFullYear()} StackPick. All prices verified weekly.
+      </p>
+
+    </div>
+  </footer>
+
+  <!-- ════════════════════════════════════════════════════════
+       MOBILE BOTTOM TAB BAR
+       Fixed. Always visible on mobile. Hidden on desktop.
+       Active state set at build time via pathname.
+       "More" active state managed by JS when overlay opens.
+       ════════════════════════════════════════════════════════ -->
+  <nav class="mobile-dock" aria-label="Mobile navigation">
+    <div class="dock-container">
+
+      <!-- Home -->
+      <a
+        href="/"
+        class:list={['dock-item', isHome && 'active']}
+        aria-current={isHome ? 'page' : undefined}
+        aria-label="Home"
+      >
+        <svg class="dock-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+        <span class="dock-label">Home</span>
+      </a>
+
+      <!-- Search -->
+      <a
+        href="/search/"
+        class:list={['dock-item', isSearch && 'active']}
+        aria-current={isSearch ? 'page' : undefined}
+        aria-label="Search"
+      >
+        <svg class="dock-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="11" cy="11" r="8"/>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <span class="dock-label">Search</span>
+      </a>
+
+      <!-- Centre hub — Guides CTA -->
+      <div class="dock-brand-center">
+        <a
+          href="/guides/"
+          class="dock-cta"
+          aria-label="Setup guides"
+        >
+          PICK
+        </a>
+      </div>
+
+      <!-- Compare -->
+      <a
+        href="/comparisons/"
+        class:list={['dock-item', isComparisons && 'active']}
+        aria-current={isComparisons ? 'page' : undefined}
+        aria-label="Compare gear"
+      >
+        <svg class="dock-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="18" y1="20" x2="18" y2="10"/>
+          <line x1="12" y1="20" x2="12" y2="4"/>
+          <line x1="6" y1="20" x2="6" y2="14"/>
+        </svg>
+        <span class="dock-label">Compare</span>
+      </a>
+
+      <!-- More — triggers overlay -->
+      <button
+        class="dock-item"
+        id="more-btn"
+        aria-label="More navigation options"
+        aria-expanded="false"
+        aria-controls="more-panel"
+      >
+        <svg class="dock-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="5" cy="12" r="1.5" fill="currentColor"/>
+          <circle cx="12" cy="12" r="1.5" fill="currentColor"/>
+          <circle cx="19" cy="12" r="1.5" fill="currentColor"/>
+        </svg>
+        <span class="dock-label">More</span>
+      </button>
+
+    </div>
+  </nav>
+
+  <!-- ════════════════════════════════════════════════════════
+       MOBILE MORE OVERLAY
+       Full-screen panel triggered by the "More" dock item.
+       Contains secondary nav + theme switcher.
+       ════════════════════════════════════════════════════════ -->
+  <div
+    class="more-overlay"
+    id="more-panel"
+    role="dialog"
+    aria-label="More navigation options"
+    aria-modal="true"
+    aria-hidden="true"
+  >
+
+    <!-- Close button -->
+    <button
+      class="close-overlay"
+      id="close-more"
+      aria-label="Close menu"
+    >
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+        <line x1="18" y1="6" x2="6" y2="18"/>
+        <line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+
+    <div class="overlay-content">
+
+      <!-- Hardware section -->
+      <p class="overlay-heading">Hardware</p>
+      <div class="overlay-grid">
         <a href="/mice/">Mice</a>
         <a href="/keyboards/">Keyboards</a>
         <a href="/headsets/">Headsets</a>
         <a href="/monitors/">Monitors</a>
         <a href="/chairs/">Chairs</a>
-        <a href="/guides/">Guides</a>
+        <a href="/search/">Search</a>
+      </div>
+
+      <!-- System section -->
+      <p class="overlay-heading">Picks</p>
+      <div class="overlay-grid">
+        <a href="/guides/">Setup Guides</a>
+        <a href="/comparisons/">Comparisons</a>
         <a href="/about/">About</a>
-      </nav>
-    </div>
-  </header>
-  
-  <slot name="hero" />
-  
-  <div class="page-wrapper container">
-    <aside class="desktop-sidebar" aria-label="Site navigation">
-      <div class="sidebar-section">
-        <p class="sidebar-heading">Peripherals</p>
-        <a href="/mice/" class="sidebar-link">Mice</a>
-        <a href="/keyboards/" class="sidebar-link">Keyboards</a>
-        <a href="/headsets/" class="sidebar-link">Headsets</a>
-        <a href="/monitors/" class="sidebar-link">Monitors</a>
-        <a href="/chairs/" class="sidebar-link">Chairs</a>
-      </div>
-      <div class="sidebar-section">
-        <p class="sidebar-heading">Coming Soon</p>
-        <div class="sidebar-link sidebar-link--disabled">
-          <span>PCs</span><span class="stamp stamp--nextday">Soon</span>
-        </div>
-        <div class="sidebar-link sidebar-link--disabled">
-          <span>Desks</span><span class="stamp stamp--nextday">Soon</span>
-        </div>
-      </div>
-      <div class="sidebar-divider"></div>
-      <div class="sidebar-section">
-        <a href="/guides/" class="sidebar-link">Setup Guides</a>
-        <a href="/comparisons/" class="sidebar-link">Comparisons</a>
-        <a href="/search/" class="sidebar-link">Search Database</a>
-        <a href="/about/" class="sidebar-link">About</a>
-      </div>
-      <!-- Single theme toggle for desktop — sidebar is the right place for it -->
-      <button class="theme-toggle sidebar-theme-btn" id="theme-toggle-sidebar" aria-label="Toggle theme">
-        <span id="sidebar-theme-icon">🌙</span>
-        <span id="sidebar-theme-label">Dark Mode</span>
-      </button>
-    </aside>
-    
-    <main class="main-content" id="main-content">
-      <slot />
-    </main>
-  </div>
-  
-  <footer class="site-footer">
-    <div class="site-footer__inner container">
-      <div class="footer__brand">
-        <a href="/" class="footer-logo">Stack<span>Pick</span></a>
-        <p class="footer-tagline">Researched gaming gear for UK gamers.<br>System verified. No filler.</p>
-      </div>
-      <div class="footer__nav">
-        <div class="footer__group">
-          <h4 class="footer-heading">Hardware</h4>
-          <ul class="footer-links">
-            <li><a href="/mice/">Mice</a></li>
-            <li><a href="/keyboards/">Keyboards</a></li>
-            <li><a href="/headsets/">Headsets</a></li>
-            <li><a href="/monitors/">Monitors</a></li>
-          </ul>
-        </div>
-        <div class="footer__group">
-          <h4 class="footer-heading">System</h4>
-          <ul class="footer-links">
-            <li><a href="/guides/">Guides</a></li>
-            <li><a href="/search/">Search Database</a></li>
-            <li><a href="/about/">About</a></li>
-            <li><a href="/comparisons/">Comparisons</a></li>
-          </ul>
-        </div>
-      </div>
-      <div class="footer-bottom">
-        <div class="footer-bottom__legal">
-          <p>&copy; 2026 StackPick.</p>
-          <p class="footer-disclaimer">As an Amazon Associate, StackPick earns from qualifying purchases. <a href="/about/#disclosure">Disclosure</a></p>
-        </div>
-      </div>
-    </div>
-  </footer>
-  
-  <!-- Mobile bottom nav -->
-  <div class="more-panel-overlay" id="more-overlay" aria-hidden="true"></div>
-  <div class="bottom-nav-more-panel" id="more-panel" role="dialog" aria-modal="true" aria-labelledby="more-panel-title" aria-hidden="true">
-    <div class="more-panel__content">
-      <p class="more-panel-title" id="more-panel-title">System Menu</p>
-      <div class="more-panel-grid">
-        <a href="/monitors/" class="more-panel-link">🖥️ Monitors</a>
-        <a href="/chairs/" class="more-panel-link">🪑 Chairs</a>
-        <a href="/guides/" class="more-panel-link">📋 Guides</a>
-        <a href="/comparisons/" class="more-panel-link">⚖️ Compare</a>
-        <a href="/search/" class="more-panel-link">🔍 Search</a>
-        <a href="/about/" class="more-panel-link">ℹ️ About</a>
-        <button class="more-panel-link more-panel-link--theme" id="more-panel-theme">
-          Theme: <span id="more-panel-theme-icon">🌙</span>
+        <!-- Theme cycle button -->
+        <button
+          id="theme-cycle-btn"
+          class="theme-pill"
+          aria-label="Switch colour theme"
+        >
+          <span id="theme-cycle-label">Theme: Light</span>
         </button>
       </div>
+
     </div>
   </div>
-  
-  <nav class="bottom-nav" aria-label="Mobile navigation">
-    <ul class="bottom-nav__items" role="list">
-      <li>
-        <a href="/" class="bottom-nav__link" data-nav-path="/">
-          <span class="bottom-nav__icon">🏠</span>
-          <span class="bottom-nav__label">Home</span>
-        </a>
-      </li>
-      <li>
-        <a href="/mice/" class="bottom-nav__link" data-nav-path="/mice/">
-          <span class="bottom-nav__icon">🖱️</span>
-          <span class="bottom-nav__label">Mice</span>
-        </a>
-      </li>
-      <li>
-        <a href="/keyboards/" class="bottom-nav__link" data-nav-path="/keyboards/">
-          <span class="bottom-nav__icon">⌨️</span>
-          <span class="bottom-nav__label">Keys</span>
-        </a>
-      </li>
-      <li>
-        <a href="/headsets/" class="bottom-nav__link" data-nav-path="/headsets/">
-          <span class="bottom-nav__icon">🎧</span>
-          <span class="bottom-nav__label">Audio</span>
-        </a>
-      </li>
-      <li>
-        <button class="bottom-nav__link" id="more-btn" aria-label="Open more categories" aria-expanded="false" aria-controls="more-panel">
-          <span class="bottom-nav__icon">⊞</span>
-          <span class="bottom-nav__label">More</span>
-        </button>
-      </li>
-    </ul>
-  </nav>
-  
-  <script is:inline>
-    (function() {
-      // Active bottom nav link
-      var path = window.location.pathname;
-      document.querySelectorAll('.bottom-nav__link[data-nav-path]').forEach(function(el) {
-        if (el.getAttribute('data-nav-path') === path) el.classList.add('active');
-      });
-      
-      // More panel
-      var moreBtn = document.getElementById('more-btn');
-      var morePanel = document.getElementById('more-panel');
-      var moreOverlay = document.getElementById('more-overlay');
-      
-      function openPanel() {
-        morePanel.setAttribute('aria-hidden', 'false');
-        moreOverlay.classList.add('open');
-        moreBtn.setAttribute('aria-expanded', 'true');
-      }
-      
-      function closePanel() {
-        morePanel.setAttribute('aria-hidden', 'true');
-        moreOverlay.classList.remove('open');
-        moreBtn.setAttribute('aria-expanded', 'false');
-      }
-      
-      if (moreBtn) moreBtn.addEventListener('click', openPanel);
-      if (moreOverlay) moreOverlay.addEventListener('click', closePanel);
-    })();
-  </script>
-  
+
+  <!-- ════════════════════════════════════════════════════════
+       INLINE SCRIPTS
+       Vanilla JS only. No dependencies.
+       Executed after the DOM is parsed.
+       ════════════════════════════════════════════════════════ -->
   <script>
+    // ── 01 MOBILE OVERLAY — open / close ────────────────────
+    const moreBtn   = document.getElementById('more-btn')   as HTMLButtonElement | null;
+    const closeMore = document.getElementById('close-more') as HTMLButtonElement | null;
+    const morePanel = document.getElementById('more-panel') as HTMLElement | null;
+    const body      = document.body;
+
+    function openOverlay(): void {
+      if (!morePanel || !moreBtn) return;
+      morePanel.classList.add('open');
+      morePanel.setAttribute('aria-hidden', 'false');
+      moreBtn.setAttribute('aria-expanded', 'true');
+      moreBtn.classList.add('active');
+      body.style.overflow = 'hidden'; // Prevent background scroll
+    }
+
+    function closeOverlay(): void {
+      if (!morePanel || !moreBtn) return;
+      morePanel.classList.remove('open');
+      morePanel.setAttribute('aria-hidden', 'true');
+      moreBtn.setAttribute('aria-expanded', 'false');
+      moreBtn.classList.remove('active');
+      body.style.overflow = '';
+    }
+
+    moreBtn?.addEventListener('click', openOverlay);
+    closeMore?.addEventListener('click', closeOverlay);
+
+    // Close on overlay backdrop click (clicking outside the content)
+    morePanel?.addEventListener('click', (e: MouseEvent) => {
+      if (e.target === morePanel) closeOverlay();
+    });
+
+    // Close on Escape key
+    document.addEventListener('keydown', (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && morePanel?.classList.contains('open')) {
+        closeOverlay();
+        moreBtn?.focus(); // Return focus to trigger
+      }
+    });
+
+    // ── 02 THEME SYSTEM ─────────────────────────────────────
+    // Three themes: light → dark → earth → light (cycles)
+    // Saved to localStorage. Respects OS on first visit.
+    // Applies .theme-transitioning to animate surface changes.
+
+    const THEMES     = ['light', 'dark', 'earth'] as const;
+    const THEME_LABELS: Record<string, string> = {
+      light: 'Theme: Light',
+      dark:  'Theme: Dark',
+      earth: 'Theme: Earth',
+    };
+    const THEME_ICONS: Record<string, string> = {
+      light: '☀',
+      dark:  '◑',
+      earth: '◈',
+    };
+
+    function getSavedTheme(): string | null {
+      try { return localStorage.getItem('sp-theme'); } catch { return null; }
+    }
+
+    function saveTheme(theme: string): void {
+      try { localStorage.setItem('sp-theme', theme); } catch { /* noop */ }
+    }
+
+    function applyTheme(theme: string): void {
+      const html = document.documentElement;
+
+      // Apply transition class for smooth surface swap
+      html.classList.add('theme-transitioning');
+      html.setAttribute('data-theme', theme);
+
+      // Remove transition class after animation completes
+      setTimeout(() => html.classList.remove('theme-transitioning'), 350);
+
+      // Update all theme toggle icons
+      const icon  = THEME_ICONS[theme]  ?? '◑';
+      const label = THEME_LABELS[theme] ?? 'Switch theme';
+
+      document.querySelectorAll<HTMLElement>('.theme-toggle').forEach(btn => {
+        const iconEl = btn.querySelector<HTMLElement>('#theme-icon-desktop, #theme-icon-sidebar');
+        if (iconEl) iconEl.textContent = icon;
+        else btn.querySelector<HTMLElement>('.icon')!.textContent = icon;
+        btn.setAttribute('aria-label', `Switch theme (currently ${theme})`);
+      });
+
+      // Update sidebar label
+      const sidebarLabel = document.getElementById('sidebar-theme-label');
+      if (sidebarLabel) {
+        sidebarLabel.textContent = theme.charAt(0).toUpperCase() + theme.slice(1);
+      }
+
+      // Update overlay cycle button
+      const cycleLabel = document.getElementById('theme-cycle-label');
+      if (cycleLabel) cycleLabel.textContent = label;
+    }
+
+    function cycleTheme(): void {
+      const current = document.documentElement.getAttribute('data-theme') ?? 'light';
+      const idx     = THEMES.indexOf(current as typeof THEMES[number]);
+      const next    = THEMES[(idx + 1) % THEMES.length];
+      applyTheme(next);
+      saveTheme(next);
+    }
+
+    // Wire up all theme controls
+    document.querySelectorAll<HTMLElement>('.theme-toggle, #theme-cycle-btn').forEach(btn => {
+      btn.addEventListener('click', cycleTheme);
+    });
+
+    // Sync initial UI state with the theme already applied by the inline script
+    const initialTheme = document.documentElement.getAttribute('data-theme') ?? 'light';
+    applyTheme(initialTheme);
+
+    // Follow OS preference changes when no saved preference
+    window.matchMedia?.('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+      if (!getSavedTheme()) applyTheme(e.matches ? 'dark' : 'light');
+    });
+
+    // ── 03 ACTIVE SIDEBAR LINK — runtime refinement ──────────
+    // Build-time active states handle the main cases.
+    // This catches edge cases like /guides/some-slug/ where
+    // the sidebar "Setup Guides" link should still be active.
+    (function setActiveSidebarLinks(): void {
+      const currentPath = window.location.pathname;
+      document.querySelectorAll<HTMLAnchorElement>('.sidebar-link, .desktop-nav a').forEach(link => {
+        const href = link.getAttribute('href') ?? '';
+        if (href.length > 1 && currentPath.startsWith(href)) {
+          link.classList.add('active');
+          link.setAttribute('aria-current', 'page');
+        }
+      });
+    })();
+
+    // ── 04 SERVICE WORKER REGISTRATION ──────────────────────
     if ('serviceWorker' in navigator) {
-      window.addEventListener('load', function() {
-        navigator.serviceWorker.register('/sw.js');
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').catch(() => { /* noop */ });
       });
     }
   </script>
-</body>
 
+</body>
 </html>

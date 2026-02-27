@@ -8,17 +8,7 @@
 //
 //  PRIVACY:
 //    IP anonymisation on · Google signals off · Ad personalisation off
-//
-//  FIXES vs v6:
-//    1. DOUBLE TRACKING BUG — affiliate_click was fired here AND in shared.js.
-//       Every Amazon click registered 2× affiliate_click in GA4, corrupting
-//       revenue goals. This file now fires ONLY select_item (GA4 ecommerce).
-//       affiliate_click is owned exclusively by shared.js/initAffiliateTracking().
-//
-//    2. Scroll listener now uses { passive: true } to stop blocking scroll
-//       thread. Previously the browser had to wait for the handler to complete
-//       before it could apply scroll — visibly impacted scroll performance.
-//
+
 //  CONTENTS
 //  01  dataLayer bootstrap & gtag shim
 //  02  GA4 config
@@ -111,20 +101,7 @@
     }, { passive: true }); // ← FIX: passive listener — does not block scroll thread
 
 
-    // ============================================================
-    //  05  OUTBOUND CLICK TRACKING
-    //
-    //  FIX: affiliate_click has been REMOVED from this handler.
-    //  It was previously duplicated here AND in shared.js, causing
-    //  2× affiliate_click events per click in GA4.
-    //
-    //  This handler now fires:
-    //    select_item     — GA4 ecommerce (for Amazon links only)
-    //    outbound_click  — for non-Amazon external links
-    //
-    //  affiliate_click is now exclusively owned by shared.js.
-    // ============================================================
-
+   
     document.addEventListener('click', function (e) {
         var el = e.target;
         while (el && el.tagName !== 'A') { el = el.parentNode; }
@@ -135,7 +112,6 @@
         var page = window.location.pathname;
 
         // ── 05a  Amazon affiliate — GA4 ecommerce only ────────
-        // NOTE: affiliate_click is NOT fired here. See shared.js.
 
         if (href.includes('amzn.to') || href.includes('amazon.co.uk')) {
             gtag('event', 'select_item', {

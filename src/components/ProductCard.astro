@@ -1,116 +1,350 @@
 ---
 // src/components/ProductCard.astro
-// Renders a single product card on category pages.
+// Renders a single ranked product entry on category pages.
+//
+// CHANGES FROM ORIGINAL:
+//   - BADGE_COLORS (hardcoded ID → hex lookup) REMOVED.
+//     Replaced by the `seam` field from content data.
+//     seam maps to a CSS custom property drawn from our palette tokens.
+//     This means ALL products get a badge color, not just the 6 in the
+//     old lookup table. New products added to content get color automatically.
+//
+//   - `brand` prop added — renders as mono overline above product name.
+//     Adds brand authority signal the original card was missing.
+//
+//   - `loadoutCount` prop added — renders as subtle social proof in the footer.
+//     "In N setups" — lightweight trust signal without being noisy.
+//
+//   - Seam color applied via CSS custom property on the article element.
+//     Badge inline style references --seam-color, NOT a raw hex value.
+//     All three themes see the correct palette color.
+//
+//   - Rank-badge text color is always white — enforced inline since it must
+//     contrast against any seam color in any theme.
+//
+//   - aria-label on the article itself — screen readers announce the product name
+//     before describing the card contents.
+//
+//   - Analytics data-* attributes preserved verbatim from original.
+//     GA4 affiliate_click events will continue to fire correctly.
 
-const BADGE_COLORS: Record<string, string> = {
-  'mice-razer-viper-v3-pro':     '#22c55e',
-  'mice-endgame-gear-op1w':      '#3b82f6',
-  'mice-atk-vxe-mad-r-plus':     '#ef4444',
-  'keyboards-aula-f99-wireless': '#8b5cf6',
-  'keyboards-keychron-c3-pro':   '#10b981',
-  'monitors-asus-rog-xg27aqdmg': '#ef4444',
+// ── Seam → token mapping ──────────────────────────────────────────────────
+// seam is a categorical field on every product (5 values, 5 categories).
+// Each maps to a palette token reference — a string used in a CSS custom
+// property. Using var(--palette-*) instead of raw hex means the value
+// still participates in the cascade even though it's set inline.
+//
+// Category → seam assignment (from content data):
+//   mice       → crimson   (ember — action energy, fast, aggressive)
+//   keyboards  → cobalt    (forest — precise, considered, crafted)
+//   monitors   → slate     (neutral — technical, objective)
+//   headsets   → slate     (neutral — audio, immersive, quiet)
+//   chairs     → jade      (mid-green — ergonomic, health, comfort)
+
+const SEAM_TOKEN: Record<string, string> = {
+  crimson: 'var(--palette-ember-600)',    // #D95433 — burnt orange
+  cobalt:  'var(--palette-forest-800)',   // #1B3022 — dark forest green
+  jade:    'var(--palette-forest-500)',   // #3D7357 — mid forest green
+  slate:   'var(--palette-neutral-600)',  // #3F3F45 — cool mid-grey
+  amber:   'var(--palette-earth-700)',    // #5C4535 — warm brown
 };
 
+// ── Budget class for filter chip JS ──────────────────────────────────────
+// The filter-chip buttons on category pages filter .product-entry elements
+// by data-budget. This function produces the value for that attribute.
+function budgetClass(priceStr: string): string {
+  const n = parseFloat(priceStr.replace(/[^0-9.]/g, ''));
+  if (n <  50)  return 'under-50';
+  if (n < 100)  return '50-100';
+  if (n < 200)  return '100-200';
+  return 'over-200';
+}
+
+// ── Props ────────────────────────────────────────────────────────────────
 export interface Props {
-  id:           string;
-  rank:         number;
-  name:         string;
-  badge:        string;
-  emoji:        string;
-  price:        string;
-  msrp:         string | null;
-  savings:      string | null;
-  affiliate:    string;
-  desc:         string;
-  specs:        string[];
-  pros:         string[];
-  cons:         string[];
+  id:           string;   // Content ID — also used as GA4 data-product
+  rank:         number;   // Position in ranked list (1 = featured)
+  name:         string;   // Full product name
+  brand:        string;   // Brand name — shown as mono overline
+  badge:        string;   // Editorial badge text (e.g. "THE PRO STANDARD")
+  seam:         string;   // Category color key: crimson | cobalt | jade | slate | amber
+  emoji:        string;   // Category emoji (visual identity, not decorative)
+  price:        string;   // Current price string (e.g. "£119")
+  msrp:         string | null;  // Original price — null if no discount
+  savings:      string | null;  // Saving percentage — null if no discount
+  affiliate:    string;   // Amazon UK affiliate URL
+  desc:         string;   // Product description (markdown body as plain text)
+  specs:        string[]; // Spec labels — rendered as mono pills (1–6)
+  pros:         string[]; // Pros list (1–6 items)
+  cons:         string[]; // Cons list (1–4 items)
   inStock:      boolean;
   nextDay:      boolean;
+  loadoutCount: number;   // How many setup guides feature this product
 }
 
 const {
-  id, rank, name, badge, emoji,
-  price, msrp, savings, affiliate,
-  desc, specs, pros, cons,
-  inStock, nextDay,
+  id,
+  rank,
+  name,
+  brand,
+  badge,
+  seam,
+  emoji,
+  price,
+  msrp,
+  savings,
+  affiliate,
+  desc,
+  specs,
+  pros,
+  cons,
+  inStock,
+  nextDay,
+  loadoutCount,
 } = Astro.props;
 
-const badgeColor = BADGE_COLORS[id];
+// Resolve seam to a CSS token reference — fall back to neutral if unknown
+const seamColor  = SEAM_TOKEN[seam] ?? SEAM_TOKEN.slate;
 const isFirst    = rank === 1;
+const budget     = budgetClass(price);
 
-// Budget class for filter chips
-function budgetClass(priceStr: string): string {
-  const n = parseFloat(priceStr.replace(/[^0-9.]/g, ''));
-  if (n < 50)  return 'under-50';
-  if (n < 100) return '50-100';
-  if (n < 200) return '100-200';
-  return 'over-200';
-}
-const budget = budgetClass(price);
+// loadoutCount label — only rendered if > 0
+const loadoutLabel = loadoutCount === 1
+  ? 'In 1 setup guide'
+  : `In ${loadoutCount} setup guides`;
 ---
 
 <article
   class:list={['product-entry', isFirst && 'product-entry--featured']}
   data-budget={budget}
   data-id={id}
+  aria-label={name}
+  style={`--seam-color: ${seamColor};`}
 >
+
+  <!-- ── RANK ROW — rank number / editorial badge / availability stamps ── -->
   <div class="product-entry__rank">
-    <span class="rank-number">#{rank}</span>
-    {badgeColor
-      ? <span class="rank-badge" style={`background:${badgeColor}; border-color:${badgeColor}; color:#fff;`}>{badge}</span>
-      : <span class="rank-badge">{badge}</span>
-    }
-    {inStock && <span class="stamp stamp--stock">In Stock</span>}
-    {nextDay && <span class="stamp stamp--nextday">Next Day</span>}
+
+    <!-- Rank number -->
+    <span
+      class="rank-number"
+      aria-label={`Ranked ${rank}`}
+    >
+      #{rank}
+    </span>
+
+    <!-- Editorial badge — seam color via CSS custom property -->
+    <span
+      class="rank-badge"
+      style="background: var(--seam-color); border-color: var(--seam-color); color: #fff;"
+    >
+      {badge}
+    </span>
+
+    <!-- Availability stamps — only render when true -->
+    {inStock && (
+      <span class="stamp stamp--stock" aria-label="In stock">
+        In Stock
+      </span>
+    )}
+    {nextDay && (
+      <span class="stamp stamp--nextday" aria-label="Next day delivery available">
+        Next Day
+      </span>
+    )}
+
   </div>
 
+  <!-- ── BODY — identity + specs + verdict ── -->
   <div class="product-entry__body">
+
+    <!-- Top row — emoji / brand + name / description -->
     <div class="product-entry__top">
-      <div class="product-entry__emoji" aria-hidden="true">{emoji}</div>
+
+      <!-- Category emoji — presentational, not read by screen readers -->
+      <div class="product-entry__emoji" aria-hidden="true">
+        {emoji}
+      </div>
+
+      <!-- Identity block -->
       <div class="product-entry__info">
-        <h2 class="product-entry__name">{name}</h2>
-        <p class="product-entry__desc">{desc}</p>
+
+        <!-- Brand overline — mono, uppercase, subtle -->
+        <span
+          class="product-entry__brand"
+          aria-hidden="true"
+        >
+          {brand}
+        </span>
+
+        <!-- Product name — h2 within the article landmark -->
+        <h2 class="product-entry__name">
+          {name}
+        </h2>
+
+        <!-- Description paragraph -->
+        <p class="product-entry__desc">
+          {desc}
+        </p>
+
       </div>
     </div>
 
+    <!-- Spec pills — mono technical labels -->
     {specs.length > 0 && (
-      <div class="product-entry__specs">
-        {specs.map(s => <span class="spec-pill">{s}</span>)}
+      <div
+        class="product-entry__specs"
+        aria-label="Key specifications"
+      >
+        {specs.map(s => (
+          <span class="spec-pill">{s}</span>
+        ))}
       </div>
     )}
 
-    <div class="pros-cons">
+    <!-- Pros and cons -->
+    <div class="pros-cons" aria-label="Pros and cons">
+
       <div class="pros-cons__col">
-        <p class="pros-cons__label pros-cons__label--pros">Pros</p>
-        <ul class="pros-cons__list">
-          {pros.map(p => <li class="pros-cons__item">{p}</li>)}
+        <p class="pros-cons__label pros-cons__label--pros" aria-hidden="true">
+          Pros
+        </p>
+        <ul class="pros-cons__list" aria-label="Advantages">
+          {pros.map(p => (
+            <li class="pros-cons__item">{p}</li>
+          ))}
         </ul>
       </div>
+
       <div class="pros-cons__col">
-        <p class="pros-cons__label pros-cons__label--cons">Cons</p>
-        <ul class="pros-cons__list">
-          {cons.map(c => <li class="pros-cons__item">{c}</li>)}
+        <p class="pros-cons__label pros-cons__label--cons" aria-hidden="true">
+          Cons
+        </p>
+        <ul class="pros-cons__list" aria-label="Disadvantages">
+          {cons.map(c => (
+            <li class="pros-cons__item">{c}</li>
+          ))}
         </ul>
+      </div>
+
+    </div>
+
+    <!-- Footer — price / social proof / CTA -->
+    <div class="product-entry__footer">
+
+      <!-- Price block -->
+      <div class="price-block">
+        <span class="price-current" aria-label={`Current price: ${price}`}>
+          {price}
+        </span>
+        {msrp && (
+          <span class="price-msrp" aria-label={`Original price: ${msrp}`}>
+            {msrp}
+          </span>
+        )}
+        {savings && (
+          <span class="price-badge" aria-label={`Save ${savings}`}>
+            Save {savings}
+          </span>
+        )}
+      </div>
+
+      <!-- Footer right — loadout count + CTA -->
+      <div class="product-entry__footer-right">
+
+        <!-- Social proof — only render if product appears in any setup guide -->
+        {loadoutCount > 0 && (
+          <span
+            class="product-entry__loadout"
+            aria-label={loadoutLabel}
+          >
+            {loadoutLabel}
+          </span>
+        )}
+
+        <!-- Primary CTA — Amazon UK affiliate link -->
+        <a
+          href={affiliate}
+          class="btn-primary"
+          target="_blank"
+          rel="noopener sponsored"
+          data-product={id}
+          data-type="card-cta"
+          aria-label={`Buy ${name} on Amazon UK — ${price}`}
+        >
+          View on Amazon
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <line x1="7" y1="17" x2="17" y2="7"/>
+            <polyline points="7 7 17 7 17 17"/>
+          </svg>
+        </a>
+
       </div>
     </div>
 
-    <div class="product-entry__footer">
-      <div class="price-block">
-        <span class="price-current">{price}</span>
-        {msrp && <span class="price-msrp">{msrp}</span>}
-        {savings && <span class="price-badge">Save {savings}</span>}
-      </div>
-      <a
-        href={affiliate}
-        class="btn-primary"
-        target="_blank"
-        rel="noopener sponsored"
-        data-product={id}
-        data-type="card-cta"
-      >
-        View on Amazon →
-      </a>
-    </div>
   </div>
 </article>
+
+<style>
+  /*
+    Scoped styles for elements unique to this component
+    that don't warrant a global class in components.css.
+
+    product-entry__brand:   Brand name overline above product name.
+    product-entry__footer-right: Flex container for loadout + CTA.
+    product-entry__loadout: Social proof label.
+
+    Everything else (.product-entry, .rank-badge, .spec-pill, etc.)
+    is styled by components.css — no duplication here.
+  */
+
+  /* Brand overline — mono uppercase, subtle, above the product name */
+  .product-entry__brand {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-semibold);
+    letter-spacing: var(--tracking-widest);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-0-5);
+    line-height: 1.4;
+  }
+
+  /* Footer right — loadout + CTA, right-aligned */
+  .product-entry__footer-right {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+
+  /* Loadout social proof label */
+  .product-entry__loadout {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-brand);
+    white-space: nowrap;
+  }
+
+  /*
+    Seam color custom property override for the featured (#1) card.
+    The featured card gets a left border in ember orange (--color-action)
+    defined in components.css. The badge still respects its seam color
+    via --seam-color — the two are independent.
+  */
+</style>

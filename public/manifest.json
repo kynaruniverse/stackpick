@@ -1,14 +1,14 @@
 {
-  "name": "Stack Pick",
+  "name": "StackPick",
   "short_name": "StackPick",
-  "description": "Gaming loadouts built like streetwear drops. Curated hardware kits for UK gamers.",
+  "description": "Researched gaming gear picks for UK gamers. Best mice, keyboards, headsets, monitors and chairs — verified UK pricing, no filler.",
   "id": "/",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "orientation": "any",
-  "background_color": "#0A0A0F",
-  "theme_color": "#0A0A0F",
+  "background_color": "#F7F7F8",
+  "theme_color": "#1B3022",
   "lang": "en-GB",
   "dir": "ltr",
   "categories": ["shopping", "entertainment"],
@@ -26,14 +26,14 @@
       "sizes": "390x844",
       "type": "image/png",
       "form_factor": "narrow",
-      "label": "Stack Pick Loadout Wall on mobile"
+      "label": "StackPick category page on mobile"
     },
     {
       "src": "/assets/images/screenshot-desktop.png",
       "sizes": "1280x800",
       "type": "image/png",
       "form_factor": "wide",
-      "label": "Stack Pick Loadout Wall on desktop"
+      "label": "StackPick homepage on desktop"
     }
   ],
 

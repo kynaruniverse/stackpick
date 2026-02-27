@@ -5,38 +5,38 @@
 import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
 
-const allProducts     = await getCollection('products');
-const allComparisons  = await getCollection('comparisons');
-const allGuides       = await getCollection('guides');
+const allProducts    = await getCollection('products');
+const allComparisons = await getCollection('comparisons');
+const allGuides      = await getCollection('guides');
 
 // Build search index at build time — passed to the client as a JSON island
 const searchIndex = [
   ...allProducts.map(p => ({
-    type:  'product',
-    title: p.data.name,
-    desc:  p.body.slice(0, 120),
-    url:   `/${p.data.category}/`,
+    type:     'product',
+    title:    p.data.name,
+    desc:     p.body.slice(0, 120),
+    url:      `/${p.data.category}/`,
     category: p.data.category,
-    price: p.data.price,
-    tags:  p.data.tags,
+    price:    p.data.price,
+    tags:     p.data.tags,
   })),
   ...allComparisons.map(c => ({
-    type:  'comparison',
-    title: c.data.title,
-    desc:  c.data.heroSubtitle,
-    url:   `/comparisons/${c.data.slug}/`,
+    type:     'comparison',
+    title:    c.data.title,
+    desc:     c.data.heroSubtitle,
+    url:      `/comparisons/${c.data.slug}/`,
     category: 'comparison',
-    price: null,
-    tags:  [],
+    price:    null,
+    tags:     [],
   })),
   ...allGuides.map(g => ({
-    type:  'guide',
-    title: g.data.title,
-    desc:  g.data.heroSubtitle,
-    url:   `/guides/${g.data.slug}/`,
+    type:     'guide',
+    title:    g.data.title,
+    desc:     g.data.heroSubtitle,
+    url:      `/guides/${g.data.slug}/`,
     category: 'guide',
-    price: null,
-    tags:  [],
+    price:    null,
+    tags:     [],
   })),
 ];
 
@@ -100,6 +100,9 @@ const searchIndexJSON = JSON.stringify(searchIndex);
     const count   = document.getElementById('results-count')  as HTMLElement;
     const results = document.getElementById('search-results') as HTMLElement;
 
+    // Inline SVG chevron — consistent with the design system, no → character
+    const ChevronSVG = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>`;
+
     function renderCard(item: typeof INDEX[0]): string {
       const typeLabel = item.type === 'product' ? item.category : item.type;
       return `
@@ -112,13 +115,16 @@ const searchIndexJSON = JSON.stringify(searchIndex);
             <div class="product-entry__top">
               <div class="product-entry__info">
                 <h2 class="product-entry__name">
-                  <a href="${item.url}" style="color:inherit">${item.title}</a>
+                  <a href="${item.url}" class="search-result-link">${item.title}</a>
                 </h2>
                 <p class="product-entry__desc">${item.desc}</p>
               </div>
             </div>
             <div class="product-entry__footer">
-              <a href="${item.url}" class="btn-secondary">View →</a>
+              <div></div>
+              <a href="${item.url}" class="btn-secondary">
+                View ${ChevronSVG}
+              </a>
             </div>
           </div>
         </article>`;
@@ -132,22 +138,35 @@ const searchIndexJSON = JSON.stringify(searchIndex);
         return;
       }
       const hits = INDEX.filter(item =>
-        item.title.toLowerCase().includes(q) ||
-        item.desc.toLowerCase().includes(q)  ||
+        item.title.toLowerCase().includes(q)    ||
+        item.desc.toLowerCase().includes(q)     ||
         item.category.toLowerCase().includes(q) ||
         item.tags.some(t => t.toLowerCase().includes(q))
       );
       count.textContent = `${hits.length} result${hits.length !== 1 ? 's' : ''} for "${query}"`;
       results.innerHTML = hits.length
         ? hits.map(renderCard).join('')
-        : '<p style="color:var(--color-text-muted)">No results found.</p>';
+        : `<p style="color:var(--color-text-muted); padding: var(--space-4) 0;">No results found.</p>`;
     }
 
-    input.addEventListener('input',  () => search(input.value));
-    input.addEventListener('keydown', e => { if (e.key === 'Enter') search(input.value); });
+    input.addEventListener('input',   () => search(input.value));
+    input.addEventListener('keydown', e  => { if (e.key === 'Enter') search(input.value); });
     document.getElementById('search-btn')!.addEventListener('click', () => search(input.value));
 
     // Auto-focus on load
     input.focus();
   </script>
+
+  <style>
+    /* Search result link — inherits card text color, no underline in default state */
+    .search-result-link {
+      color: inherit;
+      text-decoration: none;
+    }
+    .search-result-link:hover {
+      color: var(--color-brand);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+  </style>
 </Base>

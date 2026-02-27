@@ -1,216 +1,733 @@
 /* ============================================================
-   STACKPICK V2 — FORCE MARRY DESIGN TOKENS
-   Base: Monochrome + Lava Energy
+   STACKPICK — DESIGN SYSTEM TOKENS
+   Version: 4.0
+   Direction: Branded editorial authority. Confident street
+   energy, architectural layout discipline, Tommy Hilfiger-
+   level color consistency. Forest green as identity.
+   Burnt orange as action. Three themes. Zero compromise.
    ============================================================ */
 
+
+/* ──────────────────────────────────────────────────────────
+   00 — FONT IMPORTS
+   Syne:           Display / headings — geometric, memorable,
+                   character without loudness
+   Inter:          Body — invisible at reading sizes, perfect
+   JetBrains Mono: Specs, prices, metadata — technical signal
+   ────────────────────────────────────────────────────────── */
+
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+
+/* ──────────────────────────────────────────────────────────
+   01 — RAW COLOR PALETTE
+   Named by what they ARE, not what they do.
+   Never reference these directly in components —
+   always use the semantic tokens in section 02.
+   ────────────────────────────────────────────────────────── */
+
 :root {
+  /* Greens — brand identity */
+  --palette-forest-950:  #0D1A12;
+  --palette-forest-900:  #122118;
+  --palette-forest-800:  #1B3022;  /* Primary forest — the brand color */
+  --palette-forest-700:  #254533;
+  --palette-forest-600:  #2E5A42;
+  --palette-forest-500:  #3D7357;
+  --palette-forest-400:  #5A9973;
+  --palette-forest-300:  #82BC97;
+  --palette-forest-200:  #B8D9C4;
+  --palette-forest-100:  #DDE8E2;
+  --palette-forest-50:   #EBF2EE;
 
-  /* ── 01 COLOUR: RAW PALETTE ── */
-  --white:        #FFFFFF;   /* site background */
-  --grey-50:      #F9F9F9;   /* subtle section backgrounds */
-  --grey-100:     #EEEEEE;   /* ultra light borders */
-  --grey-200:     #E2E2E2;   /* standard borders */
-  --grey-700:     #666666;   /* muted/body text */
-  --grey-900:     #111111;   /* primary headings */
+  /* Oranges — action / interaction */
+  --palette-ember-950:   #3D1508;
+  --palette-ember-900:   #5C200D;
+  --palette-ember-800:   #8A3018;
+  --palette-ember-700:   #B84022;
+  --palette-ember-600:   #D95433;  /* Primary ember — the action color */
+  --palette-ember-500:   #E8693F;
+  --palette-ember-400:   #F28060;
+  --palette-ember-300:   #F7A68A;
+  --palette-ember-200:   #FBD0C2;
+  --palette-ember-100:   #FDECE6;
+  --palette-ember-50:    #FFF5F2;
 
-  --lava:         #FF4F1F;   /* your orange accent */
-  --lava-dim:     #E63E10;
-  --lava-glow:    rgba(255, 79, 31, 0.1);
-  --lava-subtle:  rgba(255, 79, 31, 0.05);
+  /* Neutrals — cool tint (light theme base) */
+  --palette-neutral-950: #0A0A0B;
+  --palette-neutral-900: #111113;
+  --palette-neutral-800: #1C1C1F;
+  --palette-neutral-700: #2C2C30;
+  --palette-neutral-600: #3F3F45;
+  --palette-neutral-500: #5A5A63;
+  --palette-neutral-400: #7D7D88;
+  --palette-neutral-300: #ADADB8;
+  --palette-neutral-200: #D4D4DC;
+  --palette-neutral-150: #E4E4EC;
+  --palette-neutral-100: #EFEFF4;
+  --palette-neutral-50:  #F7F7FA;
+  --palette-neutral-0:   #FFFFFF;
 
-  /* ── 02 COLOUR: SEMANTIC MAPPING ── */
-  --color-bg-base:       var(--white);
-  --color-bg-surface-1:  var(--white);
-  --color-bg-surface-2:  var(--grey-50);
-  --color-bg-surface-3:  var(--grey-100);
-  --color-bg-overlay:    rgba(255, 255, 255, 0.95);
+  /* Earthy — warm tint (neutral/earth theme) */
+  --palette-earth-950:   #1C1510;
+  --palette-earth-900:   #2A1F18;
+  --palette-earth-800:   #3D2E24;
+  --palette-earth-700:   #5C4535;
+  --palette-earth-600:   #7A5C48;
+  --palette-earth-500:   #9C7860;
+  --palette-earth-400:   #BA9880;
+  --palette-earth-300:   #D4B8A8;
+  --palette-earth-200:   #E5D5CB;
+  --palette-earth-150:   #EDE0D8;
+  --palette-earth-100:   #F2EAE4;
+  --palette-earth-50:    #F8F3EF;
 
-  --color-text-primary:    var(--grey-900);
-  --color-text-muted:      var(--grey-700);
-  --color-text-on-accent:  #FFFFFF;
-
-  --color-accent:          var(--lava);
-  --color-accent-dim:      var(--lava-dim);
-  --color-accent-glow:     var(--lava-glow);
-  --color-accent-subtle:   var(--lava-subtle);
-
-  --color-border-subtle:   var(--grey-100);
-  --color-border-strong:   var(--grey-900);
-
-
-  /* ── 03 TYPOGRAPHY: FAMILIES & WEIGHTS ── */
-  --font-display: 'Space Grotesk', 'Segoe UI', sans-serif;
-  --font-body:    'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-mono:    'JetBrains Mono', 'Fira Code', monospace;
-
-  --display-weight:          700;
-  --display-line-height:     1.15;
-  --display-letter-spacing:  -0.5px;
-
-  --body-weight:         400;
-  --body-line-height:    1.6;
-  --body-letter-spacing: 0px;
-
-  --label-size:           0.6875rem; /* 11px */
-  --label-weight:         600;
-  --label-letter-spacing: 0.08em;
-  --label-transform:      uppercase;
-
-  /* ── 04 TYPOGRAPHY: SCALE ── */
-  --h1-size: 2rem;
-  --h2-size: 1.75rem;
-  --h3-size: 1.5rem;
-  --h4-size: 1.25rem;
-  --h5-size: 1.125rem;
-  --h6-size: 1rem;
-
-  --display-size-hero:   2.5rem;     /* mobile */
-  --display-size-hero-lg: 4.5rem;    /* desktop */
-
-  --body-font-size-sm:   0.875rem;
-  --body-font-size-base: 1rem;
-  --body-font-size-lg:   1.125rem;
-
-  --mono-size-sm:   0.75rem;
-  --mono-size-base: 0.875rem;
-  --mono-size-lg:   1rem;
+  /* Functional colors — context-independent */
+  --palette-white:       #FFFFFF;
+  --palette-black:       #000000;
+  --palette-success:     #1A7A4A;
+  --palette-warning:     #C07A00;
+  --palette-error:       #C03030;
 }
 
-/* Responsive Type Overrides */
-@media (min-width: 1024px) {
+
+/* ──────────────────────────────────────────────────────────
+   02 — SEMANTIC COLOR TOKENS
+   LIGHT THEME (default — [data-theme="light"] or :root)
+   These are the only tokens components should reference.
+   ────────────────────────────────────────────────────────── */
+
+:root,
+[data-theme="light"] {
+
+  /* — Surfaces — */
+  --color-bg:            var(--palette-neutral-50);   /* Page canvas */
+  --color-bg-elevated:   var(--palette-neutral-0);    /* Cards, panels */
+  --color-bg-subtle:     var(--palette-neutral-100);  /* Hover tints, zebra rows */
+  --color-bg-inset:      var(--palette-neutral-150);  /* Input fields, sunken areas */
+
+  /* — Text — */
+  --color-text-primary:  var(--palette-neutral-900);  /* Body copy, headings */
+  --color-text-secondary:var(--palette-neutral-500);  /* Supporting copy */
+  --color-text-muted:    var(--palette-neutral-400);  /* Timestamps, captions */
+  --color-text-disabled: var(--palette-neutral-300);  /* Disabled states */
+  --color-text-inverse:  var(--palette-neutral-0);    /* Text on dark surfaces */
+  --color-text-on-brand: var(--palette-neutral-0);    /* Text on forest green */
+  --color-text-on-action:var(--palette-neutral-0);    /* Text on ember orange */
+
+  /* — Brand (Forest Green) — */
+  --color-brand:         var(--palette-forest-800);   /* Primary brand color */
+  --color-brand-hover:   var(--palette-forest-700);   /* Brand on hover */
+  --color-brand-active:  var(--palette-forest-900);   /* Brand on press */
+  --color-brand-subtle:  var(--palette-forest-50);    /* Tinted backgrounds */
+  --color-brand-muted:   var(--palette-forest-200);   /* Borders in brand context */
+  --color-brand-strong:  var(--palette-forest-900);   /* High-contrast brand */
+
+  /* — Action (Ember Orange) — */
+  --color-action:        var(--palette-ember-600);    /* Primary CTA */
+  --color-action-hover:  var(--palette-ember-700);    /* CTA on hover */
+  --color-action-active: var(--palette-ember-800);    /* CTA on press */
+  --color-action-subtle: var(--palette-ember-50);     /* Orange tinted background */
+  --color-action-muted:  var(--palette-ember-200);    /* Orange borders */
+
+  /* — Borders — */
+  --color-border:        var(--palette-neutral-150);  /* Default border */
+  --color-border-strong: var(--palette-neutral-200);  /* Emphasized border */
+  --color-border-focus:  var(--palette-forest-800);   /* Focus rings */
+  --color-border-brand:  var(--palette-forest-800);   /* Brand-colored borders */
+  --color-border-action: var(--palette-ember-600);    /* Action-colored borders */
+
+  /* — Functional — */
+  --color-success:       var(--palette-success);
+  --color-warning:       var(--palette-warning);
+  --color-error:         var(--palette-error);
+
+  /* — Spec pill (mono labels) — */
+  --color-spec-bg:       var(--palette-neutral-100);
+  --color-spec-text:     var(--palette-neutral-700);
+  --color-spec-border:   var(--palette-neutral-200);
+
+  /* — Table — */
+  --color-table-header-bg:   var(--palette-forest-800);
+  --color-table-header-text: var(--palette-neutral-0);
+  --color-table-row-alt:     var(--palette-neutral-50);
+  --color-table-winner:      var(--palette-forest-50);
+  --color-table-winner-text: var(--palette-forest-800);
+  --color-table-border:      var(--palette-neutral-150);
+
+  /* — Nav & sidebar — */
+  --color-nav-bg:        var(--palette-neutral-0);
+  --color-nav-border:    var(--palette-neutral-150);
+  --color-nav-text:      var(--palette-neutral-600);
+  --color-nav-text-active: var(--palette-neutral-900);
+  --color-sidebar-bg:    var(--palette-neutral-50);
+  --color-sidebar-border:var(--palette-neutral-150);
+
+  /* — Overlay — */
+  --color-overlay-bg:    var(--palette-neutral-0);
+  --color-scrim:         rgba(10, 10, 11, 0.50);
+
+  /* — Badges — */
+  --color-badge-bg:      var(--palette-neutral-900);
+  --color-badge-text:    var(--palette-neutral-0);
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   03 — DARK THEME
+   [data-theme="dark"]
+   ────────────────────────────────────────────────────────── */
+
+[data-theme="dark"] {
+
+  /* — Surfaces — */
+  --color-bg:            var(--palette-neutral-950);
+  --color-bg-elevated:   var(--palette-neutral-900);
+  --color-bg-subtle:     var(--palette-neutral-800);
+  --color-bg-inset:      var(--palette-neutral-800);
+
+  /* — Text — */
+  --color-text-primary:  #F0F0F5;
+  --color-text-secondary:var(--palette-neutral-300);
+  --color-text-muted:    var(--palette-neutral-500);
+  --color-text-disabled: var(--palette-neutral-700);
+  --color-text-inverse:  var(--palette-neutral-900);
+  --color-text-on-brand: var(--palette-neutral-0);
+  --color-text-on-action:var(--palette-neutral-0);
+
+  /* — Brand (Forest — lighter on dark) — */
+  --color-brand:         var(--palette-forest-400);
+  --color-brand-hover:   var(--palette-forest-300);
+  --color-brand-active:  var(--palette-forest-500);
+  --color-brand-subtle:  var(--palette-forest-950);
+  --color-brand-muted:   var(--palette-forest-800);
+  --color-brand-strong:  var(--palette-forest-300);
+
+  /* — Action (Ember — slightly brighter on dark) — */
+  --color-action:        var(--palette-ember-500);
+  --color-action-hover:  var(--palette-ember-400);
+  --color-action-active: var(--palette-ember-600);
+  --color-action-subtle: var(--palette-ember-950);
+  --color-action-muted:  var(--palette-ember-800);
+
+  /* — Borders — */
+  --color-border:        var(--palette-neutral-800);
+  --color-border-strong: var(--palette-neutral-700);
+  --color-border-focus:  var(--palette-forest-400);
+  --color-border-brand:  var(--palette-forest-600);
+  --color-border-action: var(--palette-ember-500);
+
+  /* — Spec pill — */
+  --color-spec-bg:       var(--palette-neutral-800);
+  --color-spec-text:     var(--palette-neutral-300);
+  --color-spec-border:   var(--palette-neutral-700);
+
+  /* — Table — */
+  --color-table-header-bg:   var(--palette-forest-900);
+  --color-table-header-text: var(--palette-forest-300);
+  --color-table-row-alt:     var(--palette-neutral-900);
+  --color-table-winner:      var(--palette-forest-950);
+  --color-table-winner-text: var(--palette-forest-300);
+  --color-table-border:      var(--palette-neutral-800);
+
+  /* — Nav & sidebar — */
+  --color-nav-bg:        var(--palette-neutral-900);
+  --color-nav-border:    var(--palette-neutral-800);
+  --color-nav-text:      var(--palette-neutral-400);
+  --color-nav-text-active: #F0F0F5;
+  --color-sidebar-bg:    var(--palette-neutral-950);
+  --color-sidebar-border:var(--palette-neutral-800);
+
+  /* — Overlay — */
+  --color-overlay-bg:    var(--palette-neutral-900);
+  --color-scrim:         rgba(0, 0, 0, 0.70);
+
+  /* — Badges — */
+  --color-badge-bg:      var(--palette-neutral-0);
+  --color-badge-text:    var(--palette-neutral-900);
+
+  /* Shadows don't read on dark — use border elevation instead */
+  --shadow-sm:   none;
+  --shadow-md:   none;
+  --shadow-lg:   none;
+  --shadow-hover:none;
+  --shadow-card: none;
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   04 — EARTHY / NEUTRAL THEME
+   [data-theme="earth"]
+   Warm sand canvas. Same brand colors, earthier surface.
+   ────────────────────────────────────────────────────────── */
+
+[data-theme="earth"] {
+
+  /* — Surfaces — */
+  --color-bg:            var(--palette-earth-50);
+  --color-bg-elevated:   var(--palette-earth-100);
+  --color-bg-subtle:     var(--palette-earth-150);
+  --color-bg-inset:      var(--palette-earth-200);
+
+  /* — Text — */
+  --color-text-primary:  var(--palette-earth-950);
+  --color-text-secondary:var(--palette-earth-700);
+  --color-text-muted:    var(--palette-earth-600);
+  --color-text-disabled: var(--palette-earth-400);
+  --color-text-inverse:  var(--palette-earth-50);
+  --color-text-on-brand: var(--palette-neutral-0);
+  --color-text-on-action:var(--palette-neutral-0);
+
+  /* — Brand — same forest, stands out beautifully on sand — */
+  --color-brand:         var(--palette-forest-800);
+  --color-brand-hover:   var(--palette-forest-700);
+  --color-brand-active:  var(--palette-forest-900);
+  --color-brand-subtle:  var(--palette-forest-100);
+  --color-brand-muted:   var(--palette-forest-200);
+  --color-brand-strong:  var(--palette-forest-900);
+
+  /* — Action — ember on sand is exceptional — */
+  --color-action:        var(--palette-ember-600);
+  --color-action-hover:  var(--palette-ember-700);
+  --color-action-active: var(--palette-ember-800);
+  --color-action-subtle: var(--palette-ember-100);
+  --color-action-muted:  var(--palette-ember-200);
+
+  /* — Borders — */
+  --color-border:        var(--palette-earth-200);
+  --color-border-strong: var(--palette-earth-300);
+  --color-border-focus:  var(--palette-forest-800);
+  --color-border-brand:  var(--palette-forest-700);
+  --color-border-action: var(--palette-ember-600);
+
+  /* — Spec pill — */
+  --color-spec-bg:       var(--palette-earth-200);
+  --color-spec-text:     var(--palette-earth-800);
+  --color-spec-border:   var(--palette-earth-300);
+
+  /* — Table — */
+  --color-table-header-bg:   var(--palette-forest-800);
+  --color-table-header-text: var(--palette-neutral-0);
+  --color-table-row-alt:     var(--palette-earth-100);
+  --color-table-winner:      var(--palette-forest-100);
+  --color-table-winner-text: var(--palette-forest-800);
+  --color-table-border:      var(--palette-earth-200);
+
+  /* — Nav — */
+  --color-nav-bg:        var(--palette-earth-100);
+  --color-nav-border:    var(--palette-earth-200);
+  --color-nav-text:      var(--palette-earth-700);
+  --color-nav-text-active: var(--palette-earth-950);
+  --color-sidebar-bg:    var(--palette-earth-50);
+  --color-sidebar-border:var(--palette-earth-200);
+
+  /* — Overlay — */
+  --color-overlay-bg:    var(--palette-earth-100);
+  --color-scrim:         rgba(28, 21, 16, 0.50);
+
+  /* — Badges — */
+  --color-badge-bg:      var(--palette-earth-950);
+  --color-badge-text:    var(--palette-earth-50);
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   05 — TYPOGRAPHY TOKENS
+   ────────────────────────────────────────────────────────── */
+
+:root {
+  /* — Font families — */
+  --font-display: 'Syne', system-ui, sans-serif;
+  --font-body:    'Inter', system-ui, sans-serif;
+  --font-mono:    'JetBrains Mono', 'Fira Code', monospace;
+
+  /* — Font weights — */
+  --weight-light:       300;
+  --weight-regular:     400;
+  --weight-medium:      500;
+  --weight-semibold:    600;
+  --weight-bold:        700;
+  --weight-extrabold:   800;
+
+  /* — Font size scale (rem / px at 16px root) — */
+  --text-xs:     0.6875rem;  /* 11px — metadata, legal, overlines */
+  --text-sm:     0.8125rem;  /* 13px — secondary labels, captions */
+  --text-base:   1rem;       /* 16px — body copy default */
+  --text-md:     1.0625rem;  /* 17px — comfortable body */
+  --text-lg:     1.125rem;   /* 18px — lead paragraphs */
+  --text-xl:     1.25rem;    /* 20px — card titles, nav items */
+  --text-2xl:    1.5rem;     /* 24px — H3 */
+  --text-3xl:    1.875rem;   /* 30px — H2 */
+  --text-4xl:    2.5rem;     /* 40px — H1 inner pages */
+  --text-5xl:    3.5rem;     /* 56px — Hero display */
+  --text-6xl:    5rem;       /* 80px — Hero display large */
+  --text-7xl:    7rem;       /* 112px — Homepage hero lockup */
+
+  /* — Line heights — */
+  --leading-none:    1;
+  --leading-tight:   1.1;    /* Display headings */
+  --leading-snug:    1.25;   /* Subheadings */
+  --leading-normal:  1.5;    /* Body copy */
+  --leading-relaxed: 1.65;   /* Long-form prose */
+  --leading-loose:   1.8;    /* Max readability */
+
+  /* — Letter spacing — */
+  --tracking-tight:   -0.03em; /* Display headlines */
+  --tracking-snug:    -0.02em; /* Large body text */
+  --tracking-normal:  -0.01em; /* Body default */
+  --tracking-wide:     0.04em; /* Overlines, labels */
+  --tracking-wider:    0.08em; /* Mono spec labels */
+  --tracking-widest:   0.14em; /* ALL-CAPS UI labels */
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   06 — SPACING SCALE
+   8px base unit. Every value a deliberate multiple.
+   ────────────────────────────────────────────────────────── */
+
+:root {
+  --space-0:    0px;
+  --space-px:   1px;
+  --space-0-5:  2px;
+  --space-1:    4px;
+  --space-1-5:  6px;
+  --space-2:    8px;     /* Base unit */
+  --space-2-5:  10px;
+  --space-3:    12px;
+  --space-4:    16px;
+  --space-5:    20px;
+  --space-6:    24px;
+  --space-7:    28px;
+  --space-8:    32px;
+  --space-9:    36px;
+  --space-10:   40px;
+  --space-12:   48px;
+  --space-14:   56px;
+  --space-16:   64px;
+  --space-20:   80px;
+  --space-24:   96px;
+  --space-28:   112px;
+  --space-32:   128px;
+  --space-40:   160px;
+  --space-48:   192px;
+
+  /* — Semantic spacing aliases — */
+  --gap-component:  var(--space-4);   /* Between items within a component */
+  --gap-section:    var(--space-12);  /* Between sections on a page */
+  --gap-page:       var(--space-20);  /* Top-level page padding */
+
+  --padding-card:   var(--space-6);   /* Card internal padding */
+  --padding-card-sm:var(--space-4);   /* Small card padding */
+  --padding-btn:    var(--space-3) var(--space-6); /* Button padding */
+  --padding-btn-sm: var(--space-2) var(--space-4); /* Small button padding */
+  --padding-input:  var(--space-3) var(--space-4); /* Input field padding */
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   07 — LAYOUT & CONTAINER
+   ────────────────────────────────────────────────────────── */
+
+:root {
+  /* — Container widths — */
+  --container-xs:    480px;
+  --container-sm:    640px;
+  --container-md:    768px;
+  --container-lg:    1024px;
+  --container-xl:    1280px;   /* Max page width */
+  --container-2xl:   1440px;   /* Wide editorial only */
+
+  /* — Page padding (horizontal) — */
+  --page-pad-mobile:   var(--space-4);   /* 16px */
+  --page-pad-tablet:   var(--space-8);   /* 32px */
+  --page-pad-desktop:  var(--space-12);  /* 48px */
+
+  /* — Navigation dimensions — */
+  --nav-height:          60px;    /* Desktop top nav */
+  --nav-height-mobile:   56px;    /* Mobile top bar */
+  --bottom-nav-height:   72px;    /* Mobile bottom tab bar */
+  --sidebar-width:       240px;   /* Desktop left rail */
+  --sidebar-width-sm:    200px;   /* Compact sidebar */
+
+  /* — Z-index scale — */
+  --z-below:    -1;
+  --z-base:      0;
+  --z-raised:   10;
+  --z-dropdown: 100;
+  --z-sticky:   200;
+  --z-nav:      300;
+  --z-overlay:  400;
+  --z-modal:    500;
+  --z-toast:    600;
+  --z-top:      999;
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   08 — BORDER RADIUS
+   Mixed geometry: sharp structure, rounded interaction.
+   ────────────────────────────────────────────────────────── */
+
+:root {
+  --radius-none:   0px;      /* Section containers, hero blocks, tables */
+  --radius-xs:     2px;      /* Micro badges, code snippets */
+  --radius-sm:     4px;      /* Tags, stamps, small chips */
+  --radius-md:     8px;      /* Buttons, inputs — interactive elements */
+  --radius-lg:     12px;     /* Product cards, guide cards */
+  --radius-xl:     16px;     /* Large surface containers, modal panels */
+  --radius-2xl:    24px;     /* Feature panels, large overlapping elements */
+  --radius-pill:   9999px;   /* Filter chips, badge pills, nav pills */
+
+  /* — Semantic radius aliases — */
+  --radius-btn:    var(--radius-md);
+  --radius-card:   var(--radius-lg);
+  --radius-input:  var(--radius-md);
+  --radius-badge:  var(--radius-sm);
+  --radius-chip:   var(--radius-pill);
+  --radius-tooltip:var(--radius-sm);
+  --radius-modal:  var(--radius-xl);
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   09 — SHADOW & ELEVATION
+   Light theme: soft layered shadows.
+   Dark/Earth theme: border-based elevation (shadows vanish).
+   ────────────────────────────────────────────────────────── */
+
+:root {
+  /* — Light theme shadows (overridden in dark) — */
+  --shadow-sm:    0 1px 2px  rgba(10, 10, 11, 0.06),
+                  0 1px 3px  rgba(10, 10, 11, 0.04);
+
+  --shadow-md:    0 2px 4px  rgba(10, 10, 11, 0.06),
+                  0 4px 12px rgba(10, 10, 11, 0.08);
+
+  --shadow-lg:    0 4px 8px  rgba(10, 10, 11, 0.06),
+                  0 8px 24px rgba(10, 10, 11, 0.10);
+
+  --shadow-hover: 0 6px 12px rgba(10, 10, 11, 0.08),
+                  0 12px 32px rgba(10, 10, 11, 0.12);
+
+  --shadow-card:  var(--shadow-md);
+
+  /* — Focus ring — accessible, brand-colored — */
+  --focus-ring:   0 0 0 2px var(--color-bg),
+                  0 0 0 4px var(--color-border-focus);
+
+  /* — Inset shadow for inputs — */
+  --shadow-inset: inset 0 1px 3px rgba(10, 10, 11, 0.08);
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   10 — MOTION & TRANSITIONS
+   Functional + polish. Nothing decorative.
+   Respects prefers-reduced-motion throughout.
+   ────────────────────────────────────────────────────────── */
+
+:root {
+  /* — Durations — */
+  --duration-instant:  0ms;
+  --duration-fast:     100ms;   /* Button press, micro-interactions */
+  --duration-base:     180ms;   /* Hover states, focus rings */
+  --duration-smooth:   280ms;   /* Panel reveals, tab switches */
+  --duration-slow:     420ms;   /* Overlay slides, page-level transitions */
+  --duration-slower:   600ms;   /* Complex staggered animations */
+
+  /* — Easing curves — */
+  --ease-in:         cubic-bezier(0.4, 0.0, 1.0, 1.0);   /* Exiting elements */
+  --ease-out:        cubic-bezier(0.0, 0.0, 0.2, 1.0);   /* Entering elements */
+  --ease-in-out:     cubic-bezier(0.4, 0.0, 0.2, 1.0);   /* State changes */
+  --ease-spring:     cubic-bezier(0.34, 1.56, 0.64, 1.0); /* Bouncy, playful */
+  --ease-sharp:      cubic-bezier(0.12, 0, 0.39, 0);     /* Snappy exits */
+
+  /* — Semantic transition shorthands — */
+  --transition-base:   var(--duration-base) var(--ease-in-out);
+  --transition-fast:   var(--duration-fast) var(--ease-in-out);
+  --transition-smooth: var(--duration-smooth) var(--ease-out);
+  --transition-hover:  var(--duration-base) var(--ease-out);
+}
+
+/* Honor user's motion preference globally */
+@media (prefers-reduced-motion: reduce) {
   :root {
-    --h1-size: 2.75rem;
-    --h2-size: 2.25rem;
-    --h3-size: 1.875rem;
-    --display-size-hero: var(--display-size-hero-lg);
+    --duration-instant:  0ms;
+    --duration-fast:     0ms;
+    --duration-base:     0ms;
+    --duration-smooth:   0ms;
+    --duration-slow:     0ms;
+    --duration-slower:   0ms;
   }
 }
 
-/* ── 05 SPACING ── */
+
+/* ──────────────────────────────────────────────────────────
+   11 — COMPONENT-LEVEL TOKENS
+   Specific values for individual component families.
+   Reduce decision fatigue and ensure consistency.
+   ────────────────────────────────────────────────────────── */
+
 :root {
-  --spacing-xxs:  4px;
-  --spacing-xs:   8px;
-  --spacing-sm:   12px;
-  --spacing-md:   16px;
-  --spacing-lg:   32px;
-  --spacing-xl:   48px;
-  --spacing-xxl:  64px;
-  --spacing-xxxl: 64px;
 
-  --spacing-section-vertical:    80px;
-  --spacing-section-vertical-sm: 48px;
+  /* — Buttons — */
+  --btn-height:         44px;     /* Min touch target */
+  --btn-height-sm:      36px;
+  --btn-height-lg:      52px;
+  --btn-font-family:    var(--font-body);
+  --btn-font-size:      var(--text-base);
+  --btn-font-size-sm:   var(--text-sm);
+  --btn-font-weight:    var(--weight-semibold);
+  --btn-letter-spacing: var(--tracking-normal);
+  --btn-radius:         var(--radius-md);
+  --btn-transition:     var(--transition-hover);
 
-  --card-padding:    var(--spacing-lg);
-  --section-padding: var(--spacing-xl);
+  /* Primary button */
+  --btn-primary-bg:           var(--color-action);
+  --btn-primary-bg-hover:     var(--color-action-hover);
+  --btn-primary-bg-active:    var(--color-action-active);
+  --btn-primary-text:         var(--color-text-on-action);
+  --btn-primary-border:       transparent;
+
+  /* Secondary button */
+  --btn-secondary-bg:         transparent;
+  --btn-secondary-bg-hover:   var(--color-bg-subtle);
+  --btn-secondary-text:       var(--color-text-primary);
+  --btn-secondary-border:     var(--color-border-strong);
+
+  /* Brand button */
+  --btn-brand-bg:             var(--color-brand);
+  --btn-brand-bg-hover:       var(--color-brand-hover);
+  --btn-brand-text:           var(--color-text-on-brand);
+
+  /* — Product cards — */
+  --card-bg:              var(--color-bg-elevated);
+  --card-border:          var(--color-border);
+  --card-border-hover:    var(--color-border-strong);
+  --card-radius:          var(--radius-card);
+  --card-shadow:          var(--shadow-card);
+  --card-shadow-hover:    var(--shadow-hover);
+  --card-padding:         var(--padding-card);
+  --card-transition:      var(--transition-smooth);
+
+  /* — Navigation — */
+  --nav-font-family:      var(--font-body);
+  --nav-font-size:        var(--text-sm);
+  --nav-font-weight:      var(--weight-medium);
+  --nav-letter-spacing:   var(--tracking-normal);
+
+  /* — Spec pills (mono) — */
+  --spec-font-family:     var(--font-mono);
+  --spec-font-size:       var(--text-xs);
+  --spec-font-weight:     var(--weight-medium);
+  --spec-letter-spacing:  var(--tracking-wider);
+  --spec-bg:              var(--color-spec-bg);
+  --spec-text:            var(--color-spec-text);
+  --spec-border:          var(--color-spec-border);
+  --spec-radius:          var(--radius-sm);
+  --spec-padding:         2px 8px;
+
+  /* — Filter chips — */
+  --chip-font-family:     var(--font-mono);
+  --chip-font-size:       var(--text-xs);
+  --chip-font-weight:     var(--weight-medium);
+  --chip-letter-spacing:  var(--tracking-wide);
+  --chip-radius:          var(--radius-chip);
+  --chip-height:          32px;
+  --chip-padding:         0 var(--space-4);
+
+  /* — Rank badges — */
+  --rank-font-family:     var(--font-display);
+  --rank-font-size:       var(--text-xs);
+  --rank-font-weight:     var(--weight-bold);
+  --rank-letter-spacing:  var(--tracking-wide);
+  --rank-radius:          var(--radius-badge);
+  --rank-padding:         3px 8px;
+
+  /* — Section headers — */
+  --section-overline-font:    var(--font-mono);
+  --section-overline-size:    var(--text-xs);
+  --section-overline-weight:  var(--weight-semibold);
+  --section-overline-spacing: var(--tracking-widest);
+  --section-overline-color:   var(--color-action);
+
+  /* — Inputs & Search — */
+  --input-height:         44px;
+  --input-radius:         var(--radius-input);
+  --input-padding:        var(--padding-input);
+  --input-font-family:    var(--font-body);
+  --input-font-size:      var(--text-base);
+  --input-border:         var(--color-border-strong);
+  --input-border-focus:   var(--color-border-focus);
+  --input-bg:             var(--color-bg-elevated);
+  --input-shadow-focus:   var(--focus-ring);
+
+  /* — Logo wordmark — */
+  --logo-font-family:     var(--font-display);
+  --logo-font-weight:     var(--weight-extrabold);
+  --logo-letter-spacing:  var(--tracking-tight);
+  --logo-size-sm:         1.25rem;  /* Mobile nav */
+  --logo-size-md:         1.5rem;   /* Desktop nav */
+  --logo-size-lg:         2rem;     /* Footer / standalone */
+
+  /* — Breadcrumbs — */
+  --breadcrumb-font-family:   var(--font-mono);
+  --breadcrumb-font-size:     var(--text-xs);
+  --breadcrumb-color:         var(--color-text-muted);
+  --breadcrumb-color-active:  var(--color-text-primary);
+  --breadcrumb-sep-color:     var(--color-border-strong);
+
+  /* — Price display — */
+  --price-font-family:    var(--font-mono);
+  --price-current-size:   var(--text-xl);
+  --price-current-weight: var(--weight-semibold);
+  --price-current-color:  var(--color-text-primary);
+  --price-msrp-size:      var(--text-sm);
+  --price-msrp-color:     var(--color-text-muted);
+  --price-save-bg:        var(--color-brand-subtle);
+  --price-save-text:      var(--color-brand);
+  --price-save-size:      var(--text-xs);
+
+  /* — Callout / highlight box — */
+  --callout-bg:           var(--color-brand-subtle);
+  --callout-border:       var(--color-brand-muted);
+  --callout-border-left:  var(--color-brand);
+  --callout-border-width: 3px;
+  --callout-radius:       var(--radius-md);
+  --callout-padding:      var(--space-6);
+
+  /* — Tables — */
+  --table-radius:         var(--radius-none);
+  --table-header-height:  48px;
+  --table-row-height:     52px;
+  --table-cell-padding:   var(--space-3) var(--space-5);
+  --table-font-size:      var(--text-sm);
 }
 
-/* ── 06 MOTION ── */
-:root {
-  --transition-base:   200ms cubic-bezier(0.25, 0, 0, 1);
-  --transition-slow:   380ms cubic-bezier(0.25, 0, 0, 1);
-  --transition-spring: 320ms cubic-bezier(0.34, 1.56, 0.64, 1);
 
-  --hover-lift-distance: 4px;
-  --hover-lift-duration: var(--transition-spring);
+/* ──────────────────────────────────────────────────────────
+   12 — BREAKPOINTS (reference only — use in media queries)
+   ────────────────────────────────────────────────────────── */
 
-  --glow-blur:           8px;
-  --glow-shadow:         0 0 var(--glow-blur) var(--color-accent-glow);
+/*
+  --bp-xs:   375px   (small phone)
+  --bp-sm:   480px   (large phone)
+  --bp-md:   768px   (tablet)
+  --bp-lg:   1024px  (small desktop)
+  --bp-xl:   1280px  (standard desktop)
+  --bp-2xl:  1440px  (wide desktop)
+*/
 
-  --cta-pulse-duration: 1.2s;
-  --cta-pulse-scale:    1.02;
 
-  --ember-opacity:            0.04;
-  --ember-animation-duration: 60s;
+/* ──────────────────────────────────────────────────────────
+   13 — THEME SWITCHER UTILITY CLASS
+   Applied by theme.js to <html> element.
+   Valid values: "light" | "dark" | "earth"
+   ────────────────────────────────────────────────────────── */
 
-  --scanbeam-width:   240px; 
-  --scanbeam-blur:    60px;
-  --scanbeam-opacity: 0.08;
-  --scanbeam-duration: 12s;
-}
-
-/* ── 07 LAYOUT & GRID ── */
-:root {
-  --container-max-width: 1100px;
-  --grid-gap-sm: var(--spacing-md);
-  --grid-gap-lg: var(--spacing-xl);
-
-  --card-min-width: 280px;
-  --card-max-width: 340px;
-  --feature-row-height-desktop: 320px;
-
-  --grid-cols: 1;
-}
-
-@media (min-width: 640px)  { :root { --grid-cols: 2; } }
-@media (min-width: 1024px) { :root { --grid-cols: 3; } }
-
-/* ── 08 NAVIGATION & Z-INDEX ── */
-:root {
-  --nav-height-desktop:  64px;
-  --nav-height-mobile:   56px;
-  --nav-bottom-height:   64px;
-
-  --z-base:    1;
-  --z-card:    10;
-  --z-sticky:  50;
-  --z-nav:     100;
-  --z-overlay: 200;
-  --z-modal:   300;
-  --z-top:     9999;
-}
-
-/* ── 09 BORDERS & RADIUS ── */
-:root {
-  --radius-sm:     0px;
-  --radius:        0px;
-  --radius-lg:     0px;
-  --radius-pill:   9999px;
-
-  /* Semantic Bridges */
-  --radius-card:   var(--radius);
-  --radius-button: var(--radius);
-}
-
-/* ── 10 KEYFRAMES ── */
-@keyframes card-lift {
-  from { transform: translateY(0); box-shadow: none; }
-  to   { transform: translateY(calc(-1 * var(--hover-lift-distance))); box-shadow: var(--glow-shadow); }
-}
-
-@keyframes cta-pulse {
-  0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 var(--color-accent-glow); }
-  50%      { transform: scale(var(--cta-pulse-scale)); box-shadow: 0 0 16px 4px var(--color-accent-glow); }
-}
-
-@keyframes scan-beam {
-  0%   { transform: translateX(-100%); opacity: 0; }
-  5%   { opacity: var(--scanbeam-opacity); }
-  95%  { opacity: var(--scanbeam-opacity); }
-  100% { transform: translateX(100vw); opacity: 0; }
-}
-
-@keyframes ember-rise {
-  0%   { transform: translateY(0) scale(1); opacity: var(--ember-opacity); }
-  50%  { transform: translateY(-40px) scale(1.2); opacity: calc(var(--ember-opacity) * 1.5); }
-  100% { transform: translateY(-80px) scale(0); opacity: 0; }
-}
-
-@keyframes tab-indicator {
-  from { transform: scaleX(0); }
-  to   { transform: scaleX(1); }
-}
-
-@keyframes fade-up {
-  from { opacity: 0; transform: translateY(16px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes shimmer {
-  0%   { background-position: -200% center; }
-  100% { background-position: 200% center; }
-}
-
-@keyframes reveal {
-  from { opacity: 0; transform: translateY(12px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
+/*
+  Usage in theme.js:
+  const themes = ['light', 'dark', 'earth'];
+  document.documentElement.setAttribute('data-theme', next);
+*/

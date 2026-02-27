@@ -1,667 +1,756 @@
-/* STACKPICK V2 — CORE 
-   Standardized Stylesheet
-*/
-
-
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
-
-/* 01 GLOBAL SELECTION */
-
-::selection {
-  background: var(--color-accent);
-  color: var(--color-text-on-accent);
-}
-
-body {
-  font-family: var(--font-body);
-  font-size: var(--body-font-size-base);
-  font-weight: var(--body-weight);
-  line-height: var(--body-line-height);
-  color: var(--color-text-primary);
-  background: var(--color-bg-base);
-  min-height: 100dvh;
-  padding-top: var(--nav-height-mobile);
-  padding-bottom: calc(var(--nav-bottom-height) + var(--spacing-lg) + env(safe-area-inset-bottom));
-  overflow-x: hidden;
-}
-
-
-button { font-family: var(--font-body); cursor: pointer; border: none; background: none; }
-a { color: inherit; text-decoration: none; }
-ul, ol { list-style: none; }
-img { display: block; max-width: 100%; height: auto; object-fit: cover; font-style: italic; }
-img:not([src]), img[src=""] { background: var(--color-bg-surface-2); min-height: 50px; }
-
-
-
-
-.container { max-width: var(--container-max-width); margin: 0 auto; padding: 0 var(--spacing-lg); }
-.page-wrapper { display: block; }
-.section { padding: var(--spacing-xl) 0; }
-
-/* 02 SITE NAVIGATION */
-.nav {
-  position: fixed; top: 0; left: 0; right: 0; z-index: var(--z-nav);
-  height: var(--nav-height-mobile);
-  background: color-mix(in srgb, var(--color-bg-base), transparent 8%);
-  backdrop-filter: blur(16px) saturate(160%);
-  -webkit-backdrop-filter: blur(16px) saturate(160%);
-  border-bottom: 1px solid var(--color-border-subtle);
-}
-.nav__inner {
-  max-width: var(--container-max-width); margin: 0 auto; padding: 0 var(--spacing-lg);
-  height: 100%; display: flex; align-items: center; justify-content: space-between; gap: var(--spacing-lg);
-}
-
-.logo { font-family: var(--font-display); font-size: 1.125rem; font-weight: 700; letter-spacing: -0.5px; color: var(--color-text-primary); }
-.logo span { color: var(--color-accent); }
-.nav nav { display: none; align-items: center; gap: var(--spacing-xl); }
-.nav nav a { font-size: var(--label-size); font-weight: var(--label-weight); letter-spacing: var(--label-letter-spacing); text-transform: var(--label-transform); color: var(--color-text-muted); transition: color var(--transition-base); }
-.nav nav a:hover, .nav nav a[aria-current="page"] { color: var(--color-text-primary); }
-.nav nav a[aria-current="page"] { color: var(--color-accent); }
-.theme-toggle {
-  width: 36px; height: 36px; border-radius: var(--radius);
-  border: 1px solid var(--color-border-subtle); background: var(--color-bg-surface-1);
-  color: var(--color-text-muted); font-size: 14px;
-  display: flex; align-items: center; justify-content: center;
-  transition: border-color var(--transition-base), color var(--transition-base);
-}
-.theme-toggle:hover { border-color: var(--color-accent); color: var(--color-accent); }
-
-/* 03 SIDEBAR & DRAWER */
-
-.desktop-sidebar { display: none; }
-.sidebar-section { padding: var(--spacing-xs) 0; }
-.sidebar-heading { font-size: var(--label-size); font-weight: var(--label-weight); letter-spacing: var(--label-letter-spacing); text-transform: var(--label-transform); color: var(--color-text-muted); padding: var(--spacing-sm) var(--spacing-md) var(--spacing-xs); }
-.sidebar-link { display: flex; align-items: center; gap: var(--spacing-sm); padding: var(--spacing-xs) var(--spacing-md); font-size: var(--body-font-size-sm); color: var(--color-text-muted); border-radius: var(--radius); transition: color var(--transition-base), background var(--transition-base); cursor: pointer; }
-.sidebar-link:hover { color: var(--color-text-primary); background: var(--color-bg-surface-2); }
-.sidebar-link--active { 
-  color: var(--color-accent); 
-  background: var(--color-accent-subtle); 
-  border-left: 2px solid var(--color-accent); 
-}
-.sidebar-link--disabled { opacity: 0.4; pointer-events: none; cursor: default; }
-.sidebar-badge { margin-left: auto; font-family: var(--font-mono); font-size: 9px; font-weight: 600; letter-spacing: 0.08em; color: var(--color-text-muted); background: var(--color-bg-surface-3); border: 1px solid var(--color-border-subtle); padding: 1px 6px; border-radius: var(--radius-pill); }
-.sidebar-divider { height: 1px; background: var(--color-border-subtle); margin: var(--spacing-sm) var(--spacing-md); }
-.sidebar-theme-btn { display: flex; align-items: center; gap: var(--spacing-sm); padding: var(--spacing-sm) var(--spacing-md); margin: var(--spacing-sm) var(--spacing-xs) 0; font-size: var(--body-font-size-sm); color: var(--color-text-muted); border-radius: var(--radius); border: 1px solid var(--color-border-subtle); background: var(--color-bg-surface-2); width: calc(100% - var(--spacing-xs) * 2); transition: border-color var(--transition-base), color var(--transition-base); }
-.sidebar-theme-btn:hover { border-color: var(--color-accent); color: var(--color-accent); }
-/* Mobile Sidebar Overlay (Only active when triggered) */
-.mobile-sidebar-active .desktop-sidebar {
-  display: block;
-  position: fixed;
-  inset: 0;
-  z-index: var(--z-modal);
-  background: var(--color-bg-base);
-  padding: var(--spacing-xl);
-}
-
-/* 04 PAGE HEADER & HERO */
-
-.hero { 
-  background: var(--color-bg-base); 
-  border-bottom: 1px solid var(--color-border-subtle); 
-  padding: var(--spacing-xxl) 0; 
-}
-
-.hero-container { max-width: var(--container-max-width); margin: 0 auto; }
-.hero-eyebrow { display: inline-flex; align-items: center; gap: var(--spacing-xs); font-family: var(--font-mono); font-size: var(--mono-size-sm); font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-accent); margin-bottom: var(--spacing-sm); }
-.hero-eyebrow::before { content: ''; display: block; width: 16px; height: 1px; background: var(--color-accent); }
-.hero h1 { font-family: var(--font-display); font-size: var(--h1-size); font-weight: var(--display-weight); letter-spacing: var(--display-letter-spacing); line-height: var(--display-line-height); color: var(--color-text-primary); margin-bottom: var(--spacing-sm); }
-.hero p { font-size: var(--body-font-size-base); color: var(--color-text-muted); max-width: 560px; line-height: var(--body-line-height); }
-
-/* 05 BREADCRUMBS */
-
-.breadcrumb-bar { border-bottom: 1px solid var(--color-border-subtle); background: var(--color-bg-base); }
-.breadcrumb-list { display: flex; align-items: center; gap: var(--spacing-xs); padding: var(--spacing-sm) 0; font-size: var(--label-size); font-weight: var(--label-weight); letter-spacing: var(--label-letter-spacing); text-transform: var(--label-transform); }
-.breadcrumb-list a { color: var(--color-text-muted); transition: color var(--transition-base); }
-.breadcrumb-list a:hover { color: var(--color-accent); }
-.breadcrumb-list li:last-child { color: var(--color-text-primary); }
-.breadcrumb-sep { color: var(--color-text-muted); font-size: 10px; }
-
-/* 06 PRODUCT ENTRIES */
-
-.product-list { display: flex; flex-direction: column; gap: var(--spacing-md); }
-.product-entry { 
-  display: flex; 
-  flex-direction: column; 
-  background: var(--color-bg-base); 
-  border: 1px solid var(--color-border-subtle); 
-  border-radius: 0; 
-  transition: border-color 0.3s ease;
-}
-
-.product-entry:hover { 
-  border-color: var(--color-accent); 
-  transform: translateY(-4px); 
-}
-
-.product-entry__image {
-  width: 100%;
-  aspect-ratio: 16/9;
-  background: var(--color-bg-surface-2);
-  object-fit: cover;
-  border-bottom: 1px solid var(--color-border-subtle);
-}
-
-
-
-.product-entry__rank { display: flex; align-items: center; gap: var(--spacing-sm); padding: var(--spacing-sm) var(--card-padding); border-bottom: 1px solid var(--color-border-subtle); background: var(--color-bg-surface-2); }
-.rank-number { font-family: var(--font-mono); font-size: var(--mono-size-sm); font-weight: 600; color: var(--color-text-muted); width: 24px; text-align: center; }
-.rank-badge { font-family: var(--font-mono); font-size: 9px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-accent); padding: 2px 8px; border: 1px solid var(--color-accent-dim); border-radius: var(--radius-pill); background: var(--color-accent-subtle); }
-.product-entry__body { padding: var(--card-padding); display: flex; flex-direction: column; gap: var(--spacing-sm); }
-.product-entry__name { font-family: var(--font-display); font-size: var(--h3-size); font-weight: var(--display-weight); letter-spacing: var(--display-letter-spacing); line-height: var(--display-line-height); color: var(--color-text-primary); }
-.product-entry__desc { font-size: var(--body-font-size-sm); color: var(--color-text-muted); line-height: var(--body-line-height); }
-.product-entry__specs { display: flex; flex-wrap: wrap; gap: var(--spacing-xxs); }
-.product-entry__footer { display: flex; align-items: center; justify-content: space-between; gap: var(--spacing-md); flex-wrap: wrap; padding-top: var(--spacing-md); border-top: 1px solid var(--color-border-subtle); margin-top: var(--spacing-xs); }
-
-/* 07 PRICE BLOCKS */
-
-.price-block { display: flex; align-items: baseline; gap: var(--spacing-xs); }
-.price-current { font-family: var(--font-mono); font-size: var(--mono-size-lg); font-weight: 600; color: var(--color-text-primary); }
-.price-msrp { font-family: var(--font-mono); font-size: var(--mono-size-sm); color: var(--color-text-muted); text-decoration: line-through; }
-.price-badge { font-family: var(--font-mono); font-size: 9px; color: var(--color-text-muted); margin-left: var(--spacing-xxs); }
-
-/* 08 PROS & CONS */
-
-.pros-cons { display: grid; gap: var(--spacing-md); margin-top: var(--spacing-sm); }
-.pros-cons__col { background: var(--color-bg-surface-2); border: 1px solid var(--color-border-subtle); border-radius: var(--radius); padding: var(--spacing-md); }
-.pros-cons__label { font-family: var(--font-mono); font-size: 9px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: var(--spacing-xs); }
-.pros-cons__label--pros { color: var(--color-success); }
-.pros-cons__label--cons { color: var(--color-danger); }
-.pros-cons__list { display: flex; flex-direction: column; gap: var(--spacing-xxs); }
-.pros-cons__item { font-size: var(--body-font-size-sm); color: var(--color-text-muted); line-height: 1.5; padding-left: var(--spacing-sm); position: relative; }
-.pros-cons__item::before { content: '·'; position: absolute; left: 0; color: var(--color-text-muted); }
-
-/* 09 INTERACTIVE FILTERS */
-
-.filter-strip { display: flex; gap: var(--spacing-xs); overflow-x: auto; padding: var(--spacing-md) 0; -ms-overflow-style: none; scrollbar-width: none; border-bottom: 1px solid var(--color-border-subtle); margin-bottom: var(--spacing-xl); }
-.filter-strip::-webkit-scrollbar { display: none; }
-.filter-chip { flex-shrink: 0; padding: var(--spacing-xxs) var(--spacing-sm); font-size: var(--label-size); font-weight: var(--label-weight); letter-spacing: var(--label-letter-spacing); text-transform: var(--label-transform); color: var(--color-text-muted); border: 1px solid var(--color-border-subtle); border-radius: var(--radius-pill); background: var(--color-bg-surface-1); transition: color var(--transition-base), border-color var(--transition-base), background var(--transition-base); cursor: pointer; }
-.filter-chip:hover { color: var(--color-text-primary); border-color: var(--color-border-strong); }
-.filter-chip.active { color: var(--color-accent); border-color: var(--color-accent-dim); background: var(--color-accent-subtle); }
-
-/* 10 ARTICLE & GUIDES */
-
-.buying-guide { max-width: 720px; }
-.buying-guide h2 { font-family: var(--font-display); font-size: var(--h2-size); font-weight: var(--display-weight); letter-spacing: var(--display-letter-spacing); color: var(--color-text-primary); line-height: var(--display-line-height); margin-top: var(--spacing-xxl); margin-bottom: var(--spacing-md); padding-top: var(--spacing-xl); border-top: 1px solid var(--color-border-subtle); }
-.buying-guide h2:first-child { margin-top: 0; padding-top: 0; border-top: none; }
-.buying-guide h3 { font-family: var(--font-display); font-size: var(--h3-size); font-weight: var(--display-weight); letter-spacing: var(--display-letter-spacing); color: var(--color-text-primary); margin-top: var(--spacing-xl); margin-bottom: var(--spacing-sm); }
-.buying-guide p { font-size: var(--body-font-size-base); color: var(--color-text-muted); line-height: var(--body-line-height); margin-bottom: var(--spacing-md); }
-.buying-guide p:last-child { margin-bottom: 0; }
-.buying-guide strong { color: var(--color-text-primary); font-weight: 600; }
-.buying-guide em { color: var(--color-accent); font-style: normal; font-weight: 600; }
-
-.buying-guide a { color: var(--color-accent); text-decoration: underline; text-underline-offset: 3px; transition: color var(--transition-base); }
-.buying-guide a:hover { color: var(--color-accent-dim); }
-
-/* 11 EDITORIAL CALLOUTS */
-
-.callout { background: var(--color-bg-surface-2); border: 1px solid var(--color-border-subtle); border-left: 3px solid var(--color-accent); border-radius: var(--radius); padding: var(--spacing-md) var(--spacing-lg); margin: var(--spacing-xl) 0; }
-.callout__title { font-family: var(--font-mono); font-size: var(--mono-size-sm); font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-accent); margin-bottom: var(--spacing-xs); }
-.callout p { font-size: var(--body-font-size-sm); color: var(--color-text-muted); line-height: var(--body-line-height); margin: 0; }
-
-/* 12 DATA TABLES */
-.comparison-table-wrapper { overflow-x: auto; border: 1px solid var(--color-border-subtle); border-radius: var(--radius-card); margin: var(--spacing-xl) 0; }
-.comparison-table { width: 100%; border-collapse: collapse; font-size: var(--body-font-size-sm); }
-.comparison-table th, .comparison-table td { padding: var(--spacing-sm) var(--spacing-md); text-align: left; border-bottom: 1px solid var(--color-border-subtle); white-space: nowrap; }
-.comparison-table th { 
-  font-family: var(--font-display); 
-  font-size: var(--label-size); 
-  font-weight: 700; 
-  color: var(--color-text-primary); 
-  border-bottom: 2px solid var(--color-text-primary);
-  background: none;
-}
-
-.comparison-table td { color: var(--color-text-muted); }
-.comparison-table td:first-child { color: var(--color-text-primary); font-weight: 500; }
-.comparison-table tr:last-child td { border-bottom: none; }
-.comparison-table tr:hover td { background: var(--color-bg-surface-2); }
-.comparison-table td.winner { color: var(--color-accent); font-weight: 600; }
-
-/* 13 SEARCH INTERFACE */
-
-.search-bar { display: flex; gap: var(--spacing-xs); margin-bottom: var(--spacing-xl); }
-.search-input { flex: 1; background: var(--color-bg-surface-1); border: 1px solid var(--color-border-subtle); border-radius: var(--radius); padding: var(--spacing-sm) var(--spacing-md); font-family: var(--font-body); font-size: var(--body-font-size-base); color: var(--color-text-primary); outline: none; transition: border-color var(--transition-base), box-shadow var(--transition-base); }
-.search-input::placeholder { color: var(--color-text-muted); }
-.search-input:focus { border-color: var(--color-accent); box-shadow: 0 0 0 2px var(--color-accent-subtle); }
-.search-btn { padding: var(--spacing-sm) var(--spacing-lg); background: var(--color-accent); color: var(--color-text-on-accent); font-family: var(--font-display); font-size: var(--label-size); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; border-radius: var(--radius-button); transition: background var(--transition-base), box-shadow var(--transition-base); }
-.search-btn:hover { background: var(--color-accent-dim); box-shadow: 0 0 12px var(--color-accent-glow); }
-.search-results-count { font-family: var(--font-mono); font-size: var(--mono-size-sm); color: var(--color-text-muted); margin-bottom: var(--spacing-lg); }
-.search-highlight { color: var(--color-accent); font-weight: 500; }
-
-/* 14 SITE FOOTER */
-
-.site-footer { border-top: 1px solid var(--color-border-subtle); padding: var(--spacing-xxl) var(--spacing-lg); margin-top: var(--spacing-section-vertical-sm); }
-.site-footer__inner { max-width: var(--container-max-width); margin: 0 auto; display: grid; grid-template-columns: 1fr; gap: var(--spacing-xl); }
-.footer-logo { font-family: var(--font-display); font-size: 1.125rem; font-weight: 700; letter-spacing: -0.5px; color: var(--color-text-primary); }
-.footer-logo span { color: var(--color-accent); }
-.footer-tagline { font-size: var(--body-font-size-sm); color: var(--color-text-muted); margin-top: var(--spacing-xs); line-height: 1.5; }
-.footer-heading { font-size: var(--label-size); font-weight: var(--label-weight); letter-spacing: var(--label-letter-spacing); text-transform: var(--label-transform); color: var(--color-text-muted); margin-bottom: var(--spacing-sm); }
-.footer-links { display: flex; flex-direction: column; gap: var(--spacing-xs); }
-.footer-links a { font-size: var(--body-font-size-sm); color: var(--color-text-muted); transition: color var(--transition-base); }
-.footer-links a:hover { color: var(--color-accent); }
-.footer-bottom { grid-column: 1/-1; padding-top: var(--spacing-xl); border-top: 1px solid var(--color-border-subtle); }
-.footer-bottom p { font-size: var(--body-font-size-sm); color: var(--color-text-muted); line-height: 1.6; }
-.footer-bottom a { color: var(--color-text-muted); text-decoration: underline; text-underline-offset: 3px; transition: color var(--transition-base); }
-.footer-bottom a:hover { color: var(--color-accent); }
-
-/* 15 MOBILE NAVIGATION BAR */
-
-.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; z-index: var(--z-nav); height: calc(var(--nav-bottom-height) + env(safe-area-inset-bottom)); padding-bottom: env(safe-area-inset-bottom); background: rgba(13,13,13,0.96); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-top: 1px solid var(--color-border-subtle); }
-.bottom-nav__items { display: flex; align-items: stretch; height: var(--nav-bottom-height); }
-.bottom-nav__link { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; color: var(--color-text-muted); font-size: var(--label-size); font-weight: var(--label-weight); letter-spacing: var(--label-letter-spacing); text-transform: var(--label-transform); transition: color var(--transition-base); -webkit-tap-highlight-color: transparent; }
-.bottom-nav__link:hover, .bottom-nav__link.active { color: var(--color-accent); }
-.bottom-nav__icon { font-size: 18px; line-height: 1; }
-.bottom-nav__label { line-height: 1; }
-
-/* 16 MOBILE MORE OVERLAY */
-
-.more-panel-overlay { position: fixed; inset: 0; z-index: var(--z-overlay); background: var(--color-bg-overlay); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); opacity: 0; pointer-events: none; transition: opacity var(--transition-slow); }
-.more-panel-overlay.open { opacity: 1; pointer-events: auto; }
-.bottom-nav-more-panel { position: fixed; bottom: 0; left: 0; right: 0; z-index: var(--z-modal); background: var(--color-bg-surface-1); border-top: 1px solid var(--color-border-strong); border-radius: var(--radius-lg) var(--radius-lg) 0 0; padding: var(--spacing-lg); padding-bottom: calc(var(--nav-bottom-height) + var(--spacing-lg) + env(safe-area-inset-bottom)); transform: translateY(100%); transition: transform var(--transition-slow); }
-.bottom-nav-more-panel[aria-hidden="false"] { transform: translateY(0); }
-.more-panel-title { font-family: var(--font-mono); font-size: var(--mono-size-sm); font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-text-muted); margin-bottom: var(--spacing-lg); }
-.more-panel-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: var(--spacing-xs); }
-.more-panel-link { display: flex; flex-direction: column; align-items: center; gap: var(--spacing-xs); padding: var(--spacing-md); background: var(--color-bg-surface-2); border: 1px solid var(--color-border-subtle); border-radius: var(--radius); font-size: var(--label-size); font-weight: var(--label-weight); letter-spacing: var(--label-letter-spacing); text-transform: var(--label-transform); color: var(--color-text-muted); transition: border-color var(--transition-base), color var(--transition-base), background var(--transition-base); }
-.more-panel-link:hover { border-color: var(--color-accent-dim); color: var(--color-accent); background: var(--color-accent-subtle); }
-.more-panel-link .nav-icon { font-size: 20px; }
-
-/* 17 ACCESSIBILITY */
-
-:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 3px; }
-
-/* 18 BREAKPOINT: DESKTOP */
-
-@media (min-width: 1024px) {
-  body { padding-top: var(--nav-height-desktop); padding-bottom: 0; }
-  .nav { height: var(--nav-height-desktop); }
-  .nav nav { display: flex; }
-  .bottom-nav { display: none; }
-  .page-wrapper { 
-    display: grid; 
-    grid-template-columns: 240px 1fr; 
-    max-width: var(--container-max-width); 
-    margin: 0 auto; 
-    padding: 0 var(--spacing-lg); 
-    gap: 0 var(--spacing-xxl); 
-    align-items: start; 
-  }
-    .desktop-sidebar { 
-    display: block; 
-    position: sticky;   
-    top: calc(var(--nav-height-desktop) + var(--spacing-lg)); 
-    height: calc(100vh - var(--nav-height-desktop) - var(--spacing-xl)); /* Add this line */
-    overflow-y: auto; /* Add this line to allow sidebar scrolling if it's long */
-    grid-row: 1 / -1; 
-    margin-top: var(--spacing-xl);
-    padding-right: var(--spacing-lg); 
-    border-right: 1px solid var(--color-border-subtle); 
-  }
-
-
-  .page-wrapper > main, .page-wrapper > .hero, .page-wrapper > .breadcrumb-bar, .page-wrapper > .section { grid-column: 2; }
-  .site-footer__inner { grid-template-columns: 2fr 1fr 1fr; }
-  .pros-cons { grid-template-columns: 1fr 1fr; }
-}
-
-@media (min-width: 640px) {
-  .site-footer__inner { grid-template-columns: 1fr 1fr; }
-  .pros-cons { grid-template-columns: 1fr 1fr; }
-}
-
-/* 19 PRINT OVERRIDES */
-
-@media print {
-  .nav, .desktop-sidebar, .bottom-nav, .more-panel-overlay, .bottom-nav-more-panel, .filter-strip { display: none !important; }
-  body { padding: 0; background: white; color: black; }
-}
-
-
-/* 20 COLLECTION GRIDS */
-
-.guide-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--spacing-md);
-}
-
-.guide-card {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-lg);
-  background: var(--color-bg-surface-1);
-  border: 1px solid var(--color-border-subtle);
-  border-radius: var(--radius-card);
-  padding: var(--card-padding);
-  text-decoration: none;
-  transition:
-    border-color var(--transition-base),
-    box-shadow var(--transition-base),
-    transform var(--transition-spring);
-}
-
-.guide-card:hover {
-  border-color: var(--color-border-strong);
-  box-shadow: var(--glow-shadow);
-  transform: translateY(calc(-1 * var(--hover-lift-distance)));
-  will-change: transform;
-}
-
-
-.guide-card__icon {
-  font-size: 2rem;
-  flex-shrink: 0;
-  width: 52px;
-  height: 52px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--color-bg-surface-2);
-  border: 1px solid var(--color-border-subtle);
-  border-radius: var(--radius-sm);
-}
-
-.guide-card__body {
-  flex: 1;
-  min-width: 0;
-}
-
-.guide-card__budget {
-  font-family: var(--font-mono);
-  font-size: var(--mono-size-sm);
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--color-accent);
-  display: block;
-  margin-bottom: var(--spacing-xxs);
-}
-
-.guide-card__title {
-  font-family: var(--font-display);
-  font-size: var(--h4-size);
-  font-weight: var(--display-weight);
-  letter-spacing: var(--display-letter-spacing);
-  color: var(--color-text-primary);
-  line-height: var(--display-line-height);
-  margin-bottom: var(--spacing-xxs);
-}
-
-.guide-card__desc {
-  font-size: var(--body-font-size-sm);
-  color: var(--color-text-muted);
-  line-height: var(--body-line-height);
-}
-
-.guide-card__arrow {
-  font-size: 1.125rem;
-  color: var(--color-text-muted);
-  flex-shrink: 0;
-  transition: color var(--transition-base), transform var(--transition-base);
-}
-
-.guide-card:hover .guide-card__arrow {
-  color: var(--color-accent);
-  transform: translateX(3px);
-}
-
-/* 21 CROSS-LINK CARDS */
-
-.also-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--spacing-md);
-}
-
-.also-card {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-md);
-  background: var(--color-bg-surface-1);
-  border: 1px solid var(--color-border-subtle);
-  border-radius: var(--radius-card);
-  padding: var(--spacing-lg) var(--card-padding);
-  text-decoration: none;
-  transition:
-    border-color var(--transition-base),
-    box-shadow var(--transition-base),
-    transform var(--transition-spring);
-}
-
-.also-card:hover {
-  border-color: var(--color-accent-dim);
-  background: var(--color-accent-subtle);
-  box-shadow: var(--glow-shadow);
-  transform: translateY(calc(-1 * var(--hover-lift-distance)));
-  will-change: transform;
-}
-
-
-.also-card__icon {
-  font-size: 1.75rem;
-  flex-shrink: 0;
-}
-
-.also-card__title {
-  font-family: var(--font-display);
-  font-size: var(--h4-size);
-  font-weight: var(--display-weight);
-  letter-spacing: var(--display-letter-spacing);
-  color: var(--color-text-primary);
-  margin-bottom: var(--spacing-xxs);
-}
-
-.also-card__desc {
-  font-size: var(--body-font-size-sm);
-  color: var(--color-text-muted);
-  line-height: var(--body-line-height);
-}
-
-.also-card__arrow {
-  font-size: 1.125rem;
-  color: var(--color-text-muted);
-  flex-shrink: 0;
-  margin-left: auto;
-  transition: color var(--transition-base), transform var(--transition-base);
-}
-
-.also-card:hover .also-card__arrow {
-  color: var(--color-accent);
-  transform: translateX(3px);
-}
-
-/* 22 METADATA */
-
-.last-updated {
-  font-family: var(--font-mono);
-  font-size: var(--mono-size-sm);
-  color: var(--color-text-muted);
-  margin-top: var(--spacing-xl);
-}
-
-/* 23 GRID LOGIC */
-
-@media (min-width: 1024px) {
-  .guide-grid { grid-template-columns: 1fr 1fr; }
-}
-
-/* 24 RESPONSIVE GRIDS */
-
-@media (min-width: 640px) {
-  .guide-grid { grid-template-columns: 1fr 1fr; }
-  .also-grid  { grid-template-columns: 1fr 1fr; }
-}
-
-/* 25 REDUCED MOTION */
-
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-}
-
-
-
 /* ============================================================
-   STACKPICK — ASTRO MIGRATION ADDITIONS
-   Append these rules to the bottom of public/assets/css/style.css
+   STACKPICK — GLOBAL STYLE LAYER
+   Version: 4.0
+   Load order: tokens.css → components.css → style.css
+
+   This file owns three things and only three things:
+
+   1. DOCUMENT COMPOSITION
+      The page-level layout — how the shell, sidebar,
+      main content, hero slot, and footer relate to each
+      other spatially. Not what they look like — that is
+      components.css. How they fit together — this file.
+
+   2. GLOBAL PROSE TYPOGRAPHY
+      Bare HTML elements (h1–h4, p, ul, li, em, strong,
+      code, hr) rendered without class names inside
+      .buying-guide, <Content />, and set:html contexts.
+      These exist because Astro's markdown renderer and
+      set:html emit unstyled elements.
+
+   3. GLOBAL SURFACE & ATMOSPHERE
+      Theme-switching transitions, subtle texture,
+      scrollbar styling, and print rules.
+
+   No component definitions. No resets. No duplication
+   of anything already defined in components.css.
    ============================================================ */
 
 
-/* ── A1. PRODUCT CARD LAYOUT (missing from original style.css) ──
-   ProductCard.astro uses these classes but they had no CSS.
-   This was causing the "bunched together" appearance.              */
-
-.product-entry__top {
-  display: flex;
-  gap: var(--spacing-md);
-  align-items: flex-start;
+/* ──────────────────────────────────────────────────────────
+   01 — THEME TRANSITION
+   Smooth surface changes when the user switches themes.
+   Applied to the root so every element inherits it.
+   Disabled for users who prefer reduced motion.
+   ────────────────────────────────────────────────────────── */
+/* THEME TRANSITION CONTROL
+   This prevents "color sliding" on first load.
+   The .theme-transitioning class is added/removed via JS in Base.astro
+*/
+.theme-transitioning,
+.theme-transitioning * {
+  transition: 
+    background-color var(--duration-smooth) var(--ease-out),
+    border-color var(--duration-smooth) var(--ease-out),
+    color var(--duration-smooth) var(--ease-out),
+    fill var(--duration-smooth) var(--ease-out),
+    box-shadow var(--duration-smooth) var(--ease-out) !important;
 }
 
-.product-entry__emoji {
-  font-size: 2.5rem;
-  flex-shrink: 0;
-  width: 56px;
-  height: 56px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--color-bg-surface-2);
-  border: 1px solid var(--color-border-subtle);
-  border-radius: var(--radius);
+html {
+  color-scheme: light dark;
 }
 
-.product-entry__info {
-  flex: 1;
-  min-width: 0;
+/* Only animate theme-sensitive properties, not layout */
+html.theme-transitioning,
+html.theme-transitioning *,
+html.theme-transitioning *::before,
+html.theme-transitioning *::after {
+  transition:
+    background-color var(--duration-smooth) var(--ease-in-out),
+    border-color     var(--duration-smooth) var(--ease-in-out),
+    color            var(--duration-smooth) var(--ease-in-out),
+    box-shadow       var(--duration-smooth) var(--ease-in-out) !important;
 }
 
-/* Featured first product — subtle accent border */
-.product-entry--featured {
-  border-color: var(--color-accent-dim);
-}
-
-
-/* ── A2. FILTER CAGE (missing from original style.css) ──
-   Wraps the budget filter strip on category pages.
-   Without this, the strip had no vertical spacing above it.        */
-
-.filter-cage {
-  padding: var(--spacing-lg) 0 0;
-}
-
-
-/* ── A3. MAIN CONTENT TOP SPACING ──
-   Content inside <main> had no top gap after the hero / breadcrumb. */
-
-.main-content {
-  padding-top: var(--spacing-xl);
-  padding-bottom: var(--spacing-xxl);
-  min-width: 0; /* Prevents grid blowout on narrow viewports */
+@media (prefers-reduced-motion: reduce) {
+  html.theme-transitioning,
+  html.theme-transitioning *,
+  html.theme-transitioning *::before,
+  html.theme-transitioning *::after {
+    transition: none !important;
+  }
 }
 
 
-/* ── A4. SECTION HEAD (already in components.css — duplicate guard) ──
-   Some pages render <div class="section-head"><h2>...</h2></div>
-   directly, without the section-head__title child class.
-   Make the h2 inside a bare section-head also styled correctly.    */
+/* ──────────────────────────────────────────────────────────
+   02 — ATMOSPHERE & SURFACE TEXTURE
+   Subtle noise overlay on the earthy theme — gives the
+   warm sand canvas a tactile, paper-like quality.
+   Pure visual. Pointer-events disabled. Inert.
+   ────────────────────────────────────────────────────────── */
 
-.section-head h2 {
-  font-family: var(--font-display);
-  font-size: var(--h2-size);
-  font-weight: var(--display-weight);
-  letter-spacing: var(--display-letter-spacing);
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-below);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--duration-slow) var(--ease-in-out);
+
+  /* SVG noise filter — no external request, no performance cost */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 300px 300px;
+}
+
+/* Earth theme gets the texture */
+[data-theme="earth"] body::before {
+  opacity: 0.028;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::before {
+    transition: none;
+  }
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   03 — CUSTOM SCROLLBAR
+   Webkit only. Thin, on-brand, respects the theme surface.
+   ────────────────────────────────────────────────────────── */
+
+/* Page scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border-strong);
+  border-radius: var(--radius-pill);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-muted);
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border-strong) var(--color-bg);
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   04 — DOCUMENT COMPOSITION — SHELL
+   The outer wrapper that gives every page its structure.
+   On mobile: single stacked column.
+   On desktop (≥1024px): sidebar rail + main content area,
+   constrained to container-xl with side padding.
+   ────────────────────────────────────────────────────────── */
+
+/* The shell wraps sidebar + main. On mobile it's invisible —
+   just a flow container. On desktop it becomes the grid. */
+.site-container {
+  /* Mobile: natural block flow, no padding (main-content handles it) */
+}
+
+@media (min-width: 1024px) {
+  .site-container {
+    /* Align with the fixed nav above */
+    padding-top: var(--space-8);
+    /* Main content gets a left separator from the sidebar */
+    align-items: flex-start;
+  }
+
+  /* Sidebar gets a right border on desktop only */
+  .sidebar {
+    border-right: 1px solid var(--color-sidebar-border);
+    padding-right: var(--space-8);
+  }
+
+  /* Main content area breathes from the sidebar border */
+  .main-content {
+    padding-top: var(--space-8);
+  }
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   05 — DOCUMENT COMPOSITION — MAIN CONTENT AREA
+   The <main> element inside the shell.
+   Handles its own horizontal padding on mobile.
+   On desktop the side padding is owned by .site-container.
+   ────────────────────────────────────────────────────────── */
+
+/* Hero slot sits outside content-pad — full bleed */
+.main-content > [slot="hero"],
+.main-content > .hero {
+  /* No horizontal padding here — hero owns its own container */
+}
+
+/* Breadcrumb and filter bar also sit flush */
+.main-content > .breadcrumb-bar,
+.main-content > .filter-cage,
+.main-content > .collection-tabs-bar {
+  /* These stripe full-width of main-content */
+  margin-left: calc(var(--page-pad-mobile) * -1);
+  margin-right: calc(var(--page-pad-mobile) * -1);
+}
+
+@media (min-width: 1024px) {
+  .main-content > .breadcrumb-bar,
+  .main-content > .filter-cage,
+  .main-content > .collection-tabs-bar {
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
+/* Padded content slot — most page content lives here */
+.content-pad {
+  padding:
+    var(--space-8)
+    var(--page-pad-mobile)
+    var(--space-16);
+}
+
+@media (min-width: 1024px) {
+  .content-pad {
+    padding-left: 0;
+    padding-right: 0;
+    padding-bottom: var(--space-20);
+  }
+}
+
+/* Generic section spacing inside content areas */
+.section {
+  padding: var(--space-10) var(--page-pad-mobile);
+}
+
+@media (min-width: 1024px) {
+  .section {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+/* Product list vertical rhythm */
+.product-list {
+  padding: var(--space-2) var(--page-pad-mobile);
+}
+
+@media (min-width: 1024px) {
+  .product-list {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   06 — GLOBAL PROSE TYPOGRAPHY
+   Styles for bare HTML elements emitted by:
+     - Astro's <Content /> markdown renderer
+     - set:html={meta.buyingGuide} in category pages
+     - set:html in comparison/guide detail pages
+     - Direct HTML in about.astro
+
+   These elements have NO class names. All styling must
+   target them by element within a scoping parent class.
+
+   Scoping parents: .buying-guide, .guide-intro,
+   .comparison-intro, .comparison-section
+   ────────────────────────────────────────────────────────── */
+
+/* — Headings in prose context — */
+.buying-guide h1,
+.buying-guide h2,
+.buying-guide h3,
+.buying-guide h4,
+.guide-intro h1,
+.guide-intro h2,
+.guide-intro h3,
+.comparison-intro h1,
+.comparison-intro h2,
+.comparison-intro h3,
+.comparison-section h2,
+.comparison-section h3 {
   color: var(--color-text-primary);
-  line-height: var(--display-line-height);
+  line-height: var(--leading-tight);
+}
+
+/* H2 in prose — primary section break */
+.buying-guide h2,
+.guide-intro h2,
+.comparison-intro h2 {
+  font-family: var(--font-display);
+  font-size: var(--text-3xl);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-tight);
+  margin-top: var(--space-12);
+  margin-bottom: var(--space-5);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.buying-guide h2:first-child,
+.guide-intro h2:first-child,
+.comparison-intro h2:first-child {
+  margin-top: 0;
+}
+
+/* H3 in prose — sub-section */
+.buying-guide h3,
+.guide-intro h3,
+.comparison-intro h3,
+.comparison-section h3 {
+  font-family: var(--font-body);
+  font-size: var(--text-xl);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-normal);
+  margin-top: var(--space-8);
+  margin-bottom: var(--space-3);
+}
+
+/* H4 in prose — minor heading */
+.buying-guide h4,
+.guide-intro h4,
+.comparison-intro h4 {
+  font-family: var(--font-body);
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-normal);
+  margin-top: var(--space-6);
+  margin-bottom: var(--space-2);
+}
+
+/* — Body paragraphs — */
+.buying-guide p,
+.guide-intro p,
+.comparison-intro p,
+.comparison-section p,
+.guide-section > p {
+  font-size: var(--text-md);
+  font-weight: var(--weight-regular);
+  line-height: var(--leading-loose);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-5);
+  max-width: 68ch; /* Optimal reading line length */
+}
+
+.buying-guide p:last-child,
+.guide-intro p:last-child,
+.comparison-intro p:last-child {
+  margin-bottom: 0;
+}
+
+/* — Inline emphasis — */
+.buying-guide strong,
+.guide-intro strong,
+.comparison-intro strong,
+.comparison-section strong {
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-primary);
+}
+
+.buying-guide em,
+.guide-intro em,
+.comparison-intro em,
+.comparison-section em {
+  font-style: italic;
+  color: var(--color-text-secondary);
+}
+
+/* — Prose links — */
+.buying-guide a,
+.guide-intro a,
+.comparison-intro a,
+.comparison-section a {
+  color: var(--color-brand);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  transition: color var(--transition-base);
+}
+
+.buying-guide a:hover,
+.guide-intro a:hover,
+.comparison-intro a:hover,
+.comparison-section a:hover {
+  color: var(--color-brand-hover);
+}
+
+/* — Horizontal rule — */
+.buying-guide hr,
+.guide-intro hr {
+  border: none;
+  border-top: 1px solid var(--color-border);
+  margin: var(--space-10) 0;
+}
+
+/* — Unordered and ordered lists in prose — */
+.buying-guide ul,
+.buying-guide ol,
+.guide-intro ul,
+.guide-intro ol,
+.comparison-intro ul,
+.comparison-intro ol {
+  margin: var(--space-5) 0 var(--space-5) var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.buying-guide ul li,
+.buying-guide ol li,
+.guide-intro ul li,
+.guide-intro ol li,
+.comparison-intro ul li,
+.comparison-intro ol li {
+  font-size: var(--text-md);
+  color: var(--color-text-secondary);
+  line-height: var(--leading-relaxed);
+  padding-left: var(--space-2);
+  position: relative;
+}
+
+/* Bullet style for unordered lists */
+.buying-guide ul li::marker,
+.guide-intro ul li::marker,
+.comparison-intro ul li::marker {
+  color: var(--color-brand);
+}
+
+.buying-guide ul,
+.guide-intro ul,
+.comparison-intro ul {
+  list-style: disc;
+}
+
+.buying-guide ol,
+.guide-intro ol,
+.comparison-intro ol {
+  list-style: decimal;
+}
+
+/* — Inline code — */
+.buying-guide code,
+.guide-intro code,
+.comparison-intro code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  font-weight: var(--weight-medium);
+  color: var(--color-brand);
+  background: var(--color-brand-subtle);
+  padding: 1px 6px;
+  border-radius: var(--radius-xs);
+}
+
+/* — Blockquote — */
+.buying-guide blockquote,
+.guide-intro blockquote {
+  border-left: 3px solid var(--color-action);
+  padding-left: var(--space-5);
+  margin: var(--space-8) 0;
+  color: var(--color-text-secondary);
+  font-style: italic;
+}
+
+.buying-guide blockquote p,
+.guide-intro blockquote p {
+  margin-bottom: 0;
 }
 
 
-/* ── A5. LOGO — EXPLICIT COLOURS (belt-and-braces) ──
-   The .logo and .logo span rules exist in style.css already,
-   but re-declaring here as explicit hex values so they work even
-   if a CSS variable fails to resolve.                              */
+/* ──────────────────────────────────────────────────────────
+   07 — GLOBAL HEADING DEFAULTS
+   For headings that appear outside prose scoping parents —
+   e.g. directly in .section or .content-pad without a
+   class-based parent. Provides safe defaults without
+   overriding component-specific heading styles.
+   ────────────────────────────────────────────────────────── */
 
-.logo,
-.footer-logo {
-  color: #F5F5F5;
-  font-family: var(--font-display), 'Space Grotesk', sans-serif;
-  font-weight: 700;
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-tight);
+  line-height: var(--leading-tight);
+  color: var(--color-text-primary);
 }
 
-.logo span,
-.footer-logo span {
-  color: #FF4F1F;
-}
+h1 { font-size: var(--text-4xl); }
+h2 { font-size: var(--text-3xl); }
+h3 { font-size: var(--text-2xl); }
+h4 { font-size: var(--text-xl); font-family: var(--font-body); font-weight: var(--weight-semibold); letter-spacing: var(--tracking-normal); }
 
-
-/* ── A6. LIGHT THEME ──
-   tokens.css only defines dark mode values in :root.
-   The theme toggle sets data-theme="light" but nothing responded.
-   These overrides flip the key colour tokens for light mode.       */
-
-[data-theme="light"] {
-  --color-bg-base:       #FFFFFF;
-  --color-bg-surface-1:  #F5F5F5;
-  --color-bg-surface-2:  #EBEBEB;
-  --color-bg-surface-3:  #E0E0E0;
-  --color-bg-overlay:    rgba(0, 0, 0, 0.5);
-
-  --color-text-primary:  #111111;
-  --color-text-muted:    #666666;
-
-  --color-border-subtle: #DDDDDD;
-  --color-border-strong: #BBBBBB;
-
-  /* Accent stays lava — readable on both light and dark */
-  --color-accent:        #E03A0F;
-  --color-accent-dim:    #B52E0B;
-  --color-accent-glow:   rgba(224, 58, 15, 0.15);
-  --color-accent-subtle: rgba(224, 58, 15, 0.08);
-}
-
-/* Keep the nav readable in light mode — it uses a blur/mix background */
-[data-theme="light"] .nav {
-  background: rgba(255, 255, 255, 0.92);
-  border-bottom-color: var(--color-border-subtle);
-}
-
-[data-theme="light"] .bottom-nav {
-  background: rgba(245, 245, 245, 0.96);
-}
-
-[data-theme="light"] .logo,
-[data-theme="light"] .footer-logo {
-  color: #111111;
+/* Body paragraphs outside scoped prose */
+p {
+  line-height: var(--leading-normal);
+  color: var(--color-text-secondary);
 }
 
 
-/* ── A7. GUIDE SECTION PADDING (guides/[slug].astro) ──
-   Guide sections had no visible separator or breathing room.       */
+/* ──────────────────────────────────────────────────────────
+   08 — RESPONSIVE TYPOGRAPHY SCALE
+   At wider viewports, the type scale steps up.
+   Only affects display-level headings — body type stays
+   consistent for readability.
+   ────────────────────────────────────────────────────────── */
 
-.guide-section + .guide-section {
-  margin-top: var(--spacing-xxl);
+/* Tablet — md breakpoint */
+@media (min-width: 768px) {
+  h1 { font-size: var(--text-5xl); }
+  h2 { font-size: var(--text-4xl); }
+
+  .buying-guide h2,
+  .guide-intro h2,
+  .comparison-intro h2 {
+    font-size: var(--text-4xl);
+  }
+}
+
+/* Desktop — lg breakpoint */
+@media (min-width: 1024px) {
+  .buying-guide,
+  .guide-intro,
+  .comparison-intro {
+    max-width: 720px;
+  }
 }
 
 
-/* ── A8. COMPARISON PRODUCT CARDS ──
-   The two-column product buy box used in comparisons/[slug].astro  */
+/* ──────────────────────────────────────────────────────────
+   09 — LAYOUT BREAKPOINTS — MAIN CONTENT PADDING
+   On large screens the sidebar + container padding handles
+   horizontal spacing. On mobile, content-pad and section
+   provide their own padding.
+   ────────────────────────────────────────────────────────── */
 
-.comparison-intro {
-  margin-bottom: var(--spacing-xl);
-  padding-bottom: var(--spacing-xl);
-  border-bottom: 1px solid var(--color-border-subtle);
+@media (min-width: 768px) {
+  .content-pad {
+    padding-left: var(--page-pad-tablet);
+    padding-right: var(--page-pad-tablet);
+  }
+
+  .section {
+    padding-left: var(--page-pad-tablet);
+    padding-right: var(--page-pad-tablet);
+  }
+
+  .product-list {
+    padding-left: var(--page-pad-tablet);
+    padding-right: var(--page-pad-tablet);
+  }
 }
 
-/* ── A9. DESKTOP SIDEBAR ACTIVE LINK ──
-   Highlight the current category in the sidebar.                   */
+@media (min-width: 1024px) {
+  .content-pad {
+    padding-left: 0;
+    padding-right: 0;
+  }
 
-.sidebar-link[aria-current="page"] {
-  color: var(--color-accent);
-  background: var(--color-accent-subtle);
-  border-left: 2px solid var(--color-accent);
+  .section {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .product-list {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   10 — HOMEPAGE-SPECIFIC COMPOSITION
+   The homepage hero and collection tab panel have
+   slightly different spatial rules — editorial and
+   spacious rather than utilitarian.
+   ────────────────────────────────────────────────────────── */
+
+/* Collection panels on homepage get vertical breathing room */
+.collection-panel {
+  padding-top: var(--space-6);
+  padding-bottom: var(--space-4);
+}
+
+/* The product list on the homepage is inset on mobile */
+.collection-panel .product-list {
+  padding-top: 0;
+}
+
+/* Browse category section on homepage */
+.hero--home + .collection-tabs-bar + .collection-panel + .section,
+.collection-panel ~ .section {
+  margin-top: var(--space-4);
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   11 — SIDEBAR COMPOSITION
+   The sidebar on desktop has two groups:
+   "Hardware Collections" (always visible) and
+   "Featured Drops" (a secondary set of links).
+   The visual separation between them is handled here
+   because it depends on layout context, not component type.
+   ────────────────────────────────────────────────────────── */
+
+@media (min-width: 1024px) {
+  /* Logo wordmark in sidebar is larger than in nav */
+  .sidebar .logo {
+    font-size: var(--logo-size-lg);
+    display: block;
+    margin-bottom: var(--space-8);
+    padding-bottom: var(--space-6);
+    border-bottom: 1px solid var(--color-sidebar-border);
+  }
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   12 — FOCUS MANAGEMENT
+   Global focus ring defaults.
+   Component-specific overrides live in components.css.
+   This ensures nothing ever loses focus visibility.
+   ────────────────────────────────────────────────────────── */
+
+/* Remove default outline — we handle focus via box-shadow */
+*:focus {
+  outline: none;
+}
+
+/* Show focus ring on keyboard navigation */
+*:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+/* Anchors and buttons need an explicit border-radius for the ring */
+a:focus-visible {
+  border-radius: var(--radius-sm);
+}
+
+button:focus-visible {
+  border-radius: var(--radius-md);
+}
+
+/* Inputs have their own focus treatment — don't double-ring them */
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  box-shadow: none;
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   13 — LAST-UPDATED PARAGRAPH GLOBAL STYLE
+   Appears at the bottom of every category buying guide
+   via set:html — no class, just a <p> with .last-updated
+   from the template string.
+   ────────────────────────────────────────────────────────── */
+
+p.last-updated,
+.buying-guide p.last-updated,
+.last-updated {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-regular);
+  color: var(--color-text-muted);
+  letter-spacing: var(--tracking-wide);
+  line-height: var(--leading-relaxed);
+  margin-top: var(--space-10);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--color-border);
+}
+
+/* Override the prose max-width cap on this element */
+p.last-updated {
+  max-width: none;
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   14 — PRINT STYLESHEET
+   Strips chrome. Leaves content.
+   ────────────────────────────────────────────────────────── */
+
+@media print {
+
+  /* Hide navigation chrome */
+  .desktop-header,
+  .mobile-dock,
+  .more-overlay,
+  .sidebar,
+  .filter-cage,
+  .breadcrumb-bar,
+  .skip-link,
+  .hero-actions,
+  .btn-primary,
+  .btn-secondary {
+    display: none !important;
+  }
+
+  /* Reset page layout */
+  body {
+    padding: 0;
+    background: white;
+    color: black;
+    font-size: 12pt;
+  }
+
+  .site-container {
+    display: block;
+  }
+
+  .main-content {
+    width: 100%;
+    padding: 0;
+  }
+
+  /* Product card print layout */
+  .product-entry {
+    border: 1px solid #ccc; /* Print: CSS vars unreliable in print engines */
+    box-shadow: none;
+    break-inside: avoid;
+    margin-bottom: 16pt;
+    page-break-inside: avoid;
+  }
+
+  /* Tables print cleanly */
+  .comparison-table {
+    font-size: 10pt;
+  }
+
+  .comparison-table th {
+    background: #1B3022 !important; /* Print: forest green — must be explicit for -webkit-print-color-adjust */
+    color: white !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Preserve links for reference */
+  a[href]::after {
+    content: " (" attr(href) ")";
+    font-size: 9pt;
+    color: #666; /* Print: explicit grey, no var() in print context */
+  }
+
+  /* Don't expand affiliate links */
+  a[rel*="sponsored"]::after {
+    content: " [Amazon UK]";
+  }
+
+  /* Headings don't break across pages */
+  h1, h2, h3, h4 {
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+}
+
+/* UTILITY: Forced Hidden 
+   Ensures tab panels and filtered products are removed from the 
+   accessibility tree and layout, regardless of their parent's display mode.
+*/
+.hidden {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
 }

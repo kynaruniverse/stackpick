@@ -34,12 +34,14 @@ comparisons.sort((a, b) => a.data.title.localeCompare(b.data.title));
     <div class="also-grid">
       {comparisons.map(comp => (
         <a href={`/comparisons/${comp.data.slug}/`} class="also-card">
-          <span class="also-card__icon">{comp.data.emoji}</span>
+          <span class="also-card__icon" aria-hidden="true">{comp.data.emoji}</span>
           <div>
             <h2 class="also-card__title">{comp.data.title}</h2>
             <p class="also-card__desc">{comp.data.heroSubtitle}</p>
           </div>
-          <span class="also-card__arrow" aria-hidden="true">→</span>
+          <span class="also-card__arrow" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </span>
         </a>
       ))}
     </div>

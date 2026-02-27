@@ -19,15 +19,15 @@ const { data }  = comp;
 // Render the intro + verdict from the markdown body
 const { Content } = await comp.render();
 
-type SpecRow = { label: string; a: string; b: string; winner?: 'a' | 'b' | 'tie' };
-type Section = { heading: string; body: string };
-type BuyPoint = { heading: string; points: string[] };
+type SpecRow    = { label: string; a: string; b: string; winner?: 'a' | 'b' | 'tie' };
+type Section    = { heading: string; body: string };
+type BuyPoint   = { heading: string; points: string[] };
 type BuySection = { heading: string; buyA: BuyPoint; buyB: BuyPoint };
 type RelatedLink = { href: string; label: string };
 
-const specTable  = data.specTable  as SpecRow[];
-const sections   = data.sections   as Section[];
-const buySection = data.buySection as BuySection;
+const specTable    = data.specTable    as SpecRow[];
+const sections     = data.sections     as Section[];
+const buySection   = data.buySection   as BuySection;
 const relatedLinks = data.relatedLinks as RelatedLink[];
 ---
 
@@ -65,11 +65,21 @@ const relatedLinks = data.relatedLinks as RelatedLink[];
       <Content />
     </div>
 
-    <!-- Product buy boxes -->
+    <!-- Product buy boxes — two column -->
     <div class="comparison-products">
       {[data.productA, data.productB].map(product => (
-        <div class="comparison-product-card">
-          <span class="rank-badge" style={`background:${product.badgeColor}; border-color:${product.badgeColor}; color:#fff`}>
+        <div
+          class="comparison-product-card"
+          style={`--seam-color: ${product.badgeColor}`}
+        >
+          <!--
+            Badge: badgeColor from content schema applied as --seam-color
+            custom property. Avoids raw hex in inline style on the element.
+          -->
+          <span
+            class="rank-badge"
+            style="background: var(--seam-color); border-color: var(--seam-color); color: #fff;"
+          >
             {product.badge}
           </span>
           <h2 class="product-entry__name">{product.name}</h2>
@@ -82,8 +92,10 @@ const relatedLinks = data.relatedLinks as RelatedLink[];
             class="btn-primary"
             target="_blank"
             rel="noopener sponsored"
+            aria-label={`Buy ${product.name} on Amazon UK — ${product.price}`}
           >
-            View on Amazon →
+            View on Amazon
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
           </a>
         </div>
       ))}
@@ -122,7 +134,7 @@ const relatedLinks = data.relatedLinks as RelatedLink[];
       </div>
     ))}
 
-    <!-- Buy section -->
+    <!-- Buy recommendation callout -->
     {buySection && (
       <div class="callout">
         <p class="callout__title">{buySection.heading}</p>
@@ -155,7 +167,9 @@ const relatedLinks = data.relatedLinks as RelatedLink[];
               <div>
                 <h3 class="also-card__title">{link.label}</h3>
               </div>
-              <span class="also-card__arrow" aria-hidden="true">→</span>
+              <span class="also-card__arrow" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+              </span>
             </a>
           ))}
         </div>
@@ -163,44 +177,4 @@ const relatedLinks = data.relatedLinks as RelatedLink[];
     )}
 
   </article>
-
-  <style>
-    .comparison-products {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: var(--spacing-lg);
-      margin: var(--spacing-xl) 0;
-    }
-    @media (max-width: 640px) {
-      .comparison-products { grid-template-columns: 1fr; }
-    }
-    .comparison-product-card {
-      background: var(--color-bg-surface-1);
-      border: 1px solid var(--color-border-subtle);
-      border-radius: var(--radius-card);
-      padding: var(--card-padding);
-      display: flex;
-      flex-direction: column;
-      gap: var(--spacing-sm);
-    }
-    .comparison-section {
-      margin: var(--spacing-xl) 0;
-    }
-    .comparison-buy-cols {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: var(--spacing-lg);
-      margin-top: var(--spacing-md);
-    }
-    @media (max-width: 640px) {
-      .comparison-buy-cols { grid-template-columns: 1fr; }
-    }
-    .comparison-buy-col h3 {
-      font-family: var(--font-mono);
-      font-size: var(--mono-size-sm);
-      font-weight: 600;
-      color: var(--color-accent);
-      margin-bottom: var(--spacing-sm);
-    }
-  </style>
 </Base>

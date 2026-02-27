@@ -1,70 +1,86 @@
 <!DOCTYPE html>
-<html lang="en-GB" data-theme="dark">
+<html lang="en-GB" data-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="theme-color" content="#0D0D0D" media="(prefers-color-scheme: dark)">
-  <meta name="theme-color" content="#F5F5F5" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#1B3022" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0F0F0F" media="(prefers-color-scheme: dark)">
   <meta name="robots" content="noindex">
   <title>You're offline — StackPick</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x26A1;</text></svg>">
 
+  <!-- Favicon — inline SVG, no network request -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%231B3022'/><text y='72' x='50' text-anchor='middle' font-size='60' font-family='system-ui' font-weight='900' fill='%23D95433'>S</text></svg>">
+
+  <!--
+    Fonts: Syne (display) + Inter (body) + JetBrains Mono
+    Same stack as the live site. Cached by the service worker.
+    Falls back to system-ui if network is unavailable.
+  -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
 
   <style>
     /* ── Reset ── */
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-    /* ── Force Marry tokens — inline so page works with no network ── */
+    /* ── Self-contained tokens — inline so page works with no network ──
+       Colors match the tokens.css palette exactly.
+       Light theme is the default (matches Base.astro). */
     :root {
-      --bg-base:        #0D0D0D;
-      --bg-surface-1:   #111111;
-      --bg-surface-2:   #1A1A1A;
-      --text-primary:   #F0EFEC;
-      --text-muted:     rgba(240,239,236,0.45);
-      --accent:         #FF4F1F;
-      --accent-subtle:  rgba(255,79,31,0.08);
-      --accent-dim:     rgba(255,79,31,0.25);
-      --accent-glow:    rgba(255,79,31,0.15);
-      --border-subtle:  #2A2A2A;
-      --border-strong:  #3A3A3A;
-      --font-display:   'Space Grotesk', system-ui, sans-serif;
-      --font-body:      'Inter', system-ui, sans-serif;
-      --font-mono:      'JetBrains Mono', monospace;
-      --radius:         8px;
-      --radius-pill:    100px;
+      --bg:           #F7F7F8;
+      --bg-surface:   #FFFFFF;
+      --text:         #0D0D0D;
+      --text-muted:   #71717A;
+      --brand:        #1B3022;
+      --action:       #D95433;
+      --action-hover: #B8421F;
+      --action-subtle:rgba(217, 84, 51, 0.08);
+      --action-dim:   rgba(217, 84, 51, 0.25);
+      --border:       #E4E4E7;
+      --border-strong:#A1A1AA;
+      --font-display: 'Syne', system-ui, sans-serif;
+      --font-body:    'Inter', system-ui, sans-serif;
+      --font-mono:    'JetBrains Mono', monospace;
+      --radius:       8px;
+      --radius-pill:  100px;
     }
 
-    [data-theme="light"] {
-      --bg-base:        #F5F5F5;
-      --bg-surface-1:   #FFFFFF;
-      --bg-surface-2:   #EBEBEB;
-      --text-primary:   #0D0D0D;
-      --text-muted:     rgba(13,13,13,0.45);
-      --border-subtle:  #E0E0E0;
-      --border-strong:  #CCCCCC;
+    [data-theme="dark"] {
+      --bg:           #0F0F0F;
+      --bg-surface:   #1A1A1A;
+      --text:         #F0F0F0;
+      --text-muted:   #71717A;
+      --brand:        #2D5240;
+      --action:       #E8613D;
+      --border:       #27272A;
+      --border-strong:#3F3F46;
+    }
+
+    [data-theme="earth"] {
+      --bg:           #F0EBE3;
+      --bg-surface:   #FBF8F4;
+      --text:         #1C1917;
+      --text-muted:   #78716C;
+      --border:       #D6CFC6;
+      --border-strong:#A8A29E;
     }
 
     /* ── Base ── */
-    html {
-      height: 100%;
-      font-family: var(--font-body);
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
+    html { height: 100%; -webkit-text-size-adjust: 100%; }
 
     body {
       min-height: 100%;
-      background: var(--bg-base);
-      color: var(--text-primary);
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       padding: 2rem 1.5rem;
       text-align: center;
+      -webkit-font-smoothing: antialiased;
     }
 
     /* ── Icon ── */
@@ -90,7 +106,7 @@
       font-weight: 600;
       letter-spacing: 0.12em;
       text-transform: uppercase;
-      color: var(--accent);
+      color: var(--action);
       margin-bottom: 0.75rem;
     }
 
@@ -98,27 +114,27 @@
       content: '';
       display: block;
       width: 16px;
-      height: 1px;
-      background: var(--accent);
+      height: 1.5px;
+      background: var(--action);
     }
 
     /* ── Heading ── */
     h1 {
       font-family: var(--font-display);
       font-size: clamp(1.75rem, 6vw, 2.5rem);
-      font-weight: 700;
-      color: var(--text-primary);
-      line-height: 1.15;
+      font-weight: 800;
+      color: var(--text);
+      line-height: 1.1;
       letter-spacing: -0.03em;
       margin-bottom: 0.75rem;
     }
 
     h1 em {
       font-style: normal;
-      color: var(--accent);
+      color: var(--action);
     }
 
-    /* ── Sub ── */
+    /* ── Subtext ── */
     .sub {
       font-size: 0.9375rem;
       color: var(--text-muted);
@@ -137,8 +153,8 @@
       font-weight: 500;
       letter-spacing: 0.06em;
       color: var(--text-muted);
-      background: var(--bg-surface-1);
-      border: 1px solid var(--border-subtle);
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
       border-radius: var(--radius-pill);
       padding: 0.375rem 0.875rem;
       margin-bottom: 2rem;
@@ -154,7 +170,7 @@
     }
 
     .status-dot--online {
-      background: #3d9e6a;
+      background: #22c55e;
       animation: none;
     }
 
@@ -163,7 +179,7 @@
       50%       { opacity: 0.25; }
     }
 
-    /* ── Actions ── */
+    /* ── Buttons ── */
     .actions {
       display: flex;
       flex-direction: column;
@@ -176,25 +192,23 @@
       display: block;
       width: 100%;
       padding: 0.8125rem 1.5rem;
-      background: var(--accent);
+      background: var(--action);
       color: #ffffff;
       font-family: var(--font-display);
       font-size: 0.8125rem;
       font-weight: 700;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.06em;
       text-transform: uppercase;
       border: none;
       border-radius: var(--radius);
       cursor: pointer;
       text-decoration: none;
-      transition: background 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+      transition: background 0.18s ease, transform 0.18s ease;
       -webkit-tap-highlight-color: transparent;
-      font-family: var(--font-display);
     }
 
     .btn-primary:hover {
-      background: #e8401a;
-      box-shadow: 0 0 20px var(--accent-glow);
+      background: var(--action-hover);
       transform: translateY(-1px);
     }
 
@@ -209,7 +223,7 @@
       font-family: var(--font-body);
       font-size: 0.8125rem;
       font-weight: 500;
-      border: 1px solid var(--border-subtle);
+      border: 1px solid var(--border);
       border-radius: var(--radius);
       cursor: pointer;
       text-decoration: none;
@@ -218,8 +232,8 @@
     }
 
     .btn-secondary:hover {
-      border-color: var(--accent-dim);
-      color: var(--text-primary);
+      border-color: var(--action-dim);
+      color: var(--text);
     }
 
     /* ── Divider ── */
@@ -227,7 +241,7 @@
       width: 100%;
       max-width: 360px;
       height: 1px;
-      background: var(--border-subtle);
+      background: var(--border);
       margin: 2.5rem 0;
     }
 
@@ -260,10 +274,10 @@
       align-items: center;
       gap: 0.625rem;
       padding: 0.625rem 0.875rem;
-      background: var(--bg-surface-1);
-      border: 1px solid var(--border-subtle);
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
       border-radius: var(--radius);
-      color: var(--text-primary);
+      color: var(--text);
       text-decoration: none;
       font-size: 0.875rem;
       font-weight: 500;
@@ -272,8 +286,8 @@
     }
 
     .cached-list a:hover {
-      border-color: var(--accent-dim);
-      background: var(--accent-subtle);
+      border-color: var(--action-dim);
+      background: var(--action-subtle);
     }
 
     .cached-list .icon {
@@ -285,14 +299,15 @@
     .logo {
       font-family: var(--font-display);
       font-size: 1rem;
-      font-weight: 700;
-      letter-spacing: -0.03em;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
       color: var(--text-muted);
       text-decoration: none;
       margin-top: 0.5rem;
     }
 
-    .logo span { color: var(--accent); }
+    .logo span { color: var(--action); }
 
     /* ── Reduced motion ── */
     @media (prefers-reduced-motion: reduce) {
@@ -335,21 +350,24 @@
 
   <div class="divider"></div>
 
-  <a href="/" class="logo">Stack<span>Pick</span></a>
+  <a href="/" class="logo">STACK<span>·</span>PICK</a>
 
   <script>
   (function () {
     'use strict';
 
     // ── Apply saved theme ─────────────────────────────────────────────────
+    // Mirrors the inline script in Base.astro — keeps the offline page
+    // consistent with whatever theme the user has selected.
     try {
       var saved = localStorage.getItem('sp-theme');
-      if (saved) {
+      var valid = ['light', 'dark', 'earth'];
+      if (saved && valid.indexOf(saved) !== -1) {
         document.documentElement.setAttribute('data-theme', saved);
-      } else if (window.matchMedia('(prefers-color-scheme: light)').matches) {
-        document.documentElement.setAttribute('data-theme', 'light');
+      } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.documentElement.setAttribute('data-theme', 'dark');
       }
-    } catch (e) { /* localStorage blocked — default dark stays */ }
+    } catch (e) { /* localStorage blocked — light default stays */ }
 
 
     // ── Retry button ──────────────────────────────────────────────────────
@@ -359,18 +377,16 @@
 
 
     // ── Populate cached list from real SW cache ───────────────────────────
-    // Reads actual cache keys so the list reflects what's genuinely available.
-    // Falls back to the static HTML list on any error.
     if ('caches' in window) {
       var PAGE_ICONS = {
         '/':             { icon: '🏠', label: 'Home' },
-        '/headsets/':    { icon: '🎧', label: 'Headsets' },
-        '/keyboards/':   { icon: '⌨️', label: 'Keyboards' },
         '/mice/':        { icon: '🖱️', label: 'Mice' },
+        '/keyboards/':   { icon: '⌨️', label: 'Keyboards' },
+        '/headsets/':    { icon: '🎧', label: 'Headsets' },
         '/monitors/':    { icon: '🖥️', label: 'Monitors' },
         '/chairs/':      { icon: '🪑', label: 'Chairs' },
         '/guides/':      { icon: '📋', label: 'Setup Guides' },
-        '/comparisons/': { icon: '⚖️', label: 'Comparisons' },
+        '/comparisons/': { icon: '📊', label: 'Comparisons' },
         '/search/':      { icon: '🔍', label: 'Search' },
         '/about/':       { icon: 'ℹ️',  label: 'About' },
       };
@@ -388,13 +404,12 @@
           catch (e) { return null; }
         }).filter(function (p) { return p && PAGE_ICONS[p]; });
 
-        // Deduplicate, preserve PAGE_ICONS display order
         var seen = {};
         var unique = Object.keys(PAGE_ICONS).filter(function (p) {
           return cachedPaths.indexOf(p) !== -1 && !seen[p] && (seen[p] = true);
         });
 
-        if (!unique.length) return; // keep static fallback
+        if (!unique.length) return;
 
         var list = document.getElementById('cached-list');
         list.innerHTML = unique.map(function (p) {

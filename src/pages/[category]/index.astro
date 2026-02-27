@@ -122,11 +122,7 @@ export async function getStaticPaths() {
 const { category } = Astro.params as { category: CategoryKey };
 const meta = CATEGORY_META[category];
 
-// Fetch products for this category, sorted by priceRaw ascending (cheapest last would be weird,
-// so we keep original order — Astro returns them in filesystem order which matches JSON order)
 const allProducts = await getCollection('products', p => p.data.category === category);
-
-// Sort by priceRaw descending so the most premium product leads
 allProducts.sort((a, b) => b.data.priceRaw - a.data.priceRaw);
 ---
 
@@ -173,7 +169,9 @@ allProducts.sort((a, b) => b.data.priceRaw - a.data.priceRaw);
         id={product.data.id}
         rank={i + 1}
         name={product.data.name}
+        brand={product.data.brand}
         badge={product.data.badge}
+        seam={product.data.seam}
         emoji={product.data.emoji}
         price={product.data.price}
         msrp={product.data.msrp}
@@ -185,6 +183,7 @@ allProducts.sort((a, b) => b.data.priceRaw - a.data.priceRaw);
         cons={product.data.cons}
         inStock={product.data.inStock}
         nextDay={product.data.nextDay}
+        loadoutCount={product.data.loadoutCount}
       />
     ))}
   </section>
@@ -208,7 +207,7 @@ allProducts.sort((a, b) => b.data.priceRaw - a.data.priceRaw);
           if (filter === 'all' || card.dataset.budget === filter) {
             card.style.display = '';
           } else {
-            card.style.display = 'none';
+            card.classList.toggle('hidden', filter !== 'all' && card.dataset.budget !== filter);
           }
         });
       });
