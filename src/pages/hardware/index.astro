@@ -117,7 +117,7 @@ const allTags = [...new Set(allProducts.flatMap(p => p.data.tags))].sort();
         <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: var(--space-6);" id="tag-overlay-tags">
           {allTags.map(tag => {
             const cls = (() => {
-              const map: = {
+              const map = {
                 fps:'fps', pro:'pro', budget:'budget', value:'value', entry:'entry',
                 wireless:'wireless', lightweight:'lightweight', comfort:'comfort',
                 ergonomic:'ergonomic', audiophile:'audiophile', creator:'creator',
