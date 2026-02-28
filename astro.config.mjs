@@ -1,28 +1,18 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 
-// https://astro.build/config
 export default defineConfig({
-  // Essential for sitemap generation and canonical URLs
-  site: 'https://stackpick.co.uk/',
+  // Ensure no trailing spaces and a clear protocol
+  site: 'https://stackpick.co.uk',
   
-  // Ensures a fully static build for GitHub Pages
-  output: 'static',
+  // Explicitly set the directory for GitHub Pages
+  outDir: './dist',
   
-  integrations: [
-    sitemap({
-      // Optional: helps ensure the sitemap is as accurate as possible
-      changefreq: 'weekly',
-      priority: 0.7,
-      lastmod: new Date(),
-    })
-  ],
+  // The sitemap integration needs to be initialized simply
+  integrations: [sitemap()],
 
+  // Keep assets organized
   build: {
-    // Keeps your dist folder organized
     assets: 'assets'
-  },
-
-  // Extension: trailingSlash ensures consistency across your internal links
-  trailingSlash: 'always'
+  }
 });
