@@ -1,25 +1,15 @@
 ---
-// src/pages/[category]/index.astro
-// Generates all 5 category pages from one template.
-// Astro calls getStaticPaths() at build time to produce:
-//   /mice/    /keyboards/    /headsets/    /monitors/    /chairs/
+// src/pages/[category]/index.astro — v6.0
+// Category pages: /mice/ /keyboards/ /headsets/ /monitors/ /chairs/
 
 import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import ProductCard from '../../components/ProductCard.astro';
 
-// ── Category metadata ──────────────────────────────────────────────────────
-
 const BUILD_MONTH = new Date().toLocaleDateString('en-GB', { month: 'long',  year: 'numeric' });
 const BUILD_SHORT = new Date().toLocaleDateString('en-GB', { month: 'short', year: 'numeric' });
 
 type CategoryKey = 'mice' | 'keyboards' | 'headsets' | 'monitors' | 'chairs';
-
-// ⚠️ SECURITY NOTE: buyingGuide strings use set:html — they are rendered
-// as raw HTML without escaping. All content here is static and author-controlled.
-// Never interpolate user-supplied values, URL parameters, or CMS content into
-// these strings without sanitisation. Astro's {} expression escaping does NOT
-// apply inside set:html contexts.
 
 const CATEGORY_META: Record<CategoryKey, {
   emoji: string;
@@ -72,9 +62,9 @@ const CATEGORY_META: Record<CategoryKey, {
     buyingGuide: `
       <h2>The 2026 Headset Guide</h2>
       <h3>Open-back vs Closed-back</h3>
-      <p><strong>Open-back</strong> headphones (like the Sennheiser HD 560S) let sound in and out — creating a wider, more natural soundstage that makes footstep positioning in FPS significantly clearer. The trade-off: everyone nearby can hear your game. <strong>Closed-back</strong> headsets isolate you — better for noisy environments.</p>
+      <p><strong>Open-back</strong> headphones (like the Sennheiser HD 560S) let sound in and out — creating a wider, more natural soundstage that makes footstep positioning in FPS significantly clearer. <strong>Closed-back</strong> headsets isolate you — better for noisy environments.</p>
       <h3>Wireless latency — solved</h3>
-      <p>The days of noticeable wireless audio lag are over. 2.4GHz wireless (used by HyperX, SteelSeries, and Logitech) operates at sub-5ms latency — imperceptible in gaming. The remaining reason to choose wired is budget: wired headsets deliver better hardware per pound at the same price point.</p>
+      <p>2.4GHz wireless (used by HyperX, SteelSeries, and Logitech) operates at sub-5ms latency — imperceptible in gaming. The remaining reason to choose wired is budget: wired headsets deliver better hardware per pound at the same price point.</p>
       <p class="last-updated"><em>Last updated: ${BUILD_MONTH}. Prices checked weekly.</em></p>
     `,
   },
@@ -88,11 +78,9 @@ const CATEGORY_META: Record<CategoryKey, {
     buyingGuide: `
       <h2>2026 Buying Guide: Glossy, Mini-LED &amp; OLED</h2>
       <h3>The Glossy Revolution</h3>
-      <p>One of the biggest shifts in 2026 is the move toward Glossy WOLED panels. Traditional matte coatings can make OLED blacks look slightly grey in lit rooms. Glossy panels maintain that infinite contrast and make colours pop — though they require more light control in your room.</p>
+      <p>One of the biggest shifts in 2026 is the move toward Glossy WOLED panels. Traditional matte coatings can make OLED blacks look slightly grey in lit rooms. Glossy panels maintain that infinite contrast and make colours pop.</p>
       <h3>Mini-LED: The OLED Alternative</h3>
-      <p>If you work in a bright room or fear OLED burn-in, <strong>Mini-LED</strong> is the standard. Models like the AOC Q27G3XMN offer HDR1000, meaning they get twice as bright as most OLEDs. For digital artists and HDR fans, deep blacks without burn-in risk.</p>
-      <h3>What is Dual-Mode?</h3>
-      <p>New for this year, monitors like the MSI MAG feature <strong>Dual-Mode</strong> — run 4K for single-player games, then switch to 1080p at 320Hz+ for competitive shooters.</p>
+      <p>If you work in a bright room or fear OLED burn-in, <strong>Mini-LED</strong> is the standard. Models like the AOC Q27G3XMN offer HDR1000, meaning they get twice as bright as most OLEDs.</p>
       <p class="last-updated"><em>Last updated: ${BUILD_MONTH}. Prices checked daily.</em></p>
     `,
   },
@@ -106,24 +94,18 @@ const CATEGORY_META: Record<CategoryKey, {
     buyingGuide: `
       <h2>The 2026 Chair Buying Guide</h2>
       <h3>Gaming chair vs office chair — honest answer</h3>
-      <p>At the budget end (under £200), gaming chairs tend to beat office chairs for comfort and build quality. Once you're spending £300+, ergonomic design matters more than aesthetics — and purpose-built chairs like the Sihoo Doro C300 will do more for your back than any racing-style bucket seat.</p>
-      <h3>What actually matters for long sessions</h3>
-      <p>Lumbar support is the single most important factor for anyone sitting more than 3 hours at a stretch. Look for adjustable lumbar that moves with you — not just a fixed cushion. Seat depth matters more than most people realise: your back should touch the rest while your feet sit flat on the floor.</p>
+      <p>At the budget end (under £200), gaming chairs tend to beat office chairs for comfort and build quality. Once you're spending £300+, ergonomic design matters more than aesthetics.</p>
       <h3>Leather vs mesh — the real difference</h3>
-      <p>PU leatherette looks great but gets hot in summer and typically starts cracking after 2–3 years. Mesh breathes significantly better and ages more gracefully. If you run hot, mesh is worth the switch. The Eureka Typhon and Sihoo Doro C300 fix the sweaty chair problem entirely.</p>
+      <p>PU leatherette looks great but gets hot in summer and typically starts cracking after 2–3 years. Mesh breathes significantly better and ages more gracefully. If you run hot, mesh is worth the switch.</p>
       <p class="last-updated"><em>Last updated: ${BUILD_MONTH}. Prices checked weekly.</em></p>
     `,
   },
 };
 
-// ── Static path generation ─────────────────────────────────────────────────
-
 export async function getStaticPaths() {
   const categories: CategoryKey[] = ['mice', 'keyboards', 'headsets', 'monitors', 'chairs'];
   return categories.map(category => ({ params: { category } }));
 }
-
-// ── Page data ──────────────────────────────────────────────────────────────
 
 const { category } = Astro.params as { category: CategoryKey };
 const meta = CATEGORY_META[category];
@@ -137,7 +119,6 @@ allProducts.sort((a, b) => (a.data.rank ?? 99) - (b.data.rank ?? 99));
   description={meta.metaDescription}
   canonical={`https://stackpick.co.uk/${category}/`}
 >
-  <!-- Hero -->
   <section slot="hero" class="hero hero--inner">
     <div class="hero-container container">
       <p class="hero-eyebrow">Hardware Category</p>
@@ -146,30 +127,31 @@ allProducts.sort((a, b) => (a.data.rank ?? 99) - (b.data.rank ?? 99));
     </div>
   </section>
 
-  <!-- Breadcrumb -->
   <nav class="breadcrumb-bar" aria-label="Breadcrumb">
     <div class="container">
       <ol class="breadcrumb-list">
         <li><a href="/">Home</a></li>
+        <li class="breadcrumb-sep" aria-hidden="true">/</li>
+        <li><a href="/hardware/">Hardware</a></li>
         <li class="breadcrumb-sep" aria-hidden="true">/</li>
         <li aria-current="page">{meta.breadcrumbLabel}</li>
       </ol>
     </div>
   </nav>
 
-  <!-- Budget filter chips -->
-  <div class="filter-cage">
+  <!-- Budget filter -->
+  <div class="filter-cage filter-cage--sticky">
     <div class="filter-strip" role="navigation" aria-label="Filter by budget">
       <button class="filter-chip active" data-filter="all">All Budgets</button>
       <button class="filter-chip" data-filter="under-50">Under £50</button>
-      <button class="filter-chip" data-filter="50-100">£50 – £100</button>
-      <button class="filter-chip" data-filter="100-200">£100 – £200</button>
+      <button class="filter-chip" data-filter="50-100">£50–£100</button>
+      <button class="filter-chip" data-filter="100-200">£100–£200</button>
       <button class="filter-chip" data-filter="over-200">£200+</button>
     </div>
   </div>
 
-  <!-- Product list -->
-  <section class="product-list" id="product-list" aria-label={`${meta.breadcrumbLabel} picks`}>
+  <!-- Product grid -->
+  <section class="product-grid" id="product-list" aria-label={`${meta.breadcrumbLabel} picks`}>
     {allProducts.map((product, i) => (
       <ProductCard
         id={product.data.id}
@@ -188,6 +170,7 @@ allProducts.sort((a, b) => (a.data.rank ?? 99) - (b.data.rank ?? 99));
         specs={product.data.specs}
         pros={product.data.pros}
         cons={product.data.cons}
+        tags={product.data.tags}
         inStock={product.data.inStock}
         nextDay={product.data.nextDay}
         loadoutCount={product.data.loadoutCount}
@@ -203,23 +186,15 @@ allProducts.sort((a, b) => (a.data.rank ?? 99) - (b.data.rank ?? 99));
     <div class="buying-guide" set:html={meta.buyingGuide} />
   </section>
 
-  <!-- Filter chip JS — minimal, no external dependency -->
-    <script>
-    // We add a check to ensure the code only runs in the browser
+  <script>
     const chips = document.querySelectorAll('.filter-chip');
-    
     chips.forEach(chip => {
       chip.addEventListener('click', (e) => {
-        // Correctly cast the target to an HTMLElement
         const target = e.currentTarget as HTMLElement;
         const filter = target.dataset.filter;
-
-        // UI Updates
         document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
         target.classList.add('active');
-
-        // Filtering logic
-        document.querySelectorAll<HTMLElement>('.product-entry').forEach(card => {
+        document.querySelectorAll<HTMLElement>('.pcard').forEach(card => {
           const visible = filter === 'all' || card.dataset.budget === filter;
           card.classList.toggle('hidden', !visible);
         });

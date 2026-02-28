@@ -1,29 +1,16 @@
 ---
-// src/pages/index.astro
-// Homepage — Performance Heritage UI System
-// Structure:
-//   1. Hero (navy, uppercase, CTA)
-//   2. Collection tabs + product wall
-//   3. Category modules
-//   4. Performance comparison block
-//   5. Editorial guides
-//   6. Final CTA strip
-//
-// All data server-rendered at build time. No client-side data fetching.
+// src/pages/index.astro — v6.0 Mobile-First Homepage
 
 import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import ProductCard from '../components/ProductCard.astro';
 
-// Fetch all data at build time
 const allProducts    = await getCollection('products');
 const allCollections = await getCollection('collections');
 const allGuides      = await getCollection('guides');
 
-// Build a product lookup map for O(1) access
 const productMap = new Map(allProducts.map(p => [p.data.id, p]));
 
-// Sort collections — all-picks always first
 const COLLECTION_ORDER = [
   'all-picks', 'sweaty-fps', 'kynar-setup',
   'wireless-only', 'study-mode', 'under-100',
@@ -33,34 +20,35 @@ allCollections.sort((a, b) =>
   COLLECTION_ORDER.indexOf(a.data.id) - COLLECTION_ORDER.indexOf(b.data.id)
 );
 
-// Pre-build product lists per collection
 const collectionProducts = allCollections.map(col => ({
   id:       col.data.id,
   label:    col.data.label,
   emoji:    col.data.emoji,
-  products: col.data.baseProducts
+  products: (col.data.baseProducts as string[])
     .map(id => productMap.get(id))
     .filter(Boolean),
 }));
 
-// Pick 3 guides for the editorial section
+// Featured = rank-1 products from each category for carousel
+const featuredProducts = ['mice', 'keyboards', 'headsets', 'monitors', 'chairs']
+  .map(cat => allProducts.find(p => p.data.category === cat && p.data.rank === 1))
+  .filter(Boolean);
+
 const featuredGuides = allGuides.slice(0, 3);
 
-// Category data for modules
 const categories = [
-  { slug: 'mice',      icon: '🖱️', name: 'Gaming Mice',      count: '5 picks' },
-  { slug: 'keyboards', icon: '⌨️', name: 'Keyboards',         count: '5 picks' },
-  { slug: 'headsets',  icon: '🎧', name: 'Headsets',          count: '5 picks' },
-  { slug: 'monitors',  icon: '🖥️', name: 'Monitors',          count: '5 picks' },
-  { slug: 'chairs',    icon: '🪑', name: 'Gaming Chairs',     count: '5 picks' },
+  { slug: 'mice',      icon: '🖱️', name: 'Mice',      count: '5 picks' },
+  { slug: 'keyboards', icon: '⌨️', name: 'Keyboards', count: '5 picks' },
+  { slug: 'headsets',  icon: '🎧', name: 'Headsets',  count: '5 picks' },
+  { slug: 'monitors',  icon: '🖥️', name: 'Monitors',  count: '5 picks' },
+  { slug: 'chairs',    icon: '🪑', name: 'Chairs',    count: '5 picks' },
 ];
 
-// Quick comparison data — representative spec snapshot
 const specComparison = [
-  { label: 'Lowest verified price', a: '£28', b: '£399+', note: 'Budget vs flagship' },
-  { label: 'Mouse polling rate',    a: '125Hz', b: '8,000Hz', note: 'Entry vs pro' },
-  { label: 'Monitor refresh rate',  a: '75Hz', b: '500Hz',   note: 'Budget vs competitive' },
-  { label: 'Keyboard polling',      a: '1,000Hz', b: '8,000Hz', note: 'Standard vs Hall Effect' },
+  { label: 'Lowest verified price', a: '£28',     b: '£399+'  },
+  { label: 'Mouse polling rate',    a: '125Hz',   b: '8,000Hz'},
+  { label: 'Monitor refresh rate',  a: '75Hz',    b: '500Hz'  },
+  { label: 'Keyboard polling',      a: '1,000Hz', b: '8,000Hz'},
 ];
 ---
 
@@ -70,106 +58,132 @@ const specComparison = [
   canonical="https://stackpick.co.uk/"
 >
 
-  <!-- ══════════════════════════════════════════
-       1. HERO — Navy dominant, uppercase, direct
-       ══════════════════════════════════════════ -->
+  <!-- ═══ HERO ═══ -->
   <section slot="hero" class="hero hero--home" aria-label="Site hero">
     <div class="hero-container container">
-
       <p class="hero-eyebrow">UK Gaming Gear Authority</p>
-
-      <h1>
-        Ranked Gaming Gear<br>
-        for UK Gamers.
-      </h1>
-
-      <p>
-        Verified picks across every category. Real UK prices.
-        No sponsored rankings. No filler.
-      </p>
-
+      <h1>Ranked Gaming Gear<br>for UK Gamers.</h1>
+      <p>Verified picks across every category. Real UK prices. No sponsored rankings. No filler.</p>
       <div class="hero-actions">
-        <a href="/mice/" class="btn-primary">
+        <a href="/hardware/" class="btn-primary">
           Browse All Picks
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <line x1="7" y1="17" x2="17" y2="7"/>
-            <polyline points="7 7 17 7 17 17"/>
-          </svg>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
         </a>
         <a href="/guides/" class="btn-secondary">Setup Guides</a>
       </div>
-
     </div>
   </section>
 
-  <!-- ══════════════════════════════════════════
-       2. COLLECTION TABS + PRODUCT WALL
-       ══════════════════════════════════════════ -->
-  <div
-    class="collection-tabs-bar"
-    id="collection-tabs"
-    role="tablist"
-    aria-label="Browse by collection"
-  >
-    {collectionProducts.map((col, i) => (
-      <button
-        role="tab"
-        class:list={['collection-tab', i === 0 && 'active']}
-        data-collection={col.id}
-        aria-selected={i === 0 ? 'true' : 'false'}
-        aria-controls={`panel-${col.id}`}
-        id={`tab-${col.id}`}
-      >
-        <span class="collection-tab__emoji">{col.emoji}</span>
-        <span class="collection-tab__label">{col.label}</span>
-      </button>
-    ))}
-  </div>
-
-  <!-- Product panels — one per collection -->
-  {collectionProducts.map((col, i) => (
-    <section
-      role="tabpanel"
-      id={`panel-${col.id}`}
-      class:list={['collection-panel', i !== 0 && 'hidden']}
-      aria-labelledby={`tab-${col.id}`}
-      aria-hidden={i !== 0 ? 'true' : 'false'}
-    >
-      <div class="product-list">
-        {col.products.map((product, rank) => product && (
-          <ProductCard
-            id={product.data.id}
-            rank={rank + 1}
-            name={product.data.name}
-            brand={product.data.brand}
-            badge={product.data.badge}
-            seam={product.data.seam}
-            emoji={product.data.emoji}
-            price={product.data.price}
-            priceRaw={product.data.priceRaw}
-            msrp={product.data.msrp}
-            savings={product.data.savings}
-            affiliate={product.data.affiliate}
-            desc={product.body}
-            specs={product.data.specs}
-            pros={product.data.pros}
-            cons={product.data.cons}
-            inStock={product.data.inStock}
-            nextDay={product.data.nextDay}
-            loadoutCount={product.data.loadoutCount}
-          />
+  <!-- ═══ FEATURED CAROUSEL ═══ -->
+  <section aria-label="Featured top picks" style="border-bottom: 1px solid var(--color-border);">
+    <div class="section-head">
+      <span class="section-head__label">Top Picks</span>
+      <span class="section-head__title">Featured Gear</span>
+      <a href="/hardware/" class="section-head__link">All →</a>
+    </div>
+    <div class="carousel" id="featured-carousel">
+      <div class="carousel__track" id="carousel-track">
+        {featuredProducts.map((product) => product && (
+          <div class="carousel__slide">
+            <ProductCard
+              id={product.data.id}
+              rank={product.data.rank ?? 1}
+              name={product.data.name}
+              brand={product.data.brand}
+              badge={product.data.badge}
+              seam={product.data.seam}
+              emoji={product.data.emoji}
+              price={product.data.price}
+              priceRaw={product.data.priceRaw}
+              msrp={product.data.msrp}
+              savings={product.data.savings}
+              affiliate={product.data.affiliate}
+              desc={product.body}
+              specs={product.data.specs}
+              pros={product.data.pros}
+              cons={product.data.cons}
+              tags={product.data.tags}
+              inStock={product.data.inStock}
+              nextDay={product.data.nextDay}
+              loadoutCount={product.data.loadoutCount}
+            />
+          </div>
         ))}
       </div>
-    </section>
-  ))}
+      <div class="carousel__dots" id="carousel-dots" aria-hidden="true">
+        {featuredProducts.map((_, i) => (
+          <button class:list={['carousel__dot', i === 0 && 'active']} data-index={i} aria-label={`Go to slide ${i + 1}`}></button>
+        ))}
+      </div>
+    </div>
+  </section>
 
-  <!-- ══════════════════════════════════════════
-       3. CATEGORY MODULES
-       ══════════════════════════════════════════ -->
-  <section class="section home-categories" aria-label="Browse by category">
+  <!-- ═══ COLLECTION TABS ═══ -->
+  <section aria-label="Browse by collection" style="border-bottom: 1px solid var(--color-border);">
     <div class="section-head">
-      <p class="section-head__label">Hardware</p>
-      <h2 class="section-head__title">Browse by Category</h2>
+      <span class="section-head__label">Collections</span>
+      <span class="section-head__title">Shop by Vibe</span>
+    </div>
+
+    <div class="collection-tabs-bar" id="collection-tabs" role="tablist" aria-label="Browse by collection">
+      {collectionProducts.map((col, i) => (
+        <button
+          role="tab"
+          class:list={['collection-tab', i === 0 && 'active']}
+          data-collection={col.id}
+          aria-selected={i === 0 ? 'true' : 'false'}
+          aria-controls={`panel-${col.id}`}
+          id={`tab-${col.id}`}
+        >
+          <span class="collection-tab__emoji">{col.emoji}</span>
+          <span class="collection-tab__label">{col.label}</span>
+        </button>
+      ))}
+    </div>
+
+    {collectionProducts.map((col, i) => (
+      <div
+        role="tabpanel"
+        id={`panel-${col.id}`}
+        class:list={['collection-panel', i !== 0 && 'hidden']}
+        aria-labelledby={`tab-${col.id}`}
+        aria-hidden={i !== 0 ? 'true' : 'false'}
+      >
+        <div class="product-grid" style="padding-top: var(--space-4);">
+          {col.products.map((product: any, rank: number) => product && (
+            <ProductCard
+              id={product.data.id}
+              rank={rank + 1}
+              name={product.data.name}
+              brand={product.data.brand}
+              badge={product.data.badge}
+              seam={product.data.seam}
+              emoji={product.data.emoji}
+              price={product.data.price}
+              priceRaw={product.data.priceRaw}
+              msrp={product.data.msrp}
+              savings={product.data.savings}
+              affiliate={product.data.affiliate}
+              desc={product.body}
+              specs={product.data.specs}
+              pros={product.data.pros}
+              cons={product.data.cons}
+              tags={product.data.tags}
+              inStock={product.data.inStock}
+              nextDay={product.data.nextDay}
+              loadoutCount={product.data.loadoutCount}
+            />
+          ))}
+        </div>
+      </div>
+    ))}
+  </section>
+
+  <!-- ═══ CATEGORY GRID ═══ -->
+  <section class="section home-categories" aria-label="Browse by category" style="border-bottom: 1px solid var(--color-border);">
+    <div class="section-head">
+      <span class="section-head__label">Hardware</span>
+      <span class="section-head__title">Browse by Category</span>
     </div>
     <div class="category-grid">
       {categories.map(cat => (
@@ -182,27 +196,19 @@ const specComparison = [
     </div>
   </section>
 
-  <!-- ══════════════════════════════════════════
-       4. PERFORMANCE COMPARISON BLOCK
-       Table-style layout. Emphasized numeric specs.
-       ══════════════════════════════════════════ -->
-  <section class="section home-comparison" aria-label="Performance comparison">
+  <!-- ═══ COMPARISON STRIP ═══ -->
+  <section class="section home-comparison" aria-label="Performance comparison" style="border-bottom: 1px solid var(--color-border);">
     <div class="section-head">
-      <p class="section-head__label">Performance Data</p>
-      <h2 class="section-head__title">Spec Comparison</h2>
+      <span class="section-head__label">Performance Data</span>
+      <span class="section-head__title">Spec Comparison</span>
       <a href="/comparisons/" class="section-head__link">Full comparisons →</a>
     </div>
-
     <div class="comparison-strip" role="table" aria-label="Gear performance comparison">
-
-      <div class="comparison-strip__header" role="row" aria-hidden="true">
-        <div class="comparison-strip__row comparison-strip__row--head">
-          <span class="comparison-strip__label">Specification</span>
-          <span class="comparison-strip__val" style="font-weight: var(--weight-semibold); color: var(--color-text-primary);">Entry Level</span>
-          <span class="comparison-strip__val" style="color: var(--color-accent); font-weight: var(--weight-bold);">Pro / Flagship</span>
-        </div>
+      <div class="comparison-strip__row comparison-strip__row--head" role="row" aria-hidden="true">
+        <span class="comparison-strip__label">Specification</span>
+        <span class="comparison-strip__val" style="font-weight: var(--weight-semibold); color: var(--color-text-primary);">Entry Level</span>
+        <span class="comparison-strip__val" style="color: var(--color-accent); font-weight: var(--weight-bold);">Pro / Flagship</span>
       </div>
-
       {specComparison.map(row => (
         <div class="comparison-strip__row" role="row">
           <span class="comparison-strip__label" role="cell">{row.label}</span>
@@ -213,77 +219,78 @@ const specComparison = [
     </div>
   </section>
 
-  <!-- ══════════════════════════════════════════
-       5. EDITORIAL GUIDES
-       ══════════════════════════════════════════ -->
-  <section class="section home-guides" aria-label="Setup guides">
+  <!-- ═══ SETUP GUIDES ═══ -->
+  <section class="section home-guides" aria-label="Setup guides" style="border-bottom: 1px solid var(--color-border);">
     <div class="section-head">
-      <p class="section-head__label">Editorial</p>
-      <h2 class="section-head__title">Setup Guides</h2>
+      <span class="section-head__label">Editorial</span>
+      <span class="section-head__title">Setup Guides</span>
       <a href="/guides/" class="section-head__link">All guides →</a>
     </div>
     <div class="guide-grid">
       {featuredGuides.map(guide => (
-        <a href={`/guides/${guide.slug}/`} class="guide-card">
+        <a href={`/guides/${guide.data.slug}/`} class="guide-card">
           <span class="guide-card__icon" aria-hidden="true">{guide.data.emoji ?? '📋'}</span>
           <div class="guide-card__body">
             <span class="guide-card__budget">{guide.data.budgetLabel}</span>
             <span class="guide-card__title">{guide.data.heroTitle ?? guide.data.title}</span>
             <span class="guide-card__desc">{guide.data.heroSubtitle ?? guide.data.metaDescription}</span>
           </div>
-          <span class="guide-card__arrow" aria-hidden="true">›</span>
+          <span class="guide-card__arrow" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </span>
         </a>
       ))}
     </div>
   </section>
 
-  <!-- ══════════════════════════════════════════
-       6. FINAL CTA STRIP — Red background
-       ══════════════════════════════════════════ -->
+  <!-- ═══ CTA STRIP ═══ -->
   <section class="cta-strip" aria-label="Get started">
     <div class="cta-strip__inner">
       <span class="cta-strip__overline">Start Here</span>
       <h2>Build Your UK Gaming Setup</h2>
-      <p>
-        Complete setup guides from £50 to £2,500. Every pick
-        individually verified for UK availability and pricing.
-      </p>
+      <p>Complete setup guides from £50 to £2,500. Every pick individually verified for UK availability and pricing.</p>
       <div class="cta-strip__actions">
-        <a href="/guides/" class="btn-primary" style="background: #fff; color: var(--palette-red-600); border-color: #fff;">
-          View Setup Guides
-        </a>
-        <a href="/comparisons/" class="btn-secondary">
-          Compare Gear
-        </a>
+        <a href="/guides/" class="btn-primary" style="background: #fff; color: var(--color-accent); border-color: #fff;">View Setup Guides</a>
+        <a href="/comparisons/" class="btn-secondary" style="border-color: rgba(255,255,255,0.3); color: rgba(255,255,255,0.85);">Compare Gear</a>
       </div>
     </div>
   </section>
 
-  <!-- Tab switching script — zero dependencies -->
   <script>
+    // Carousel scroll sync + dot nav
+    const track = document.getElementById('carousel-track') as HTMLElement | null;
+    const dots  = document.querySelectorAll<HTMLElement>('.carousel__dot');
+    if (track && dots.length) {
+      const updateDots = () => {
+        const slideW = (track.firstElementChild as HTMLElement)?.offsetWidth ?? 1;
+        const gap    = 12;
+        const idx    = Math.round(track.scrollLeft / (slideW + gap));
+        dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+      };
+      track.addEventListener('scroll', updateDots, { passive: true });
+      dots.forEach((dot, i) => {
+        dot.addEventListener('click', () => {
+          const slideW = (track.firstElementChild as HTMLElement)?.offsetWidth ?? 1;
+          track.scrollTo({ left: i * (slideW + 12), behavior: 'smooth' });
+        });
+      });
+    }
+
+    // Collection tab switching
     const tabs   = document.querySelectorAll<HTMLElement>('.collection-tab');
     const panels = document.querySelectorAll<HTMLElement>('.collection-panel');
-
     tabs.forEach(tab => {
       tab.addEventListener('click', () => {
         const id = tab.dataset.collection!;
-
-        tabs.forEach(t => {
-          t.classList.remove('active');
-          t.setAttribute('aria-selected', 'false');
-        });
+        tabs.forEach(t => { t.classList.remove('active'); t.setAttribute('aria-selected', 'false'); });
         tab.classList.add('active');
         tab.setAttribute('aria-selected', 'true');
-
         panels.forEach(panel => {
           const isTarget = panel.id === `panel-${id}`;
           panel.classList.toggle('hidden', !isTarget);
           panel.setAttribute('aria-hidden', isTarget ? 'false' : 'true');
-          if (!isTarget) {
-            panel.setAttribute('inert', '');
-          } else {
-            panel.removeAttribute('inert');
-          }
+          if (!isTarget) panel.setAttribute('inert', '');
+          else panel.removeAttribute('inert');
         });
       });
     });

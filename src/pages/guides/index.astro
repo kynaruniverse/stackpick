@@ -1,11 +1,12 @@
 ---
-// src/pages/guides/index.astro
+// src/pages/guides/index.astro — v6.0
+// Setups page: large setup cards, tap → product overlay
+
 import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 
 const guides = await getCollection('guides');
 
-// Display order — cheapest first
 const ORDER = [
   'budget-picks-under-50',
   'gaming-setup-500',
@@ -14,6 +15,18 @@ const ORDER = [
   'gaming-setup-2500',
 ];
 guides.sort((a, b) => ORDER.indexOf(a.data.slug) - ORDER.indexOf(b.data.slug));
+
+// Budget → badge color
+const BUDGET_COLORS: Record<string, string> = {
+  '£50':   '#4ADE80',
+  '£500':  '#60A5FA',
+  '£1000': '#C084FC',
+  '£1500': '#FB923C',
+  '£2500': '#FCD34D',
+};
+
+// Category emoji sets for each setup card visual
+const SETUP_EMOJIS = ['🖥️', '🖱️', '⌨️', '🎧', '🪑'];
 ---
 
 <Base
@@ -21,11 +34,12 @@ guides.sort((a, b) => ORDER.indexOf(a.data.slug) - ORDER.indexOf(b.data.slug));
   description="Complete UK gaming setup guides by budget. From under £50 to a £2500 dream build — every pick verified on Amazon UK."
   canonical="https://stackpick.co.uk/guides/"
 >
-  <section slot="hero" class="hero hero--inner">
+
+  <section slot="hero" class="hero hero--inner" aria-label="Setup guides">
     <div class="hero-container container">
       <p class="hero-eyebrow">Setup Guides</p>
-      <h1>Gaming Setup Guides</h1>
-      <p>Every budget. Every pick verified on Amazon UK.</p>
+      <h1>Gaming Setups</h1>
+      <p>Complete builds by budget. Every pick verified on Amazon UK.</p>
     </div>
   </section>
 
@@ -34,26 +48,182 @@ guides.sort((a, b) => ORDER.indexOf(a.data.slug) - ORDER.indexOf(b.data.slug));
       <ol class="breadcrumb-list">
         <li><a href="/">Home</a></li>
         <li class="breadcrumb-sep" aria-hidden="true">/</li>
-        <li aria-current="page">Guides</li>
+        <li aria-current="page">Setups</li>
       </ol>
     </div>
   </nav>
 
-  <section class="section">
-    <div class="guide-grid">
-      {guides.map(guide => (
-        <a href={`/guides/${guide.data.slug}/`} class="guide-card">
-          <div class="guide-card__icon" aria-hidden="true">{guide.data.emoji}</div>
-          <div class="guide-card__body">
-            <span class="guide-card__budget">{guide.data.budgetLabel}</span>
-            <h2 class="guide-card__title">{guide.data.title}</h2>
-            <p class="guide-card__desc">{guide.data.heroSubtitle}</p>
-          </div>
-          <span class="guide-card__arrow" aria-hidden="true">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-          </span>
-        </a>
+  <!-- Budget filter -->
+  <div class="filter-cage">
+    <div class="filter-strip" role="navigation" aria-label="Filter by budget">
+      <button class="filter-chip active" data-filter="all">All Budgets</button>
+      {guides.map(g => (
+        <button class="filter-chip" data-filter={g.data.slug}>{g.data.budgetLabel}</button>
       ))}
     </div>
+  </div>
+
+  <!-- Setup cards -->
+  <section class="setups-grid" id="setups-grid" aria-label="Setup guides">
+    {guides.map(guide => {
+      const badgeColor = BUDGET_COLORS[guide.data.budgetLabel] ?? 'var(--color-accent)';
+      const sections = guide.data.sections as any[];
+      const totalStr = guide.data.summaryTotals?.[0]?.value ?? '';
+
+      return (
+        <article
+          class="setup-card"
+          data-slug={guide.data.slug}
+          data-sections={JSON.stringify(sections)}
+          role="article"
+          aria-label={guide.data.title}
+        >
+          <!-- Visual -->
+          <div class="setup-card__visual">
+            <div class="setup-card__emoji-row" aria-hidden="true">
+              {SETUP_EMOJIS.map(em => <span>{em}</span>)}
+            </div>
+            <div class="setup-card__budget-badge" style={`background: ${badgeColor}; color: #000;`}>
+              {guide.data.budgetLabel}
+            </div>
+          </div>
+
+          <!-- Body -->
+          <div class="setup-card__body">
+            <h2 class="setup-card__title">{guide.data.title}</h2>
+            <p class="setup-card__desc">{guide.data.heroSubtitle}</p>
+          </div>
+
+          <!-- Footer -->
+          <div class="setup-card__footer">
+            <span class="setup-card__total">{totalStr}</span>
+            <span class="setup-card__cta">
+              View Products
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+            </span>
+          </div>
+        </article>
+      );
+    })}
   </section>
+
+  <!-- Setup detail overlay (slide-up) -->
+  <div class="prod-overlay" id="setup-overlay" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Setup products">
+    <div class="prod-overlay__scrim" id="setup-overlay-scrim"></div>
+    <div class="prod-overlay__sheet">
+      <div class="prod-overlay__handle" aria-hidden="true"></div>
+      <button class="prod-overlay__close" id="setup-overlay-close" aria-label="Close">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+      <div class="prod-overlay__content" id="setup-overlay-content">
+        <!-- Populated dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ── Budget filter ─────────────────────────────────
+    const chips = document.querySelectorAll<HTMLElement>('.filter-chip');
+    const cards = document.querySelectorAll<HTMLElement>('.setup-card');
+
+    chips.forEach(chip => {
+      chip.addEventListener('click', () => {
+        chips.forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        const f = chip.dataset.filter ?? 'all';
+        cards.forEach(card => {
+          card.classList.toggle('hidden', f !== 'all' && card.dataset.slug !== f);
+        });
+      });
+    });
+
+    // ── Setup card → overlay ──────────────────────────
+    const overlay       = document.getElementById('setup-overlay');
+    const overlayScrim  = document.getElementById('setup-overlay-scrim');
+    const overlayClose  = document.getElementById('setup-overlay-close');
+    const overlayContent = document.getElementById('setup-overlay-content');
+
+    function openSetupOverlay(title: string, sections: any[]) {
+      if (!overlay || !overlayContent) return;
+      overlayContent.innerHTML = buildSetupHTML(title, sections);
+      overlay.classList.add('open');
+      overlay.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+      // Re-init wishlist buttons inside overlay
+      (window as any).__sp?.initWishlistButtons?.();
+    }
+
+    function closeSetupOverlay() {
+      overlay?.classList.remove('open');
+      overlay?.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+
+    overlayScrim?.addEventListener('click', closeSetupOverlay);
+    overlayClose?.addEventListener('click', closeSetupOverlay);
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && overlay?.classList.contains('open')) closeSetupOverlay();
+    });
+
+    cards.forEach(card => {
+      card.addEventListener('click', () => {
+        const title    = card.querySelector('.setup-card__title')?.textContent ?? '';
+        const raw      = card.dataset.sections ?? '[]';
+        const sections = JSON.parse(raw) as any[];
+        openSetupOverlay(title, sections);
+      });
+    });
+
+    function buildSetupHTML(title: string, sections: any[]): string {
+      const sectionsHTML = sections.map(sec => {
+        const products = (sec.products ?? []).map((p: any) => {
+          const starsStr = '★★★★½';
+          return `
+            <div class="setup-product" style="
+              background: var(--color-bg-subtle);
+              border-radius: var(--radius-md);
+              padding: var(--space-4);
+              margin-bottom: var(--space-3);
+              border: 1px solid var(--color-border);
+            ">
+              <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:var(--space-3);">
+                <div>
+                  <div style="font-family:var(--font-mono); font-size:9px; letter-spacing:0.1em; text-transform:uppercase; color:var(--color-accent); margin-bottom:3px;">${p.badge ?? ''}</div>
+                  <h3 style="font-family:var(--font-display); font-size:var(--text-xl); font-weight:var(--weight-bold); text-transform:uppercase; color:var(--color-text-primary); line-height:1.1; margin-bottom:var(--space-1);">${p.name}</h3>
+                  <div style="font-family:var(--font-mono); font-size:var(--text-base); font-weight:var(--weight-bold); color:var(--color-text-primary);">${p.price}</div>
+                  <div class="stars" style="margin-top:4px;"><span class="stars__symbol">${starsStr}</span><span class="stars__score">4.7</span></div>
+                </div>
+              </div>
+              <p style="font-size:var(--text-sm); color:var(--color-text-secondary); margin-top:var(--space-2); line-height:var(--leading-normal);">${p.desc ?? ''}</p>
+              ${p.pros?.length ? `
+              <ul style="margin-top:var(--space-2); display:flex; flex-direction:column; gap:4px;">
+                ${p.pros.map((pr: string) => `
+                  <li style="font-size:var(--text-sm); color:var(--color-text-secondary); padding-left:var(--space-3); position:relative;">
+                    <span style="position:absolute;left:0;color:#4ADE80;">✓</span>${pr}
+                  </li>`).join('')}
+              </ul>` : ''}
+              <div style="display:flex; gap:var(--space-2); margin-top:var(--space-3);">
+                <a href="${p.affiliate}" class="btn-primary" target="_blank" rel="noopener sponsored" style="flex:1; height:var(--btn-height-lg);">
+                  Buy on Amazon ↗
+                </a>
+              </div>
+            </div>`;
+        }).join('');
+
+        return `
+          <div style="margin-bottom: var(--space-5);">
+            <h3 style="font-family:var(--font-display); font-size:var(--text-2xl); font-weight:var(--weight-bold); text-transform:uppercase; color:var(--color-text-primary); margin-bottom:var(--space-1);">${sec.heading ?? ''}</h3>
+            ${sec.intro ? `<p style="font-size:var(--text-sm); color:var(--color-text-muted); margin-bottom:var(--space-3);">${sec.intro}</p>` : ''}
+            ${products}
+          </div>`;
+      }).join('');
+
+      return `
+        <h2 style="font-family:var(--font-display); font-size:var(--text-3xl); font-weight:var(--weight-black); text-transform:uppercase; color:var(--color-text-primary); line-height:1.05; margin-bottom:var(--space-5);">${title}</h2>
+        ${sectionsHTML}
+        <a href="#" onclick="window.history.back(); return false;" class="btn-secondary" style="width:100%; margin-top:var(--space-2);">View Full Guide →</a>
+      `;
+    }
+  </script>
+
 </Base>

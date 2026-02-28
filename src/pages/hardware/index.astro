@@ -1,0 +1,237 @@
+---
+// src/pages/hardware/index.astro
+// Hardware hub — all products in 2-col grid, category tabs, multi-tag filter overlay
+
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import ProductCard from '../../components/ProductCard.astro';
+
+const allProducts = await getCollection('products');
+allProducts.sort((a, b) => (a.data.rank ?? 99) - (b.data.rank ?? 99));
+
+const categories = [
+  { slug: 'all',        label: 'All Gear',   emoji: '⚡' },
+  { slug: 'mice',       label: 'Mice',       emoji: '🖱️' },
+  { slug: 'keyboards',  label: 'Keyboards',  emoji: '⌨️' },
+  { slug: 'headsets',   label: 'Headsets',   emoji: '🎧' },
+  { slug: 'monitors',   label: 'Monitors',   emoji: '🖥️' },
+  { slug: 'chairs',     label: 'Chairs',     emoji: '🪑' },
+];
+
+const allTags = [...new Set(allProducts.flatMap(p => p.data.tags))].sort();
+---
+
+<Base
+  title="All Gaming Hardware UK | StackPick"
+  description="Browse all gaming mice, keyboards, headsets, monitors and chairs. Verified UK pricing on Amazon."
+  canonical="https://stackpick.co.uk/hardware/"
+>
+
+  <section slot="hero" class="hero hero--inner" aria-label="Hardware">
+    <div class="hero-container container">
+      <p class="hero-eyebrow">Hardware Database</p>
+      <h1>All Gaming Gear</h1>
+      <p>25 individually verified picks across 5 categories. Real UK prices.</p>
+    </div>
+  </section>
+
+  <!-- Breadcrumb -->
+  <nav class="breadcrumb-bar" aria-label="Breadcrumb">
+    <div class="container">
+      <ol class="breadcrumb-list">
+        <li><a href="/">Home</a></li>
+        <li class="breadcrumb-sep" aria-hidden="true">/</li>
+        <li aria-current="page">Hardware</li>
+      </ol>
+    </div>
+  </nav>
+
+  <!-- Category tabs -->
+  <div class="cat-tabs" role="tablist" aria-label="Filter by category" id="cat-tabs">
+    {categories.map((cat, i) => (
+      <button
+        role="tab"
+        class:list={['cat-tab', i === 0 && 'active']}
+        data-cat={cat.slug}
+        aria-selected={i === 0 ? 'true' : 'false'}
+      >
+        <span aria-hidden="true">{cat.emoji}</span>
+        {cat.label}
+      </button>
+    ))}
+  </div>
+
+  <!-- Filter chips (budget) -->
+  <div class="filter-cage filter-cage--sticky">
+    <div class="filter-strip" role="navigation" aria-label="Filter by budget">
+      <button class="filter-chip active" data-filter="all">All Budgets</button>
+      <button class="filter-chip" data-filter="under-50">Under £50</button>
+      <button class="filter-chip" data-filter="50-100">£50–£100</button>
+      <button class="filter-chip" data-filter="100-200">£100–£200</button>
+      <button class="filter-chip" data-filter="over-200">£200+</button>
+      <button class="filter-chip" id="tag-filter-btn" data-filter="tags">
+        Tags
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Product grid -->
+  <section class="product-grid" id="product-grid" aria-label="All hardware picks">
+    {allProducts.map((product, i) => (
+      <ProductCard
+        id={product.data.id}
+        rank={product.data.rank ?? i + 1}
+        name={product.data.name}
+        brand={product.data.brand}
+        badge={product.data.badge}
+        seam={product.data.seam}
+        emoji={product.data.emoji}
+        price={product.data.price}
+        priceRaw={product.data.priceRaw}
+        msrp={product.data.msrp}
+        savings={product.data.savings}
+        affiliate={product.data.affiliate}
+        desc={product.body}
+        specs={product.data.specs}
+        pros={product.data.pros}
+        cons={product.data.cons}
+        tags={product.data.tags}
+        inStock={product.data.inStock}
+        nextDay={product.data.nextDay}
+        loadoutCount={product.data.loadoutCount}
+      />
+    ))}
+  </section>
+
+  <!-- Tag filter overlay -->
+  <div class="prod-overlay" id="tag-overlay" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Filter by tags">
+    <div class="prod-overlay__scrim" id="tag-overlay-scrim"></div>
+    <div class="prod-overlay__sheet">
+      <div class="prod-overlay__handle" aria-hidden="true"></div>
+      <button class="prod-overlay__close" id="tag-overlay-close" aria-label="Close filters">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+      <div class="prod-overlay__content">
+        <h2 style="font-size: var(--text-xl); margin-bottom: var(--space-4);">Filter by Tags</h2>
+        <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: var(--space-6);" id="tag-overlay-tags">
+          {allTags.map(tag => {
+            const cls = (() => {
+              const map: Record<string,string> = {
+                fps:'fps', pro:'pro', budget:'budget', value:'value', entry:'entry',
+                wireless:'wireless', lightweight:'lightweight', comfort:'comfort',
+                ergonomic:'ergonomic', audiophile:'audiophile', creator:'creator',
+                'hall-effect':'hall-effect'
+              };
+              return `tag tag--${map[tag] ?? 'default'}`;
+            })();
+            return <button class={cls} data-tag={tag} style="cursor:pointer; border: none;">{tag}</button>;
+          })}
+        </div>
+        <div style="display:flex; gap: var(--space-3);">
+          <button class="btn-primary" id="tag-apply-btn" style="flex:1;">Apply Filters</button>
+          <button class="btn-secondary" id="tag-clear-btn">Clear All</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const cards     = document.querySelectorAll<HTMLElement>('.pcard');
+    const catBtns   = document.querySelectorAll<HTMLElement>('.cat-tab');
+    const budgetBtns= document.querySelectorAll<HTMLElement>('.filter-chip:not(#tag-filter-btn)');
+    const tagFilterBtn = document.getElementById('tag-filter-btn');
+    const tagOverlay   = document.getElementById('tag-overlay');
+    const tagScrim     = document.getElementById('tag-overlay-scrim');
+    const tagClose     = document.getElementById('tag-overlay-close');
+    const tagApply     = document.getElementById('tag-apply-btn');
+    const tagClear     = document.getElementById('tag-clear-btn');
+    const tagBtns      = document.querySelectorAll<HTMLElement>('#tag-overlay-tags [data-tag]');
+
+    let activeCat    = 'all';
+    let activeBudget = 'all';
+    let activeTags: string[] = [];
+
+    function applyFilters() {
+      cards.forEach(card => {
+        const cat    = card.dataset.category ?? '';
+        const budget = card.dataset.budget ?? '';
+        const tagsRaw = card.dataset.pjson ?? '';
+        let cardTags: string[] = [];
+        try { cardTags = JSON.parse(tagsRaw).tags ?? []; } catch {}
+
+        const catMatch    = activeCat === 'all' || (
+          activeCat === 'mice'      ? cat === 'crimson' :
+          activeCat === 'keyboards' ? cat === 'cobalt'  :
+          activeCat === 'headsets'  ? cat === 'slate'   :
+          activeCat === 'monitors'  ? cat === 'amber'   :
+          activeCat === 'chairs'    ? cat === 'jade'    : true
+        );
+        const budgetMatch = activeBudget === 'all' || budget === activeBudget;
+        const tagMatch    = activeTags.length === 0 || activeTags.every(t => cardTags.includes(t));
+
+        card.classList.toggle('hidden', !(catMatch && budgetMatch && tagMatch));
+      });
+    }
+
+    // Category tabs
+    catBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        catBtns.forEach(b => { b.classList.remove('active'); b.setAttribute('aria-selected','false'); });
+        btn.classList.add('active');
+        btn.setAttribute('aria-selected','true');
+        activeCat = btn.dataset.cat ?? 'all';
+        applyFilters();
+      });
+    });
+
+    // Budget filter chips
+    budgetBtns.forEach(chip => {
+      chip.addEventListener('click', () => {
+        budgetBtns.forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        activeBudget = chip.dataset.filter ?? 'all';
+        applyFilters();
+      });
+    });
+
+    // Tag overlay open/close
+    tagFilterBtn?.addEventListener('click', () => {
+      tagOverlay?.classList.add('open');
+      tagOverlay?.setAttribute('aria-hidden','false');
+      document.body.style.overflow = 'hidden';
+    });
+    function closeTagOverlay() {
+      tagOverlay?.classList.remove('open');
+      tagOverlay?.setAttribute('aria-hidden','true');
+      document.body.style.overflow = '';
+    }
+    tagScrim?.addEventListener('click', closeTagOverlay);
+    tagClose?.addEventListener('click', closeTagOverlay);
+
+    // Tag selection
+    tagBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const tag = btn.dataset.tag ?? '';
+        btn.classList.toggle('tag--active');
+        if (activeTags.includes(tag)) activeTags = activeTags.filter(t => t !== tag);
+        else activeTags.push(tag);
+      });
+    });
+
+    tagApply?.addEventListener('click', () => {
+      closeTagOverlay();
+      applyFilters();
+      // Update chip label
+      if (tagFilterBtn) {
+        tagFilterBtn.classList.toggle('active', activeTags.length > 0);
+      }
+    });
+
+    tagClear?.addEventListener('click', () => {
+      activeTags = [];
+      tagBtns.forEach(b => b.classList.remove('tag--active'));
+    });
+  </script>
+
+</Base>

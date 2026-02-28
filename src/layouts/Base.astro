@@ -1,17 +1,13 @@
 ---
-// src/layouts/Base.astro
-// The single layout shell wrapping every page on the site.
+// src/layouts/Base.astro — v6.0 Mobile-First Layout Shell
 //
 // Slots:
-//   name="head"   → extra <head> tags (page-specific meta, schema, etc.)
-//   name="hero"   → full-bleed hero section, renders above content-pad
-//   (default)     → main page content, renders inside content-pad
+//   name="head"  → extra <head> tags
+//   name="hero"  → full-bleed hero section
+//   (default)    → main page content
 //
-// Props:
-//   title         → <title> tag and og:title
-//   description   → meta description and og:description
-//   canonical     → canonical URL (auto-computed from Astro.url if omitted)
-//   ogType        → og:type (defaults to "website", use "article" for guides/comparisons)
+// Mobile: TopBar (hides on scroll) + content + BottomNav
+// Desktop: Fixed header + sidebar + main
 
 export interface Props {
   title:        string;
@@ -20,8 +16,8 @@ export interface Props {
   ogType?:      string;
   ogImage?:     string;
 }
-const { ogImage = 'https://stackpick.co.uk/assets/images/og-default.png' } = Astro.props;
 
+const { ogImage = 'https://stackpick.co.uk/assets/images/og-default.png' } = Astro.props;
 const {
   title,
   description,
@@ -29,30 +25,24 @@ const {
   ogType    = 'website',
 } = Astro.props;
 
-// Ensure every page title includes the brand name, but never doubles it
 const metaTitle = title.includes('StackPick') ? title : `${title} | StackPick`;
 
-// Build-time active state detection
-// Astro.url.pathname is available at build time for every static route.
-// We use it to set aria-current and active classes without any JavaScript.
 const path = Astro.url.pathname;
 
-// Sidebar — category pages
 const isMice      = path.startsWith('/mice/');
 const isKeyboards = path.startsWith('/keyboards/');
 const isHeadsets  = path.startsWith('/headsets/');
 const isMonitors  = path.startsWith('/monitors/');
 const isChairs    = path.startsWith('/chairs/');
+const isHardware  = path.startsWith('/hardware/') || isMice || isKeyboards || isHeadsets || isMonitors || isChairs;
 
-// Desktop nav — section pages
 const isGuides      = path.startsWith('/guides');
 const isComparisons = path.startsWith('/comparisons');
 const isSearch      = path.startsWith('/search');
+const isWishlist    = path.startsWith('/wishlist');
+const isHome        = path === '/';
+const isSetups      = isGuides; // Setups maps to guides
 
-// Mobile dock
-const isHome = path === '/';
-
-// Active sidebar link helper
 function sidebarLinkClass(active: boolean): string {
   return active ? 'sidebar-link active' : 'sidebar-link';
 }
@@ -64,34 +54,23 @@ function sidebarLinkClass(active: boolean): string {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
-  <!--
-    FLASH-OF-WRONG-THEME PREVENTION
-    Runs synchronously before any rendering.
-    Must be is:inline so it is not deferred.
-    Reads localStorage first, falls back to OS preference.
-    Defaults to "light" if neither is set.
-    Theme values: "light" | "dark" | "earth"
-  -->
+  <!-- Flash-of-wrong-theme prevention -->
   <script is:inline>
-    (function () {
-      var saved  = null;
-      try { saved = localStorage.getItem('sp-theme'); } catch (e) {}
-      var system = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)
-                   ? 'dark' : 'light';
-      var valid  = ['light', 'dark', 'earth'];
-      var theme  = (saved && valid.indexOf(saved) !== -1) ? saved : system;
-      document.documentElement.setAttribute('data-theme', theme);
+    (function(){
+      var s=null;try{s=localStorage.getItem('sp-theme');}catch(e){}
+      var sys=(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+      var v=['light','dark','earth'];
+      var t=(s&&v.indexOf(s)!==-1)?s:sys;
+      document.documentElement.setAttribute('data-theme',t);
     })();
   </script>
 
-  <!-- ── Primary meta ── -->
   <title>{metaTitle}</title>
   <meta name="description"         content={description}>
   <meta name="robots"              content="index, follow">
   <meta name="author"              content="StackPick">
   <link rel="canonical"            href={canonical}>
 
-  <!-- ── Open Graph ── -->
   <meta property="og:type"         content={ogType}>
   <meta property="og:title"        content={metaTitle}>
   <meta property="og:description"  content={description}>
@@ -101,198 +80,142 @@ function sidebarLinkClass(active: boolean): string {
   <meta property="og:image"        content={ogImage}>
   <meta property="og:image:width"  content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="og:image:alt"    content="StackPick — Best Gaming Gear for UK Gamers">
 
-  <!-- ── Twitter / X Card ── -->
   <meta name="twitter:card"        content="summary_large_image">
   <meta name="twitter:title"       content={metaTitle}>
   <meta name="twitter:description" content={description}>
   <meta name="twitter:image"       content={ogImage}>
 
-  <!-- ── PWA & mobile ── -->
-  <meta name="theme-color"         content="#E4EDF5" media="(prefers-color-scheme: light)">
   <meta name="theme-color"         content="#0D1520" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color"         content="#0D1520" media="(prefers-color-scheme: light)">
   <meta name="mobile-web-app-capable"              content="yes">
   <meta name="apple-mobile-web-app-capable"        content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title"          content="StackPick">
   <link rel="manifest"             href="/manifest.json">
 
-  <!-- ── Favicon — inline SVG, no external request ── -->
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='8' fill='%230D1520'/><text y='72' x='50' text-anchor='middle' font-size='62' font-family='Arial Narrow,sans-serif' font-weight='900' fill='%23C82020'>S</text></svg>">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230D1520'/><text y='72' x='50' text-anchor='middle' font-size='60' font-family='system-ui' font-weight='900' fill='%23C82020'>S</text></svg>">
 
-  <!-- ── Font loading ──
-    Syne:           Display headings — geometric, memorable, brand character
-    Inter:          Body — maximum legibility at all sizes
-    JetBrains Mono: Spec labels, prices, metadata — technical precision
-    display=swap ensures text is visible during font load.
-    preconnect eliminates DNS + TLS negotiation cost.
-  -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800;900&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
-    rel="stylesheet"
-  >
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800;900&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <!-- ── Stylesheets — strict load order ── -->
   <link rel="stylesheet" href="/assets/css/tokens.css">
   <link rel="stylesheet" href="/assets/css/components.css">
   <link rel="stylesheet" href="/assets/css/style.css">
-  
-  <!-- ── Google Analytics 4 ── -->
-  <!-- gtag.js bootstrap — must load before analytics.js -->
+
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZTN7H3L6DV"></script>
-  <!-- Site analytics: affiliate clicks, scroll depth, LCP, error tracking -->
   <script src="/assets/js/analytics.js" defer></script>
 
-
-  <!-- ── Per-page head injection ── -->
   <slot name="head" />
 </head>
 
 <body class="streetwear-layout">
 
-  <!-- ── Skip link — keyboard accessibility ── -->
   <a href="#main-content" class="skip-link">Skip to main content</a>
 
-  <!-- ════════════════════════════════════════════════════════
-       DESKTOP HEADER
-       Fixed top bar. Hidden on mobile (≥1024px breakpoint).
-       Contains: logo wordmark | primary nav | theme toggle
-       ════════════════════════════════════════════════════════ -->
-  <header class="desktop-header" role="banner">
-    <div class="header-grid">
+  <!-- ═══════════════ MOBILE TOP BAR ═══════════════ -->
+  <header class="topbar" id="topbar" role="banner" aria-label="Site header">
+    <a href="/" class="topbar__logo" aria-label="StackPick homepage">
+      STACK<span>·</span>PICK
+    </a>
 
-      <!-- Logo wordmark -->
-      <a href="/" class="logo" aria-label="StackPick — back to homepage">
-        STACK<span class="logo-dot">·</span>PICK
-      </a>
+    <div class="topbar__search">
+      <span class="topbar__search-icon" aria-hidden="true">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </span>
+      <input
+        type="search"
+        class="topbar__search-input"
+        placeholder="Search gear, setups, tags…"
+        id="topbar-search"
+        autocomplete="off"
+        autocorrect="off"
+        spellcheck="false"
+        aria-label="Search all gear"
+      >
+    </div>
 
-      <!-- Primary navigation -->
-      <nav class="desktop-nav" aria-label="Main navigation">
-        <a
-          href="/guides/"
-          aria-current={isGuides ? 'page' : undefined}
-        >Guides</a>
-        <a
-          href="/comparisons/"
-          aria-current={isComparisons ? 'page' : undefined}
-        >Compare</a>
-        <a
-          href="/search/"
-          aria-current={isSearch ? 'page' : undefined}
-        >Search</a>
-        <a href="/about/">About</a>
-      </nav>
-
-      <!-- Theme toggle -->
-      <div class="header-actions">
-        <button
-          class="theme-toggle"
-          id="theme-toggle-desktop"
-          aria-label="Switch theme"
-          title="Switch theme"
-        >
-          <span class="icon" aria-hidden="true" id="theme-icon-desktop">
-            <!-- Icon updated by theme.js after load -->
-            ◑
-          </span>
-        </button>
-      </div>
-
+    <div class="topbar__actions">
+      <button class="topbar__theme-btn theme-toggle" id="theme-toggle-topbar" aria-label="Switch theme" title="Switch theme">
+        <span class="icon" id="theme-icon-topbar" aria-hidden="true">◑</span>
+      </button>
     </div>
   </header>
 
-  <!-- ════════════════════════════════════════════════════════
-       PAGE SHELL
-       On mobile: single stacked column.
-       On desktop: sidebar rail left + main content right.
-       Max-width and padding handled by .site-container
-       in components.css and style.css.
-       ════════════════════════════════════════════════════════ -->
+  <!-- ═══════════════ DESKTOP HEADER ═══════════════ -->
+  <header class="desktop-header" role="banner">
+    <div class="header-grid">
+      <a href="/" class="logo" aria-label="StackPick homepage">STACK<span>·</span>PICK</a>
+
+      <nav class="desktop-nav" aria-label="Main navigation">
+        <a href="/"             aria-current={isHome        ? 'page' : undefined}>Home</a>
+        <a href="/hardware/"    aria-current={isHardware    ? 'page' : undefined}>Hardware</a>
+        <a href="/comparisons/" aria-current={isComparisons ? 'page' : undefined}>Compare</a>
+        <a href="/guides/"      aria-current={isSetups      ? 'page' : undefined}>Setups</a>
+        <a href="/wishlist/"    aria-current={isWishlist    ? 'page' : undefined}>Wishlist</a>
+        <a href="/search/"      aria-current={isSearch      ? 'page' : undefined}>Search</a>
+      </nav>
+
+      <div class="header-actions">
+        <button class="theme-toggle" id="theme-toggle-desktop" aria-label="Switch theme" title="Switch theme">
+          <span class="icon" aria-hidden="true" id="theme-icon-desktop">◑</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ═══════════════ PAGE SHELL ═══════════════ -->
   <div class="site-container">
 
-    <!-- ── Sidebar — desktop only (hidden via CSS on mobile) ── -->
+    <!-- Desktop sidebar -->
     <aside class="sidebar" aria-label="Category navigation">
       <div class="sidebar-inner">
 
-        <!-- Sidebar logo — shown only on desktop -->
-        <a href="/" class="logo" aria-label="StackPick homepage">
-          STACK<span class="logo-dot">·</span>PICK
-        </a>
-
-        <!-- Hardware categories -->
         <div class="sidebar-group">
           <p class="label">Hardware</p>
           <nav aria-label="Browse by hardware category">
-            <a
-              href="/mice/"
-              class={sidebarLinkClass(isMice)}
-              aria-current={isMice ? 'page' : undefined}
-            >
+            <a href="/mice/"      class={sidebarLinkClass(isMice)}      aria-current={isMice      ? 'page' : undefined}>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="2" width="14" height="20" rx="7"/><path d="M12 2v8"/></svg>
               Mice
             </a>
-            <a
-              href="/keyboards/"
-              class={sidebarLinkClass(isKeyboards)}
-              aria-current={isKeyboards ? 'page' : undefined}
-            >
+            <a href="/keyboards/" class={sidebarLinkClass(isKeyboards)} aria-current={isKeyboards ? 'page' : undefined}>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M6 11h.01M9 11h.01M12 11h.01M15 11h.01M18 11h.01M6 15h12"/></svg>
               Keyboards
             </a>
-            <a
-              href="/headsets/"
-              class={sidebarLinkClass(isHeadsets)}
-              aria-current={isHeadsets ? 'page' : undefined}
-            >
+            <a href="/headsets/"  class={sidebarLinkClass(isHeadsets)}  aria-current={isHeadsets  ? 'page' : undefined}>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 14h2a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-7a9 9 0 0 1 18 0v7a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h2"/></svg>
               Headsets
             </a>
-            <a
-              href="/monitors/"
-              class={sidebarLinkClass(isMonitors)}
-              aria-current={isMonitors ? 'page' : undefined}
-            >
+            <a href="/monitors/"  class={sidebarLinkClass(isMonitors)}  aria-current={isMonitors  ? 'page' : undefined}>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
               Monitors
             </a>
-            <a
-              href="/chairs/"
-              class={sidebarLinkClass(isChairs)}
-              aria-current={isChairs ? 'page' : undefined}
-            >
+            <a href="/chairs/"    class={sidebarLinkClass(isChairs)}    aria-current={isChairs    ? 'page' : undefined}>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2v6M18 2v6M6 8h12M8 22v-4M16 22v-4M6 14h12a2 2 0 0 0 2-2V8H4v4a2 2 0 0 0 2 2z"/></svg>
               Chairs
             </a>
           </nav>
         </div>
 
-        <!-- Editorial sections -->
         <div class="sidebar-group">
           <p class="label">Editorial</p>
           <nav aria-label="Browse editorial content">
-            <a
-              href="/guides/"
-              class={sidebarLinkClass(isGuides)}
-              aria-current={isGuides ? 'page' : undefined}
-            >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+            <a href="/guides/"      class={sidebarLinkClass(isSetups)}      aria-current={isSetups      ? 'page' : undefined}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
               Setup Guides
             </a>
-            <a
-              href="/comparisons/"
-              class={sidebarLinkClass(isComparisons)}
-              aria-current={isComparisons ? 'page' : undefined}
-            >
+            <a href="/comparisons/" class={sidebarLinkClass(isComparisons)} aria-current={isComparisons ? 'page' : undefined}>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
               Comparisons
+            </a>
+            <a href="/wishlist/"    class={sidebarLinkClass(isWishlist)}    aria-current={isWishlist    ? 'page' : undefined}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+              Wishlist
             </a>
           </nav>
         </div>
 
-        <!-- Sidebar theme toggle -->
         <div class="sidebar-group">
           <button
             class="theme-toggle"
@@ -308,330 +231,462 @@ function sidebarLinkClass(active: boolean): string {
       </div>
     </aside>
 
-    <!-- ── Main content area ── -->
+    <!-- Main content -->
     <main class="main-content" id="main-content" tabindex="-1">
-
-      <!-- Hero slot — full bleed, no padding wrapper -->
       <slot name="hero" />
-
-      <!-- Default slot — wrapped in padding container -->
       <div class="content-pad">
         <slot />
       </div>
-
     </main>
   </div>
 
-  <!-- ════════════════════════════════════════════════════════
-       FOOTER
-       ════════════════════════════════════════════════════════ -->
+  <!-- ═══════════════ FOOTER ═══════════════ -->
   <footer class="site-footer" role="contentinfo">
     <div class="site-footer__inner">
-
-      <div>
-        <a href="/" class="site-footer__brand" aria-label="StackPick homepage">
-          STACK<span class="logo-dot">·</span>PICK
-        </a>
-      </div>
-
+      <a href="/" class="site-footer__brand" aria-label="StackPick homepage">
+        STACK<span>·</span>PICK
+      </a>
       <p class="site-footer__copy">
         Researched gaming gear for UK gamers. Amazon UK affiliate links —
         <a href="/about/#disclosure">disclosure</a>.
         &copy; {new Date().getFullYear()} StackPick. All prices verified weekly.
       </p>
-
     </div>
   </footer>
 
-  <!-- ════════════════════════════════════════════════════════
-       MOBILE BOTTOM TAB BAR
-       Fixed. Always visible on mobile. Hidden on desktop.
-       Active state set at build time via pathname.
-       "More" active state managed by JS when overlay opens.
-       ════════════════════════════════════════════════════════ -->
+  <!-- ═══════════════ MOBILE BOTTOM NAV ═══════════════ -->
   <nav class="mobile-dock" aria-label="Mobile navigation">
     <div class="dock-container">
 
       <!-- Home -->
-      <a
-        href="/"
-        class:list={['dock-item', isHome && 'active']}
-        aria-current={isHome ? 'page' : undefined}
-        aria-label="Home"
-      >
+      <a href="/" class:list={['dock-item', isHome && 'active']} aria-current={isHome ? 'page' : undefined} aria-label="Home">
         <svg class="dock-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-          <polyline points="9 22 9 12 15 12 15 22"/>
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
         </svg>
         <span class="dock-label">Home</span>
       </a>
 
-      <!-- Search -->
-      <a
-        href="/search/"
-        class:list={['dock-item', isSearch && 'active']}
-        aria-current={isSearch ? 'page' : undefined}
-        aria-label="Search"
-      >
+      <!-- Hardware -->
+      <a href="/hardware/" class:list={['dock-item', isHardware && 'active']} aria-current={isHardware ? 'page' : undefined} aria-label="Browse hardware">
         <svg class="dock-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <circle cx="11" cy="11" r="8"/>
-          <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          <rect x="5" y="2" width="14" height="20" rx="7"/><path d="M12 2v8"/>
         </svg>
-        <span class="dock-label">Search</span>
+        <span class="dock-label">Hardware</span>
       </a>
 
-      <!-- Centre hub — Guides CTA -->
-      <div class="dock-brand-center">
-        <a
-          href="/guides/"
-          class="dock-cta"
-          aria-label="Setup guides"
-        >
-          PICK
-        </a>
+      <!-- Centre: Compare -->
+      <div class="dock-cta-wrap">
+        <a href="/comparisons/" class="dock-cta" aria-label="Compare gear">VS</a>
       </div>
 
-      <!-- Compare -->
-      <a
-        href="/comparisons/"
-        class:list={['dock-item', isComparisons && 'active']}
-        aria-current={isComparisons ? 'page' : undefined}
-        aria-label="Compare gear"
-      >
+      <!-- Setups -->
+      <a href="/guides/" class:list={['dock-item', isSetups && 'active']} aria-current={isSetups ? 'page' : undefined} aria-label="Setup guides">
         <svg class="dock-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <line x1="18" y1="20" x2="18" y2="10"/>
-          <line x1="12" y1="20" x2="12" y2="4"/>
-          <line x1="6" y1="20" x2="6" y2="14"/>
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
         </svg>
-        <span class="dock-label">Compare</span>
+        <span class="dock-label">Setups</span>
       </a>
 
-      <!-- More — triggers overlay -->
-      <button
-        class="dock-item"
-        id="more-btn"
-        aria-label="More navigation options"
-        aria-expanded="false"
-        aria-controls="more-panel"
-      >
+      <!-- Wishlist -->
+      <a href="/wishlist/" class:list={['dock-item', isWishlist && 'active']} aria-current={isWishlist ? 'page' : undefined} aria-label="Wishlist" id="dock-wishlist">
+        <span class="wishlist-badge" style="display:none;" aria-hidden="true"></span>
         <svg class="dock-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <circle cx="5" cy="12" r="1.5" fill="currentColor"/>
-          <circle cx="12" cy="12" r="1.5" fill="currentColor"/>
-          <circle cx="19" cy="12" r="1.5" fill="currentColor"/>
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
         </svg>
-        <span class="dock-label">More</span>
-      </button>
+        <span class="dock-label">Wishlist</span>
+      </a>
 
     </div>
   </nav>
 
-  <!-- ════════════════════════════════════════════════════════
-       MOBILE MORE OVERLAY
-       Full-screen panel triggered by the "More" dock item.
-       Contains secondary nav + theme switcher.
-       ════════════════════════════════════════════════════════ -->
-  <div
-    class="more-overlay"
-    id="more-panel"
-    role="dialog"
-    aria-label="More navigation options"
-    aria-modal="true"
-    aria-hidden="true"
-  >
-
-    <!-- Close button -->
-    <button
-      class="close-overlay"
-      id="close-more"
-      aria-label="Close menu"
-    >
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
-        <line x1="18" y1="6" x2="6" y2="18"/>
-        <line x1="6" y1="6" x2="18" y2="18"/>
-      </svg>
-    </button>
-
-    <div class="overlay-content">
-
-      <!-- Hardware section -->
-      <p class="overlay-heading">Hardware</p>
-      <div class="overlay-grid">
-        <a href="/mice/">Mice</a>
-        <a href="/keyboards/">Keyboards</a>
-        <a href="/headsets/">Headsets</a>
-        <a href="/monitors/">Monitors</a>
-        <a href="/chairs/">Chairs</a>
-        <a href="/search/">Search</a>
+  <!-- ═══════════════ PRODUCT OVERLAY ═══════════════ -->
+  <!-- Global slide-up overlay for product details -->
+  <div class="prod-overlay" id="prod-overlay" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Product details">
+    <div class="prod-overlay__scrim" id="prod-overlay-scrim"></div>
+    <div class="prod-overlay__sheet" id="prod-overlay-sheet">
+      <div class="prod-overlay__handle" aria-hidden="true"></div>
+      <button class="prod-overlay__close" id="prod-overlay-close" aria-label="Close">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+      <div class="prod-overlay__content" id="prod-overlay-content">
+        <!-- Populated by JS -->
       </div>
-
-      <!-- System section -->
-      <p class="overlay-heading">Picks</p>
-      <div class="overlay-grid">
-        <a href="/guides/">Setup Guides</a>
-        <a href="/comparisons/">Comparisons</a>
-        <a href="/about/">About</a>
-        <!-- Theme cycle button -->
-        <button
-          id="theme-cycle-btn"
-          class="theme-pill"
-          aria-label="Switch colour theme"
-        >
-          <span id="theme-cycle-label">Theme: Light</span>
-        </button>
-      </div>
-
     </div>
   </div>
 
-  <!-- ════════════════════════════════════════════════════════
-       INLINE SCRIPTS
-       Vanilla JS only. No dependencies.
-       Executed after the DOM is parsed.
-       ════════════════════════════════════════════════════════ -->
+  <!-- ═══════════════ SCRIPTS ═══════════════ -->
   <script>
-    // ── 01 MOBILE OVERLAY — open / close ────────────────────
-    const moreBtn   = document.getElementById('more-btn')   as HTMLButtonElement | null;
-    const closeMore = document.getElementById('close-more') as HTMLButtonElement | null;
-    const morePanel = document.getElementById('more-panel') as HTMLElement | null;
-    const body      = document.body;
+    // ── 01 TOPBAR HIDE ON SCROLL ─────────────────────
+    (function() {
+      const topbar = document.getElementById('topbar');
+      if (!topbar) return;
+      let lastY = window.scrollY;
+      let ticking = false;
+      window.addEventListener('scroll', () => {
+        if (!ticking) {
+          window.requestAnimationFrame(() => {
+            const y = window.scrollY;
+            if (y > lastY && y > 60) {
+              topbar.classList.add('topbar--hidden');
+            } else {
+              topbar.classList.remove('topbar--hidden');
+            }
+            lastY = y;
+            ticking = false;
+          });
+          ticking = true;
+        }
+      }, { passive: true });
+    })();
 
-    function openOverlay(): void {
-      if (!morePanel || !moreBtn) return;
-      morePanel.classList.add('open');
-      morePanel.setAttribute('aria-hidden', 'false');
-      moreBtn.setAttribute('aria-expanded', 'true');
-      moreBtn.classList.add('active');
-      body.style.overflow = 'hidden'; // Prevent background scroll
-    }
+    // ── 02 TOPBAR SEARCH REDIRECT ────────────────────
+    (function() {
+      const input = document.getElementById('topbar-search') as HTMLInputElement | null;
+      if (!input) return;
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          const q = encodeURIComponent(input.value.trim());
+          if (q) window.location.href = `/search/?q=${q}`;
+        }
+      });
+      // On search pages, don't redirect — let the page handle it
+    })();
 
-    function closeOverlay(): void {
-      if (!morePanel || !moreBtn) return;
-      morePanel.classList.remove('open');
-      morePanel.setAttribute('aria-hidden', 'true');
-      moreBtn.setAttribute('aria-expanded', 'false');
-      moreBtn.classList.remove('active');
-      body.style.overflow = '';
-    }
-
-    moreBtn?.addEventListener('click', openOverlay);
-    closeMore?.addEventListener('click', closeOverlay);
-
-    // Close on overlay backdrop click (clicking outside the content)
-    morePanel?.addEventListener('click', (e: MouseEvent) => {
-      if (e.target === morePanel) closeOverlay();
-    });
-
-    // Close on Escape key
-    document.addEventListener('keydown', (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && morePanel?.classList.contains('open')) {
-        closeOverlay();
-        moreBtn?.focus(); // Return focus to trigger
-      }
-    });
-
-    // ── 02 THEME SYSTEM ─────────────────────────────────────
-    // Three themes: light → dark → earth → light (cycles)
-    // Saved to localStorage. Respects OS on first visit.
-    // Applies .theme-transitioning to animate surface changes.
-
-    const THEMES     = ['light', 'dark', 'earth'] as const;
-    const THEME_LABELS: Record<string, string> = {
-      light: 'Theme: Light',
-      dark:  'Theme: Dark',
-      earth: 'Theme: Earth',
-    };
-    const THEME_ICONS: Record<string, string> = {
-      light: '☀',
-      dark:  '◑',
-      earth: '◈',
-    };
+    // ── 03 THEME SYSTEM ──────────────────────────────
+    const THEMES = ['light', 'dark', 'earth'] as const;
+    const THEME_ICONS: Record<string, string> = { light: '☀', dark: '◑', earth: '◈' };
+    const THEME_LABELS: Record<string, string> = { light: 'Theme: Light', dark: 'Theme: Dark', earth: 'Theme: Earth' };
 
     function getSavedTheme(): string | null {
       try { return localStorage.getItem('sp-theme'); } catch { return null; }
     }
-
     function saveTheme(theme: string): void {
-      try { localStorage.setItem('sp-theme', theme); } catch { /* noop */ }
+      try { localStorage.setItem('sp-theme', theme); } catch {}
     }
 
     function applyTheme(theme: string): void {
       const html = document.documentElement;
-
-      // Apply transition class for smooth surface swap
       html.classList.add('theme-transitioning');
       html.setAttribute('data-theme', theme);
+      setTimeout(() => html.classList.remove('theme-transitioning'), 300);
 
-      // Remove transition class after animation completes
-      setTimeout(() => html.classList.remove('theme-transitioning'), 350);
-
-      // Update all theme toggle icons
       const icon  = THEME_ICONS[theme]  ?? '◑';
       const label = THEME_LABELS[theme] ?? 'Switch theme';
 
-      document.querySelectorAll<HTMLElement>('.theme-toggle').forEach(btn => {
-        const iconEl = btn.querySelector<HTMLElement>('#theme-icon-desktop, #theme-icon-sidebar');
-        if (iconEl) iconEl.textContent = icon;
-        else {
-          const iconFallback = btn.querySelector<HTMLElement>('.icon');
-          if (iconFallback) iconFallback.textContent = icon;
-        }
-        btn.setAttribute('aria-label', `Switch theme (currently ${theme})`);
+      ['theme-icon-topbar', 'theme-icon-desktop', 'theme-icon-sidebar'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = icon;
       });
 
-      // Update sidebar label
       const sidebarLabel = document.getElementById('sidebar-theme-label');
-      if (sidebarLabel) {
-        sidebarLabel.textContent = theme.charAt(0).toUpperCase() + theme.slice(1);
-      }
+      if (sidebarLabel) sidebarLabel.textContent = theme.charAt(0).toUpperCase() + theme.slice(1);
 
-      // Update overlay cycle button
       const cycleLabel = document.getElementById('theme-cycle-label');
       if (cycleLabel) cycleLabel.textContent = label;
     }
 
     function cycleTheme(): void {
       const current = document.documentElement.getAttribute('data-theme') ?? 'light';
-      const idx     = THEMES.indexOf(current as typeof THEMES[number]);
-      const next    = THEMES[(idx + 1) % THEMES.length];
+      const idx = THEMES.indexOf(current as typeof THEMES[number]);
+      const next = THEMES[(idx + 1) % THEMES.length];
       applyTheme(next);
       saveTheme(next);
     }
 
-    // Wire up all theme controls
     document.querySelectorAll<HTMLElement>('.theme-toggle, #theme-cycle-btn').forEach(btn => {
       btn.addEventListener('click', cycleTheme);
     });
 
-    // Sync initial UI state with the theme already applied by the inline script
-    const initialTheme = document.documentElement.getAttribute('data-theme') ?? 'light';
-    applyTheme(initialTheme);
+    const initial = document.documentElement.getAttribute('data-theme') ?? 'light';
+    applyTheme(initial);
 
-    // Follow OS preference changes when no saved preference
     window.matchMedia?.('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
       if (!getSavedTheme()) applyTheme(e.matches ? 'dark' : 'light');
     });
 
-    // ── 03 ACTIVE SIDEBAR LINK — runtime refinement ──────────
-    // Build-time active states handle the main cases.
-    // This catches edge cases like /guides/some-slug/ where
-    // the sidebar "Setup Guides" link should still be active.
-    (function setActiveSidebarLinks(): void {
-      const currentPath = window.location.pathname;
+    // ── 04 PRODUCT OVERLAY ───────────────────────────
+    const overlay      = document.getElementById('prod-overlay')       as HTMLElement | null;
+    const overlaySheet = document.getElementById('prod-overlay-sheet') as HTMLElement | null;
+    const overlayScrim = document.getElementById('prod-overlay-scrim') as HTMLElement | null;
+    const overlayClose = document.getElementById('prod-overlay-close') as HTMLElement | null;
+    const overlayContent = document.getElementById('prod-overlay-content') as HTMLElement | null;
+
+    function openProductOverlay(data: ProductData): void {
+      if (!overlay || !overlayContent) return;
+      overlayContent.innerHTML = buildOverlayHTML(data);
+
+      overlay.classList.add('open');
+      overlay.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+
+      // Wire up wishlist button inside overlay
+      const wb = overlayContent.querySelector<HTMLButtonElement>('.btn-wishlist');
+      if (wb) {
+        const pid = wb.dataset.id ?? '';
+        updateWishlistBtn(wb, pid);
+        wb.addEventListener('click', (e) => {
+          e.stopPropagation();
+          toggleWishlist(pid);
+          updateWishlistBtn(wb, pid);
+          animateBtn(wb);
+        });
+      }
+
+      overlaySheet?.focus();
+    }
+
+    function closeProductOverlay(): void {
+      if (!overlay) return;
+      overlay.classList.remove('open');
+      overlay.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+
+    overlayClose?.addEventListener('click', closeProductOverlay);
+    overlayScrim?.addEventListener('click', closeProductOverlay);
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && overlay?.classList.contains('open')) closeProductOverlay();
+    });
+
+    // Delegate card taps
+    document.addEventListener('click', (e) => {
+      const card = (e.target as HTMLElement).closest<HTMLElement>('[data-pjson]');
+      if (!card) return;
+      // Don't open overlay if clicking a button/link inside the card
+      const clicked = e.target as HTMLElement;
+      if (clicked.closest('button, a, .btn-wishlist, .btn-compare, .tag')) return;
+
+      const raw = card.dataset.pjson;
+      if (!raw) return;
+      try {
+        const data = JSON.parse(raw) as ProductData;
+        openProductOverlay(data);
+        // Animate card
+        card.classList.add('card-tapped');
+        setTimeout(() => card.classList.remove('card-tapped'), 300);
+      } catch {}
+    });
+
+    // ── 05 WISHLIST (localStorage) ────────────────────
+    const WL_KEY = 'sp-wishlist-v1';
+
+    function getWishlist(): string[] {
+      try { return JSON.parse(localStorage.getItem(WL_KEY) ?? '[]'); } catch { return []; }
+    }
+
+    function saveWishlist(ids: string[]): void {
+      try { localStorage.setItem(WL_KEY, JSON.stringify(ids)); } catch {}
+    }
+
+    function toggleWishlist(id: string): void {
+      const wl = getWishlist();
+      const idx = wl.indexOf(id);
+      if (idx === -1) wl.push(id);
+      else wl.splice(idx, 1);
+      saveWishlist(wl);
+      updateWishlistBadge();
+      // Dispatch event for wishlist page to react
+      window.dispatchEvent(new CustomEvent('wishlist-changed', { detail: { wl } }));
+    }
+
+    function isWishlisted(id: string): boolean {
+      return getWishlist().includes(id);
+    }
+
+    function updateWishlistBtn(btn: HTMLButtonElement, id: string): void {
+      const inList = isWishlisted(id);
+      btn.classList.toggle('wishlisted', inList);
+      btn.setAttribute('aria-pressed', String(inList));
+      btn.innerHTML = inList
+        ? `<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> Saved`
+        : `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> Save`;
+    }
+
+    function updateWishlistBadge(): void {
+      const count = getWishlist().length;
+      const badge = document.getElementById('dock-wishlist')?.querySelector('.wishlist-badge');
+      if (badge) {
+        if (count > 0) {
+          badge.textContent = String(count);
+          (badge as HTMLElement).style.display = 'flex';
+        } else {
+          (badge as HTMLElement).style.display = 'none';
+        }
+      }
+    }
+
+    // Init all wishlist buttons on page
+    function initWishlistButtons(): void {
+      document.querySelectorAll<HTMLButtonElement>('.btn-wishlist[data-id]').forEach(btn => {
+        const id = btn.dataset.id ?? '';
+        updateWishlistBtn(btn, id);
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          toggleWishlist(id);
+          updateWishlistBtn(btn, id);
+          animateBtn(btn);
+        });
+      });
+    }
+
+    // Expose for pages to call
+    (window as any).__sp = { toggleWishlist, isWishlisted, getWishlist, updateWishlistBtn, initWishlistButtons };
+
+    updateWishlistBadge();
+    document.addEventListener('DOMContentLoaded', () => {
+      initWishlistButtons();
+      updateWishlistBadge();
+    });
+
+    // ── 06 BUTTON ANIMATIONS ─────────────────────────
+    function animateBtn(btn: HTMLElement): void {
+      btn.classList.add('btn-bounce');
+      setTimeout(() => btn.classList.remove('btn-bounce'), 300);
+    }
+
+    document.addEventListener('click', (e) => {
+      const btn = (e.target as HTMLElement).closest<HTMLElement>('.btn-primary, .btn-secondary');
+      if (btn) animateBtn(btn);
+    });
+
+    // ── 07 ACTIVE SIDEBAR LINKS ──────────────────────
+    (function() {
+      const p = window.location.pathname;
       document.querySelectorAll<HTMLAnchorElement>('.sidebar-link, .desktop-nav a').forEach(link => {
         const href = link.getAttribute('href') ?? '';
-        if (href.length > 1 && currentPath.startsWith(href)) {
+        if (href.length > 1 && p.startsWith(href)) {
           link.classList.add('active');
           link.setAttribute('aria-current', 'page');
         }
       });
     })();
 
-    // ── 04 SERVICE WORKER REGISTRATION ──────────────────────
+    // ── 08 SERVICE WORKER ────────────────────────────
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js').catch(() => { /* noop */ });
+        navigator.serviceWorker.register('/sw.js').catch(() => {});
       });
     }
+
+    // ── TYPES ────────────────────────────────────────
+    interface ProductData {
+      id:          string;
+      name:        string;
+      brand:       string;
+      price:       string;
+      msrp?:       string | null;
+      savings?:    string | null;
+      emoji:       string;
+      seam:        string;
+      badge:       string;
+      tags:        string[];
+      specs:       string[];
+      pros:        string[];
+      cons:        string[];
+      affiliate:   string;
+      inStock:     boolean;
+      nextDay:     boolean;
+      rating:      number;
+    }
+
+    function tagClass(t: string): string {
+      const map: Record<string,string> = {
+        fps:'fps', pro:'pro', budget:'budget', value:'value', entry:'entry',
+        wireless:'wireless', lightweight:'lightweight', comfort:'comfort',
+        ergonomic:'ergonomic', audiophile:'audiophile', creator:'creator',
+        'hall-effect':'hall-effect'
+      };
+      return `tag tag--${map[t] ?? 'default'}`;
+    }
+
+    function buildOverlayHTML(d: ProductData): string {
+      const SEAM_MAP: Record<string,string> = {
+        crimson: 'var(--palette-red-500)',
+        cobalt:  'var(--palette-navy-600)',
+        jade:    'var(--palette-navy-400)',
+        slate:   'var(--palette-carbon-600)',
+        amber:   'var(--palette-silver-600)',
+      };
+      const seamColor = SEAM_MAP[d.seam] ?? 'var(--color-accent)';
+
+      const starsHTML = buildStarsHTML(d.rating ?? 4.5);
+      const specsHTML = d.specs.map(s => `<span class="spec-pill">${s}</span>`).join('');
+      const tagsHTML  = d.tags.map(t => `<span class="${tagClass(t)}">${t}</span>`).join('');
+      const prosHTML  = d.pros.map(p => `<li>${p}</li>`).join('');
+      const consHTML  = d.cons.map(c => `<li>${c}</li>`).join('');
+
+      const savingBadge = d.savings
+        ? `<span class="price-badge">Save ${d.savings}</span>` : '';
+      const msrp = d.msrp
+        ? `<span class="price-msrp">${d.msrp}</span>` : '';
+      const stockStamp  = d.inStock  ? '<span class="stamp stamp--stock">In Stock</span>' : '';
+      const nextDayStamp = d.nextDay ? '<span class="stamp stamp--nextday">Next Day</span>' : '';
+
+      return `
+        <div class="prod-overlay__header">
+          <div class="prod-overlay__visual" style="--seam-color:${seamColor}">
+            <span aria-hidden="true">${d.emoji}</span>
+          </div>
+          <div class="prod-overlay__info">
+            <div class="prod-overlay__brand">${d.brand}</div>
+            <h2 class="prod-overlay__name">${d.name}</h2>
+            <div class="prod-overlay__price-row">
+              <span class="price-current">${d.price}</span>
+              ${msrp}
+              ${savingBadge}
+              ${starsHTML}
+            </div>
+            <div style="display:flex;gap:4px;margin-top:6px;flex-wrap:wrap;">
+              ${stockStamp}${nextDayStamp}
+            </div>
+          </div>
+        </div>
+
+        ${specsHTML ? `
+        <div class="prod-overlay__section">
+          <div class="prod-overlay__section-label">Specs</div>
+          <div class="prod-overlay__specs">${specsHTML}</div>
+        </div>` : ''}
+
+        <div class="prod-overlay__section">
+          <div class="prod-overlay__prose">
+            <div>
+              <div class="prod-overlay__col-label prod-overlay__col-label--pros">Pros</div>
+              <ul class="prod-overlay__list">${prosHTML}</ul>
+            </div>
+            <div>
+              <div class="prod-overlay__col-label prod-overlay__col-label--cons">Cons</div>
+              <ul class="prod-overlay__list">${consHTML}</ul>
+            </div>
+          </div>
+        </div>
+
+        ${tagsHTML ? `
+        <div class="prod-overlay__tags">${tagsHTML}</div>` : ''}
+
+        <div class="prod-overlay__cta">
+          <a href="${d.affiliate}" class="btn-primary" target="_blank" rel="noopener sponsored"
+            data-product="${d.id}" data-type="overlay-cta"
+            aria-label="Buy ${d.name} on Amazon UK — ${d.price}">
+            View on Amazon
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+          </a>
+          <button class="btn-wishlist" data-id="${d.id}" aria-pressed="false">
+            ♡ Save
+          </button>
+        </div>
+      `;
+    }
+
+    function buildStarsHTML(rating: number): string {
+      const full = Math.floor(rating);
+      const stars = '★'.repeat(full) + (rating % 1 >= 0.5 ? '½' : '');
+      return `<div class="stars"><span class="stars__symbol">${stars}</span><span class="stars__score">${rating.toFixed(1)}</span></div>`;
+    }
+
+    // Make overlay builder available globally
+    (window as any).__sp.buildStarsHTML = buildStarsHTML;
+    (window as any).__sp.tagClass = tagClass;
   </script>
 
 </body>

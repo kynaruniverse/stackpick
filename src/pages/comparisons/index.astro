@@ -1,10 +1,38 @@
 ---
-// src/pages/comparisons/index.astro
+// src/pages/comparisons/index.astro — v6.0
+// Compare page: swipe-based product comparison
+
 import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 
-const comparisons = await getCollection('comparisons');
-comparisons.sort((a, b) => a.data.title.localeCompare(b.data.title));
+const allProducts   = await getCollection('products');
+const allComparisons = await getCollection('comparisons');
+allComparisons.sort((a, b) => a.data.title.localeCompare(b.data.title));
+
+// Sort products alphabetically by name for compare picker
+allProducts.sort((a, b) => a.data.name.localeCompare(b.data.name));
+
+const SEAM_COLOR: Record<string, string> = {
+  crimson: 'var(--palette-red-500)',
+  cobalt:  'var(--palette-navy-600)',
+  jade:    'var(--palette-navy-400)',
+  slate:   'var(--palette-carbon-600)',
+  amber:   'var(--palette-silver-600)',
+};
+
+function ratingFromRank(rank: number): number {
+  return [4.9, 4.7, 4.5, 4.3, 4.1][Math.min(rank - 1, 4)] ?? 4.0;
+}
+
+function tagClass(t: string): string {
+  const map: Record<string,string> = {
+    fps:'fps', pro:'pro', budget:'budget', value:'value', entry:'entry',
+    wireless:'wireless', lightweight:'lightweight', comfort:'comfort',
+    ergonomic:'ergonomic', audiophile:'audiophile', creator:'creator',
+    'hall-effect':'hall-effect'
+  };
+  return `tag tag--${map[t] ?? 'default'}`;
+}
 ---
 
 <Base
@@ -12,11 +40,12 @@ comparisons.sort((a, b) => a.data.title.localeCompare(b.data.title));
   description="Head-to-head comparisons of the top gaming gear. Which mouse, keyboard, headset or monitor wins for UK gamers?"
   canonical="https://stackpick.co.uk/comparisons/"
 >
-  <section slot="hero" class="hero hero--inner">
+
+  <section slot="hero" class="hero hero--inner" aria-label="Compare gear">
     <div class="hero-container container">
       <p class="hero-eyebrow">Comparisons</p>
-      <h1>Head-to-Head Comparisons</h1>
-      <p>Side-by-side breakdowns to help you decide between the top picks.</p>
+      <h1>Compare Gear</h1>
+      <p>Swipe through side-by-side breakdowns. Add favourites to wishlist.</p>
     </div>
   </section>
 
@@ -25,15 +54,110 @@ comparisons.sort((a, b) => a.data.title.localeCompare(b.data.title));
       <ol class="breadcrumb-list">
         <li><a href="/">Home</a></li>
         <li class="breadcrumb-sep" aria-hidden="true">/</li>
-        <li aria-current="page">Comparisons</li>
+        <li aria-current="page">Compare</li>
       </ol>
     </div>
   </nav>
 
-  <section class="section">
+  <!-- ═══ SWIPE COMPARE (all products) ═══ -->
+  <section aria-label="Swipe through all products">
+    <div class="section-head">
+      <span class="section-head__label">All Products</span>
+      <span class="section-head__title">Swipe to Compare</span>
+      <span id="compare-count" class="compare-nav__count" style="margin-left:auto; font-family:var(--font-mono); font-size:var(--text-xs); color:var(--color-text-muted);">1 / {allProducts.length}</span>
+    </div>
+
+    <div class="compare-swipe" id="compare-swipe" aria-label="Product cards">
+      {allProducts.map((product) => {
+        const rating = ratingFromRank(product.data.rank ?? 3);
+        const seamColor = SEAM_COLOR[product.data.seam] ?? 'var(--color-accent)';
+        const starsStr = '★'.repeat(Math.floor(rating)) + (rating % 1 >= 0.5 ? '½' : '');
+        return (
+          <div class="compare-card" style={`--seam-color: ${seamColor};`} data-id={product.data.id}>
+
+            <!-- Visual -->
+            <div class="compare-card__visual">
+              <div class="compare-card__visual-emoji" aria-hidden="true">{product.data.emoji}</div>
+            </div>
+
+            <!-- Body -->
+            <div class="compare-card__body">
+              <div class="compare-card__brand">{product.data.brand}</div>
+              <h2 class="compare-card__name">{product.data.name}</h2>
+
+              <div class="compare-card__price">
+                <span class="price-current">{product.data.price}</span>
+                {product.data.msrp && <span class="price-msrp" style="margin-left:8px;">{product.data.msrp}</span>}
+                {product.data.savings && <span class="price-badge" style="margin-left:6px;">-{product.data.savings}</span>}
+              </div>
+
+              <div class="stars" style="margin-top: 6px;" aria-label={`Rating: ${rating}`}>
+                <span class="stars__symbol" aria-hidden="true">{starsStr}</span>
+                <span class="stars__score">{rating.toFixed(1)}</span>
+              </div>
+
+              <div class="compare-card__tags" style="margin-top: 8px;">
+                {product.data.tags.slice(0,3).map((t: string) => (
+                  <span class={tagClass(t)}>{t}</span>
+                ))}
+              </div>
+
+              <div class="compare-card__specs">
+                {product.data.specs.map((s: string) => (
+                  <span class="spec-pill">{s}</span>
+                ))}
+              </div>
+
+              <div class="compare-card__prose">
+                <div>
+                  <div class="compare-card__col-label compare-card__col-label--pros">Pros</div>
+                  <ul class="compare-card__list">
+                    {product.data.pros.slice(0,3).map((p: string) => <li>{p}</li>)}
+                  </ul>
+                </div>
+                <div>
+                  <div class="compare-card__col-label compare-card__col-label--cons">Cons</div>
+                  <ul class="compare-card__list">
+                    {product.data.cons.slice(0,2).map((c: string) => <li>{c}</li>)}
+                  </ul>
+                </div>
+              </div>
+
+              <div class="compare-card__actions">
+                <a href={product.data.affiliate} class="btn-primary" target="_blank" rel="noopener sponsored"
+                  data-product={product.data.id} data-type="compare-cta">
+                  Amazon UK
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+                </a>
+                <button class="btn-wishlist" data-id={product.data.id} aria-pressed="false">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                  Save
+                </button>
+              </div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+
+    <!-- Swipe nav dots -->
+    <div class="compare-nav" aria-hidden="true">
+      {allProducts.slice(0, 8).map((_, i) => (
+        <button class:list={['compare-nav__dot', i === 0 && 'active']} data-index={i}></button>
+      ))}
+      {allProducts.length > 8 && <span class="compare-nav__count">+{allProducts.length - 8} more</span>}
+    </div>
+  </section>
+
+  <!-- ═══ EDITORIAL COMPARISONS ═══ -->
+  <section aria-label="Head-to-head comparisons">
+    <div class="section-head">
+      <span class="section-head__label">Editorial</span>
+      <span class="section-head__title">Head-to-Head</span>
+    </div>
     <div class="also-grid">
-      {comparisons.map(comp => (
-        <a href={`/comparisons/${comp.data.slug}/`} class="also-card">
+      {allComparisons.map(comp => (
+        <a href={`/comparisons/${comp.slug}/`} class="also-card">
           <span class="also-card__icon" aria-hidden="true">{comp.data.emoji}</span>
           <div>
             <h2 class="also-card__title">{comp.data.title}</h2>
@@ -46,4 +170,31 @@ comparisons.sort((a, b) => a.data.title.localeCompare(b.data.title));
       ))}
     </div>
   </section>
+
+  <script>
+    // ── Scroll counter + nav dots ────────────────────
+    const swipe = document.getElementById('compare-swipe');
+    const dots  = document.querySelectorAll<HTMLElement>('.compare-nav__dot');
+    const count = document.getElementById('compare-count');
+    const total = swipe?.children.length ?? 0;
+
+    function updateNav() {
+      if (!swipe) return;
+      const cardW = (swipe.firstElementChild as HTMLElement)?.offsetWidth ?? 1;
+      const gap   = 16;
+      const idx   = Math.round(swipe.scrollLeft / (cardW + gap));
+      dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+      if (count) count.textContent = `${idx + 1} / ${total}`;
+    }
+
+    swipe?.addEventListener('scroll', updateNav, { passive: true });
+
+    dots.forEach((dot, i) => {
+      dot.addEventListener('click', () => {
+        const cardW = (swipe?.firstElementChild as HTMLElement)?.offsetWidth ?? 1;
+        swipe?.scrollTo({ left: i * (cardW + 16), behavior: 'smooth' });
+      });
+    });
+  </script>
+
 </Base>

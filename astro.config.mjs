@@ -2,21 +2,17 @@ import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
-  // Ensure this has NO trailing slash
+  // Main site URL
   site: 'https://stackpick.co.uk',
   
-  // Force trailing slash handling to be explicit
+  // Best for SEO and GitHub Pages consistency
   trailingSlash: 'always',
 
   integrations: [
     sitemap({
-      // Explicitly redundant - helps the plugin if it's 'losing' the site config
-      hostname: 'https://stackpick.co.uk',
-      // This empty filter often bypasses the internal 'reduce' crash
-      filter: (page) => true,
-      serialize(item) {
-        return item;
-      },
+      // The plugin now automatically pulls the URL from 'site' above.
+      // We'll keep the filter logic simple to avoid the 'reduce' crash.
+      filter: (page) => !page.includes('/404')
     })
   ],
 
