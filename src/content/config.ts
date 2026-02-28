@@ -68,12 +68,13 @@ const specRowSchema = z.object({
   label:  z.string(),
   a:      z.string(),
   b:      z.string(),
-  winner: z.enum(['a', 'b', 'tie']).optional(),
+  winner: z.enum(['a', 'b', 'tie', '']).optional(),
 });
 
 const comparisons = defineCollection({
   type: 'content',
   schema: z.object({
+
     title:           z.string(),
     heroTitle:       z.string(),
     heroSubtitle:    z.string(),
@@ -105,7 +106,7 @@ const summaryRowSchema = z.object({
 const guides = defineCollection({
   type: 'content',
   schema: z.object({
-    slug:               z.string(),
+
     title:              z.string(),
     heroTitle:          z.string(),
     heroSubtitle:       z.string(),
