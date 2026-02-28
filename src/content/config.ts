@@ -74,7 +74,6 @@ const specRowSchema = z.object({
 const comparisons = defineCollection({
   type: 'content',
   schema: z.object({
-    slug:            z.string(),
     title:           z.string(),
     heroTitle:       z.string(),
     heroSubtitle:    z.string(),
