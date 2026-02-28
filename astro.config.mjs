@@ -2,15 +2,28 @@ import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
-  // The most important line for sitemaps
+  // Ensure this has NO trailing slash
   site: 'https://stackpick.co.uk',
   
-  integrations: [sitemap()],
+  // Force trailing slash handling to be explicit
+  trailingSlash: 'always',
+
+  integrations: [
+    sitemap({
+      // Explicitly redundant - helps the plugin if it's 'losing' the site config
+      hostname: 'https://stackpick.co.uk',
+      // This empty filter often bypasses the internal 'reduce' crash
+      filter: (page) => true,
+      serialize(item) {
+        return item;
+      },
+    })
+  ],
 
   build: {
-    assets: 'assets'
+    assets: 'assets',
+    inlineStylesheets: 'always'
   },
 
-  // Ensures your static site works perfectly on GitHub Pages
   output: 'static'
 });
