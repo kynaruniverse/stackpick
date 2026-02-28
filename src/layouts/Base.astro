@@ -110,8 +110,8 @@ function sidebarLinkClass(active: boolean): string {
   <meta name="twitter:image"       content={ogImage}>
 
   <!-- ── PWA & mobile ── -->
-  <meta name="theme-color"         content="#1B3022" media="(prefers-color-scheme: light)">
-  <meta name="theme-color"         content="#0F0F0F" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color"         content="#E4EDF5" media="(prefers-color-scheme: light)">
+  <meta name="theme-color"         content="#0D1520" media="(prefers-color-scheme: dark)">
   <meta name="mobile-web-app-capable"              content="yes">
   <meta name="apple-mobile-web-app-capable"        content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -119,7 +119,7 @@ function sidebarLinkClass(active: boolean): string {
   <link rel="manifest"             href="/manifest.json">
 
   <!-- ── Favicon — inline SVG, no external request ── -->
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%231B3022'/><text y='72' x='50' text-anchor='middle' font-size='60' font-family='system-ui' font-weight='900' fill='%23D95433'>S</text></svg>">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='8' fill='%230D1520'/><text y='72' x='50' text-anchor='middle' font-size='62' font-family='Arial Narrow,sans-serif' font-weight='900' fill='%23C82020'>S</text></svg>">
 
   <!-- ── Font loading ──
     Syne:           Display headings — geometric, memorable, brand character
@@ -131,7 +131,7 @@ function sidebarLinkClass(active: boolean): string {
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800;900&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
     rel="stylesheet"
   >
 
@@ -166,7 +166,7 @@ function sidebarLinkClass(active: boolean): string {
 
       <!-- Logo wordmark -->
       <a href="/" class="logo" aria-label="StackPick — back to homepage">
-        STACK<span>·</span>PICK
+        STACK<span class="logo-dot">·</span>PICK
       </a>
 
       <!-- Primary navigation -->
@@ -219,7 +219,7 @@ function sidebarLinkClass(active: boolean): string {
 
         <!-- Sidebar logo — shown only on desktop -->
         <a href="/" class="logo" aria-label="StackPick homepage">
-          STACK<span>·</span>PICK
+          STACK<span class="logo-dot">·</span>PICK
         </a>
 
         <!-- Hardware categories -->
@@ -330,7 +330,7 @@ function sidebarLinkClass(active: boolean): string {
 
       <div>
         <a href="/" class="site-footer__brand" aria-label="StackPick homepage">
-          STACK<span>·</span>PICK
+          STACK<span class="logo-dot">·</span>PICK
         </a>
       </div>
 

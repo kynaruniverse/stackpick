@@ -1,7 +1,15 @@
 ---
 // src/pages/index.astro
-// Homepage — product wall with collection tabs.
-// All data is server-rendered at build time. No wall.js needed.
+// Homepage — Performance Heritage UI System
+// Structure:
+//   1. Hero (navy, uppercase, CTA)
+//   2. Collection tabs + product wall
+//   3. Category modules
+//   4. Performance comparison block
+//   5. Editorial guides
+//   6. Final CTA strip
+//
+// All data server-rendered at build time. No client-side data fetching.
 
 import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
@@ -10,11 +18,12 @@ import ProductCard from '../components/ProductCard.astro';
 // Fetch all data at build time
 const allProducts    = await getCollection('products');
 const allCollections = await getCollection('collections');
+const allGuides      = await getCollection('guides');
 
 // Build a product lookup map for O(1) access
 const productMap = new Map(allProducts.map(p => [p.data.id, p]));
 
-// Sort collections so "all-picks" is always first
+// Sort collections — all-picks always first
 const COLLECTION_ORDER = [
   'all-picks', 'sweaty-fps', 'kynar-setup',
   'wireless-only', 'study-mode', 'under-100',
@@ -24,42 +33,84 @@ allCollections.sort((a, b) =>
   COLLECTION_ORDER.indexOf(a.data.id) - COLLECTION_ORDER.indexOf(b.data.id)
 );
 
-// Pre-build product lists per collection for server rendering
+// Pre-build product lists per collection
 const collectionProducts = allCollections.map(col => ({
   id:       col.data.id,
   label:    col.data.label,
   emoji:    col.data.emoji,
-  color:    col.data.color,
   products: col.data.baseProducts
     .map(id => productMap.get(id))
     .filter(Boolean),
 }));
+
+// Pick 3 guides for the editorial section
+const featuredGuides = allGuides.slice(0, 3);
+
+// Category data for modules
+const categories = [
+  { slug: 'mice',      icon: '🖱️', name: 'Gaming Mice',      count: '5 picks' },
+  { slug: 'keyboards', icon: '⌨️', name: 'Keyboards',         count: '5 picks' },
+  { slug: 'headsets',  icon: '🎧', name: 'Headsets',          count: '5 picks' },
+  { slug: 'monitors',  icon: '🖥️', name: 'Monitors',          count: '5 picks' },
+  { slug: 'chairs',    icon: '🪑', name: 'Gaming Chairs',     count: '5 picks' },
+];
+
+// Quick comparison data — representative spec snapshot
+const specComparison = [
+  { label: 'Lowest verified price', a: '£28', b: '£399+', note: 'Budget vs flagship' },
+  { label: 'Mouse polling rate',    a: '125Hz', b: '8,000Hz', note: 'Entry vs pro' },
+  { label: 'Monitor refresh rate',  a: '75Hz', b: '500Hz',   note: 'Budget vs competitive' },
+  { label: 'Keyboard polling',      a: '1,000Hz', b: '8,000Hz', note: 'Standard vs Hall Effect' },
+];
 ---
 
 <Base
   title="StackPick — Best Gaming Gear for UK Gamers"
-  description="Researched gaming gear picks for UK gamers. Best mice, keyboards, headsets, monitors and chairs — tested, ranked, no filler."
+  description="Researched gaming gear picks for UK gamers. Best mice, keyboards, headsets, monitors and chairs — verified UK pricing, no filler."
   canonical="https://stackpick.co.uk/"
 >
 
-  <!-- Homepage hero -->
-  <section slot="hero" class="hero hero--home">
+  <!-- ══════════════════════════════════════════
+       1. HERO — Navy dominant, uppercase, direct
+       ══════════════════════════════════════════ -->
+  <section slot="hero" class="hero hero--home" aria-label="Site hero">
     <div class="hero-container container">
-      <p class="hero-eyebrow">UK Gaming Gear</p>
-      <h1>The Best Gaming Gear<br>for UK Gamers</h1>
-      <p>Researched picks across every category. System verified. No filler.</p>
+
+      <p class="hero-eyebrow">UK Gaming Gear Authority</p>
+
+      <h1>
+        Ranked Gaming Gear<br>
+        for UK Gamers.
+      </h1>
+
+      <p>
+        Verified picks across every category. Real UK prices.
+        No sponsored rankings. No filler.
+      </p>
+
       <div class="hero-actions">
         <a href="/mice/" class="btn-primary">
-          Browse Mice
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+          Browse All Picks
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="7" y1="17" x2="17" y2="7"/>
+            <polyline points="7 7 17 7 17 17"/>
+          </svg>
         </a>
         <a href="/guides/" class="btn-secondary">Setup Guides</a>
       </div>
+
     </div>
   </section>
 
-  <!-- Collection tabs -->
-  <div class="collection-tabs-bar" id="collection-tabs" role="tablist" aria-label="Browse by collection">
+  <!-- ══════════════════════════════════════════
+       2. COLLECTION TABS + PRODUCT WALL
+       ══════════════════════════════════════════ -->
+  <div
+    class="collection-tabs-bar"
+    id="collection-tabs"
+    role="tablist"
+    aria-label="Browse by collection"
+  >
     {collectionProducts.map((col, i) => (
       <button
         role="tab"
@@ -75,7 +126,7 @@ const collectionProducts = allCollections.map(col => ({
     ))}
   </div>
 
-  <!-- Product panels — one per collection, only first is visible -->
+  <!-- Product panels — one per collection -->
   {collectionProducts.map((col, i) => (
     <section
       role="tabpanel"
@@ -112,72 +163,99 @@ const collectionProducts = allCollections.map(col => ({
     </section>
   ))}
 
-  <!-- Browse categories strip -->
-  <section class="section">
+  <!-- ══════════════════════════════════════════
+       3. CATEGORY MODULES
+       ══════════════════════════════════════════ -->
+  <section class="section home-categories" aria-label="Browse by category">
     <div class="section-head">
-      <h2>Browse by Category</h2>
+      <p class="section-head__label">Hardware</p>
+      <h2 class="section-head__title">Browse by Category</h2>
     </div>
-    <div class="also-grid">
-      <a href="/mice/" class="also-card">
-        <span class="also-card__icon" aria-hidden="true">🖱️</span>
-        <div>
-          <h3 class="also-card__title">Gaming Mice</h3>
-          <p class="also-card__desc">From 40g ultralight to all-round legends</p>
+    <div class="category-grid">
+      {categories.map(cat => (
+        <a href={`/${cat.slug}/`} class="category-tile">
+          <span class="category-tile__icon" aria-hidden="true">{cat.icon}</span>
+          <span class="category-tile__name">{cat.name}</span>
+          <span class="category-tile__desc">{cat.count}</span>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════
+       4. PERFORMANCE COMPARISON BLOCK
+       Table-style layout. Emphasized numeric specs.
+       ══════════════════════════════════════════ -->
+  <section class="section home-comparison" aria-label="Performance comparison">
+    <div class="section-head">
+      <p class="section-head__label">Performance Data</p>
+      <h2 class="section-head__title">Spec Comparison</h2>
+      <a href="/comparisons/" class="section-head__link">Full comparisons →</a>
+    </div>
+
+    <div class="comparison-strip" role="table" aria-label="Gear performance comparison">
+
+      <div class="comparison-strip__header" role="row" aria-hidden="true">
+        <div class="comparison-strip__row comparison-strip__row--head">
+          <span class="comparison-strip__label">Specification</span>
+          <span class="comparison-strip__val" style="font-weight: var(--weight-semibold); color: var(--color-text-primary);">Entry Level</span>
+          <span class="comparison-strip__val" style="color: var(--color-accent); font-weight: var(--weight-bold);">Pro / Flagship</span>
         </div>
-        <span class="also-card__arrow" aria-hidden="true">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-        </span>
-      </a>
-      <a href="/keyboards/" class="also-card">
-        <span class="also-card__icon" aria-hidden="true">⌨️</span>
-        <div>
-          <h3 class="also-card__title">Keyboards</h3>
-          <p class="also-card__desc">Hall Effect, wireless, budget mechanical</p>
+      </div>
+
+      {specComparison.map(row => (
+        <div class="comparison-strip__row" role="row">
+          <span class="comparison-strip__label" role="cell">{row.label}</span>
+          <span class="comparison-strip__val" role="cell">{row.a}</span>
+          <span class="comparison-strip__val comparison-strip__val--accent" role="cell">{row.b}</span>
         </div>
-        <span class="also-card__arrow" aria-hidden="true">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-        </span>
-      </a>
-      <a href="/headsets/" class="also-card">
-        <span class="also-card__icon" aria-hidden="true">🎧</span>
-        <div>
-          <h3 class="also-card__title">Headsets</h3>
-          <p class="also-card__desc">Open-back audiophile to wireless premium</p>
-        </div>
-        <span class="also-card__arrow" aria-hidden="true">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-        </span>
-      </a>
-      <a href="/monitors/" class="also-card">
-        <span class="also-card__icon" aria-hidden="true">🖥️</span>
-        <div>
-          <h3 class="also-card__title">Monitors</h3>
-          <p class="also-card__desc">OLED, Mini-LED, and budget IPS</p>
-        </div>
-        <span class="also-card__arrow" aria-hidden="true">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-        </span>
-      </a>
-      <a href="/chairs/" class="also-card">
-        <span class="also-card__icon" aria-hidden="true">🪑</span>
-        <div>
-          <h3 class="also-card__title">Chairs</h3>
-          <p class="also-card__desc">Five chairs for five real problems</p>
-        </div>
-        <span class="also-card__arrow" aria-hidden="true">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-        </span>
-      </a>
-      <a href="/guides/" class="also-card">
-        <span class="also-card__icon" aria-hidden="true">📋</span>
-        <div>
-          <h3 class="also-card__title">Setup Guides</h3>
-          <p class="also-card__desc">Complete builds from £50 to £2500</p>
-        </div>
-        <span class="also-card__arrow" aria-hidden="true">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-        </span>
-      </a>
+      ))}
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════
+       5. EDITORIAL GUIDES
+       ══════════════════════════════════════════ -->
+  <section class="section home-guides" aria-label="Setup guides">
+    <div class="section-head">
+      <p class="section-head__label">Editorial</p>
+      <h2 class="section-head__title">Setup Guides</h2>
+      <a href="/guides/" class="section-head__link">All guides →</a>
+    </div>
+    <div class="guide-grid">
+      {featuredGuides.map(guide => (
+        <a href={`/guides/${guide.slug}/`} class="guide-card">
+          <span class="guide-card__icon" aria-hidden="true">{guide.data.emoji ?? '📋'}</span>
+          <div class="guide-card__body">
+            <span class="guide-card__budget">{guide.data.budgetLabel}</span>
+            <span class="guide-card__title">{guide.data.heroTitle ?? guide.data.title}</span>
+            <span class="guide-card__desc">{guide.data.heroSubtitle ?? guide.data.metaDescription}</span>
+          </div>
+          <span class="guide-card__arrow" aria-hidden="true">›</span>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════
+       6. FINAL CTA STRIP — Red background
+       ══════════════════════════════════════════ -->
+  <section class="cta-strip" aria-label="Get started">
+    <div class="cta-strip__inner">
+      <span class="cta-strip__overline">Start Here</span>
+      <h2>Build Your UK Gaming Setup</h2>
+      <p>
+        Complete setup guides from £50 to £2,500. Every pick
+        individually verified for UK availability and pricing.
+      </p>
+      <div class="cta-strip__actions">
+        <a href="/guides/" class="btn-primary" style="background: #fff; color: var(--palette-red-600); border-color: #fff;">
+          View Setup Guides
+        </a>
+        <a href="/comparisons/" class="btn-secondary">
+          Compare Gear
+        </a>
+      </div>
     </div>
   </section>
 
@@ -200,8 +278,6 @@ const collectionProducts = allCollections.map(col => ({
         panels.forEach(panel => {
           const isTarget = panel.id === `panel-${id}`;
           panel.classList.toggle('hidden', !isTarget);
-          // display:none already removes from a11y tree; aria-hidden is redundant
-          // but keep for belt-and-suspenders with older AT
           panel.setAttribute('aria-hidden', isTarget ? 'false' : 'true');
           if (!isTarget) {
             panel.setAttribute('inert', '');
