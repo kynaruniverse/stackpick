@@ -204,18 +204,27 @@ allProducts.sort((a, b) => (a.data.rank ?? 99) - (b.data.rank ?? 99));
   </section>
 
   <!-- Filter chip JS — minimal, no external dependency -->
-  <script>
-    document.querySelectorAll('.filter-chip').forEach(chip => {
-      chip.addEventListener('click', () => {
-        const filter = (chip as HTMLElement).dataset.filter;
+    <script>
+    // We add a check to ensure the code only runs in the browser
+    const chips = document.querySelectorAll('.filter-chip');
+    
+    chips.forEach(chip => {
+      chip.addEventListener('click', (e) => {
+        // Correctly cast the target to an HTMLElement
+        const target = e.currentTarget as HTMLElement;
+        const filter = target.dataset.filter;
+
+        // UI Updates
         document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
-        chip.classList.add('active');
+        target.classList.add('active');
+
+        // Filtering logic
         document.querySelectorAll<HTMLElement>('.product-entry').forEach(card => {
           const visible = filter === 'all' || card.dataset.budget === filter;
           card.classList.toggle('hidden', !visible);
-          card.style.display = ''; // clear any residual inline style from old code
         });
       });
     });
   </script>
+
 </Base>
