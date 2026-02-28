@@ -8,11 +8,11 @@ import Base from '../../layouts/Base.astro';
 export async function getStaticPaths() {
   const guides = await getCollection('guides');
   return guides.map(guide => ({
-    // Use frontmatter slug, fallback to filename
-    params: { slug: guide.data.slug || guide.slug },
+    params: { slug: guide.slug },
     props:  { guide },
   }));
 }
+
 
 
 const { guide } = Astro.props;
@@ -41,9 +41,10 @@ const relatedGuides = data.relatedGuides as RelatedGuide[];
 <Base
   title={data.metaTitle}
   description={data.metaDescription}
-  canonical={`https://stackpick.co.uk/guides/${data.slug || guide.slug}/`}
+  canonical={`https://stackpick.co.uk/guides/${guide.slug}/`}
   ogType="article"
 >
+
 
 
   <section slot="hero" class="hero hero--inner">
