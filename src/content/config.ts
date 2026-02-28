@@ -74,7 +74,7 @@ const specRowSchema = z.object({
 const comparisons = defineCollection({
   type: 'content',
   schema: z.object({
-
+    slug:            z.string(),
     title:           z.string(),
     heroTitle:       z.string(),
     heroSubtitle:    z.string(),
@@ -106,7 +106,7 @@ const summaryRowSchema = z.object({
 const guides = defineCollection({
   type: 'content',
   schema: z.object({
-
+    slug:               z.string(), // Added for consistency and future routes
     title:              z.string(),
     heroTitle:          z.string(),
     heroSubtitle:       z.string(),
@@ -124,6 +124,7 @@ const guides = defineCollection({
     buyingGuideHeading: z.string(),
   }),
 });
+
 
 export const collections = {
   products,

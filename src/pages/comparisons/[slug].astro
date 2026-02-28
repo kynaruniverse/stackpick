@@ -7,11 +7,19 @@ import Base from '../../layouts/Base.astro';
 
 export async function getStaticPaths() {
   const comparisons = await getCollection('comparisons');
-  return comparisons.map(comp => ({
-    params: { slug: comp.data.slug },
-    props:  { comp },
-  }));
+  return comparisons.map(comp => {
+    // Priority 1: The slug defined in frontmatter
+    // Priority 2: The filename (comp.slug)
+    const actualSlug = comp.data.slug || comp.slug;
+    
+    return {
+      params: { slug: actualSlug },
+      props:  { comp },
+    };
+  });
 }
+
+
 
 const { comp } = Astro.props;
 const { data }  = comp;
@@ -34,9 +42,10 @@ const relatedLinks = data.relatedLinks as RelatedLink[];
 <Base
   title={data.metaTitle}
   description={data.metaDescription}
-  canonical={`https://stackpick.co.uk/comparisons/${data.slug}/`}
+  canonical={`https://stackpick.co.uk/comparisons/${data.slug || comp.slug}/`}
   ogType="article"
 >
+
 
   <section slot="hero" class="hero hero--inner">
     <div class="hero-container container">
