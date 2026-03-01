@@ -16,7 +16,7 @@ const searchIndex = [
     type:      'product',
     title:     p.data.name,
     desc:      p.body.slice(0, 120),
-    url:       `/${p.data.category}/#${p.data.id}`,
+    url:       `/${p.data.category}/`,
     category:  p.data.category,
     price:     p.data.price,
     tags:      p.data.tags,
@@ -38,7 +38,7 @@ const searchIndex = [
     type:      'comparison',
     title:     c.data.title,
     desc:      c.data.heroSubtitle,
-    url:       `/comparisons/${c.data.slug}/`,
+    url:       `/comparisons/${c.slug}/`,
     category:  'comparison',
     price:     null,
     tags:      [] as string[],
@@ -108,7 +108,7 @@ const searchIndexJSON = JSON.stringify(searchIndex);
 
   <!-- Type filter -->
   <div class="filter-cage">
-    <div class="filter-strip" role="navigation" aria-label="Filter by type">
+    <div class="filter-strip" role="group" aria-label="Filter by type">
       <button class="filter-chip active" data-type="all">All</button>
       <button class="filter-chip" data-type="product">Products</button>
       <button class="filter-chip" data-type="guide">Setups</button>
