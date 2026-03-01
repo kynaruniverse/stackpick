@@ -15,6 +15,7 @@ affiliate: "https://amzn.to/4qPy6pT"
 inStock: true
 nextDay: false
 loadoutCount: 3
+rank: 1
 specs:
   - "6D Armrests"
   - "Pop-out Lumbar"

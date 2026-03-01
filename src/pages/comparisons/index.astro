@@ -12,18 +12,9 @@ allComparisons.sort((a, b) => a.data.title.localeCompare(b.data.title));
 // Sort products alphabetically by name for compare picker
 allProducts.sort((a, b) => a.data.name.localeCompare(b.data.name));
 
-const SEAM_COLOR: Record<string, string> = {
-  crimson: 'var(--palette-red-500)',
-  cobalt:  'var(--palette-navy-600)',
-  jade:    'var(--palette-navy-400)',
-  slate:   'var(--palette-carbon-600)',
-  amber:   'var(--palette-silver-600)',
-};
+import { SEAM_COLOR, ratingFromRank } from '../../lib/productUtils';
 
-function ratingFromRank(rank: number): number {
-  return [4.9, 4.7, 4.5, 4.3, 4.1][Math.min(rank - 1, 4)] ?? 4.0;
-}
-
+// tagClass: build-time copy — client-side equivalent is window.__sp.tagClass
 function tagClass(t: string): string {
   const map: Record<string,string> = {
     fps:'fps', pro:'pro', budget:'budget', value:'value', entry:'entry',

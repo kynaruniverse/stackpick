@@ -15,6 +15,7 @@ affiliate: "https://amzn.to/4aX25Y9"
 inStock: true
 nextDay: false
 loadoutCount: 3
+rank: 1
 specs:
   - "27\" 1440p"
   - "Glossy WOLED 240Hz"

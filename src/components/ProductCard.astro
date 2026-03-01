@@ -5,15 +5,11 @@
 // Product details exposed as data-pjson for overlay population.
 // Visual area: gradient using seam color + large emoji (no real images).
 
-const SEAM_COLOR: Record<string, string> = {
-  crimson: 'var(--palette-red-500)',
-  cobalt:  'var(--palette-navy-600)',
-  jade:    'var(--palette-navy-400)',
-  slate:   'var(--palette-carbon-600)',
-  amber:   'var(--palette-silver-600)',
-};
+import { SEAM_COLOR, ratingFromRank, budgetClass } from '../lib/productUtils';
 
-// Tag → CSS class mapping
+// Tag → CSS class mapping lives on window.__sp.tagClass (client-side, Base.astro).
+// For server-side tag rendering in this component we use a local copy because
+// Astro component frontmatter runs at build time and cannot access window.__sp.
 function tagClass(t: string): string {
   const map: Record<string,string> = {
     fps:'fps', pro:'pro', budget:'budget', value:'value', entry:'entry',
@@ -22,20 +18,6 @@ function tagClass(t: string): string {
     'hall-effect':'hall-effect'
   };
   return `tag tag--${map[t] ?? 'default'}`;
-}
-
-// Budget class for filter chips
-function budgetClass(n: number): string {
-  if (n <  50)  return 'under-50';
-  if (n < 100)  return '50-100';
-  if (n < 200)  return '100-200';
-  return 'over-200';
-}
-
-// Rating from rank (rank 1 = 4.9, etc.)
-function ratingFromRank(rank: number): number {
-  const ratings = [4.9, 4.7, 4.5, 4.3, 4.1];
-  return ratings[Math.min(rank - 1, ratings.length - 1)] ?? 4.0;
 }
 
 export interface Props {
@@ -94,7 +76,6 @@ const visibleTags = tags.slice(0, 2);
 
 <article
   class:list={['pcard', isFirst && 'pcard--featured', listMode && 'pcard--list']}
-  id={id}
   data-budget={budget}
   data-id={id}
   data-category={seam}

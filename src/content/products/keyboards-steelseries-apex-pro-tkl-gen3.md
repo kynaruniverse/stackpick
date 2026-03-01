@@ -15,6 +15,7 @@ affiliate: "https://amzn.to/4kHUmQV"
 inStock: true
 nextDay: true
 loadoutCount: 3
+rank: 1
 specs:
   - "OmniPoint 3.0 (HE)"
   - "Rapid Trigger & Rapid Tap"

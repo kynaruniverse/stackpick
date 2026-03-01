@@ -15,6 +15,7 @@ affiliate: "https://amzn.to/4c1StN0"
 inStock: true
 nextDay: true
 loadoutCount: 4
+rank: 1
 specs:
   - "54g Wireless"
   - "35K Sensor"

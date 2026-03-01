@@ -15,6 +15,7 @@ affiliate: "https://amzn.to/4tHtncv"
 inStock: true
 nextDay: true
 loadoutCount: 3
+rank: 1
 specs:
   - "Open-back"
   - "120\u03a9 Impedance"

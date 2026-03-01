@@ -9,17 +9,7 @@ const allProducts    = await getCollection('products');
 const allComparisons = await getCollection('comparisons');
 const allGuides      = await getCollection('guides');
 
-const SEAM_COLOR: Record<string, string> = {
-  crimson: 'var(--palette-red-500)',
-  cobalt:  'var(--palette-navy-600)',
-  jade:    'var(--palette-navy-400)',
-  slate:   'var(--palette-carbon-600)',
-  amber:   'var(--palette-silver-600)',
-};
-
-function ratingFromRank(rank: number): number {
-  return [4.9, 4.7, 4.5, 4.3, 4.1][Math.min(rank - 1, 4)] ?? 4.0;
-}
+import { SEAM_COLOR, ratingFromRank } from '../lib/productUtils';
 
 const searchIndex = [
   ...allProducts.map(p => ({
@@ -48,7 +38,7 @@ const searchIndex = [
     type:      'comparison',
     title:     c.data.title,
     desc:      c.data.heroSubtitle,
-    url:       `/comparisons/${c.slug}/`,
+    url:       `/comparisons/${c.data.slug}/`,
     category:  'comparison',
     price:     null,
     tags:      [] as string[],
@@ -62,7 +52,7 @@ const searchIndex = [
     type:      'guide',
     title:     g.data.title,
     desc:      g.data.heroSubtitle,
-    url:       `/guides/${g.slug}/`,
+    url:       `/guides/${g.data.slug}/`,
     category:  'guide',
     price:     null,
     tags:      [] as string[],
@@ -155,18 +145,9 @@ const searchIndexJSON = JSON.stringify(searchIndex);
       return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
     }
 
+    // NOTE: tagClass below is an intentional client-side copy — browser <script>
+    // blocks cannot import from src/lib/productUtils.ts. Canonical version is there.
     function tagClass(t: string): string {
-      const map: Record<string,string> = {
-        fps:'fps', pro:'pro', budget:'budget', value:'value', entry:'entry',
-        wireless:'wireless', lightweight:'lightweight', comfort:'comfort',
-        ergonomic:'ergonomic', audiophile:'audiophile', creator:'creator',
-        'hall-effect':'hall-effect'
-      };
-      return `tag tag--${map[t] ?? 'default'}`;
-    }
-
-    function starsStr(r: number): string {
-      return '★'.repeat(Math.floor(r)) + (r % 1 >= 0.5 ? '½' : '');
     }
 
     function renderCard(item: SearchItem): string {

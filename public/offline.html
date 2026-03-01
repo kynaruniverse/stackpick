@@ -16,6 +16,20 @@
     Same stack as the live site. Cached by the service worker.
     Falls back to system-ui if network is unavailable.
   -->
+  <!--
+    OFFLINE-PAGE SELF-CONTAINMENT NOTE:
+    This page must work with zero network access. Rules:
+    - All CSS is inline (<style> block below) — no external .css files
+    - All JS is inline (<script> block at bottom) — no external .js files
+    - The favicon is an inline data: URI — no network request
+    - Google Fonts <link> tags below will silently fail offline; the stack
+      falls back to system-ui/monospace via CSS font-family fallbacks. This
+      is intentional and correct — do NOT remove the fallback fonts from CSS.
+    - The cached-list JS reads from the real SW cache when available, and
+      falls back to the hardcoded <li> links when caches API is unavailable.
+    Do NOT add <link rel="stylesheet">, <script src="">, or <img src=""> tags
+    that point to external files — they will break this page when truly offline.
+  -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
