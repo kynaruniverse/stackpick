@@ -115,7 +115,7 @@ function sidebarLinkClass(active: boolean): string {
   <a href="#main-content" class="skip-link">Skip to main content</a>
 
   <!-- ═══════════════ MOBILE TOP BAR ═══════════════ -->
-  <header class="topbar" id="topbar" aria-label="Site header">
+  <header class="topbar" id="topbar" role="banner" aria-label="Site header">
     <a href="/" class="topbar__logo" aria-label="StackPick homepage">
       STACK<span>·</span>PICK
     </a>
@@ -393,6 +393,11 @@ function sidebarLinkClass(active: boolean): string {
       saveTheme(next);
     }
 
+    // Any element with class 'theme-toggle' OR id 'theme-cycle-btn' triggers cycleTheme.
+    // This covers: topbar button (#theme-toggle-topbar), desktop header button
+    // (#theme-toggle-desktop), and sidebar button (#theme-toggle-sidebar).
+    // NOTE: If you add a new button anywhere with class 'theme-toggle', it will
+    // automatically cycle the theme — this is intentional but worth knowing.
     document.querySelectorAll<HTMLElement>('.theme-toggle, #theme-cycle-btn').forEach(btn => {
       btn.addEventListener('click', cycleTheme);
     });
@@ -569,6 +574,10 @@ function sidebarLinkClass(active: boolean): string {
     }
 
     // ── TYPES ────────────────────────────────────────
+    // NOTE: tagClass and SEAM_MAP below are intentional client-side copies.
+    // They cannot be imported from src/lib/productUtils.ts because this is a
+    // browser <script> block. The canonical server-side versions live in
+    // src/lib/productUtils.ts. If you update one, update both.
     interface ProductData {
       id:          string;
       name:        string;
