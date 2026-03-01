@@ -52,7 +52,7 @@ const searchIndex = [
     type:      'guide',
     title:     g.data.title,
     desc:      g.data.heroSubtitle,
-    url:       `/guides/${g.data.slug}/`,
+    url:       `/guides/${g.slug}/`,
     category:  'guide',
     price:     null,
     tags:      [] as string[],
@@ -148,6 +148,13 @@ const searchIndexJSON = JSON.stringify(searchIndex);
     // NOTE: tagClass below is an intentional client-side copy — browser <script>
     // blocks cannot import from src/lib/productUtils.ts. Canonical version is there.
     function tagClass(t: string): string {
+      const map: Record<string,string> = {
+        fps:'fps', pro:'pro', budget:'budget', value:'value', entry:'entry',
+        wireless:'wireless', lightweight:'lightweight', comfort:'comfort',
+        ergonomic:'ergonomic', audiophile:'audiophile', creator:'creator',
+        'hall-effect':'hall-effect'
+      };
+      return `tag tag--${map[t] ?? 'default'}`;
     }
 
     function renderCard(item: SearchItem): string {
@@ -212,6 +219,10 @@ const searchIndexJSON = JSON.stringify(searchIndex);
       results.innerHTML = hits.length
         ? hits.map(renderCard).join('')
         : `<p style="color:var(--color-text-muted); padding: var(--space-4) var(--page-pad-mobile); grid-column:1/-1;">No results found.</p>`;
+    }
+    
+    function starsStr(r: number): string {
+      return '★'.repeat(Math.floor(r)) + (r % 1 >= 0.5 ? '½' : '');
     }
 
     // Type filter

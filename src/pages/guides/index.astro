@@ -145,7 +145,7 @@ const SETUP_EMOJIS = ['🖥️', '🖱️', '⌨️', '🎧', '🪑'];
 
     function openSetupOverlay(title: string, sections: any[], slug: string) {
       if (!overlay || !overlayContent) return;
-      overlayContent.innerHTML = buildSetupHTML(title, sections);
+      overlayContent.innerHTML = buildSetupHTML(title, sections, slug);
       overlay.classList.add('open');
       overlay.setAttribute('aria-hidden', 'false');
       document.body.style.overflow = 'hidden';

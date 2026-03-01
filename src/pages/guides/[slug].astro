@@ -120,12 +120,12 @@ const relatedGuides = data.relatedGuides as RelatedGuide[];
               <div class="product-entry__rank">
                 <!--
                   Badge color applied via --seam-color CSS custom property.
-                  Falls back to --color-badge-bg if no badgeColor in content.
+                  Falls back to --color-accent if no badgeColor in content.
                   This avoids injecting raw hex values into inline styles.
                 -->
                 <span
                   class="rank-badge"
-                  style="background: var(--seam-color, var(--color-badge-bg)); border-color: var(--seam-color, var(--color-badge-bg)); color: #fff;"
+                  style="background: var(--seam-color, var(--color-accent)); border-color: var(--seam-color, var(--color-accent)); color: #fff;"
                 >
                   {product.badge}
                 </span>

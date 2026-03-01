@@ -76,6 +76,15 @@ const allTags = [...new Set(allProducts.flatMap(p => p.data.tags))].sort();
     </div>
   </div>
 
+  <!-- Active tag chips bar (shown when tags are selected) -->
+  <div class="active-tags-bar" id="active-tags-bar" aria-live="polite" aria-label="Active tag filters">
+    <div class="active-tags-inner container">
+      <span class="active-tags-label">Filtered by:</span>
+      <div class="active-tags-list" id="active-tags-list"></div>
+      <button class="active-tags-clear" id="active-tags-clear-all">Clear all</button>
+    </div>
+  </div>
+
   <!-- Product grid -->
   <section class="product-grid" id="product-grid" aria-label="All hardware picks">
     {allProducts.map((product, i) => (
@@ -114,6 +123,10 @@ const allTags = [...new Set(allProducts.flatMap(p => p.data.tags))].sort();
       </button>
       <div class="prod-overlay__content">
         <h2 style="font-size: var(--text-xl); margin-bottom: var(--space-4);">Filter by Tags</h2>
+
+        <!-- Selected count indicator inside overlay -->
+        <p class="tag-overlay-count" id="tag-overlay-count" aria-live="polite"></p>
+
         <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: var(--space-6);" id="tag-overlay-tags">
           {allTags.map(tag => {
             const cls = (() => {
@@ -125,7 +138,7 @@ const allTags = [...new Set(allProducts.flatMap(p => p.data.tags))].sort();
               };
               return `tag tag--${map[tag] ?? 'default'}`;
             })();
-            return <button class={cls} data-tag={tag} style="cursor:pointer; border: none;">{tag}</button>;
+            return <button class={cls} data-tag={tag} style="cursor:pointer; border: none;" aria-pressed="false">{tag}</button>;
           })}
         </div>
         <div style="display:flex; gap: var(--space-3);">
@@ -136,10 +149,96 @@ const allTags = [...new Set(allProducts.flatMap(p => p.data.tags))].sort();
     </div>
   </div>
 
+  <style>
+    /* ── Tag active state inside the overlay ── */
+    .tag.tag--selected {
+      outline: 2px solid currentColor;
+      outline-offset: 2px;
+      box-shadow: 0 0 0 4px color-mix(in srgb, currentColor 15%, transparent);
+      font-weight: 700;
+      transform: scale(1.05);
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
+    }
+
+    /* ── Selected count line ── */
+    .tag-overlay-count {
+      font-size: var(--text-sm, 0.8rem);
+      color: var(--color-muted, #888);
+      margin-bottom: var(--space-3, 12px);
+      min-height: 1.2em;
+    }
+
+    /* ── Active tags bar ── */
+    .active-tags-bar {
+      display: none;
+      padding: 10px 0;
+      border-bottom: 1px solid color-mix(in srgb, currentColor 10%, transparent);
+    }
+    .active-tags-bar.visible {
+      display: block;
+    }
+    .active-tags-inner {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .active-tags-label {
+      font-size: var(--text-sm, 0.8rem);
+      color: var(--color-muted, #888);
+      white-space: nowrap;
+    }
+    .active-tags-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    /* Individual removable chip */
+    .active-tag-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 8px 3px 10px;
+      border-radius: 999px;
+      font-size: var(--text-sm, 0.8rem);
+      font-weight: 600;
+      background: var(--color-surface-raised, #222);
+      border: 1px solid color-mix(in srgb, currentColor 20%, transparent);
+      cursor: pointer;
+      transition: opacity 0.15s ease;
+      line-height: 1;
+    }
+    .active-tag-chip:hover {
+      opacity: 0.75;
+    }
+    .active-tag-chip__x {
+      font-size: 0.75rem;
+      line-height: 1;
+      opacity: 0.6;
+    }
+
+    /* Clear all button in the bar */
+    .active-tags-clear {
+      margin-left: auto;
+      font-size: var(--text-sm, 0.8rem);
+      color: var(--color-muted, #888);
+      background: none;
+      border: none;
+      cursor: pointer;
+      text-decoration: underline;
+      white-space: nowrap;
+      padding: 0;
+    }
+    .active-tags-clear:hover {
+      color: var(--color-text, #fff);
+    }
+  </style>
+
   <script>
-    const cards     = document.querySelectorAll<HTMLElement>('.pcard');
-    const catBtns   = document.querySelectorAll<HTMLElement>('.cat-tab');
-    const budgetBtns= document.querySelectorAll<HTMLElement>('.filter-chip:not(#tag-filter-btn)');
+    const cards        = document.querySelectorAll<HTMLElement>('.pcard');
+    const catBtns      = document.querySelectorAll<HTMLElement>('.cat-tab');
+    const budgetBtns   = document.querySelectorAll<HTMLElement>('.filter-chip:not(#tag-filter-btn)');
     const tagFilterBtn = document.getElementById('tag-filter-btn');
     const tagOverlay   = document.getElementById('tag-overlay');
     const tagScrim     = document.getElementById('tag-overlay-scrim');
@@ -147,16 +246,80 @@ const allTags = [...new Set(allProducts.flatMap(p => p.data.tags))].sort();
     const tagApply     = document.getElementById('tag-apply-btn');
     const tagClear     = document.getElementById('tag-clear-btn');
     const tagBtns      = document.querySelectorAll<HTMLElement>('#tag-overlay-tags [data-tag]');
+    const activeTagsBar     = document.getElementById('active-tags-bar');
+    const activeTagsList    = document.getElementById('active-tags-list');
+    const activeTagsClearAll = document.getElementById('active-tags-clear-all');
+    const tagOverlayCount   = document.getElementById('tag-overlay-count');
 
     let activeCat    = 'all';
     let activeBudget = 'all';
     let activeTags: string[] = [];
 
+    /* ── Render the active chips bar above the grid ── */
+    function renderActiveTagsBar() {
+      if (!activeTagsBar || !activeTagsList) return;
+
+      if (activeTags.length === 0) {
+        activeTagsBar.classList.remove('visible');
+        activeTagsList.innerHTML = '';
+        return;
+      }
+
+      activeTagsBar.classList.add('visible');
+      activeTagsList.innerHTML = '';
+
+      activeTags.forEach(tag => {
+        const chip = document.createElement('button');
+        chip.className = 'active-tag-chip';
+        chip.setAttribute('aria-label', `Remove filter: ${tag}`);
+        chip.innerHTML = `${tag}<span class="active-tag-chip__x" aria-hidden="true">✕</span>`;
+        chip.addEventListener('click', () => {
+          removeTag(tag);
+          applyFilters();
+          renderActiveTagsBar();
+          syncTagButtons();
+          updateOverlayCount();
+          updateTagFilterBtn();
+        });
+        activeTagsList.appendChild(chip);
+      });
+    }
+
+    /* ── Update the count line inside the overlay ── */
+    function updateOverlayCount() {
+      if (!tagOverlayCount) return;
+      if (activeTags.length === 0) {
+        tagOverlayCount.textContent = '';
+      } else {
+        tagOverlayCount.textContent = `${activeTags.length} tag${activeTags.length > 1 ? 's' : ''} selected`;
+      }
+    }
+
+    /* ── Keep tag buttons in sync with activeTags array ── */
+    function syncTagButtons() {
+      tagBtns.forEach(btn => {
+        const tag = btn.dataset.tag ?? '';
+        const isActive = activeTags.includes(tag);
+        btn.classList.toggle('tag--selected', isActive);
+        btn.setAttribute('aria-pressed', String(isActive));
+      });
+    }
+
+    function removeTag(tag: string) {
+      activeTags = activeTags.filter(t => t !== tag);
+    }
+
+    /* ── Update the Tags button in the filter strip ── */
+    function updateTagFilterBtn() {
+      if (!tagFilterBtn) return;
+      tagFilterBtn.classList.toggle('active', activeTags.length > 0);
+    }
+
     function applyFilters() {
       cards.forEach(card => {
-        const cat    = card.dataset.category ?? '';
-        const budget = card.dataset.budget ?? '';
-        const tagsRaw = card.dataset.pjson ?? '';
+        const cat      = card.dataset.category ?? '';
+        const budget   = card.dataset.budget ?? '';
+        const tagsRaw  = card.dataset.pjson ?? '';
         let cardTags: string[] = [];
         try { cardTags = JSON.parse(tagsRaw).tags ?? []; } catch {}
 
@@ -209,28 +372,47 @@ const allTags = [...new Set(allProducts.flatMap(p => p.data.tags))].sort();
     tagScrim?.addEventListener('click', closeTagOverlay);
     tagClose?.addEventListener('click', closeTagOverlay);
 
-    // Tag selection
+    // Tag selection — now with visual feedback
     tagBtns.forEach(btn => {
       btn.addEventListener('click', () => {
         const tag = btn.dataset.tag ?? '';
-        btn.classList.toggle('tag--active');
-        if (activeTags.includes(tag)) activeTags = activeTags.filter(t => t !== tag);
-        else activeTags.push(tag);
+        if (activeTags.includes(tag)) {
+          removeTag(tag);
+        } else {
+          activeTags.push(tag);
+        }
+        btn.classList.toggle('tag--selected', activeTags.includes(tag));
+        btn.setAttribute('aria-pressed', String(activeTags.includes(tag)));
+        updateOverlayCount();
       });
     });
 
+    // Apply
     tagApply?.addEventListener('click', () => {
       closeTagOverlay();
       applyFilters();
-      // Update chip label
-      if (tagFilterBtn) {
-        tagFilterBtn.classList.toggle('active', activeTags.length > 0);
-      }
+      renderActiveTagsBar();
+      updateTagFilterBtn();
     });
 
+    // Clear inside overlay
     tagClear?.addEventListener('click', () => {
       activeTags = [];
-      tagBtns.forEach(b => b.classList.remove('tag--active'));
+      tagBtns.forEach(b => {
+        b.classList.remove('tag--selected');
+        b.setAttribute('aria-pressed','false');
+      });
+      updateOverlayCount();
+    });
+
+    // Clear all from the bar
+    activeTagsClearAll?.addEventListener('click', () => {
+      activeTags = [];
+      syncTagButtons();
+      updateOverlayCount();
+      applyFilters();
+      renderActiveTagsBar();
+      updateTagFilterBtn();
     });
   </script>
 

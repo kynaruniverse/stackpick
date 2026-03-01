@@ -411,7 +411,6 @@ function sidebarLinkClass(active: boolean): string {
 
     // ── 04 PRODUCT OVERLAY ───────────────────────────
     const overlay      = document.getElementById('prod-overlay')       as HTMLElement | null;
-    const overlaySheet = document.getElementById('prod-overlay-sheet') as HTMLElement | null;
     const overlayScrim = document.getElementById('prod-overlay-scrim') as HTMLElement | null;
     const overlayClose = document.getElementById('prod-overlay-close') as HTMLElement | null;
     const overlayContent = document.getElementById('prod-overlay-content') as HTMLElement | null;
@@ -437,7 +436,7 @@ function sidebarLinkClass(active: boolean): string {
         });
       }
 
-      overlaySheet?.focus();
+      overlayClose?.focus();
     }
 
     function closeProductOverlay(): void {

@@ -237,9 +237,41 @@ img { display: block; max-width: 100%; height: auto; }
 .tag--entry       { background: var(--tag-budget-bg);      color: var(--tag-budget-text);      border-color: var(--tag-budget-border); }
 .tag--ergonomic   { background: var(--tag-comfort-bg);     color: var(--tag-comfort-text);     border-color: var(--tag-comfort-border); }
 
-/* Tag active state (filter mode) */
-.tag.tag--active { opacity: 1; }
-.tag:not(.tag--active).tag--dimmed { opacity: 0.35; }
+
+/* Selected state — inverts the chip using its own color vars */
+.tag.tag--selected {
+  background: var(--tag-default-text);
+  color: var(--tag-default-bg);
+  border-color: var(--tag-default-text);
+  font-weight: var(--weight-bold);
+  transform: scale(1.05);
+  box-shadow: 0 0 0 3px color-mix(in srgb, currentColor 20%, transparent);
+  transition:
+    transform 0.12s var(--ease-bounce, cubic-bezier(0.34, 1.56, 0.64, 1)),
+    box-shadow 0.12s ease,
+    background 0.1s ease;
+}
+
+/* Per-variant selected states — keep each tag's own colour identity */
+.tag--fps.tag--selected         { background: var(--tag-fps-text);         color: var(--tag-fps-bg);         border-color: var(--tag-fps-text); }
+.tag--pro.tag--selected         { background: var(--tag-pro-text);         color: var(--tag-pro-bg);         border-color: var(--tag-pro-text); }
+.tag--budget.tag--selected      { background: var(--tag-budget-text);      color: var(--tag-budget-bg);      border-color: var(--tag-budget-text); }
+.tag--wireless.tag--selected    { background: var(--tag-wireless-text);    color: var(--tag-wireless-bg);    border-color: var(--tag-wireless-text); }
+.tag--lightweight.tag--selected { background: var(--tag-lightweight-text); color: var(--tag-lightweight-bg); border-color: var(--tag-lightweight-text); }
+.tag--comfort.tag--selected     { background: var(--tag-comfort-text);     color: var(--tag-comfort-bg);     border-color: var(--tag-comfort-text); }
+.tag--audiophile.tag--selected  { background: var(--tag-audiophile-text);  color: var(--tag-audiophile-bg);  border-color: var(--tag-audiophile-text); }
+.tag--hall-effect.tag--selected { background: var(--tag-hallfx-text);      color: var(--tag-hallfx-bg);      border-color: var(--tag-hallfx-text); }
+.tag--creator.tag--selected     { background: var(--tag-creator-text);     color: var(--tag-creator-bg);     border-color: var(--tag-creator-text); }
+.tag--value.tag--selected,
+.tag--entry.tag--selected       { background: var(--tag-budget-text);      color: var(--tag-budget-bg);      border-color: var(--tag-budget-text); }
+.tag--ergonomic.tag--selected   { background: var(--tag-comfort-text);     color: var(--tag-comfort-bg);     border-color: var(--tag-comfort-text); }
+
+/* Dimmed state — unselected tags fade back when others are active */
+.tag--dimmed {
+  opacity: 0.35;
+  transition: opacity 0.15s ease;
+}
+
 
 
 /* ──────────────────────────────────────────────
