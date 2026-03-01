@@ -1,7 +1,7 @@
 ---
 id: "creator-bay"
 label: "Creator Bay"
-emoji: "\ud83c\udfac"
+emoji: "🎬"
 color: "#7B2FBE"
 baseProducts:
   - monitors-samsung-odyssey-g80sd
@@ -14,3 +14,4 @@ baseProducts:
   - headsets-steelseries-arctis-nova-pro
   - chairs-sihoo-doro-c300
   - chairs-andaseat-kaiser-4
+---

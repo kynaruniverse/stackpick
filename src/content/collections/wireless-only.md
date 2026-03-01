@@ -1,7 +1,7 @@
 ---
 id: "wireless-only"
 label: "Wireless Only"
-emoji: "\ud83d\udce1"
+emoji: "📡"
 color: "#8E8EA0"
 baseProducts:
   - mice-razer-viper-v3-pro
@@ -12,3 +12,4 @@ baseProducts:
   - headsets-hyperx-cloud-iii-s-wireless
   - headsets-steelseries-arctis-nova-pro
   - headsets-bose-quietcomfort-ultra-gen2
+---

@@ -1,7 +1,7 @@
 ---
 id: "under-100"
-label: "Under \u00a3100"
-emoji: "\ud83d\udcb7"
+label: "Under £100"
+emoji: "💷"
 color: "#00C853"
 baseProducts:
   - mice-atk-vxe-mad-r-plus
@@ -10,3 +10,4 @@ baseProducts:
   - keyboards-aula-f99-wireless
   - headsets-sennheiser-hd560s
   - headsets-razer-blackshark-v2-x
+---

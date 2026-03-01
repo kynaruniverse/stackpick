@@ -1,7 +1,7 @@
 ---
 id: "study-mode"
 label: "Study Mode"
-emoji: "\ud83d\udcda"
+emoji: "📚"
 color: "#0057FF"
 baseProducts:
   - keyboards-asus-rog-strix-scope-ii-96
@@ -13,3 +13,4 @@ baseProducts:
   - monitors-msi-mag-274updf
   - chairs-sihoo-doro-c300
   - chairs-eureka-typhon
+---

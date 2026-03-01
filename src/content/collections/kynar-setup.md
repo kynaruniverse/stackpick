@@ -1,7 +1,7 @@
 ---
 id: "kynar-setup"
 label: "Kynar Setup"
-emoji: "\u26a1"
+emoji: "⚡"
 color: "#C8FF00"
 baseProducts:
   - mice-razer-viper-v3-pro
@@ -12,3 +12,4 @@ baseProducts:
   - monitors-asus-rog-xg27aqdmg
   - chairs-andaseat-kaiser-4
   - chairs-noblechairs-hero
+---

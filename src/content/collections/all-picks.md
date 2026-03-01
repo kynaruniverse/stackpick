@@ -1,7 +1,7 @@
 ---
 id: "all-picks"
 label: "All Picks"
-emoji: "\ud83c\udff4"
+emoji: "🏴"
 color: "#F2F0EB"
 baseProducts:
   - mice-razer-viper-v3-pro
@@ -29,3 +29,4 @@ baseProducts:
   - headsets-razer-blackshark-v2-x
   - monitors-samsung-odyssey-g80sd
   - chairs-noblechairs-hero
+---

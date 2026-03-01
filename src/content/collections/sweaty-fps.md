@@ -1,7 +1,7 @@
 ---
 id: "sweaty-fps"
 label: "Sweaty FPS"
-emoji: "\ud83c\udfaf"
+emoji: "🎯"
 color: "#FF2D55"
 baseProducts:
   - mice-razer-viper-v3-pro
@@ -12,3 +12,4 @@ baseProducts:
   - monitors-asus-rog-xg27aqdmg
   - monitors-aoc-24g4xe
   - chairs-andaseat-kaiser-4
+---

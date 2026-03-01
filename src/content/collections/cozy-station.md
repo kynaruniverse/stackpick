@@ -1,7 +1,7 @@
 ---
 id: "cozy-station"
 label: "Cozy Station"
-emoji: "\ud83c\udf75"
+emoji: "🍵"
 color: "#FF9500"
 baseProducts:
   - keyboards-keychron-q1-max
@@ -14,3 +14,4 @@ baseProducts:
   - chairs-andaseat-kaiser-4
   - chairs-noblechairs-hero
   - chairs-corsair-tc100-relaxed
+---
