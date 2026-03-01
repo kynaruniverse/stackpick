@@ -10,9 +10,10 @@ export default defineConfig({
 
   integrations: [
     sitemap({
-      // The plugin now automatically pulls the URL from 'site' above.
-      // We'll keep the filter logic simple to avoid the 'reduce' crash.
-      filter: (page) => !page.includes('/404')
+      filter: (page) => !page.includes('/404'),
+      serialize(item) {
+        return item;
+      }
     })
   ],
 
