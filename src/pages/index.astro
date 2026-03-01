@@ -228,7 +228,7 @@ const specComparison = [
     </div>
     <div class="guide-grid">
       {featuredGuides.map(guide => (
-        <a href={`/guides/${guide.data.slug}/`} class="guide-card">
+        <a href={`/guides/${guide.slug}/`} class="guide-card">
           <span class="guide-card__icon" aria-hidden="true">{guide.data.emoji ?? '📋'}</span>
           <div class="guide-card__body">
             <span class="guide-card__budget">{guide.data.budgetLabel}</span>

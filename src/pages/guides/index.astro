@@ -14,7 +14,7 @@ const ORDER = [
   'gaming-setup-1500',
   'gaming-setup-2500',
 ];
-guides.sort((a, b) => ORDER.indexOf(a.data.slug) - ORDER.indexOf(b.data.slug));
+guides.sort((a, b) => ORDER.indexOf(a.slug) - ORDER.indexOf(b.slug));
 
 // Budget → badge color
 const BUDGET_COLORS: Record<string, string> = {
@@ -55,10 +55,10 @@ const SETUP_EMOJIS = ['🖥️', '🖱️', '⌨️', '🎧', '🪑'];
 
   <!-- Budget filter -->
   <div class="filter-cage">
-    <div class="filter-strip" role="navigation" aria-label="Filter by budget">
+    <div class="filter-strip" role="group" aria-label="Filter by budget">
       <button class="filter-chip active" data-filter="all">All Budgets</button>
       {guides.map(g => (
-        <button class="filter-chip" data-filter={g.data.slug}>{g.data.budgetLabel}</button>
+        <button class="filter-chip" data-filter={g.slug}>{g.data.budgetLabel}</button>
       ))}
     </div>
   </div>
@@ -73,7 +73,7 @@ const SETUP_EMOJIS = ['🖥️', '🖱️', '⌨️', '🎧', '🪑'];
       return (
         <article
           class="setup-card"
-          data-slug={guide.data.slug}
+          data-slug={guide.slug}
           data-sections={JSON.stringify(sections)}
           role="article"
           aria-label={guide.data.title}
@@ -143,7 +143,7 @@ const SETUP_EMOJIS = ['🖥️', '🖱️', '⌨️', '🎧', '🪑'];
     const overlayClose  = document.getElementById('setup-overlay-close');
     const overlayContent = document.getElementById('setup-overlay-content');
 
-    function openSetupOverlay(title: string, sections: any[]) {
+    function openSetupOverlay(title: string, sections: any[], slug: string) {
       if (!overlay || !overlayContent) return;
       overlayContent.innerHTML = buildSetupHTML(title, sections);
       overlay.classList.add('open');
@@ -170,11 +170,11 @@ const SETUP_EMOJIS = ['🖥️', '🖱️', '⌨️', '🎧', '🪑'];
         const title    = card.querySelector('.setup-card__title')?.textContent ?? '';
         const raw      = card.dataset.sections ?? '[]';
         const sections = JSON.parse(raw) as any[];
-        openSetupOverlay(title, sections);
+        openSetupOverlay(title, sections, card.dataset.slug ?? '');
       });
     });
 
-    function buildSetupHTML(title: string, sections: any[]): string {
+    function buildSetupHTML(title: string, sections: any[], slug: string): string {
       const sectionsHTML = sections.map(sec => {
         const products = (sec.products ?? []).map((p: any) => {
           const starsStr = '★★★★½';
@@ -203,9 +203,13 @@ const SETUP_EMOJIS = ['🖥️', '🖱️', '⌨️', '🎧', '🪑'];
                   </li>`).join('')}
               </ul>` : ''}
               <div style="display:flex; gap:var(--space-2); margin-top:var(--space-3);">
+                ${p.affiliate && !p.affiliate.startsWith('TODO') ? `
                 <a href="${p.affiliate}" class="btn-primary" target="_blank" rel="noopener sponsored" style="flex:1; height:var(--btn-height-lg);">
                   Buy on Amazon ↗
-                </a>
+                </a>` : `
+                <span class="btn-secondary" style="flex:1; height:var(--btn-height-lg); opacity:0.4; pointer-events:none; cursor:default; display:flex; align-items:center; justify-content:center;">
+                  Coming Soon
+                </span>`}
               </div>
             </div>`;
         }).join('');
@@ -221,7 +225,7 @@ const SETUP_EMOJIS = ['🖥️', '🖱️', '⌨️', '🎧', '🪑'];
       return `
         <h2 style="font-family:var(--font-display); font-size:var(--text-3xl); font-weight:var(--weight-black); text-transform:uppercase; color:var(--color-text-primary); line-height:1.05; margin-bottom:var(--space-5);">${title}</h2>
         ${sectionsHTML}
-        <a href="#" onclick="window.history.back(); return false;" class="btn-secondary" style="width:100%; margin-top:var(--space-2);">View Full Guide →</a>
+        <a href="/guides/${slug}/" class="btn-secondary" style="width:100%; margin-top:var(--space-2);">View Full Guide →</a>
       `;
     }
   </script>

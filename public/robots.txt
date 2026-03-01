@@ -25,4 +25,4 @@ Disallow: /offline.html
 # Disallow build artifacts
 Disallow: /sitemap.xml.tmp
 
-Sitemap: https://stackpick.co.uk/sitemap.xml
+Sitemap: https://stackpick.co.uk/sitemap-index.xml
