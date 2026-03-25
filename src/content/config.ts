@@ -11,7 +11,7 @@ const products = defineCollection({
   type: 'content',
   schema: z.object({
     id:           z.string(),
-    category:     z.enum(['mice', 'keyboards', 'headsets', 'monitors', 'chairs']),
+    category: z.enum(['mice', 'keyboards', 'headsets', 'monitors', 'chairs', 'controllers', 'streaming', 'desk-accessories']),
     brand:        z.string(),
     badge:        z.string(),
     name:         z.string(),

@@ -1,0 +1,57 @@
+---
+// src/components/Footer.astro
+---
+<footer class="site-footer">
+  <div class="footer-container">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <span class="footer-logo">STACK<span>·</span>PICK</span>
+        <p class="footer-desc">The definitive guide to UK gaming gear. Independently researched, UK prices verified weekly.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Hardware</h4>
+        <a href="/mice/">Mice</a>
+        <a href="/keyboards/">Keyboards</a>
+        <a href="/headsets/">Headsets</a>
+        <a href="/monitors/">Monitors</a>
+        <a href="/chairs/">Chairs</a>
+      </div>
+      <div class="footer-col">
+        <h4>Editorial</h4>
+        <a href="/guides/">Setup Guides</a>
+        <a href="/comparisons/">Comparisons</a>
+        <a href="/about/">About Us</a>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <a href="/privacy/">Privacy Policy</a>
+        <a href="/terms/">Terms of Use</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 StackPick. All rights reserved.</p>
+      <p class="affiliate-disclaimer">As an Amazon Associate, we earn from qualifying purchases.</p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background: var(--color-bg-inset);
+    border-top: 1px solid var(--color-border);
+    padding: var(--space-8) var(--space-4) var(--space-12);
+    margin-top: var(--space-12);
+  }
+  .footer-container { max-width: 1200px; margin: 0 auto; }
+  .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: var(--space-8); margin-bottom: var(--space-8); }
+  .footer-logo { font-family: var(--font-display); font-weight: 900; font-size: var(--size-lg); letter-spacing: -0.02em; color: var(--color-text-primary); }
+  .footer-logo span { color: var(--color-accent); }
+  .footer-desc { margin-top: var(--space-2); font-size: var(--size-xs); color: var(--color-text-muted); line-height: 1.6; }
+  .footer-col h4 { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--color-text-dim); margin-bottom: var(--space-4); }
+  .footer-col a { display: block; font-size: var(--size-xs); color: var(--color-text-muted); text-decoration: none; margin-bottom: var(--space-2); }
+  .footer-col a:hover { color: var(--color-accent); }
+  .footer-bottom { border-top: 1px solid var(--color-border); padding-top: var(--space-4); text-align: center; }
+  .footer-bottom p { font-size: 11px; color: var(--color-text-dim); }
+  .affiliate-disclaimer { margin-top: 4px; font-style: italic; }
+  @media (max-width: 768px) { .footer-grid { grid-template-columns: 1fr 1fr; } .footer-col:first-child { grid-column: span 2; } }
+</style>
