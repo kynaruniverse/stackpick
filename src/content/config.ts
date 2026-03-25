@@ -37,7 +37,6 @@ const products = defineCollection({
 // ── COLLECTIONS ───────────────────────────────────────────────────────────────
 // Homepage product wall tabs. Each collection references product IDs.
 
-
 const homepageCollections = defineCollection({
   type: 'content',
   schema: z.object({
@@ -74,7 +73,6 @@ const specRowSchema = z.object({
 const comparisons = defineCollection({
   type: 'content',
   schema: z.object({
-    
     title:           z.string(),
     heroTitle:       z.string(),
     heroSubtitle:    z.string(),
@@ -106,7 +104,6 @@ const summaryRowSchema = z.object({
 const guides = defineCollection({
   type: 'content',
   schema: z.object({
-    
     title:              z.string(),
     heroTitle:          z.string(),
     heroSubtitle:       z.string(),
@@ -124,7 +121,6 @@ const guides = defineCollection({
     buyingGuideHeading: z.string(),
   }),
 });
-
 
 export const collections = {
   products,

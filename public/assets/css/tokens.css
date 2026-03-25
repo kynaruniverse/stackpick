@@ -64,6 +64,9 @@
   --palette-seam-jade:    #3A4F6E;
   --palette-seam-slate:   #333337;
   --palette-seam-amber:   #545460;
+  --palette-seam-violet:  #8B5CF6; /* New: Controllers */
+  --palette-seam-emerald: #10B981; /* New: Streaming */
+  --palette-seam-gold:    #F59E0B; /* New: Desk Gear */
 }
 
 /* ── Dark Theme (Default) ── */
@@ -114,6 +117,14 @@
   --shadow-card: 0 2px 8px rgba(0,0,0,0.4), 0 0 0 1px var(--color-border);
   --shadow-card-hover: 0 8px 24px rgba(0,0,0,0.6), 0 0 0 1px var(--color-border-strong);
   --shadow-overlay: 0 -8px 40px rgba(0,0,0,0.7);
+  /* New Tag Colors for Phase 2 */
+  --tag-controller-bg:     rgba(139, 92, 246, 0.15);
+  --tag-controller-text:   #A78BFA;
+  --tag-controller-border: rgba(139, 92, 246, 0.3);
+
+  --tag-stream-bg:         rgba(16, 185, 129, 0.15);
+  --tag-stream-text:       #34D399;
+  --tag-stream-border:     rgba(16, 185, 129, 0.3);
 }
 
 /* ── Light Theme ── */

@@ -1,0 +1,144 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+
+const products = await getCollection('products');
+
+// Group products by category for a cleaner dropdown
+const categories = [...new Set(products.map(p => p.data.category))];
+---
+
+<Base 
+  title="Compare Gaming Gear — StackPick"
+  description="Select any two gaming products to see a side-by-side spec comparison and verdict."
+>
+  <main class="compare-builder container">
+    <div class="builder-header">
+      <p class="hero-eyebrow">Interactive Tool</p>
+      <h1>Compare Any Two Products</h1>
+      <p>Select two products to see a side-by-side spec comparison.</p>
+    </div>
+    
+    <div class="builder-grid">
+      <div class="product-selector">
+        <label for="prod-a">Product 1</label>
+        <select id="prod-a" class="custom-select">
+          <option value="">Select Product 1</option>
+          {categories.map(cat => (
+            <optgroup label={cat.charAt(0).toUpperCase() + cat.slice(1)}>
+              {products.filter(p => p.data.category === cat).map(p => (
+                <option value={p.data.id} data-category={cat}>{p.data.name}</option>
+              ))}
+            </optgroup>
+          ))}
+        </select>
+      </div>
+      
+      <div class="vs-container">
+        <span class="vs">VS</span>
+      </div>
+      
+      <div class="product-selector">
+        <label for="prod-b">Product 2</label>
+        <select id="prod-b" class="custom-select">
+          <option value="">Select Product 2</option>
+          {categories.map(cat => (
+            <optgroup label={cat.charAt(0).toUpperCase() + cat.slice(1)}>
+              {products.filter(p => p.data.category === cat).map(p => (
+                <option value={p.data.id} data-category={cat}>{p.data.name}</option>
+              ))}
+            </optgroup>
+          ))}
+        </select>
+      </div>
+    </div>
+
+    <div class="builder-actions">
+      <button id="start-compare" class="btn-primary btn-large">Compare Now</button>
+      <p id="error-msg" class="error-text" style="display: none;"></p>
+    </div>
+  </main>
+</Base>
+
+<style>
+  .compare-builder { text-align: center; padding: var(--space-12) var(--page-pad-mobile); min-height: 60vh; }
+  .builder-header { margin-bottom: var(--space-10); }
+  .builder-header h1 { font-size: 48px; font-weight: 900; margin-bottom: var(--space-2); letter-spacing: -0.02em; }
+  .builder-header p { color: var(--color-text-muted); font-size: 18px; max-width: 600px; margin: 0 auto; }
+  
+  .builder-grid { 
+    display: flex; 
+    align-items: flex-end; 
+    justify-content: center; 
+    gap: var(--space-8); 
+    margin: var(--space-12) 0; 
+  }
+  
+  .product-selector { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
+  .product-selector label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 800; color: var(--color-text-dim); margin-left: 4px; }
+  
+  .custom-select { 
+    padding: 18px 24px; 
+    border-radius: 16px; 
+    background: var(--color-bg-inset); 
+    color: var(--color-text-primary); 
+    border: 2px solid var(--color-border); 
+    font-size: 16px; 
+    width: 320px; 
+    outline: none; 
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 600;
+  }
+  .custom-select:focus { border-color: var(--color-accent); box-shadow: 0 0 0 4px rgba(200, 32, 32, 0.1); }
+  
+  .vs-container { padding-bottom: 12px; }
+  .vs { font-weight: 900; font-style: italic; color: var(--color-accent); font-size: 40px; text-shadow: 4px 4px 0px rgba(0,0,0,0.1); }
+  
+  .builder-actions { margin-top: var(--space-8); }
+  .btn-large { padding: 20px 48px; font-size: 18px; border-radius: 16px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; }
+  
+  .error-text { color: var(--color-accent); font-size: 14px; margin-top: 16px; font-weight: 600; }
+
+  @media (max-width: 768px) { 
+    .builder-grid { flex-direction: column; align-items: stretch; gap: var(--space-4); } 
+    .custom-select { width: 100%; }
+    .vs-container { padding: var(--space-2) 0; }
+    .builder-header h1 { font-size: 32px; }
+  }
+</style>
+
+<script is:inline>
+  document.getElementById('start-compare').addEventListener('click', () => {
+    const selA = document.getElementById('prod-a');
+    const selB = document.getElementById('prod-b');
+    const error = document.getElementById('error-msg');
+    
+    const a = selA.value;
+    const b = selB.value;
+    
+    const catA = selA.options[selA.selectedIndex]?.dataset.category;
+    const catB = selB.options[selB.selectedIndex]?.dataset.category;
+
+    if (!a || !b) { 
+      error.textContent = "Please select two products to compare.";
+      error.style.display = 'block';
+      return; 
+    }
+    
+    if (a === b) { 
+      error.textContent = "You cannot compare a product to itself.";
+      error.style.display = 'block';
+      return; 
+    }
+
+    if (catA !== catB) {
+      error.textContent = `Please compare products from the same category (${catA} vs ${catB} is not supported).`;
+      error.style.display = 'block';
+      return;
+    }
+
+    error.style.display = 'none';
+    window.location.href = `/comparisons/${a}-vs-${b}/`;
+  });
+</script>

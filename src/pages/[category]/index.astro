@@ -1,6 +1,6 @@
 ---
 // src/pages/[category]/index.astro — v6.0
-// Category pages: /mice/ /keyboards/ /headsets/ /monitors/ /chairs/
+// Category pages: /mice/ /keyboards/ /headsets/ /monitors/ /chairs/ /controllers/ /streaming/ /desk-accessories/
 
 import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
@@ -9,7 +9,7 @@ import ProductCard from '../../components/ProductCard.astro';
 const BUILD_MONTH = new Date().toLocaleDateString('en-GB', { month: 'long',  year: 'numeric' });
 const BUILD_SHORT = new Date().toLocaleDateString('en-GB', { month: 'short', year: 'numeric' });
 
-type CategoryKey = 'mice' | 'keyboards' | 'headsets' | 'monitors' | 'chairs';
+type CategoryKey = 'mice' | 'keyboards' | 'headsets' | 'monitors' | 'chairs' | 'controllers' | 'streaming' | 'desk-accessories';
 
 const CATEGORY_META: Record<CategoryKey, {
   emoji: string;
@@ -100,10 +100,58 @@ const CATEGORY_META: Record<CategoryKey, {
       <p class="last-updated"><em>Last updated: ${BUILD_MONTH}. Prices checked weekly.</em></p>
     `,
   },
+  controllers: {
+    emoji: '🎮',
+    pageTitle: `Best Gaming Controllers UK ${new Date().getFullYear()} | StackPick`,
+    metaDescription: 'Best gaming controllers for UK gamers. Hall Effect, pro-grade paddles, and budget wireless picks — verified UK pricing.',
+    heroTitle: 'Best Gaming Controllers (UK)',
+    heroSubtitle: `Hall Effect sticks, pro-grade paddles, and zero-drift picks. Updated ${BUILD_SHORT}.`,
+    breadcrumbLabel: 'Gaming Controllers',
+    buyingGuide: `
+      <h2>The 2026 Controller Guide</h2>
+      <h3>Why Hall Effect is Essential</h3>
+      <p>Traditional controllers use potentiometers that eventually drift. <strong>Hall Effect sensors</strong> use magnets to track movement, meaning they physically cannot drift. In 2026, we only recommend HE sticks for serious longevity.</p>
+      <h3>Mechanical vs Membrane Buttons</h3>
+      <p>Pro controllers now use <strong>mechanical switches</strong> for the D-pad and face buttons. They provide a tactile "click" (like a mouse) and actuate 30% faster than traditional rubber membrane buttons.</p>
+      <p class="last-updated"><em>Last updated: ${BUILD_MONTH}. Prices checked weekly.</em></p>
+    `,
+  },
+  streaming: {
+    emoji: '🎥',
+    pageTitle: `Best Streaming Gear UK ${new Date().getFullYear()} | StackPick`,
+    metaDescription: 'Best streaming gear for UK creators. 4K webcams, XLR mics, and lighting — verified UK pricing on Amazon.',
+    heroTitle: 'Best Streaming Gear (UK)',
+    heroSubtitle: `4K webcams, XLR audio, and the gear that makes you look pro. Updated ${BUILD_SHORT}.`,
+    breadcrumbLabel: 'Streaming Gear',
+    buyingGuide: `
+      <h2>The 2026 Creator Guide</h2>
+      <h3>Audio is 70% of the Stream</h3>
+      <p>Viewers will tolerate 720p video, but they won't tolerate bad audio. We recommend <strong>XLR setups</strong> for the most professional sound, but modern USB-C mics (like the Shure MV7+) have closed the gap significantly.</p>
+      <h3>Webcam vs Mirrorless</h3>
+      <p>High-end webcams now offer 4K/60fps with large sensors. Unless you are a full-time professional, a premium webcam is easier to manage and delivers 90% of the quality of a complex camera setup.</p>
+      <p class="last-updated"><em>Last updated: ${BUILD_MONTH}. Prices checked weekly.</em></p>
+    `,
+  },
+  'desk-accessories': {
+    emoji: '💡',
+    pageTitle: `Best Desk Accessories UK ${new Date().getFullYear()} | StackPick`,
+    metaDescription: 'Best desk accessories for UK gamers. Monitor arms, desk pads, and cable management — verified UK pricing.',
+    heroTitle: 'Best Desk Accessories (UK)',
+    heroSubtitle: `Monitor arms, premium pads, and the details that finish your setup. Updated ${BUILD_SHORT}.`,
+    breadcrumbLabel: 'Desk Accessories',
+    buyingGuide: `
+      <h2>The 2026 Accessories Guide</h2>
+      <h3>Monitor Arms: Reclaim your Desk</h3>
+      <p>Standard monitor stands are bulky. A gas-spring <strong>monitor arm</strong> lets you float your screen, giving you back 20% of your desk space for your mousepad and keyboard.</p>
+      <h3>Glass vs Cloth Pads</h3>
+      <p>Cloth pads are the standard for control. <strong>Glass pads</strong> (like the SkyPAD) offer near-zero friction for effortless tracking. They are more expensive but physically never wear out.</p>
+      <p class="last-updated"><em>Last updated: ${BUILD_MONTH}. Prices checked weekly.</em></p>
+    `,
+  },
 };
 
 export async function getStaticPaths() {
-  const categories: CategoryKey[] = ['mice', 'keyboards', 'headsets', 'monitors', 'chairs'];
+  const categories: CategoryKey[] = ['mice', 'keyboards', 'headsets', 'monitors', 'chairs', 'controllers', 'streaming', 'desk-accessories'];
   return categories.map(category => ({ params: { category } }));
 }
 
@@ -143,10 +191,10 @@ allProducts.sort((a, b) => (a.data.rank ?? 99) - (b.data.rank ?? 99));
   <div class="filter-cage filter-cage--sticky">
     <div class="filter-strip" role="group" aria-label="Filter by budget">
       <button class="filter-chip active" data-filter="all">All Budgets</button>
-      <button class="filter-chip" data-filter="under-50">Under £50</button>
-      <button class="filter-chip" data-filter="50-100">£50–£100</button>
-      <button class="filter-chip" data-filter="100-200">£100–£200</button>
-      <button class="filter-chip" data-filter="over-200">£200+</button>
+      <button class="filter-chip" data-filter="budget">Budget</button>
+      <button class="filter-chip" data-filter="mid-range">Mid-Range</button>
+      <button class="filter-chip" data-filter="premium">Premium</button>
+      <button class="filter-chip" data-filter="enthusiast">Enthusiast</button>
     </div>
   </div>
 

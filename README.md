@@ -1,14 +1,20 @@
-# StackPick
+# StackPick UK
 
-UK gaming gear recommendations. Curated picks for headsets, keyboards, mice, monitors, and chairs — verified UK pricing, no sponsored content.
+The definitive guide to UK gaming gear. Curated picks for mice, keyboards, headsets, monitors, chairs, controllers, and streaming gear — verified UK pricing, independent research, zero filler.
 
 **Live site:** [stackpick.co.uk](https://stackpick.co.uk)
 
 ---
 
-## What This Is
+## Project Evolution (v6.0)
 
-StackPick helps UK gamers find the right gear without wading through US-centric reviews or bloated 50-item lists. Every pick is researched against what the UK gaming community actually buys, with pricing verified on Amazon UK.
+StackPick has evolved from a simple list into a comprehensive discovery engine for UK enthusiasts.
+
+### New Features:
+- **Dedicated Product Pages:** Every gear pick now has a full SEO-optimized review page.
+- **Interactivity:** New Comparison Builder and Wishlist Sharing tools.
+- **Discovery:** Global keyword search across all products, guides, and comparisons.
+- **Expanded Categories:** Now including Controllers, Streaming Gear, and Desk Accessories.
 
 ---
 
@@ -16,43 +22,12 @@ StackPick helps UK gamers find the right gear without wading through US-centric 
 
 | Layer | Detail |
 |---|---|
-| Framework | Astro 4 (static output) |
+| Framework | Astro 5 (Static Output) |
 | Language | TypeScript |
-| Styling | Custom CSS design system (tokens → components → style) |
-| Content | Astro Content Collections (Markdown + YAML frontmatter) |
-| Hosting | GitHub Pages |
-| Analytics | Google Analytics 4 |
-| PWA | Service Worker with cache-first shell strategy |
-
----
-
-## Project Structure
-
-```
-src/
-  components/    → Astro components (ProductCard.astro)
-  content/
-    products/    → One .md file per product
-    collections/ → Homepage tab collections (reference product IDs)
-    comparisons/ → Head-to-head comparison pages
-    guides/      → Budget setup guides
-    config.ts    → Zod schemas for all content collections
-  layouts/       → Base.astro (single page shell)
-  pages/         → Astro page routes
-public/
-  assets/css/    → tokens.css → components.css → style.css
-  assets/js/     → analytics.js
-  sw.js          → Service Worker
-```
-
----
-
-## How to Add a Product
-
-1. Create a new `.md` file in `src/content/products/` following the naming convention `{category}-{brand-slug}.md`
-2. Add all required frontmatter fields as defined in `src/content/config.ts`
-3. Add the product's `id` to the relevant collection files in `src/content/collections/`
-4. Run `npm run build` to verify the build passes
+| Styling | Custom "Streetwear" CSS Tokens & Components |
+| Content | Astro Content Collections (Markdown + Zod) |
+| SEO | JSON-LD Structured Data & Auto-Sitemap |
+| PWA | Offline-first Service Worker Strategy |
 
 ---
 
@@ -60,13 +35,16 @@ public/
 
 ```bash
 npm install
-npm run dev       # Dev server at localhost:4321
-npm run build     # Production build to dist/
-npm run preview   # Preview the production build
+npm run dev       # Local server at localhost:4321
+npm run build     # Validate content and build to dist/
+npm run preview   # Preview production build
 ```
 
 ---
 
-## Deployment
+## Content Workflow
 
-Pushes to `main` automatically trigger the GitHub Actions workflow (`.github/workflows/build-and-deploy.yml`) which builds the Astro site, stamps the service worker cache version, and deploys to GitHub Pages.
+1. **Add Product:** Create `.md` in `src/content/products/`.
+2. **Dedicated Review:** Add your analysis to the body of the Markdown file.
+3. **Category:** Ensure the `category` matches one of the 8 allowed types.
+4. **Verification:** Run `npm run build` to check category validity.

@@ -8,14 +8,11 @@ import Base from '../../layouts/Base.astro';
 export async function getStaticPaths() {
   const comparisons = await getCollection('comparisons');
   return comparisons.map(comp => ({
-    // Use Astro's built-in slug (which automatically picks up your frontmatter 'slug')
+    // Use Astro's built-in slug
     params: { slug: comp.slug }, 
     props:  { comp },
   }));
 }
-
-
-
 
 const { comp } = Astro.props;
 const { data }  = comp;
@@ -33,6 +30,8 @@ const specTable    = data.specTable    as SpecRow[];
 const sections     = data.sections     as Section[];
 const buySection   = data.buySection   as BuySection;
 const relatedLinks = data.relatedLinks as RelatedLink[];
+
+const BUILD_MONTH = new Date().toLocaleDateString('en-GB', { month: 'long', year: 'numeric' });
 ---
 
 <Base
@@ -41,8 +40,6 @@ const relatedLinks = data.relatedLinks as RelatedLink[];
   canonical={`https://stackpick.co.uk/comparisons/${comp.slug}/`}
   ogType="article"
 >
-
-
 
   <section slot="hero" class="hero hero--inner">
     <div class="hero-container container">
@@ -78,10 +75,6 @@ const relatedLinks = data.relatedLinks as RelatedLink[];
           class="comparison-product-card"
           style={`--seam-color: ${product.badgeColor}`}
         >
-          <!--
-            Badge: badgeColor from content schema applied as --seam-color
-            custom property. Avoids raw hex in inline style on the element.
-          -->
           <span
             class="rank-badge"
             style="background: var(--seam-color); border-color: var(--seam-color); color: #fff;"
@@ -92,6 +85,7 @@ const relatedLinks = data.relatedLinks as RelatedLink[];
           <p class="product-entry__desc">{product.desc}</p>
           <div class="price-block">
             <span class="price-current">{product.price}</span>
+            <span class="last-verified">Verified {BUILD_MONTH}</span>
           </div>
           <a
             href={product.affiliate}
@@ -141,12 +135,14 @@ const relatedLinks = data.relatedLinks as RelatedLink[];
     </div>
 
     <!-- Analysis sections -->
-    {sections.map(section => (
-      <div class="comparison-section">
-        <h2>{section.heading}</h2>
-        <p>{section.body}</p>
-      </div>
-    ))}
+    <div class="comparison-analysis">
+      {sections.map(section => (
+        <div class="comparison-section">
+          <h2>{section.heading}</h2>
+          <p>{section.body}</p>
+        </div>
+      ))}
+    </div>
 
     <!-- Buy recommendation callout -->
     {buySection && (
@@ -167,7 +163,10 @@ const relatedLinks = data.relatedLinks as RelatedLink[];
       </div>
     )}
 
-    <p class="last-updated">Last verified: {data.dateModified}</p>
+    <div class="editorial-footer">
+      <p class="last-updated">Last verified: {data.dateModified}</p>
+      <p class="affiliate-notice">As an Amazon Associate, StackPick earns from qualifying purchases.</p>
+    </div>
 
     <!-- Related links -->
     {relatedLinks.length > 0 && (
@@ -191,4 +190,37 @@ const relatedLinks = data.relatedLinks as RelatedLink[];
     )}
 
   </article>
+
+  <style>
+    .comparison-analysis {
+      margin-top: var(--space-8);
+    }
+    .comparison-section h2 {
+      font-size: var(--size-md);
+      margin-bottom: var(--space-4);
+      color: var(--color-text-primary);
+    }
+    .comparison-section p {
+      line-height: 1.7;
+      color: var(--color-text-muted);
+      margin-bottom: var(--space-8);
+    }
+    .editorial-footer {
+      margin-top: var(--space-12);
+      padding-top: var(--space-6);
+      border-top: 1px solid var(--color-border);
+    }
+    .affiliate-notice {
+      font-size: 11px;
+      color: var(--color-text-dim);
+      font-style: italic;
+      margin-top: var(--space-2);
+    }
+    .last-verified {
+      font-size: 10px;
+      color: var(--color-text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+  </style>
 </Base>

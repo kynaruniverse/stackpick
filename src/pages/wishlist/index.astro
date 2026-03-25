@@ -1,6 +1,6 @@
 ---
 // src/pages/wishlist/index.astro — v6.0
-// Wishlist: localStorage-backed, 2-col grid, remove + expand overlay
+// Wishlist: localStorage-backed, 2-col grid, remove + expand overlay + shareable setups
 
 import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
@@ -31,11 +31,13 @@ const allProductsData = allProducts.map(p => ({
 }));
 
 const allProductsJSON = JSON.stringify(allProductsData);
+
+const BUILD_MONTH = new Date().toLocaleDateString('en-GB', { month: 'long', year: 'numeric' });
 ---
 
 <Base
-  title="My Wishlist | StackPick"
-  description="Your saved gaming gear picks. Build your perfect UK gaming setup."
+  title="My Gaming Wishlist | StackPick UK"
+  description="Your saved gaming gear picks. Build, compare, and share your perfect UK gaming setup."
   canonical="https://stackpick.co.uk/wishlist/"
 >
 
@@ -43,7 +45,7 @@ const allProductsJSON = JSON.stringify(allProductsData);
     <div class="hero-container container">
       <p class="hero-eyebrow">Your Collection</p>
       <h1>Wishlist</h1>
-      <p>Saved gear — tap any card for details, swipe to compare.</p>
+      <p>Your curated gear for {BUILD_MONTH}. Tap any card for details or share your setup.</p>
     </div>
   </section>
 
@@ -57,26 +59,59 @@ const allProductsJSON = JSON.stringify(allProductsData);
     </div>
   </nav>
 
-  <!-- Wishlist count -->
-  <div class="wishlist-count" id="wishlist-count" aria-live="polite"></div>
+  <div class="wishlist-controls container">
+    <div class="wishlist-meta">
+      <div class="wishlist-count" id="wishlist-count" aria-live="polite"></div>
+      <p class="last-verified">Prices verified {BUILD_MONTH}</p>
+    </div>
+    <div class="wishlist-actions">
+      <button id="share-wishlist" class="btn-primary btn-share">
+        Share My Setup
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+      </button>
+    </div>
+  </div>
 
   <!-- Empty state -->
   <div class="wishlist-empty hidden" id="wishlist-empty">
-    <span class="wishlist-empty__icon" aria-hidden="true">♡</span>
-    <h2 class="wishlist-empty__title">Nothing saved yet</h2>
-    <p class="wishlist-empty__desc">Browse gear and tap "Save" to add products here.</p>
-    <a href="/hardware/" class="btn-primary" style="margin-top: var(--space-2);">
-      Browse Hardware
-    </a>
+    <div class="wishlist-empty__visual" aria-hidden="true">♡</div>
+    <h2 class="wishlist-empty__title">Your collection is empty</h2>
+    <p class="wishlist-empty__desc">Browse the hardware database and save the gear that fits your playstyle.</p>
+    <a href="/hardware/" class="btn-primary">Browse Hardware</a>
   </div>
 
   <!-- Wishlist grid -->
-  <div class="wishlist-grid" id="wishlist-grid" aria-label="Saved products">
-    <!-- Populated by JS -->
-  </div>
+  <section class="wishlist-grid-wrapper container">
+    <div class="wishlist-grid" id="wishlist-grid" aria-live="polite">
+      <!-- Populated by JS -->
+    </div>
+  </section>
 
   <!-- Embed all product data -->
   <script type="application/json" id="all-products-data" set:html={allProductsJSON}></script>
+
+  <style>
+    .wishlist-controls { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: var(--space-8); margin-top: var(--space-8); }
+    .wishlist-meta { display: flex; flex-direction: column; gap: 4px; }
+    .wishlist-count { font-family: var(--font-mono); font-weight: 800; font-size: var(--text-sm); color: var(--color-text-primary); text-transform: uppercase; }
+    .last-verified { font-size: 10px; color: var(--color-text-dim); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700; }
+    
+    .btn-share { padding: 12px 24px; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 8px; border-radius: 12px; }
+    
+    .wishlist-empty { text-align: center; padding: var(--space-20) var(--space-4); }
+    .wishlist-empty__visual { font-size: 80px; color: var(--color-border); margin-bottom: var(--space-4); }
+    .wishlist-empty__title { font-size: var(--text-3xl); font-weight: 900; margin-bottom: var(--space-2); color: var(--color-text-primary); }
+    .wishlist-empty__desc { color: var(--color-text-muted); margin-bottom: var(--space-8); max-width: 400px; margin-left: auto; margin-right: auto; }
+
+    .wishlist-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); }
+    
+    @media (max-width: 768px) {
+      .wishlist-grid { grid-template-columns: 1fr; }
+      .wishlist-controls { flex-direction: column; align-items: flex-start; gap: var(--space-6); }
+      .wishlist-actions { width: 100%; }
+      .btn-share { width: 100%; justify-content: center; }
+    }
+  </style>
 
   <script>
     const raw        = document.getElementById('all-products-data')!.textContent!;
@@ -109,8 +144,6 @@ const allProductsJSON = JSON.stringify(allProductsData);
       window.dispatchEvent(new CustomEvent('wishlist-changed', { detail: { wl } }));
     }
 
-    // NOTE: tagClass below is an intentional client-side copy — browser <script>
-    // blocks cannot import from src/lib/productUtils.ts. Canonical version is there.
     function tagClass(t: string): string {
       const map: Record<string,string> = {
         fps:'fps', pro:'pro', budget:'budget', value:'value', entry:'entry',
@@ -132,7 +165,7 @@ const allProductsJSON = JSON.stringify(allProductsData);
         <article class="pcard" data-id="${p.id}" style="--seam-color: ${p.seamColor};"
           data-pjson='${JSON.stringify(p).replace(/'/g,"&#39;")}' tabindex="0">
           <div class="pcard__visual">
-            <span class="pcard__rank-badge" style="background:${p.seamColor};">${p.badge.slice(0,12)}</span>
+            <span class="pcard__rank-badge" style="background:${p.seamColor};">${p.badge}</span>
             <div class="pcard__emoji">${p.emoji}</div>
           </div>
           <div class="pcard__body">
@@ -149,14 +182,33 @@ const allProductsJSON = JSON.stringify(allProductsData);
             <div class="pcard__tags">${tagsHTML}${extra}</div>
             <div class="pcard__actions">
               <button class="btn-remove" data-remove="${p.id}" aria-label="Remove ${p.name} from wishlist">
-                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                Remove
+                ✕ Remove
               </button>
               <a href="${p.affiliate}" class="btn-compare" target="_blank" rel="noopener sponsored" onclick="event.stopPropagation()">Amazon ↗</a>
             </div>
           </div>
         </article>`;
     }
+
+    // Share Wishlist Logic
+    document.getElementById('share-wishlist')?.addEventListener('click', () => {
+      const wl = getWL();
+      if (wl.length === 0) {
+        alert("Your wishlist is empty! Add some gear first.");
+        return;
+      }
+      const ids = wl.join(',');
+      const shareUrl = `${window.location.origin}/wishlist/?ids=${ids}`;
+      
+      navigator.clipboard.writeText(shareUrl).then(() => {
+        const btn = document.getElementById('share-wishlist')!;
+        const originalText = btn.innerHTML;
+        btn.innerHTML = 'Link Copied! ✓';
+        setTimeout(() => { btn.innerHTML = originalText; }, 2000);
+      }).catch(() => {
+        alert("Failed to copy link. Please copy the URL from your browser address bar.");
+      });
+    });
 
     function renderGrid() {
       const wl = getWL();
@@ -165,11 +217,11 @@ const allProductsJSON = JSON.stringify(allProductsData);
       if (products.length === 0) {
         grid.innerHTML = '';
         empty.classList.remove('hidden');
-        countEl.textContent = '';
+        countEl.textContent = '0 ITEMS SAVED';
       } else {
         empty.classList.add('hidden');
         grid.innerHTML = products.map(buildCard).join('');
-        countEl.textContent = `${products.length} item${products.length !== 1 ? 's' : ''} saved`;
+        countEl.textContent = `${products.length} ITEM${products.length !== 1 ? 'S' : ''} SAVED`;
 
         // Wire remove buttons
         grid.querySelectorAll<HTMLButtonElement>('[data-remove]').forEach(btn => {

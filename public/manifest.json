@@ -1,79 +1,29 @@
 {
   "name": "StackPick",
   "short_name": "StackPick",
-  "description": "Researched gaming gear picks for UK gamers. Best mice, keyboards, headsets, monitors and chairs — verified UK pricing, no filler.",
+  "description": "The definitive guide to UK gaming gear. Verified pricing, independent research, no filler.",
   "id": "/",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "orientation": "any",
-  "background_color": "#F7F7F8",
-  "theme_color": "#0D1520",
+  "background_color": "#0D1520",
+  "theme_color": "#C82020",
   "lang": "en-GB",
   "dir": "ltr",
-  "categories": ["shopping", "entertainment"],
-
+  "categories": ["shopping", "entertainment", "tech"],
   "icons": [
-    { "src": "/assets/icons/icon-192.png",          "sizes": "192x192", "type": "image/png", "purpose": "any" },
-    { "src": "/assets/icons/icon-512.png",          "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/assets/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
     { "src": "/assets/icons/icon-maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
     { "src": "/assets/icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ],
-
-  "screenshots": [
-    {
-      "src": "/assets/images/screenshot-mobile.png",
-      "sizes": "390x844",
-      "type": "image/png",
-      "form_factor": "narrow",
-      "label": "StackPick category page on mobile"
-    },
-    {
-      "src": "/assets/images/screenshot-desktop.png",
-      "sizes": "1280x800",
-      "type": "image/png",
-      "form_factor": "wide",
-      "label": "StackPick homepage on desktop"
-    }
-  ],
-
   "shortcuts": [
-    {
-      "name": "Browse Headsets",
-      "short_name": "Headsets",
-      "description": "Best gaming headsets for UK gamers",
-      "url": "/headsets/",
-      "icons": [{ "src": "/assets/icons/shortcut-headsets.png", "sizes": "96x96" }]
-    },
-    {
-      "name": "Browse Keyboards",
-      "short_name": "Keyboards",
-      "description": "Best gaming keyboards for UK gamers",
-      "url": "/keyboards/",
-      "icons": [{ "src": "/assets/icons/shortcut-keyboards.png", "sizes": "96x96" }]
-    },
-    {
-      "name": "Browse Mice",
-      "short_name": "Mice",
-      "description": "Best gaming mice for UK gamers",
-      "url": "/mice/",
-      "icons": [{ "src": "/assets/icons/shortcut-mice.png", "sizes": "96x96" }]
-    },
-    {
-      "name": "Browse Monitors",
-      "short_name": "Monitors",
-      "description": "Best gaming monitors for UK gamers",
-      "url": "/monitors/",
-      "icons": [{ "src": "/assets/icons/shortcut-monitors.png", "sizes": "96x96" }]
-    },
-    {
-      "name": "Browse Chairs",
-      "short_name": "Chairs",
-      "description": "Best gaming chairs for UK gamers",
-      "url": "/chairs/",
-      "icons": [{ "src": "/assets/icons/shortcut-chairs.png", "sizes": "96x96" }]
-    }
+    { "name": "Mice", "url": "/mice/", "icons": [{ "src": "/assets/icons/shortcut-mice.png", "sizes": "96x96" }] },
+    { "name": "Keyboards", "url": "/keyboards/", "icons": [{ "src": "/assets/icons/shortcut-keyboards.png", "sizes": "96x96" }] },
+    { "name": "Controllers", "url": "/controllers/", "icons": [{ "src": "/assets/icons/shortcut-controllers.png", "sizes": "96x96" }] },
+    { "name": "Streaming", "url": "/streaming/", "icons": [{ "src": "/assets/icons/shortcut-streaming.png", "sizes": "96x96" }] },
+    { "name": "Setup Guides", "url": "/guides/", "icons": [{ "src": "/assets/icons/shortcut-guides.png", "sizes": "96x96" }] }
   ],
-
   "prefer_related_applications": false
 }

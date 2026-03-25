@@ -15,6 +15,9 @@ export const SEAM_COLOR: Record<string, string> = {
   jade:    'var(--palette-navy-400)',
   slate:   'var(--palette-carbon-600)',
   amber:   'var(--palette-silver-600)',
+  emerald: 'var(--palette-green-500)', // New for Controllers/Streaming
+  violet:  'var(--palette-purple-500)', // New for Accessories
+  gold:    'var(--palette-gold-500)',   // New for Premium picks
 };
 
 // ── RATING FROM RANK ──────────────────────────────────────────────────────────
@@ -25,15 +28,39 @@ export const SEAM_COLOR: Record<string, string> = {
 // rank 4 → 4.3 ★   rank 5+ → 4.1 ★
 
 export function ratingFromRank(rank: number): number {
-  return [4.9, 4.7, 4.5, 4.3, 4.1][Math.min(rank - 1, 4)] ?? 4.0;
+  const ratings = [4.9, 4.7, 4.5, 4.3, 4.1];
+  return ratings[Math.min(rank - 1, ratings.length - 1)] ?? 4.0;
 }
 
 // ── BUDGET CLASS ──────────────────────────────────────────────────────────────
 // Maps a raw price number to the CSS data-budget filter value.
+// Updated for Phase 2/3 to handle high-end gear more precisely.
 
 export function budgetClass(priceRaw: number): string {
-  if (priceRaw <  50) return 'under-50';
-  if (priceRaw < 100) return '50-100';
-  if (priceRaw < 200) return '100-200';
-  return 'over-200';
+  if (priceRaw < 50) return 'budget';
+  if (priceRaw < 150) return 'mid-range';
+  if (priceRaw < 300) return 'premium';
+  return 'enthusiast';
+}
+
+// ── TAG CLASS MAP ─────────────────────────────────────────────────────────────
+// Server-side version of the tag class mapper.
+// Keep this in sync with the client-side version in Base.astro.
+
+export function tagClass(t: string): string {
+  const map: Record<string, string> = {
+    fps: 'fps',
+    pro: 'pro',
+    budget: 'budget',
+    value: 'value',
+    entry: 'entry',
+    wireless: 'wireless',
+    lightweight: 'lightweight',
+    comfort: 'comfort',
+    ergonomic: 'ergonomic',
+    audiophile: 'audiophile',
+    creator: 'creator',
+    'hall-effect': 'hall-effect',
+  };
+  return `tag tag--${map[t] ?? 'default'}`;
 }

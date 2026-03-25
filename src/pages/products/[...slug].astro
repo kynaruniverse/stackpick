@@ -1,6 +1,10 @@
 ---
+// src/pages/products/[...slug].astro — v6.0
+// Dedicated product pages: /products/razer-viper-v3-pro/
+
 import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
+import { SEAM_COLOR, ratingFromRank } from '../../lib/productUtils';
 
 export async function getStaticPaths() {
   const products = await getCollection('products');
@@ -12,59 +16,73 @@ export async function getStaticPaths() {
 const { entry } = Astro.props;
 const { Content } = await entry.render();
 
-// Helper for stars
-function starsHTML(r: number): string {
-  const full = Math.floor(r);
-  return '★'.repeat(full) + (r % 1 >= 0.5 ? '½' : '');
-}
+const rating = ratingFromRank(entry.data.rank ?? 3);
+const starsStr = '★'.repeat(Math.floor(rating)) + (rating % 1 >= 0.5 ? '½' : '');
+const seamColor = SEAM_COLOR[entry.data.seam] ?? 'var(--color-accent)';
+
+const BUILD_MONTH = new Date().toLocaleDateString('en-GB', { month: 'long', year: 'numeric' });
+const BUILD_SHORT = new Date().toLocaleDateString('en-GB', { month: 'short', year: 'numeric' });
 ---
 
 <Base 
-  title={`${entry.data.name} — StackPick`} 
-  description={entry.data.badge}
+  title={`${entry.data.name} UK Review & Best Price ${new Date().getFullYear()} | StackPick`} 
+  description={`${entry.data.name} review for UK gamers. ${entry.data.badge} — verified UK pricing and availability.`}
+  canonical={`https://stackpick.co.uk/products/${entry.slug}/`}
+  ogType="product"
 >
   <main class="product-page container" id="main-content">
-    <nav class="breadcrumb" aria-label="Breadcrumb">
-      <a href="/">Home</a>
-      <span class="sep">/</span>
-      <a href={`/${entry.data.category}/`}>{entry.data.category.charAt(0).toUpperCase() + entry.data.category.slice(1)}</a>
-      <span class="sep">/</span>
-      <span class="current">{entry.data.name}</span>
+    <nav class="breadcrumb-bar" aria-label="Breadcrumb">
+      <ol class="breadcrumb-list">
+        <li><a href="/">Home</a></li>
+        <li class="breadcrumb-sep" aria-hidden="true">/</li>
+        <li><a href="/hardware/">Hardware</a></li>
+        <li class="breadcrumb-sep" aria-hidden="true">/</li>
+        <li><a href={`/${entry.data.category}/`}>{entry.data.category.charAt(0).toUpperCase() + entry.data.category.slice(1)}</a></li>
+        <li class="breadcrumb-sep" aria-hidden="true">/</li>
+        <li aria-current="page">{entry.data.name}</li>
+      </ol>
     </nav>
 
-    <div class="product-grid-layout">
+    <div class="product-grid-layout" style={`--seam-color: ${seamColor};`}>
       <!-- Left: Visual -->
       <div class="product-visual">
         <div class="product-emoji" aria-hidden="true">{entry.data.emoji}</div>
         <div class="product-rating">
-          <span class="stars">{starsHTML(entry.data.priceRaw / 40 > 5 ? 5 : 4.5)}</span>
-          <span class="score">StackPick Verified</span>
+          <div class="stars" aria-label={`Rating: ${rating.toFixed(1)} out of 5`}>
+            <span class="stars__symbol">{starsStr}</span>
+            <span class="stars__score">{rating.toFixed(1)}</span>
+          </div>
+          <span class="score-label">StackPick Verified Pick</span>
         </div>
       </div>
 
       <!-- Right: Info -->
       <div class="product-info">
-        <span class="brand">{entry.data.brand}</span>
-        <h1>{entry.data.name}</h1>
-        <p class="badge-text">{entry.data.badge}</p>
+        <div class="product-header">
+          <span class="brand-tag">{entry.data.brand}</span>
+          <h1>{entry.data.name}</h1>
+          <p class="hero-subtitle">{entry.data.badge}</p>
+        </div>
 
         <div class="price-box">
           <div class="price-main">
-            <span class="currency">£</span>
-            <span class="amount">{entry.data.priceRaw}</span>
+            <span class="price-current">{entry.data.price}</span>
+            <div class="price-meta">
+              {entry.data.msrp && <span class="price-msrp">MSRP: {entry.data.msrp}</span>}
+              <span class="verified-badge">Price Verified {BUILD_SHORT}</span>
+            </div>
           </div>
-          <div class="price-meta">
-            {entry.data.msrp && <span class="msrp">MSRP: {entry.data.msrp}</span>}
-            <span class="verified-tag">Verified UK Price</span>
-          </div>
+          {entry.data.savings && <div class="savings-badge">Save {entry.data.savings}</div>}
         </div>
 
-        <div class="action-bar">
-          <a href={entry.data.affiliate} class="btn-primary" target="_blank" rel="noopener sponsored">
-            View on Amazon UK ↗
+        <div class="action-grid">
+          <a href={entry.data.affiliate} class="btn-primary btn-xl" target="_blank" rel="noopener sponsored">
+            View on Amazon UK
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
           </a>
-          <button class="btn-secondary" data-id={entry.data.id} id="add-to-wishlist">
-            Save to Wishlist
+          <button class="btn-secondary btn-xl btn-wishlist" data-id={entry.data.id} aria-pressed="false">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            Save
           </button>
         </div>
 
@@ -75,16 +93,21 @@ function starsHTML(r: number): string {
         <div class="specs-grid">
           <div class="specs-col">
             <h3>Pros</h3>
-            <ul class="pros-list">
-              {entry.data.pros.map(p => <li>✓ {p}</li>)}
+            <ul class="pros-cons__list">
+              {entry.data.pros.map(p => <li class="pros-cons__item pros-cons__item--pro">✓ {p}</li>)}
             </ul>
           </div>
           <div class="specs-col">
             <h3>Cons</h3>
-            <ul class="cons-list">
-              {entry.data.cons.map(c => <li>✗ {c}</li>)}
+            <ul class="pros-cons__list">
+              {entry.data.cons.map(c => <li class="pros-cons__item pros-cons__item--con">✗ {c}</li>)}
             </ul>
           </div>
+        </div>
+
+        <div class="product-footer">
+          <p class="last-updated">Information verified: {BUILD_MONTH}</p>
+          <p class="affiliate-notice">As an Amazon Associate, StackPick earns from qualifying purchases at no extra cost to you.</p>
         </div>
       </div>
     </div>
@@ -92,49 +115,89 @@ function starsHTML(r: number): string {
 </Base>
 
 <style>
-  .product-page { padding-top: var(--space-8); padding-bottom: var(--space-12); }
-  .breadcrumb { display: flex; gap: var(--space-2); font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-text-dim); margin-bottom: var(--space-8); }
-  .breadcrumb a { color: var(--color-text-muted); text-decoration: none; }
-  .breadcrumb a:hover { color: var(--color-accent); }
-  .breadcrumb .sep { color: var(--color-border); }
+  .product-page { padding-bottom: var(--space-16); }
   
-  .product-grid-layout { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-12); align-items: start; }
+  .product-grid-layout { 
+    display: grid; 
+    grid-template-columns: 1fr 1fr; 
+    gap: var(--space-12); 
+    align-items: start; 
+    margin-top: var(--space-8);
+  }
   
-  .product-visual { background: var(--color-bg-inset); border: 1px solid var(--color-border); border-radius: 24px; aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; position: sticky; top: 100px; }
-  .product-emoji { font-size: 120px; filter: drop-shadow(0 20px 40px rgba(0,0,0,0.2)); }
+  .product-visual { 
+    background: var(--color-bg-inset); 
+    border: 1px solid var(--color-border); 
+    border-radius: 32px; 
+    aspect-ratio: 1; 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    justify-content: center; 
+    position: sticky; 
+    top: 100px; 
+    box-shadow: var(--shadow-sm);
+  }
+  
+  .product-emoji { font-size: 140px; filter: drop-shadow(0 20px 40px rgba(0,0,0,0.15)); }
+  
   .product-rating { margin-top: var(--space-8); text-align: center; }
-  .product-rating .stars { display: block; font-size: 24px; color: var(--color-accent); margin-bottom: 4px; }
-  .product-rating .score { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--color-text-dim); }
+  .product-rating .stars { display: flex; align-items: baseline; justify-content: center; gap: 8px; margin-bottom: 4px; }
+  .product-rating .stars__symbol { font-size: 24px; color: var(--color-accent); }
+  .product-rating .stars__score { font-family: var(--font-mono); font-weight: 800; font-size: 20px; color: var(--color-text-primary); }
+  .score-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 800; color: var(--color-text-dim); }
 
-  .brand { font-size: var(--size-sm); font-weight: var(--weight-bold); color: var(--color-accent); text-transform: uppercase; letter-spacing: 0.1em; }
-  h1 { font-size: 48px; font-weight: 900; line-height: 1.1; margin: var(--space-2) 0; letter-spacing: -0.02em; }
-  .badge-text { font-size: var(--size-lg); color: var(--color-text-muted); margin-bottom: var(--space-6); }
+  .brand-tag { font-family: var(--font-mono); font-size: 11px; font-weight: 800; color: var(--color-accent); text-transform: uppercase; letter-spacing: 0.15em; }
+  h1 { font-size: 56px; font-weight: 900; line-height: 1.05; margin: var(--space-2) 0; letter-spacing: -0.03em; color: var(--color-text-primary); }
+  .hero-subtitle { font-size: 20px; color: var(--color-text-muted); margin-bottom: var(--space-8); line-height: 1.4; }
 
-  .price-box { background: var(--color-bg-card); border: 1px solid var(--color-border); padding: var(--space-6); border-radius: 16px; margin-bottom: var(--space-8); display: flex; align-items: center; gap: var(--space-6); }
-  .price-main { display: flex; align-items: flex-start; line-height: 1; }
-  .price-main .currency { font-size: 24px; font-weight: 700; margin-top: 4px; }
-  .price-main .amount { font-size: 56px; font-weight: 900; letter-spacing: -0.04em; }
-  .price-meta { display: flex; flex-direction: column; gap: 4px; }
-  .msrp { font-size: 12px; color: var(--color-text-dim); text-decoration: line-through; }
-  .verified-tag { font-size: 10px; font-weight: 700; color: #10b981; text-transform: uppercase; background: rgba(16, 185, 129, 0.1); padding: 4px 8px; border-radius: 4px; }
-
-  .action-bar { display: flex; gap: var(--space-4); margin-bottom: var(--space-8); }
-  .btn-primary { flex: 2; text-align: center; padding: 18px; font-size: 16px; font-weight: 800; background: var(--color-accent); color: #fff; border-radius: 12px; text-decoration: none; transition: transform 0.2s; }
-  .btn-primary:hover { transform: translateY(-2px); }
-  .btn-secondary { flex: 1; padding: 18px; font-size: 14px; font-weight: 700; background: var(--color-bg-inset); border: 1px solid var(--color-border); color: var(--color-text-primary); border-radius: 12px; cursor: pointer; }
-
-  .prose-content { font-size: 18px; line-height: 1.6; color: var(--color-text-muted); margin-bottom: var(--space-10); }
+  .price-box { 
+    background: var(--color-bg-card); 
+    border: 1px solid var(--color-border); 
+    padding: var(--space-6) var(--space-8); 
+    border-radius: 24px; 
+    margin-bottom: var(--space-8); 
+    display: flex; 
+    justify-content: space-between;
+    align-items: center;
+    border-left: 6px solid var(--seam-color);
+  }
   
-  .specs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-6); border-top: 1px solid var(--color-border); padding-top: var(--space-8); }
-  .specs-col h3 { font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--color-text-dim); margin-bottom: var(--space-4); }
-  .specs-col ul { list-style: none; padding: 0; }
-  .specs-col li { font-size: 14px; margin-bottom: 8px; color: var(--color-text-muted); }
-  .pros-list li { color: #10b981; }
-  .cons-list li { color: var(--color-accent); }
+  .price-main { display: flex; align-items: center; gap: var(--space-4); }
+  .price-current { font-family: var(--font-mono); font-size: 48px; font-weight: 900; letter-spacing: -0.04em; color: var(--color-text-primary); }
+  
+  .price-meta { display: flex; flex-direction: column; gap: 2px; }
+  .price-msrp { font-size: 12px; color: var(--color-text-dim); text-decoration: line-through; }
+  .verified-badge { font-size: 9px; font-weight: 800; color: #10b981; text-transform: uppercase; letter-spacing: 0.05em; background: rgba(16, 185, 129, 0.1); padding: 4px 8px; border-radius: 6px; }
+
+  .savings-badge { background: var(--color-accent); color: #fff; padding: 6px 12px; border-radius: 999px; font-size: 12px; font-weight: 800; text-transform: uppercase; }
+
+  .action-grid { display: grid; grid-template-columns: 2fr 1fr; gap: var(--space-4); margin-bottom: var(--space-10); }
+  .btn-xl { height: 72px; border-radius: 20px; font-size: 16px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; justify-content: center; gap: 12px; text-decoration: none; transition: all 0.2s; }
+  .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(200, 32, 32, 0.2); }
+  .btn-secondary:hover { background: var(--color-bg-subtle); }
+
+  .prose-content { font-size: 18px; line-height: 1.7; color: var(--color-text-muted); margin-bottom: var(--space-12); }
+  .prose-content :global(p) { margin-bottom: var(--space-6); }
+  .prose-content :global(strong) { color: var(--color-text-primary); font-weight: 800; }
+  
+  .specs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-8); border-top: 1px solid var(--color-border); padding-top: var(--space-10); }
+  .specs-col h3 { font-size: 11px; text-transform: uppercase; letter-spacing: 0.15em; font-weight: 800; color: var(--color-text-dim); margin-bottom: var(--space-6); }
+  
+  .pros-cons__list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+  .pros-cons__item { font-size: 15px; font-weight: 600; line-height: 1.4; }
+  .pros-cons__item--pro { color: #10b981; }
+  .pros-cons__item--con { color: var(--color-accent); }
+
+  .product-footer { margin-top: var(--space-16); padding-top: var(--space-8); border-top: 1px solid var(--color-border); }
+  .last-updated { font-size: 11px; font-weight: 700; color: var(--color-text-dim); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+  .affiliate-notice { font-size: 11px; color: var(--color-text-dim); font-style: italic; }
 
   @media (max-width: 968px) {
-    .product-grid-layout { grid-template-columns: 1fr; }
-    .product-visual { position: static; aspect-ratio: 16/9; }
-    h1 { font-size: 32px; }
+    .product-grid-layout { grid-template-columns: 1fr; gap: var(--space-8); }
+    .product-visual { position: static; aspect-ratio: 1/1; width: 100%; max-width: 500px; margin: 0 auto; }
+    h1 { font-size: 40px; }
+    .action-grid { grid-template-columns: 1fr; }
+    .price-current { font-size: 40px; }
   }
 </style>

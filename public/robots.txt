@@ -3,24 +3,26 @@
 
 User-agent: *
 
-# Core content — allow everything
+# Core Content — allow everything for SEO
 Allow: /
 Allow: /mice/
 Allow: /keyboards/
 Allow: /headsets/
 Allow: /monitors/
 Allow: /chairs/
+Allow: /controllers/
+Allow: /streaming/
+Allow: /desk-accessories/
+Allow: /products/
 Allow: /guides/
 Allow: /comparisons/
-Allow: /search/
 Allow: /about/
 
-# Disallow auto-generated data files — these are raw JSON-as-JS
-# and should not be indexed as standalone content
-Disallow: /assets/js/data/
-
-# Disallow the offline fallback page — not real content
+# Disallow internal tools and system pages
+Disallow: /search/
+Disallow: /wishlist/
 Disallow: /offline.html
+Disallow: /api/
 
 # Disallow build artifacts
 Disallow: /sitemap.xml.tmp

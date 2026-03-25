@@ -26,7 +26,9 @@ const BUDGET_COLORS: Record<string, string> = {
 };
 
 // Category emoji sets for each setup card visual
-const SETUP_EMOJIS = ['🖥️', '🖱️', '⌨️', '🎧', '🪑'];
+const SETUP_EMOJIS = ['🖥️', '🖱️', '⌨️', '🎧', '🎮'];
+
+const BUILD_MONTH = new Date().toLocaleDateString('en-GB', { month: 'long', year: 'numeric' });
 ---
 
 <Base
@@ -39,7 +41,7 @@ const SETUP_EMOJIS = ['🖥️', '🖱️', '⌨️', '🎧', '🪑'];
     <div class="hero-container container">
       <p class="hero-eyebrow">Setup Guides</p>
       <h1>Gaming Setups</h1>
-      <p>Complete builds by budget. Every pick verified on Amazon UK.</p>
+      <p>Complete builds by budget. Every pick verified on Amazon UK for {BUILD_MONTH}.</p>
     </div>
   </section>
 
@@ -54,7 +56,7 @@ const SETUP_EMOJIS = ['🖥️', '🖱️', '⌨️', '🎧', '🪑'];
   </nav>
 
   <!-- Budget filter -->
-  <div class="filter-cage">
+  <div class="filter-cage container">
     <div class="filter-strip" role="group" aria-label="Filter by budget">
       <button class="filter-chip active" data-filter="all">All Budgets</button>
       {guides.map(g => (
@@ -64,7 +66,7 @@ const SETUP_EMOJIS = ['🖥️', '🖱️', '⌨️', '🎧', '🪑'];
   </div>
 
   <!-- Setup cards -->
-  <section class="setups-grid" id="setups-grid" aria-label="Setup guides">
+  <section class="setups-grid container" id="setups-grid" aria-label="Setup guides">
     {guides.map(guide => {
       const badgeColor = BUDGET_COLORS[guide.data.budgetLabel] ?? 'var(--color-accent)';
       const sections = guide.data.sections as any[];
@@ -77,6 +79,7 @@ const SETUP_EMOJIS = ['🖥️', '🖱️', '⌨️', '🎧', '🪑'];
           data-sections={JSON.stringify(sections)}
           role="article"
           aria-label={guide.data.title}
+          tabindex="0"
         >
           <!-- Visual -->
           <div class="setup-card__visual">
@@ -96,9 +99,12 @@ const SETUP_EMOJIS = ['🖥️', '🖱️', '⌨️', '🎧', '🪑'];
 
           <!-- Footer -->
           <div class="setup-card__footer">
-            <span class="setup-card__total">{totalStr}</span>
+            <div class="setup-card__total-stack">
+              <span class="setup-card__total">{totalStr}</span>
+              <span class="last-verified">Verified {BUILD_MONTH}</span>
+            </div>
             <span class="setup-card__cta">
-              View Products
+              View Gear
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
             </span>
           </div>
@@ -120,6 +126,16 @@ const SETUP_EMOJIS = ['🖥️', '🖱️', '⌨️', '🎧', '🪑'];
       </div>
     </div>
   </div>
+
+  <style>
+    .setups-grid { display: grid; grid-template-columns: 1fr; gap: var(--space-6); margin-top: var(--space-8); margin-bottom: var(--space-16); }
+    .setup-card__total-stack { display: flex; flex-direction: column; line-height: 1.2; }
+    .last-verified { font-size: 9px; color: var(--color-text-dim); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700; margin-top: 2px; }
+    
+    @media (min-width: 768px) {
+      .setups-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
 
   <script>
     // ── Budget filter ─────────────────────────────────
@@ -175,6 +191,7 @@ const SETUP_EMOJIS = ['🖥️', '🖱️', '⌨️', '🎧', '🪑'];
     });
 
     function buildSetupHTML(title: string, sections: any[], slug: string): string {
+      const BUILD_MONTH = new Date().toLocaleDateString('en-GB', { month: 'short', year: 'numeric' });
       const sectionsHTML = sections.map(sec => {
         const products = (sec.products ?? []).map((p: any) => {
           const starsStr = '★★★★½';
@@ -190,13 +207,16 @@ const SETUP_EMOJIS = ['🖥️', '🖱️', '⌨️', '🎧', '🪑'];
                 <div>
                   <div style="font-family:var(--font-mono); font-size:9px; letter-spacing:0.1em; text-transform:uppercase; color:var(--color-accent); margin-bottom:3px;">${p.badge ?? ''}</div>
                   <h3 style="font-family:var(--font-display); font-size:var(--text-xl); font-weight:var(--weight-bold); text-transform:uppercase; color:var(--color-text-primary); line-height:1.1; margin-bottom:var(--space-1);">${p.name}</h3>
-                  <div style="font-family:var(--font-mono); font-size:var(--text-base); font-weight:var(--weight-bold); color:var(--color-text-primary);">${p.price}</div>
+                  <div style="display:flex; align-items:baseline; gap:6px;">
+                    <div style="font-family:var(--font-mono); font-size:var(--text-base); font-weight:var(--weight-bold); color:var(--color-text-primary);">${p.price}</div>
+                    <div style="font-size:9px; color:var(--color-text-dim); text-transform:uppercase; font-weight:700;">Verified ${BUILD_MONTH}</div>
+                  </div>
                   <div class="stars" style="margin-top:4px;"><span class="stars__symbol">${starsStr}</span><span class="stars__score">4.7</span></div>
                 </div>
               </div>
               <p style="font-size:var(--text-sm); color:var(--color-text-secondary); margin-top:var(--space-2); line-height:var(--leading-normal);">${p.desc ?? ''}</p>
               ${p.pros?.length ? `
-              <ul style="margin-top:var(--space-2); display:flex; flex-direction:column; gap:4px;">
+              <ul style="margin-top:var(--space-2); display:flex; flex-direction:column; gap:4px; list-style:none; padding:0;">
                 ${p.pros.map((pr: string) => `
                   <li style="font-size:var(--text-sm); color:var(--color-text-secondary); padding-left:var(--space-3); position:relative;">
                     <span style="position:absolute;left:0;color:#4ADE80;">✓</span>${pr}
@@ -204,8 +224,8 @@ const SETUP_EMOJIS = ['🖥️', '🖱️', '⌨️', '🎧', '🪑'];
               </ul>` : ''}
               <div style="display:flex; gap:var(--space-2); margin-top:var(--space-3);">
                 ${p.affiliate && !p.affiliate.startsWith('TODO') ? `
-                <a href="${p.affiliate}" class="btn-primary" target="_blank" rel="noopener sponsored" style="flex:1; height:var(--btn-height-lg);">
-                  Buy on Amazon ↗
+                <a href="${p.affiliate}" class="btn-primary" target="_blank" rel="noopener sponsored" style="flex:1; height:var(--btn-height-lg); text-decoration:none; display:flex; align-items:center; justify-content:center;">
+                  Amazon UK ↗
                 </a>` : `
                 <span class="btn-secondary" style="flex:1; height:var(--btn-height-lg); opacity:0.4; pointer-events:none; cursor:default; display:flex; align-items:center; justify-content:center;">
                   Coming Soon
@@ -225,7 +245,7 @@ const SETUP_EMOJIS = ['🖥️', '🖱️', '⌨️', '🎧', '🪑'];
       return `
         <h2 style="font-family:var(--font-display); font-size:var(--text-3xl); font-weight:var(--weight-black); text-transform:uppercase; color:var(--color-text-primary); line-height:1.05; margin-bottom:var(--space-5);">${title}</h2>
         ${sectionsHTML}
-        <a href="/guides/${slug}/" class="btn-secondary" style="width:100%; margin-top:var(--space-2);">View Full Guide →</a>
+        <a href="/guides/${slug}/" class="btn-secondary" style="width:100%; margin-top:var(--space-2); text-decoration:none; display:flex; align-items:center; justify-content:center;">View Full Guide →</a>
       `;
     }
   </script>

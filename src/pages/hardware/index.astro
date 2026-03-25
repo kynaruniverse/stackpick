@@ -16,14 +16,19 @@ const categories = [
   { slug: 'headsets',   label: 'Headsets',   emoji: '🎧' },
   { slug: 'monitors',   label: 'Monitors',   emoji: '🖥️' },
   { slug: 'chairs',     label: 'Chairs',     emoji: '🪑' },
+  { slug: 'controllers', label: 'Controllers', emoji: '🎮' },
+  { slug: 'streaming',  label: 'Streaming',  emoji: '🎥' },
+  { slug: 'desk-accessories', label: 'Desk Gear', emoji: '💡' },
 ];
 
 const allTags = [...new Set(allProducts.flatMap(p => p.data.tags))].sort();
+
+const BUILD_MONTH = new Date().toLocaleDateString('en-GB', { month: 'long', year: 'numeric' });
 ---
 
 <Base
   title="All Gaming Hardware UK | StackPick"
-  description="Browse all gaming mice, keyboards, headsets, monitors and chairs. Verified UK pricing on Amazon."
+  description="Browse all gaming mice, keyboards, headsets, monitors and more. Verified UK pricing on Amazon."
   canonical="https://stackpick.co.uk/hardware/"
 >
 
@@ -31,7 +36,7 @@ const allTags = [...new Set(allProducts.flatMap(p => p.data.tags))].sort();
     <div class="hero-container container">
       <p class="hero-eyebrow">Hardware Database</p>
       <h1>All Gaming Gear</h1>
-      <p>25 individually verified picks across 5 categories. Real UK prices.</p>
+      <p>{allProducts.length} individually verified picks across {categories.length - 1} categories. Updated {BUILD_MONTH}.</p>
     </div>
   </section>
 
@@ -47,28 +52,30 @@ const allTags = [...new Set(allProducts.flatMap(p => p.data.tags))].sort();
   </nav>
 
   <!-- Category tabs -->
-  <div class="cat-tabs" role="tablist" aria-label="Filter by category" id="cat-tabs">
-    {categories.map((cat, i) => (
-      <button
-        role="tab"
-        class:list={['cat-tab', i === 0 && 'active']}
-        data-cat={cat.slug}
-        aria-selected={i === 0 ? 'true' : 'false'}
-      >
-        <span aria-hidden="true">{cat.emoji}</span>
-        {cat.label}
-      </button>
-    ))}
+  <div class="cat-tabs-wrapper">
+    <div class="cat-tabs container" role="tablist" aria-label="Filter by category" id="cat-tabs">
+      {categories.map((cat, i) => (
+        <button
+          role="tab"
+          class:list={['cat-tab', i === 0 && 'active']}
+          data-cat={cat.slug}
+          aria-selected={i === 0 ? 'true' : 'false'}
+        >
+          <span aria-hidden="true">{cat.emoji}</span>
+          {cat.label}
+        </button>
+      ))}
+    </div>
   </div>
 
   <!-- Filter chips (budget) -->
   <div class="filter-cage filter-cage--sticky">
     <div class="filter-strip" role="group" aria-label="Filter by budget">
       <button class="filter-chip active" data-filter="all">All Budgets</button>
-      <button class="filter-chip" data-filter="under-50">Under £50</button>
-      <button class="filter-chip" data-filter="50-100">£50–£100</button>
-      <button class="filter-chip" data-filter="100-200">£100–£200</button>
-      <button class="filter-chip" data-filter="over-200">£200+</button>
+      <button class="filter-chip" data-filter="budget">Budget</button>
+      <button class="filter-chip" data-filter="mid-range">Mid-Range</button>
+      <button class="filter-chip" data-filter="premium">Premium</button>
+      <button class="filter-chip" data-filter="enthusiast">Enthusiast</button>
       <button class="filter-chip" id="tag-filter-btn" data-filter="tags">
         Tags
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
@@ -76,7 +83,7 @@ const allTags = [...new Set(allProducts.flatMap(p => p.data.tags))].sort();
     </div>
   </div>
 
-  <!-- Active tag chips bar (shown when tags are selected) -->
+  <!-- Active tag chips bar -->
   <div class="active-tags-bar" id="active-tags-bar" aria-live="polite" aria-label="Active tag filters">
     <div class="active-tags-inner container">
       <span class="active-tags-label">Filtered by:</span>
@@ -123,11 +130,9 @@ const allTags = [...new Set(allProducts.flatMap(p => p.data.tags))].sort();
       </button>
       <div class="prod-overlay__content">
         <h2 style="font-size: var(--text-xl); margin-bottom: var(--space-4);">Filter by Tags</h2>
-
-        <!-- Selected count indicator inside overlay -->
         <p class="tag-overlay-count" id="tag-overlay-count" aria-live="polite"></p>
 
-        <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: var(--space-6);" id="tag-overlay-tags">
+        <div class="tag-selection-grid" id="tag-overlay-tags">
           {allTags.map(tag => {
             const cls = (() => {
               const map = {
@@ -141,7 +146,7 @@ const allTags = [...new Set(allProducts.flatMap(p => p.data.tags))].sort();
             return <button class={cls} data-tag={tag} style="cursor:pointer; border: none;" aria-pressed="false">{tag}</button>;
           })}
         </div>
-        <div style="display:flex; gap: var(--space-3);">
+        <div class="tag-overlay-actions">
           <button class="btn-primary" id="tag-apply-btn" style="flex:1;">Apply Filters</button>
           <button class="btn-secondary" id="tag-clear-btn">Clear All</button>
         </div>
@@ -150,88 +155,32 @@ const allTags = [...new Set(allProducts.flatMap(p => p.data.tags))].sort();
   </div>
 
   <style>
-    /* ── Tag active state inside the overlay ── */
+    .cat-tabs-wrapper { background: var(--color-bg-inset); border-bottom: 1px solid var(--color-border); overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .cat-tabs { display: flex; gap: var(--space-2); padding: var(--space-4) var(--page-pad-mobile); }
+    .cat-tab { white-space: nowrap; padding: 10px 20px; border-radius: 999px; background: transparent; border: 1px solid var(--color-border); color: var(--color-text-muted); font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+    .cat-tab.active { background: var(--color-accent); border-color: var(--color-accent); color: #fff; }
+
+    .tag-selection-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: var(--space-6); }
+    .tag-overlay-actions { display: flex; gap: var(--space-3); margin-top: var(--space-6); }
+
     .tag.tag--selected {
       outline: 2px solid currentColor;
       outline-offset: 2px;
       box-shadow: 0 0 0 4px color-mix(in srgb, currentColor 15%, transparent);
       font-weight: 700;
       transform: scale(1.05);
-      transition: transform 0.1s ease, box-shadow 0.1s ease;
     }
 
-    /* ── Selected count line ── */
-    .tag-overlay-count {
-      font-size: var(--text-sm, 0.8rem);
-      color: var(--color-muted, #888);
-      margin-bottom: var(--space-3, 12px);
-      min-height: 1.2em;
-    }
+    .active-tags-bar { display: none; padding: 12px 0; border-bottom: 1px solid var(--color-border); background: var(--color-bg-subtle); }
+    .active-tags-bar.visible { display: block; }
+    .active-tags-inner { display: flex; align-items: center; gap: 12px; }
+    .active-tags-list { display: flex; flex-wrap: wrap; gap: 8px; }
+    
+    .active-tag-chip { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 999px; font-size: 11px; font-weight: 800; background: var(--color-bg-card); border: 1px solid var(--color-border); cursor: pointer; text-transform: uppercase; }
+    .active-tag-chip__x { opacity: 0.5; font-size: 10px; }
 
-    /* ── Active tags bar ── */
-    .active-tags-bar {
-      display: none;
-      padding: 10px 0;
-      border-bottom: 1px solid color-mix(in srgb, currentColor 10%, transparent);
-    }
-    .active-tags-bar.visible {
-      display: block;
-    }
-    .active-tags-inner {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-    .active-tags-label {
-      font-size: var(--text-sm, 0.8rem);
-      color: var(--color-muted, #888);
-      white-space: nowrap;
-    }
-    .active-tags-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-    }
-
-    /* Individual removable chip */
-    .active-tag-chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      padding: 3px 8px 3px 10px;
-      border-radius: 999px;
-      font-size: var(--text-sm, 0.8rem);
-      font-weight: 600;
-      background: var(--color-surface-raised, #222);
-      border: 1px solid color-mix(in srgb, currentColor 20%, transparent);
-      cursor: pointer;
-      transition: opacity 0.15s ease;
-      line-height: 1;
-    }
-    .active-tag-chip:hover {
-      opacity: 0.75;
-    }
-    .active-tag-chip__x {
-      font-size: 0.75rem;
-      line-height: 1;
-      opacity: 0.6;
-    }
-
-    /* Clear all button in the bar */
-    .active-tags-clear {
-      margin-left: auto;
-      font-size: var(--text-sm, 0.8rem);
-      color: var(--color-muted, #888);
-      background: none;
-      border: none;
-      cursor: pointer;
-      text-decoration: underline;
-      white-space: nowrap;
-      padding: 0;
-    }
-    .active-tags-clear:hover {
-      color: var(--color-text, #fff);
+    @media (max-width: 768px) {
+      .cat-tabs { padding: var(--space-4) var(--page-pad-mobile); }
     }
   </style>
 
@@ -255,165 +204,126 @@ const allTags = [...new Set(allProducts.flatMap(p => p.data.tags))].sort();
     let activeBudget = 'all';
     let activeTags: string[] = [];
 
-    /* ── Render the active chips bar above the grid ── */
-    function renderActiveTagsBar() {
-      if (!activeTagsBar || !activeTagsList) return;
-
-      if (activeTags.length === 0) {
-        activeTagsBar.classList.remove('visible');
-        activeTagsList.innerHTML = '';
-        return;
-      }
-
-      activeTagsBar.classList.add('visible');
-      activeTagsList.innerHTML = '';
-
-      activeTags.forEach(tag => {
-        const chip = document.createElement('button');
-        chip.className = 'active-tag-chip';
-        chip.setAttribute('aria-label', `Remove filter: ${tag}`);
-        chip.innerHTML = `${tag}<span class="active-tag-chip__x" aria-hidden="true">✕</span>`;
-        chip.addEventListener('click', () => {
-          removeTag(tag);
-          applyFilters();
-          renderActiveTagsBar();
-          syncTagButtons();
-          updateOverlayCount();
-          updateTagFilterBtn();
-        });
-        activeTagsList.appendChild(chip);
-      });
-    }
-
-    /* ── Update the count line inside the overlay ── */
-    function updateOverlayCount() {
-      if (!tagOverlayCount) return;
-      if (activeTags.length === 0) {
-        tagOverlayCount.textContent = '';
-      } else {
-        tagOverlayCount.textContent = `${activeTags.length} tag${activeTags.length > 1 ? 's' : ''} selected`;
-      }
-    }
-
-    /* ── Keep tag buttons in sync with activeTags array ── */
-    function syncTagButtons() {
-      tagBtns.forEach(btn => {
-        const tag = btn.dataset.tag ?? '';
-        const isActive = activeTags.includes(tag);
-        btn.classList.toggle('tag--selected', isActive);
-        btn.setAttribute('aria-pressed', String(isActive));
-      });
-    }
-
-    function removeTag(tag: string) {
-      activeTags = activeTags.filter(t => t !== tag);
-    }
-
-    /* ── Update the Tags button in the filter strip ── */
-    function updateTagFilterBtn() {
-      if (!tagFilterBtn) return;
-      tagFilterBtn.classList.toggle('active', activeTags.length > 0);
-    }
-
     function applyFilters() {
       cards.forEach(card => {
-        const cat      = card.dataset.category ?? '';
-        const budget   = card.dataset.budget ?? '';
-        const tagsRaw  = card.dataset.pjson ?? '';
-        let cardTags: string[] = [];
-        try { cardTags = JSON.parse(tagsRaw).tags ?? []; } catch {}
-
-        const catMatch    = activeCat === 'all' || (
-          activeCat === 'mice'      ? cat === 'crimson' :
-          activeCat === 'keyboards' ? cat === 'cobalt'  :
-          activeCat === 'headsets'  ? cat === 'slate'   :
-          activeCat === 'monitors'  ? cat === 'amber'   :
-          activeCat === 'chairs'    ? cat === 'jade'    : true
-        );
-        const budgetMatch = activeBudget === 'all' || budget === activeBudget;
-        const tagMatch    = activeTags.length === 0 || activeTags.every(t => cardTags.includes(t));
+        const catMatch = activeCat === 'all' || card.dataset.category === activeCat;
+        const budgetMatch = activeBudget === 'all' || card.dataset.budget === activeBudget;
+        
+        const cardTags = JSON.parse(card.dataset.tags || '[]');
+        const tagMatch = activeTags.length === 0 || activeTags.every(t => cardTags.includes(t));
 
         card.classList.toggle('hidden', !(catMatch && budgetMatch && tagMatch));
       });
     }
 
-    // Category tabs
     catBtns.forEach(btn => {
       btn.addEventListener('click', () => {
-        catBtns.forEach(b => { b.classList.remove('active'); b.setAttribute('aria-selected','false'); });
+        catBtns.forEach(b => {
+          b.classList.remove('active');
+          b.setAttribute('aria-selected', 'false');
+        });
         btn.classList.add('active');
-        btn.setAttribute('aria-selected','true');
-        activeCat = btn.dataset.cat ?? 'all';
+        btn.setAttribute('aria-selected', 'true');
+        activeCat = btn.dataset.cat || 'all';
         applyFilters();
       });
     });
 
-    // Budget filter chips
-    budgetBtns.forEach(chip => {
-      chip.addEventListener('click', () => {
-        budgetBtns.forEach(c => c.classList.remove('active'));
-        chip.classList.add('active');
-        activeBudget = chip.dataset.filter ?? 'all';
+    budgetBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        budgetBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        activeBudget = btn.dataset.filter || 'all';
         applyFilters();
       });
     });
 
-    // Tag overlay open/close
     tagFilterBtn?.addEventListener('click', () => {
       tagOverlay?.classList.add('open');
-      tagOverlay?.setAttribute('aria-hidden','false');
-      document.body.style.overflow = 'hidden';
+      tagOverlay?.setAttribute('aria-hidden', 'false');
     });
-    function closeTagOverlay() {
-      tagOverlay?.classList.remove('open');
-      tagOverlay?.setAttribute('aria-hidden','true');
-      document.body.style.overflow = '';
-    }
-    tagScrim?.addEventListener('click', closeTagOverlay);
-    tagClose?.addEventListener('click', closeTagOverlay);
 
-    // Tag selection — now with visual feedback
+    function closeOverlay() {
+      tagOverlay?.classList.remove('open');
+      tagOverlay?.setAttribute('aria-hidden', 'true');
+    }
+
+    tagScrim?.addEventListener('click', closeOverlay);
+    tagClose?.addEventListener('click', closeOverlay);
+
     tagBtns.forEach(btn => {
       btn.addEventListener('click', () => {
-        const tag = btn.dataset.tag ?? '';
+        const tag = btn.dataset.tag || '';
         if (activeTags.includes(tag)) {
-          removeTag(tag);
+          activeTags = activeTags.filter(t => t !== tag);
+          btn.classList.remove('tag--selected');
+          btn.setAttribute('aria-pressed', 'false');
         } else {
           activeTags.push(tag);
+          btn.classList.add('tag--selected');
+          btn.setAttribute('aria-pressed', 'true');
         }
-        btn.classList.toggle('tag--selected', activeTags.includes(tag));
-        btn.setAttribute('aria-pressed', String(activeTags.includes(tag)));
         updateOverlayCount();
       });
     });
 
-    // Apply
     tagApply?.addEventListener('click', () => {
-      closeTagOverlay();
       applyFilters();
       renderActiveTagsBar();
-      updateTagFilterBtn();
+      closeOverlay();
     });
 
-    // Clear inside overlay
     tagClear?.addEventListener('click', () => {
       activeTags = [];
       tagBtns.forEach(b => {
         b.classList.remove('tag--selected');
-        b.setAttribute('aria-pressed','false');
+        b.setAttribute('aria-pressed', 'false');
       });
       updateOverlayCount();
     });
 
-    // Clear all from the bar
     activeTagsClearAll?.addEventListener('click', () => {
       activeTags = [];
-      syncTagButtons();
-      updateOverlayCount();
+      tagBtns.forEach(b => {
+        b.classList.remove('tag--selected');
+        b.setAttribute('aria-pressed', 'false');
+      });
       applyFilters();
       renderActiveTagsBar();
-      updateTagFilterBtn();
     });
+
+    function renderActiveTagsBar() {
+      if (!activeTagsBar || !activeTagsList) return;
+      if (activeTags.length === 0) {
+        activeTagsBar.classList.remove('visible');
+        return;
+      }
+      activeTagsBar.classList.add('visible');
+      activeTagsList.innerHTML = activeTags.map(tag => `
+        <button class="active-tag-chip" data-tag="${tag}">
+          ${tag} <span class="active-tag-chip__x">✕</span>
+        </button>
+      `).join('');
+
+      activeTagsList.querySelectorAll('.active-tag-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+          const tag = (chip as HTMLElement).dataset.tag;
+          activeTags = activeTags.filter(t => t !== tag);
+          const btn = document.querySelector(`#tag-overlay-tags [data-tag="${tag}"]`);
+          btn?.classList.remove('tag--selected');
+          btn?.setAttribute('aria-pressed', 'false');
+          applyFilters();
+          renderActiveTagsBar();
+        });
+      });
+    }
+
+    function updateOverlayCount() {
+      if (!tagOverlayCount) return;
+      tagOverlayCount.textContent = activeTags.length > 0 
+        ? `${activeTags.length} tag${activeTags.length > 1 ? 's' : ''} selected` 
+        : 'No tags selected';
+    }
   </script>
 
 </Base>

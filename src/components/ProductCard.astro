@@ -77,12 +77,11 @@ const visibleTags = tags.slice(0, 2);
 <a
   href={`/products/${id}/`}
   class:list={['pcard', isFirst && 'pcard--featured', listMode && 'pcard--list']}
-  style="text-decoration: none; color: inherit;"
   data-budget={budget}
   data-id={id}
   data-category={seam}
   data-pjson={pjson}
-  style={`--seam-color: ${seamColor};`}
+  style={`--seam-color: ${seamColor}; text-decoration: none; color: inherit;`}
   role="article"
   aria-label={name}
   tabindex="0"
@@ -115,6 +114,7 @@ const visibleTags = tags.slice(0, 2);
         <span class="price-badge" aria-label={`Save ${savings}`}>-{savings}</span>
       )}
     </div>
+
 
 
     <!-- Stars -->
@@ -187,7 +187,18 @@ const visibleTags = tags.slice(0, 2);
     box-shadow: var(--shadow-card-hover), var(--focus-ring);
   }
   
-  .price-stack { display: flex; flex-direction: column; line-height: 1; }
-  .last-verified { font-size: 9px; color: var(--color-text-dim); font-style: italic; margin-top: 2px; text-transform: uppercase; letter-spacing: 0.05em; }
-
+  .price-stack {
+    display: flex;
+    flex-direction: column;
+    line-height: 1;
+  }
+  
+  .last-verified {
+    font-size: 9px;
+    color: var(--color-text-dim);
+    font-style: italic;
+    margin-top: 2px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
 </style>

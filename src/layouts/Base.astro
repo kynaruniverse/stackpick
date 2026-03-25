@@ -34,7 +34,11 @@ const isKeyboards = path.startsWith('/keyboards/');
 const isHeadsets  = path.startsWith('/headsets/');
 const isMonitors  = path.startsWith('/monitors/');
 const isChairs    = path.startsWith('/chairs/');
-const isHardware  = path.startsWith('/hardware/') || isMice || isKeyboards || isHeadsets || isMonitors || isChairs;
+const isControllers = path.startsWith('/controllers/');
+const isStreaming = path.startsWith('/streaming/');
+const isAccessories = path.startsWith('/desk-accessories/');
+
+const isHardware  = path.startsWith('/hardware/') || isMice || isKeyboards || isHeadsets || isMonitors || isChairs || isControllers || isStreaming || isAccessories;
 
 const isGuides      = path.startsWith('/guides');
 const isComparisons = path.startsWith('/comparisons');
@@ -111,8 +115,24 @@ import Footer from '../components/Footer.astro';
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZTN7H3L6DV"></script>
   <script src="/assets/js/analytics.js" defer></script>
 
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "StackPick",
+    "description": "The definitive guide to UK gaming gear. Independently researched, UK prices verified weekly.",
+    "url": "https://stackpick.co.uk",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": {
+        "@type": "EntryPoint",
+        "urlTemplate": "https://stackpick.co.uk/search/?q={search_term_string}"
+      },
+      "query-input": "required name=search_term_string"
+    }
+  })} />
   <slot name="head" />
 </head>
+
 
 <body class="streetwear-layout">
 
@@ -190,6 +210,14 @@ import Footer from '../components/Footer.astro';
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2v6M18 2v6M6 8h12M8 22v-4M16 22v-4M6 14h12a2 2 0 0 0 2-2V8H4v4a2 2 0 0 0 2 2z"/></svg>
               Chairs
             </a>
+            <a href="/controllers/" class={sidebarLinkClass(isControllers)} aria-current={isControllers ? 'page' : undefined}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 12h.01M9 12h.01M15 12h.01M18 12h.01"/></svg>
+              Controllers
+            </a>
+            <a href="/streaming/" class={sidebarLinkClass(isStreaming)} aria-current={isStreaming ? 'page' : undefined}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+              Streaming
+            </a>
           </nav>
         </div>
 
@@ -198,56 +226,27 @@ import Footer from '../components/Footer.astro';
           <nav aria-label="Browse editorial content">
             <a href="/guides/"      class={sidebarLinkClass(isSetups)}      aria-current={isSetups      ? 'page' : undefined}>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-              Setup Guides
+              Setups
             </a>
             <a href="/comparisons/" class={sidebarLinkClass(isComparisons)} aria-current={isComparisons ? 'page' : undefined}>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
               Comparisons
             </a>
-            <a href="/wishlist/"    class={sidebarLinkClass(isWishlist)}    aria-current={isWishlist    ? 'page' : undefined}>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-              Wishlist
-            </a>
           </nav>
-        </div>
-
-        <div class="sidebar-group">
-          <button
-            class="theme-toggle"
-            id="theme-toggle-sidebar"
-            aria-label="Switch theme"
-            style="width: 100%; justify-content: flex-start; gap: var(--space-2); padding: var(--space-2) var(--space-3);"
-          >
-            <span class="icon" aria-hidden="true" id="theme-icon-sidebar">◑</span>
-            <span id="sidebar-theme-label" style="font-size: var(--text-sm); font-weight: var(--weight-medium); color: var(--color-text-secondary);">Theme</span>
-          </button>
         </div>
 
       </div>
     </aside>
 
     <!-- Main content -->
-    <main class="main-content" id="main-content" tabindex="-1">
+    <main class="main" id="main-content">
       <slot name="hero" />
-      <div class="content-pad">
+      <div class="page-content">
         <slot />
       </div>
     </main>
-  </div>
 
-  <!-- ═══════════════ FOOTER ═══════════════ -->
-  <footer class="site-footer" role="contentinfo">
-    <div class="site-footer__inner">
-      <a href="/" class="site-footer__brand" aria-label="StackPick homepage">
-        STACK<span>·</span>PICK
-      </a>
-      <p class="site-footer__copy">
-        Researched gaming gear for UK gamers. Amazon UK affiliate links —
-        <a href="/about/#disclosure">disclosure</a>.
-        &copy; {new Date().getFullYear()} StackPick. All prices verified weekly.
-      </p>
-    </div>
-  </footer>
+  </div>
 
   <!-- ═══════════════ MOBILE BOTTOM NAV ═══════════════ -->
   <nav class="mobile-dock" aria-label="Mobile navigation">
@@ -389,10 +388,6 @@ import Footer from '../components/Footer.astro';
     }
 
     // Any element with class 'theme-toggle' OR id 'theme-cycle-btn' triggers cycleTheme.
-    // This covers: topbar button (#theme-toggle-topbar), desktop header button
-    // (#theme-toggle-desktop), and sidebar button (#theme-toggle-sidebar).
-    // NOTE: If you add a new button anywhere with class 'theme-toggle', it will
-    // automatically cycle the theme — this is intentional but worth knowing.
     document.querySelectorAll<HTMLElement>('.theme-toggle, #theme-cycle-btn').forEach(btn => {
       btn.addEventListener('click', cycleTheme);
     });
@@ -568,10 +563,6 @@ import Footer from '../components/Footer.astro';
     }
 
     // ── TYPES ────────────────────────────────────────
-    // NOTE: tagClass and SEAM_MAP below are intentional client-side copies.
-    // They cannot be imported from src/lib/productUtils.ts because this is a
-    // browser <script> block. The canonical server-side versions live in
-    // src/lib/productUtils.ts. If you update one, update both.
     interface ProductData {
       id:          string;
       name:        string;
@@ -696,4 +687,3 @@ import Footer from '../components/Footer.astro';
   <Footer />
 </body>
 </html>
-

@@ -13,8 +13,6 @@ export async function getStaticPaths() {
   }));
 }
 
-
-
 const { guide } = Astro.props;
 const { data }   = guide;
 
@@ -36,6 +34,9 @@ const summaryTable  = data.summaryTable  as SummaryRow[];
 const summaryTotals = data.summaryTotals as SummaryTotal[];
 const sections      = data.sections      as GuideSection[];
 const relatedGuides = data.relatedGuides as RelatedGuide[];
+
+const BUILD_MONTH = new Date().toLocaleDateString('en-GB', { month: 'long', year: 'numeric' });
+const BUILD_SHORT = new Date().toLocaleDateString('en-GB', { month: 'short', year: 'numeric' });
 ---
 
 <Base
@@ -44,8 +45,6 @@ const relatedGuides = data.relatedGuides as RelatedGuide[];
   canonical={`https://stackpick.co.uk/guides/${guide.slug}/`}
   ogType="article"
 >
-
-
 
   <section slot="hero" class="hero hero--inner">
     <div class="hero-container container">
@@ -101,6 +100,7 @@ const relatedGuides = data.relatedGuides as RelatedGuide[];
             ))}
           </tbody>
         </table>
+        <p class="table-disclaimer">Prices verified {BUILD_MONTH}. Subject to change.</p>
       </div>
     )}
 
@@ -118,11 +118,6 @@ const relatedGuides = data.relatedGuides as RelatedGuide[];
               style={product.badgeColor ? `--seam-color: ${product.badgeColor}` : undefined}
             >
               <div class="product-entry__rank">
-                <!--
-                  Badge color applied via --seam-color CSS custom property.
-                  Falls back to --color-accent if no badgeColor in content.
-                  This avoids injecting raw hex values into inline styles.
-                -->
                 <span
                   class="rank-badge"
                   style="background: var(--seam-color, var(--color-accent)); border-color: var(--seam-color, var(--color-accent)); color: #fff;"
@@ -161,11 +156,14 @@ const relatedGuides = data.relatedGuides as RelatedGuide[];
 
                 <div class="product-entry__footer">
                   <div class="price-block">
-                    <span class="price-current">{product.price}</span>
+                    <div class="price-stack">
+                      <span class="price-current">{product.price}</span>
+                      <span class="last-verified">Verified {BUILD_SHORT}</span>
+                    </div>
                     {product.msrp    && <span class="price-msrp">{product.msrp}</span>}
                     {product.savings && <span class="price-badge">Save {product.savings}</span>}
                   </div>
-                  {product.affiliate && product.affiliate !== 'TODO:REPLACE_WITH_REAL_AFFILIATE_URL'
+                  {product.affiliate && !product.affiliate.includes('TODO')
                     ? (
                       <a
                         href={product.affiliate}
@@ -175,8 +173,7 @@ const relatedGuides = data.relatedGuides as RelatedGuide[];
                         data-type="guide-cta"
                         aria-label={`Buy ${product.name} on Amazon UK — ${product.price}`}
                       >
-                        View on Amazon
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+                        Amazon UK ↗
                       </a>
                     ) : (
                       <span class="btn-secondary" aria-disabled="true" style="opacity: 0.4; pointer-events: none; cursor: default;">
@@ -192,7 +189,10 @@ const relatedGuides = data.relatedGuides as RelatedGuide[];
       </section>
     ))}
 
-    <p class="last-updated">Last verified: {data.dateModified}</p>
+    <div class="editorial-footer">
+      <p class="last-updated">Last verified: {data.dateModified}</p>
+      <p class="affiliate-notice">As an Amazon Associate, StackPick earns from qualifying purchases at no extra cost to you.</p>
+    </div>
 
     <!-- Related guides -->
     {relatedGuides.length > 0 && (
@@ -218,4 +218,12 @@ const relatedGuides = data.relatedGuides as RelatedGuide[];
     )}
 
   </article>
+
+  <style>
+    .table-disclaimer { font-size: 11px; color: var(--color-text-dim); margin-top: var(--space-2); font-style: italic; }
+    .price-stack { display: flex; flex-direction: column; line-height: 1.2; }
+    .last-verified { font-size: 9px; color: var(--color-text-dim); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700; margin-top: 2px; }
+    .editorial-footer { margin-top: var(--space-12); padding-top: var(--space-6); border-top: 1px solid var(--color-border); }
+    .affiliate-notice { font-size: 11px; color: var(--color-text-dim); font-style: italic; margin-top: var(--space-2); }
+  </style>
 </Base>

@@ -1,22 +1,22 @@
 ---
 // src/pages/search.astro — v6.0
 // Global search: products, setups (guides), comparisons — all client-side
+// Optimized for keyword, phrase, and exact word matching.
 
 import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
+import { SEAM_COLOR, ratingFromRank } from '../lib/productUtils';
 
 const allProducts    = await getCollection('products');
 const allComparisons = await getCollection('comparisons');
 const allGuides      = await getCollection('guides');
 
-import { SEAM_COLOR, ratingFromRank } from '../lib/productUtils';
-
 const searchIndex = [
   ...allProducts.map(p => ({
     type:      'product',
     title:     p.data.name,
-    desc:      p.body.slice(0, 120),
-    url:       `/${p.data.category}/`,
+    desc:      p.body, // Include full body for better keyword matching
+    url:       `/products/${p.slug}/`, // Updated to link to dedicated product pages
     category:  p.data.category,
     price:     p.data.price,
     tags:      p.data.tags,
@@ -37,7 +37,7 @@ const searchIndex = [
   ...allComparisons.map(c => ({
     type:      'comparison',
     title:     c.data.title,
-    desc:      c.data.heroSubtitle,
+    desc:      c.data.heroSubtitle + " " + c.body,
     url:       `/comparisons/${c.slug}/`,
     category:  'comparison',
     price:     null,
@@ -51,7 +51,7 @@ const searchIndex = [
   ...allGuides.map(g => ({
     type:      'guide',
     title:     g.data.title,
-    desc:      g.data.heroSubtitle,
+    desc:      g.data.heroSubtitle + " " + g.body,
     url:       `/guides/${g.slug}/`,
     category:  'guide',
     price:     null,
@@ -65,19 +65,20 @@ const searchIndex = [
 ];
 
 const searchIndexJSON = JSON.stringify(searchIndex);
+const BUILD_MONTH = new Date().toLocaleDateString('en-GB', { month: 'long', year: 'numeric' });
 ---
 
 <Base
-  title="Search Gaming Gear | StackPick"
+  title="Search Gaming Gear | StackPick UK"
   description="Search StackPick's database of reviewed gaming gear. Find the best mice, keyboards, headsets, monitors and chairs for UK gamers."
   canonical="https://stackpick.co.uk/search/"
 >
 
   <section slot="hero" class="hero hero--inner" aria-label="Search">
     <div class="hero-container container">
-      <p class="hero-eyebrow">Search Database</p>
+      <p class="hero-eyebrow">Discovery Engine</p>
       <h1>Search StackPick</h1>
-      <p>Every product, comparison, and guide — searchable instantly.</p>
+      <p>Instant keyword search across {searchIndex.length} verified UK gear picks. Updated {BUILD_MONTH}.</p>
     </div>
   </section>
 
@@ -91,36 +92,47 @@ const searchIndexJSON = JSON.stringify(searchIndex);
     </div>
   </nav>
 
-  <!-- Search bar -->
-  <div class="search-bar">
-    <input
-      type="search"
-      id="search-input"
-      class="search-input"
-      placeholder="Search mice, keyboards, headsets, tags…"
-      autocomplete="off"
-      autocorrect="off"
-      spellcheck="false"
-      aria-label="Search gaming gear"
-    />
-    <button class="search-btn" id="search-btn" type="button">Search</button>
-  </div>
-
-  <!-- Type filter -->
-  <div class="filter-cage">
-    <div class="filter-strip" role="group" aria-label="Filter by type">
-      <button class="filter-chip active" data-type="all">All</button>
-      <button class="filter-chip" data-type="product">Products</button>
-      <button class="filter-chip" data-type="guide">Setups</button>
-      <button class="filter-chip" data-type="comparison">Comparisons</button>
+  <div class="search-container container">
+    <div class="search-bar">
+      <div class="search-input-wrapper">
+        <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input
+          type="search"
+          id="search-input"
+          class="search-input"
+          placeholder="Search by keyword, brand, or phrase (e.g. 'wireless mouse')..."
+          autocomplete="off"
+          autocorrect="off"
+          spellcheck="false"
+          aria-label="Search gaming gear"
+        />
+      </div>
+      <button class="btn-primary search-btn" id="search-btn" type="button">Search</button>
     </div>
+
+    <div class="filter-cage">
+      <div class="filter-strip" role="group" aria-label="Filter by type">
+        <button class="filter-chip active" data-type="all">All Results</button>
+        <button class="filter-chip" data-type="product">Hardware</button>
+        <button class="filter-chip" data-type="guide">Setup Guides</button>
+        <button class="filter-chip" data-type="comparison">Comparisons</button>
+      </div>
+    </div>
+
+    <div class="search-meta">
+      <p class="search-results-count" id="results-count" aria-live="polite"></p>
+      <div class="search-suggestions" id="search-suggestions">
+        <span class="label">Try:</span>
+        <button class="suggestion-chip">Razer</button>
+        <button class="suggestion-chip">Wireless</button>
+        <button class="suggestion-chip">OLED</button>
+        <button class="suggestion-chip">Budget</button>
+      </div>
+    </div>
+
+    <div id="search-results" class="product-grid search-results-grid" aria-label="Search results"></div>
   </div>
 
-  <p class="search-results-count" id="results-count" aria-live="polite"></p>
-
-  <div id="search-results" class="product-grid" style="padding-top: var(--space-2);" aria-label="Search results"></div>
-
-  <!-- Embed search index -->
   <script type="application/json" id="search-index-data" set:html={searchIndexJSON}></script>
 
   <script>
@@ -138,6 +150,7 @@ const searchIndexJSON = JSON.stringify(searchIndex);
     const countEl   = document.getElementById('results-count')    as HTMLElement;
     const results   = document.getElementById('search-results')   as HTMLElement;
     const typeChips = document.querySelectorAll<HTMLElement>('.filter-chip[data-type]');
+    const suggestions = document.querySelectorAll<HTMLElement>('.suggestion-chip');
 
     let activeType = 'all';
 
@@ -145,8 +158,6 @@ const searchIndexJSON = JSON.stringify(searchIndex);
       return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
     }
 
-    // NOTE: tagClass below is an intentional client-side copy — browser <script>
-    // blocks cannot import from src/lib/productUtils.ts. Canonical version is there.
     function tagClass(t: string): string {
       const map: Record<string,string> = {
         fps:'fps', pro:'pro', budget:'budget', value:'value', entry:'entry',
@@ -155,6 +166,10 @@ const searchIndexJSON = JSON.stringify(searchIndex);
         'hall-effect':'hall-effect'
       };
       return `tag tag--${map[t] ?? 'default'}`;
+    }
+
+    function starsStr(r: number): string {
+      return '★'.repeat(Math.floor(r)) + (r % 1 >= 0.5 ? '½' : '');
     }
 
     function renderCard(item: SearchItem): string {
@@ -176,13 +191,12 @@ const searchIndexJSON = JSON.stringify(searchIndex);
               ${stars}
               ${tagsHTML ? `<div class="pcard__tags">${tagsHTML}</div>` : ''}
               <div class="pcard__actions">
-                <a href="${esc(item.url)}" class="btn-wishlist">View →</a>
+                <a href="${esc(item.url)}" class="btn-wishlist">View Review →</a>
               </div>
             </div>
           </article>`;
       }
 
-      // Guide / Comparison — wider card
       const typeLabel = item.type === 'guide' ? 'Setup Guide' : 'Comparison';
       return `
         <article class="also-card" style="grid-column: 1 / -1;">
@@ -190,7 +204,7 @@ const searchIndexJSON = JSON.stringify(searchIndex);
           <div>
             <div style="font-family:var(--font-mono);font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--color-accent);margin-bottom:3px;">${typeLabel}</div>
             <h3 class="also-card__title"><a href="${esc(item.url)}" class="search-result-link">${esc(item.title)}</a></h3>
-            <p class="also-card__desc">${esc(item.desc ?? '')}</p>
+            <p class="also-card__desc">${esc(item.desc.slice(0, 140))}...</p>
           </div>
           <a href="${esc(item.url)}" class="also-card__arrow" aria-label="View ${esc(item.title)}">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
@@ -202,30 +216,32 @@ const searchIndexJSON = JSON.stringify(searchIndex);
       const q = query.trim().toLowerCase();
       if (!q) {
         results.innerHTML = '';
-        countEl.textContent = '';
+        countEl.textContent = 'Type to search...';
         return;
       }
-      let hits = INDEX.filter(item =>
-        item.title.toLowerCase().includes(q)    ||
-        item.desc.toLowerCase().includes(q)     ||
-        item.category.toLowerCase().includes(q) ||
-        item.brand?.toLowerCase().includes(q)   ||
-        item.tags.some(t => t.toLowerCase().includes(q))
-      );
+      
+      // Improved matching logic: Check title, then brand, then tags, then description
+      let hits = INDEX.filter(item => {
+        const titleMatch = item.title.toLowerCase().includes(q);
+        const brandMatch = item.brand?.toLowerCase().includes(q);
+        const tagMatch = item.tags.some(t => t.toLowerCase().includes(q));
+        const descMatch = item.desc.toLowerCase().includes(q);
+        return titleMatch || brandMatch || tagMatch || descMatch;
+      });
+
       if (activeType !== 'all') {
         hits = hits.filter(h => h.type === activeType);
       }
+
       countEl.textContent = `${hits.length} result${hits.length !== 1 ? 's' : ''} for "${query}"`;
       results.innerHTML = hits.length
         ? hits.map(renderCard).join('')
-        : `<p style="color:var(--color-text-muted); padding: var(--space-4) var(--page-pad-mobile); grid-column:1/-1;">No results found.</p>`;
-    }
-    
-    function starsStr(r: number): string {
-      return '★'.repeat(Math.floor(r)) + (r % 1 >= 0.5 ? '½' : '');
+        : `<div class="no-results">
+            <p>No results found for "${esc(query)}".</p>
+            <p style="font-size: 14px; margin-top: 8px;">Try searching for a brand like "Logitech" or a feature like "Wireless".</p>
+           </div>`;
     }
 
-    // Type filter
     typeChips.forEach(chip => {
       chip.addEventListener('click', () => {
         typeChips.forEach(c => c.classList.remove('active'));
@@ -235,11 +251,17 @@ const searchIndexJSON = JSON.stringify(searchIndex);
       });
     });
 
-    input.addEventListener('input',   () => search(input.value));
-    input.addEventListener('keydown', e  => { if (e.key === 'Enter') search(input.value); });
+    suggestions.forEach(s => {
+      s.addEventListener('click', () => {
+        input.value = s.textContent || '';
+        search(input.value);
+      });
+    });
+
+    input.addEventListener('input', () => search(input.value));
+    input.addEventListener('keydown', e => { if (e.key === 'Enter') search(input.value); });
     document.getElementById('search-btn')!.addEventListener('click', () => search(input.value));
 
-    // Read ?q= from URL (for topbar redirect)
     const urlQ = new URLSearchParams(window.location.search).get('q');
     if (urlQ) {
       input.value = urlQ;
@@ -250,8 +272,33 @@ const searchIndexJSON = JSON.stringify(searchIndex);
   </script>
 
   <style>
+    .search-container { padding-top: var(--space-8); padding-bottom: var(--space-16); }
+    .search-bar { display: flex; gap: var(--space-4); margin-bottom: var(--space-8); }
+    .search-input-wrapper { flex: 1; position: relative; }
+    .search-icon { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--color-text-dim); pointer-events: none; }
+    .search-input { width: 100%; padding: 16px 16px 16px 48px; border-radius: 16px; background: var(--color-bg-inset); border: 2px solid var(--color-border); color: var(--color-text-primary); font-size: 16px; outline: none; transition: border-color 0.2s; }
+    .search-input:focus { border-color: var(--color-accent); }
+    .search-btn { padding: 0 32px; border-radius: 16px; }
+
+    .search-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-6); border-bottom: 1px solid var(--color-border); padding-bottom: var(--space-4); }
+    .search-results-count { font-family: var(--font-mono); font-size: 11px; font-weight: 800; text-transform: uppercase; color: var(--color-text-dim); }
+    
+    .search-suggestions { display: flex; align-items: center; gap: 8px; }
+    .search-suggestions .label { font-size: 11px; color: var(--color-text-dim); font-weight: 700; text-transform: uppercase; }
+    .suggestion-chip { background: var(--color-bg-subtle); border: 1px solid var(--color-border); padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; cursor: pointer; color: var(--color-text-muted); }
+    .suggestion-chip:hover { border-color: var(--color-accent); color: var(--color-accent); }
+
+    .search-results-grid { min-height: 400px; }
+    .no-results { grid-column: 1 / -1; padding: var(--space-12); text-align: center; color: var(--color-text-muted); background: var(--color-bg-inset); border-radius: 24px; border: 1px dashed var(--color-border); }
+
     .search-result-link { color: inherit; text-decoration: none; }
     .search-result-link:hover { color: var(--color-accent); text-decoration: underline; }
+
+    @media (max-width: 768px) {
+      .search-bar { flex-direction: column; }
+      .search-btn { width: 100%; height: 56px; }
+      .search-meta { flex-direction: column; align-items: flex-start; gap: var(--space-4); }
+    }
   </style>
 
 </Base>

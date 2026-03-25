@@ -1,29 +1,24 @@
 ---
 // src/pages/comparisons/index.astro — v6.0
-// Compare page: swipe-based product comparison
+// Compare page: swipe-based product comparison + editorial head-to-head
 
 import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
+import { SEAM_COLOR, ratingFromRank, tagClass } from '../../lib/productUtils';
 
-const allProducts   = await getCollection('products');
+const allProducts = await getCollection('products');
 const allComparisons = await getCollection('comparisons');
-allComparisons.sort((a, b) => a.data.title.localeCompare(b.data.title));
 
-// Sort products alphabetically by name for compare picker
-allProducts.sort((a, b) => a.data.name.localeCompare(b.data.name));
+// Sort comparisons by date modified (newest first)
+allComparisons.sort((a, b) => new Date(b.data.dateModified).getTime() - new Date(a.data.dateModified).getTime());
 
-import { SEAM_COLOR, ratingFromRank } from '../../lib/productUtils';
+// Sort products by category then rank
+allProducts.sort((a, b) => {
+  if (a.data.category !== b.data.category) return a.data.category.localeCompare(b.data.category);
+  return (a.data.rank ?? 99) - (b.data.rank ?? 99);
+});
 
-// tagClass: build-time copy — client-side equivalent is window.__sp.tagClass
-function tagClass(t: string): string {
-  const map: Record<string,string> = {
-    fps:'fps', pro:'pro', budget:'budget', value:'value', entry:'entry',
-    wireless:'wireless', lightweight:'lightweight', comfort:'comfort',
-    ergonomic:'ergonomic', audiophile:'audiophile', creator:'creator',
-    'hall-effect':'hall-effect'
-  };
-  return `tag tag--${map[t] ?? 'default'}`;
-}
+const BUILD_MONTH = new Date().toLocaleDateString('en-GB', { month: 'long', year: 'numeric' });
 ---
 
 <Base
@@ -36,7 +31,7 @@ function tagClass(t: string): string {
     <div class="hero-container container">
       <p class="hero-eyebrow">Comparisons</p>
       <h1>Compare Gear</h1>
-      <p>Swipe through side-by-side breakdowns. Add favourites to wishlist.</p>
+      <p>Swipe through side-by-side breakdowns or read our expert head-to-head verdicts.</p>
     </div>
   </section>
 
@@ -51,10 +46,10 @@ function tagClass(t: string): string {
   </nav>
 
   <!-- ═══ SWIPE COMPARE (all products) ═══ -->
-  <section aria-label="Swipe through all products">
-    <div class="section-head">
+  <section aria-label="Swipe through all products" class="section--swipe">
+    <div class="section-head container">
       <span class="section-head__label">All Products</span>
-      <span class="section-head__title">Swipe to Compare</span>
+      <h2 class="section-head__title">Swipe to Compare</h2>
       <span id="compare-count" class="compare-nav__count" style="margin-left:auto; font-family:var(--font-mono); font-size:var(--text-xs); color:var(--color-text-muted);">1 / {allProducts.length}</span>
     </div>
 
@@ -65,29 +60,27 @@ function tagClass(t: string): string {
         const starsStr = '★'.repeat(Math.floor(rating)) + (rating % 1 >= 0.5 ? '½' : '');
         return (
           <div class="compare-card" style={`--seam-color: ${seamColor};`} data-id={product.data.id}>
+            <a href={`/products/${product.data.id}/`} class="compare-card__link" aria-label={`View details for ${product.data.name}`}>
+              <div class="compare-card__visual">
+                <div class="compare-card__visual-emoji" aria-hidden="true">{product.data.emoji}</div>
+              </div>
+            </a>
 
-            <!-- Visual -->
-            <div class="compare-card__visual">
-              <div class="compare-card__visual-emoji" aria-hidden="true">{product.data.emoji}</div>
-            </div>
-
-            <!-- Body -->
             <div class="compare-card__body">
               <div class="compare-card__brand">{product.data.brand}</div>
-              <h2 class="compare-card__name">{product.data.name}</h2>
+              <h3 class="compare-card__name">{product.data.name}</h3>
 
               <div class="compare-card__price">
                 <span class="price-current">{product.data.price}</span>
-                {product.data.msrp && <span class="price-msrp" style="margin-left:8px;">{product.data.msrp}</span>}
-                {product.data.savings && <span class="price-badge" style="margin-left:6px;">-{product.data.savings}</span>}
+                <span class="last-verified">Verified {BUILD_MONTH}</span>
               </div>
 
-              <div class="stars" style="margin-top: 6px;" aria-label={`Rating: ${rating}`}>
+              <div class="stars" aria-label={`Rating: ${rating}`}>
                 <span class="stars__symbol" aria-hidden="true">{starsStr}</span>
                 <span class="stars__score">{rating.toFixed(1)}</span>
               </div>
 
-              <div class="compare-card__tags" style="margin-top: 8px;">
+              <div class="compare-card__tags">
                 {product.data.tags.slice(0,3).map((t: string) => (
                   <span class={tagClass(t)}>{t}</span>
                 ))}
@@ -100,13 +93,13 @@ function tagClass(t: string): string {
               </div>
 
               <div class="compare-card__prose">
-                <div>
+                <div class="compare-card__prose-col">
                   <div class="compare-card__col-label compare-card__col-label--pros">Pros</div>
                   <ul class="compare-card__list">
                     {product.data.pros.slice(0,3).map((p: string) => <li>{p}</li>)}
                   </ul>
                 </div>
-                <div>
+                <div class="compare-card__prose-col">
                   <div class="compare-card__col-label compare-card__col-label--cons">Cons</div>
                   <ul class="compare-card__list">
                     {product.data.cons.slice(0,2).map((c: string) => <li>{c}</li>)}
@@ -117,12 +110,10 @@ function tagClass(t: string): string {
               <div class="compare-card__actions">
                 <a href={product.data.affiliate} class="btn-primary" target="_blank" rel="noopener sponsored"
                   data-product={product.data.id} data-type="compare-cta">
-                  Amazon UK
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+                  Amazon UK ↗
                 </a>
                 <button class="btn-wishlist" data-id={product.data.id} aria-pressed="false">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                  Save
+                  ♡ Save
                 </button>
               </div>
             </div>
@@ -134,33 +125,56 @@ function tagClass(t: string): string {
     <!-- Swipe nav dots -->
     <div class="compare-nav" aria-hidden="true">
       {allProducts.slice(0, 8).map((_, i) => (
-        <button class:list={['compare-nav__dot', i === 0 && 'active']} data-index={i}></button>
+        <button class:list={['compare-nav__dot', i === 0 && 'active']} data-index={i} aria-label={`Go to product ${i + 1}`}></button>
       ))}
       {allProducts.length > 8 && <span class="compare-nav__count">+{allProducts.length - 8} more</span>}
     </div>
   </section>
 
   <!-- ═══ EDITORIAL COMPARISONS ═══ -->
-  <section aria-label="Head-to-head comparisons">
-    <div class="section-head">
-      <span class="section-head__label">Editorial</span>
-      <span class="section-head__title">Head-to-Head</span>
+  <section aria-label="Head-to-head comparisons" class="section--editorial">
+    <div class="section-head container">
+      <span class="section-head__label">Expert Reviews</span>
+      <h2 class="section-head__title">Head-to-Head</h2>
     </div>
-    <div class="also-grid">
-      {allComparisons.map(comp => (
-        <a href={`/comparisons/${comp.slug}/`} class="also-card">
-          <span class="also-card__icon" aria-hidden="true">{comp.data.emoji}</span>
-          <div>
-            <h2 class="also-card__title">{comp.data.title}</h2>
-            <p class="also-card__desc">{comp.data.heroSubtitle}</p>
-          </div>
-          <span class="also-card__arrow" aria-hidden="true">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-          </span>
-        </a>
-      ))}
+    <div class="container">
+      <div class="also-grid">
+        {allComparisons.map(comp => (
+          <a href={`/comparisons/${comp.slug}/`} class="also-card">
+            <span class="also-card__icon" aria-hidden="true">{comp.data.emoji}</span>
+            <div class="also-card__content">
+              <h3 class="also-card__title">{comp.data.title}</h3>
+              <p class="also-card__desc">{comp.data.heroSubtitle}</p>
+            </div>
+            <span class="also-card__arrow" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+            </span>
+          </a>
+        ))}
+      </div>
     </div>
   </section>
+
+  <style>
+    .section--swipe { padding-bottom: var(--space-12); }
+    .section--editorial { padding: var(--space-12) 0 var(--space-16); background: var(--color-bg-inset); border-top: 1px solid var(--color-border); }
+    
+    .compare-card__link { display: block; text-decoration: none; }
+    .compare-card__price { display: flex; align-items: baseline; gap: var(--space-2); margin-top: var(--space-2); }
+    .last-verified { font-size: 10px; color: var(--color-text-dim); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; }
+    
+    .compare-card__prose { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); margin-top: var(--space-6); }
+    .compare-card__col-label { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: var(--space-2); }
+    .compare-card__col-label--pros { color: var(--color-success, #10b981); }
+    .compare-card__col-label--cons { color: var(--color-error, #ef4444); }
+    
+    .compare-card__actions { display: grid; grid-template-columns: 1fr auto; gap: var(--space-2); margin-top: var(--space-8); }
+    
+    @media (max-width: 768px) {
+      .compare-swipe { padding: 0 var(--page-pad-mobile); }
+      .compare-card { width: calc(100vw - 48px); }
+    }
+  </style>
 
   <script>
     // ── Scroll counter + nav dots ────────────────────
