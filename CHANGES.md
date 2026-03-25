@@ -1,7 +1,6 @@
 # StackPick v6.0 — Modified Files
 
-## CSS (public/assets/css/)
-- `tokens.css` — Redesigned: tag color tokens, animation tokens, card/overlay variables, theme updates
+
 - `components.css` — Rebuilt: 2-col cards, slide-up overlay, topbar, bottom nav, carousel, compare swipe, setup cards, wishlist, tag chips
 - `style.css` — Updated: page-level rules for new pages
 
